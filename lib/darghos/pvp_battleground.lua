@@ -1,0 +1,61 @@
+pvpBattleground = {
+	team1 = {},
+	team2 = {}
+}
+
+function pvpBattleground.onEnter(cid)
+
+	local team1, team2 = pvpBattleground.team1, pvpBattleground.team2
+	
+	local goIn = team1
+	local respawn = temp_towns.BATTLEGROUND_TEAM_1
+	
+	if(#team1 > #team2) then
+		goIn = team2
+		respawn = temp_towns.BATTLEGROUND_TEAM_2
+	end
+	
+	table.insert(goIn, cid)
+	
+	local town_id = getPlayerTown(cid)
+	setPlayerStorageValue(cid, sid.TEMPLE_ID, town_id)
+	
+	doPlayerSetTown(cid, respawn)
+	local destPos = getTownTemplePosition(respawn)
+	
+	doPlayerSetDoubleDamage(cid)
+	lockTeleportScroll(cid)
+	doTeleportThing(cid, destPos)
+	doSendMagicEffect(destPos, CONST_ME_MAGIC_BLUE)
+	
+	return true
+end
+
+function pvpBattleground.onExit(cid)
+
+	local team1, team2 = pvpBattleground.team1, pvpBattleground.team2
+	local respawn = getPlayerTown(cid)
+	local town_id = getPlayerStorageValue(cid, sid.TEMPLE_ID)
+	
+	doPlayerSetTown(cid, town_id)
+	doPlayerRemoveDoubleDamage(cid)	
+	unlockTeleportScroll(cid)
+	
+	local destPos = getThingPos(uid.BATTLEGROUND_LEAVE)
+	doTeleportThing(cid, destPos)
+	doSendMagicEffect(destPos, CONST_ME_MAGIC_BLUE)	
+	
+	local pos = nil
+	
+	if(respawn == temp_towns.BATTLEGROUND_TEAM_1) then
+		pos = table.find(team1, cid)
+	elseif(respawn == temp_towns.BATTLEGROUND_TEAM_2) then
+		pos = table.find(team2, cid)
+	else
+		print("[PvP Battleground] Player exiting with temporary town respawn wrong: " .. getPlayerName(cid))
+		return false
+	end
+	
+	team1[pos] = nil	
+	return true
+end
