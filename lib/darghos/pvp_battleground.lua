@@ -3,6 +3,19 @@ pvpBattleground = {
 	team2 = {}
 }
 
+function pvpBattleground.onKill(cid, flags)
+
+	local FLAG_IS_LAST = 1
+
+	local isLast = uband(flags, FLAG_IS_LAST)
+	
+	if(isLast) then
+		print("Is last!")
+	else
+		print("Is not last..")
+	end
+end
+
 function pvpBattleground.onEnter(cid)
 
 	local team1, team2 = pvpBattleground.team1, pvpBattleground.team2
@@ -27,6 +40,7 @@ function pvpBattleground.onEnter(cid)
 	lockTeleportScroll(cid)
 	doTeleportThing(cid, destPos)
 	doSendMagicEffect(destPos, CONST_ME_MAGIC_BLUE)
+	registerCreatureEvent(cid, "pvpBattleground_onKill")
 	
 	return true
 end
@@ -40,6 +54,7 @@ function pvpBattleground.onExit(cid)
 	doPlayerSetTown(cid, town_id)
 	doPlayerRemoveDoubleDamage(cid)	
 	unlockTeleportScroll(cid)
+	unregisterCreatureEvent(cid, "pvpBattleground_onKill")
 	
 	local destPos = getThingPos(uid.BATTLEGROUND_LEAVE)
 	doTeleportThing(cid, destPos)
