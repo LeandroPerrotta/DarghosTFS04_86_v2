@@ -34,8 +34,8 @@ function pvpBattleground.onEnter(cid)
 	local outfit = getCreatureOutfit(cid)
 	
 	local goIn = team1
-	outfit.body = team1_outfit.body
-	outfit.body = team1_outfit.legs
+	outfit.lookBody = team1_outfit.body
+	outfit.lookLegs = team1_outfit.legs
 	
 	local respawn = temp_towns.BATTLEGROUND_TEAM_1
 	
@@ -43,8 +43,8 @@ function pvpBattleground.onEnter(cid)
 		goIn = team2
 		respawn = temp_towns.BATTLEGROUND_TEAM_2
 		
-		outfit.body = team2_outfit.body
-		outfit.legs = team2_outfit.legs		
+		outfit.lookBody = team2_outfit.body
+		outfit.lookLegs = team2_outfit.legs		
 	end
 	
 	table.insert(goIn, cid)
