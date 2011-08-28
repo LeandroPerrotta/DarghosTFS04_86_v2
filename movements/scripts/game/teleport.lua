@@ -27,7 +27,7 @@ function onStepIn(cid, item, position, fromPosition)
 	
 	if(item.actionid == aid.BATTLEGROUND_ENTRANCE) then
 		return pvpBattleground.onEnter(cid)
-	elseif(item.actionid == aid.BATTLEGROUND_EXIST) then
+	elseif(item.actionid == aid.BATTLEGROUND_EXIT) then
 		return pvpBattleground.onExit(cid)
 	end
 	
