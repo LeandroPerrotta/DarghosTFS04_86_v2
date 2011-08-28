@@ -73,11 +73,12 @@ function pvpBattleground.onExit(cid)
 	local respawn = getPlayerTown(cid)
 	local town_id = getPlayerStorageValue(cid, sid.TEMPLE_ID)
 	
+	unlockChangeOutfit(cid)
 	restorePlayerOutfit(cid)
 	doPlayerSetTown(cid, town_id)
 	doPlayerRemoveDoubleDamage(cid)	
 	unlockTeleportScroll(cid)
-	unlockChangeOutfit(cid)
+	
 	unregisterCreatureEvent(cid, "pvpBattleground_onKill")
 	
 	local destPos = getThingPos(uid.BATTLEGROUND_LEAVE)
