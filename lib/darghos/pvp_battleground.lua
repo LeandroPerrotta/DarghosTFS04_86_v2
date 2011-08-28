@@ -28,7 +28,7 @@ end
 
 function pvpBattleground.onEnter(cid)
 
-	local team1, team2 = pvpBattleground.team1, pvpBattleground.team2
+	local team1, team2, team1_outfit, team2_outft = pvpBattleground.team1, pvpBattleground.team2, pvpBattleground.team1_outfit, pvpBattleground.team2_outfit
 	
 	storePlayerOutfit(cid)
 	local outfit = getCreatureOutfit(cid)
