@@ -11,6 +11,7 @@ dofile(getDataDir() .. "lib/darghos/uids.lua")
 dofile(getDataDir() .. "lib/darghos/polls.lua")
 dofile(getDataDir() .. "lib/darghos/pvp_arena.lua")
 dofile(getDataDir() .. "lib/darghos/pvp_queue.lua")
+dofile(getDataDir() .. "lib/darghos/pvp_battleground.lua")
 dofile(getDataDir() .. "lib/darghos/luaGlobal.lua")
 
 dofile(getDataDir() .. "lib/darghos/lib_movements.lua")
