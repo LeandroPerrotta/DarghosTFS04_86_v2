@@ -9,6 +9,7 @@ function onStartup()
 	local sendPlayerToTemple = getGlobalStorageValue(gid.SEND_PLAYERS_TO_TEMPLE)
 	
 	setGlobalStorageValue(gid.START_SERVER_WEEKDAY, os.date("*t").wday)
+	setGlobalStorageValue(gid.EVENT_MINI_GAME_STATE, -1)
 	
 	if(sendPlayerToTemple == 1) then
 		db.executeQuery("UPDATE `players` SET `posx` = '0', `posy` = '0', `posz` = '0';")
