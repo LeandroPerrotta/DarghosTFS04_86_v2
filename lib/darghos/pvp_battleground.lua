@@ -49,13 +49,15 @@ function pvpBattleground.onExit(cid)
 	
 	if(respawn == temp_towns.BATTLEGROUND_TEAM_1) then
 		pos = table.find(team1, cid)
+		team1[pos] = nil	
 	elseif(respawn == temp_towns.BATTLEGROUND_TEAM_2) then
 		pos = table.find(team2, cid)
+		team2[pos] = nil	
 	else
 		print("[PvP Battleground] Player exiting with temporary town respawn wrong: " .. getPlayerName(cid))
 		return false
 	end
 	
-	team1[pos] = nil	
+	
 	return true
 end
