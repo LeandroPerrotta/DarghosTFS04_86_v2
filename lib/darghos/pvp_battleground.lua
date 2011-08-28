@@ -1,8 +1,8 @@
 pvpBattleground = {
 	team1 = {},
 	team2 = {},
-	team1_outfit = {body = 87, legs = 87},
-	team2_outfit = {body = 94, legs = 94}
+	team1_outfit = {body = 114, legs = 114, head = 82, feet = 91},
+	team2_outfit = {body = 114, legs = 114, head = 94, feet = 0}
 }
 
 function pvpBattleground.saveKill(cid, isfrag)
@@ -15,6 +15,11 @@ function pvpBattleground.saveDeath(cid)
 end
 
 function pvpBattleground.onKill(cid, target, flags)
+
+	-- preve fogo amigo
+	if(getPlayerTown(target) == getPlayerTown(cid)) then
+		return
+	end
 
 	local FLAG_IS_LAST = 1
 	local isfrag = getBooleanFromString(bit.uband(flags, FLAG_IS_LAST))
@@ -36,6 +41,8 @@ function pvpBattleground.onEnter(cid)
 	local goIn = team1
 	outfit.lookBody = team1_outfit.body
 	outfit.lookLegs = team1_outfit.legs
+	outfit.lookHead = team1_outfit.head
+	outfit.lookFeet = team1_outfit.feet
 	
 	local respawn = temp_towns.BATTLEGROUND_TEAM_1
 	
@@ -45,6 +52,8 @@ function pvpBattleground.onEnter(cid)
 		
 		outfit.lookBody = team2_outfit.body
 		outfit.lookLegs = team2_outfit.legs		
+		outfit.lookHead = team2_outfit.head		
+		outfit.lookFeet = team2_outfit.feet		
 	end
 	
 	table.insert(goIn, cid)
