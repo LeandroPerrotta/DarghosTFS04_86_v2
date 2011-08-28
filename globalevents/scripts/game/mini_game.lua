@@ -18,7 +18,7 @@ end
 
 function eventStart()
 
-	setGlobalStorageValue(gid.EVENT_MINI_GAME_STATE, 1)
+	setGlobalStorageValue(gid.EVENT_MINI_GAME_STATE, EVENT_STATE_INIT)
 	
 	local message = "O evento Warmaster Game foi iniciado!"
 	doBroadcastMessage(message, MESSAGE_TYPES["blue"])	

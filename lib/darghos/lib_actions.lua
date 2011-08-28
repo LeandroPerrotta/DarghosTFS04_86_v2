@@ -76,7 +76,7 @@ function outfitTicket.onUse(cid, item, fromPosition, itemEx, toPosition)
 	if(not playerOutfit.outfit) then
 		local log_id = getItemAttribute(item.uid, "itemShopLogId")
 		
-		if(not log_id or not doLogItemShopUse(cid, log_id)) then
+		if(log_id or not doLogItemShopUse(cid, log_id)) then
 			doPlayerSendTextMessage(cid, MESSAGE_STATUS_SMALL, "The benefit of this item has already been provided. Issue reported.")
 			return true
 		end		
@@ -86,7 +86,7 @@ function outfitTicket.onUse(cid, item, fromPosition, itemEx, toPosition)
 	elseif(not playerOutfit.first_addon) then
 		local log_id = getItemAttribute(item.uid, "itemShopLogId")
 		
-		if(not log_id or not doLogItemShopUse(cid, log_id)) then
+		if(log_id or not doLogItemShopUse(cid, log_id)) then
 			doPlayerSendTextMessage(cid, MESSAGE_STATUS_SMALL, "The benefit of this item has already been provided. Issue reported.")
 			return true
 		end		
@@ -96,7 +96,7 @@ function outfitTicket.onUse(cid, item, fromPosition, itemEx, toPosition)
 	elseif(not playerOutfit.second_addon) then
 		local log_id = getItemAttribute(item.uid, "itemShopLogId")
 		
-		if(not log_id or not doLogItemShopUse(cid, log_id)) then
+		if(log_id or not doLogItemShopUse(cid, log_id)) then
 			doPlayerSendTextMessage(cid, MESSAGE_STATUS_SMALL, "The benefit of this item has already been provided. Issue reported.")
 			return true
 		end		
