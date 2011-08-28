@@ -27,7 +27,7 @@ function lockChangeOutfit(cid)
 end
 
 function unlockChangeOutfit(cid)
-	setPlayerStorageValie(cid, sid.CHANGE_OUTFIT_LOCK, -1)
+	getPlayerStorageValue(cid, sid.CHANGE_OUTFIT_LOCK, -1)
 end
 
 function changeOutfitIsLocked(cid)
