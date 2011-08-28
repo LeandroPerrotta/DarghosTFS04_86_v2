@@ -23,10 +23,12 @@ function unpackPosition(data)
 end
 
 function lockChangeOutfit(cid)
+	registerCreatureEvent(cid, "OnChangeOutfit")
 	setPlayerStorageValue(cid, sid.CHANGE_OUTFIT_LOCK, 1)
 end
 
 function unlockChangeOutfit(cid)
+	unregisterCreatureEvent(cid, "OnChangeOutfit")
 	getPlayerStorageValue(cid, sid.CHANGE_OUTFIT_LOCK, -1)
 end
 
