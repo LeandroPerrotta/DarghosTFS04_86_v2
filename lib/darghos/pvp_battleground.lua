@@ -7,7 +7,7 @@ function pvpBattleground.onKill(cid, flags)
 
 	local FLAG_IS_LAST = 1
 
-	local isLast = uband(flags, FLAG_IS_LAST)
+	local isLast = bit.uband(flags, FLAG_IS_LAST)
 	
 	if(isLast) then
 		print("Is last!")
