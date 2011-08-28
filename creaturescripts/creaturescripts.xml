@@ -31,4 +31,5 @@
 	<event type="think" name="GainStamina" event="script" value="game/stamina.lua"/>
 	<event type="kill" name="autolotgold" event="script" value="game/autolotgold.lua"/>  
 	<event type="tradeaccept" name="tradeHandler" event="script" value="game/trade.lua"/> 	
+	<event type="outfit" name="OnChangeOutfit" event="script" value="game/outfit.lua"/> 	
 </creaturescripts>

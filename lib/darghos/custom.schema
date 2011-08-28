@@ -1,0 +1,12 @@
+CREATE TABLE `battleground_kills` (
+  `player_id` INTEGER UNSIGNED NOT NULL,
+  `is_frag` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  `date` INTEGER UNSIGNED NOT NULL DEFAULT 0
+)
+ENGINE = InnoDB;
+
+CREATE TABLE `battleground_deaths` (
+  `player_id` INTEGER UNSIGNED NOT NULL,
+  `date` INTEGER UNSIGNED NOT NULL DEFAULT 0
+)
+ENGINE = InnoDB;

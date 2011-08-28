@@ -1,13 +1,37 @@
-function packPosition(pos)
+function storePlayerOutfit(cid)
+	local json = require("json")
+	setPlayerStorageValue(cid, sid.OUTFIT, json.encode(getCreatureOutfit(cid)))
+end
 
+function restorePlayerOutfit(cid)
+	local json = require("json")
+	local data = getPlayerStorageValue(cid, sid.OUTFIT)
+	
+	if(data ~= -1) then
+		doCreatureChangeOutfit(cid, json.decode(data))
+	end
+end
+
+function packPosition(pos)
 	local json = require("json")
 	return json.encode(pos)
 end
 
 function unpackPosition(data)
-	
 	local json = require("json")
 	return json.decode(data)
+end
+
+function lockChangeOutfit(cid)
+	setPlayerStorageValue(cid, sid.CHANGE_OUTFIT_LOCK, 1)
+end
+
+function unlockChangeOutfit(cid)
+	setPlayerStorageValie(cid, sid.CHANGE_OUTFIT_LOCK, -1)
+end
+
+function changeOutfitIsLocked(cid)
+	return (getPlayerStorageValue(cid, sid.CHANGE_OUTFIT_LOCK) == 1) and true or false
 end
 
 function lockTeleportScroll(cid)
