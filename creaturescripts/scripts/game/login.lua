@@ -41,6 +41,22 @@ function onLogin(cid)
 			doPlayerSetGroupId(cid, GROUP_PLAYER_NON_PVP)
 		end
 	end
+	
+	if(isInArray({temp_towns.BATTLEGROUND_TEAM_1, temp_towns.BATTLEGROUND_TEAM_2}, getPlayerTown(cid))) then
+		local town_id = getPlayerStorageValue(cid, sid.TEMPLE_ID)
+			
+		unlockChangeOutfit(cid)
+		restorePlayerOutfit(cid)
+		doPlayerSetTown(cid, town_id)
+		doPlayerRemoveDoubleDamage(cid)	
+		unlockTeleportScroll(cid)
+		
+		unregisterCreatureEvent(cid, "pvpBattleground_onKill")
+		
+		local destPos = getThingPos(uid.BATTLEGROUND_LEAVE)
+		doTeleportThing(cid, destPos)
+		doSendMagicEffect(destPos, CONST_ME_MAGIC_BLUE)			
+	end
 
 	if(getPlayerAccess(cid) == groups.GOD) then
 		addAllOufits(cid)
