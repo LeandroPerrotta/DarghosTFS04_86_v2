@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <movements>
-	<!-- SPECIAL QUEST TILES -->
+	*SPECIAL QUEST TILES
 	<!-- 
 	<movevent type="StepIn" actionid="7400" event="script" value="game/dungeons.lua"/>		
 	<movevent type="StepIn" actionid="7401" event="script" value="game/dungeons.lua"/>		
 	-->
 
-	<!-- FIELD DAMAGE -->
+	*FIELD DAMAGE
 	<!-- 
 	<movevent type="StepIn" actionid="8300" event="script" value="game/field_damage.lua"/>	
 	<movevent type="StepIn" actionid="8301" event="script" value="game/field_damage.lua"/>	
@@ -16,10 +16,10 @@
 	<movevent type="StepIn" actionid="8305" event="script" value="game/field_damage.lua"/>
 	-->
 
-	<!-- DEMON OAK  -->
+	*DEMON OAK
 	<movevent type="StepIn" actionid="4066" event="script" value="game/demon_oak.lua"/>
 
-	<!-- INQUISITION QUEST -->
+	*INQUISITION QUEST
 	
 	<movevent type="StepIn" actionid="4033" event="script" value="game/inquisition_hall.lua"/>
 	<movevent type="StepIn" actionid="4034" event="script" value="game/inquisition_hall.lua"/>		
@@ -34,15 +34,15 @@
 	<movevent type="StepIn" uniqueid="1027" event="script" value="game/inquisition_hall.lua"/>		
 	<movevent type="StepIn" uniqueid="1034" event="script" value="game/inquisition_hall.lua"/>
 
-	<!-- MEDUSA TP -->	
+	*MEDUSA TP	
 	<movevent type="StepIn" actionid="4040" event="script" value="game/medusa_tp.lua"/>
 	
 	
-	<!-- MINI GAME -->
+	*MINI GAME
 	<movevent type="StepIn" actionid="261" event="script" value="game/mini_game_tp.lua"/>
 	<movevent type="StepIn" actionid="262" event="script" value="game/mini_game_tile.lua"/>	
 	
-	<!-- POI QUEST -->
+	*POI QUEST
 	<movevent type="StepIn" actionid="250" event="script" value="game/poi.quest/tps.lua"/>
 	<movevent type="StepIn" actionid="251" event="script" value="game/poi.quest/tps.lua"/>
 	<movevent type="StepIn" actionid="252" event="script" value="game/poi.quest/tps.lua"/>
@@ -69,11 +69,7 @@
 	<movevent type="StepIn" actionid="4028" event="script" value="game/poi.quest/verification.lua"/>
 	<movevent type="StepIn" actionid="4029" event="script" value="game/poi.quest/verification.lua"/>
 	
-	
-	<!-- POI QUEST -->
-	
-	
-	<!-- BANSHEE QUEST -->
+	*BANSHEE QUEST
 	<movevent type="StepIn" actionid="4002" event="script" value="game/banshee.lua"/>
 	<movevent type="StepIn" actionid="4003" event="script" value="game/banshee.lua"/>
 	<movevent type="StepIn" actionid="4004" event="script" value="game/banshee.lua"/>
@@ -83,19 +79,19 @@
 	<movevent type="StepIn" actionid="4008" event="script" value="game/banshee.lua"/>
 	<movevent type="StepIn" actionid="4009" event="script" value="game/banshee.lua"/>		
 	
-	<!-- BANSHEE QUEST -->
+	*TELEPORTS
+	<movevent type="StepIn" itemid="1387" event="script" value="game/teleport.lua"/>
+	<movevent type="StepIn" itemid="1397" event="script" value="game/teleport.lua"/>
+	<movevent type="StepIn" actionid="30101-30110" event="script" value="game/teleport.lua"/>
 
-	<movevent type="StepIn" itemid="1387;1397" event="script" value="game/teleport.lua"/>		
-	<movevent type="StepIn" actionid="30101-30199" event="script" value="game/teleport.lua"/>	
-
-	<!-- CUSTOM EXHAUSTEDS PARA MIGHT RING E STONE SKIN AMULETS -->
+	*CUSTOM EXHAUSTEDS PARA MIGHT RING E STONE SKIN AMULETS
 	<!-- 
 	<movevent type="Equip" itemid="2164" slot="ring" event="script" value="game/custom_exhausted.lua"/>
 	<movevent type="Equip" itemid="2197" slot="necklace" event="script" value="game/custom_exhausted.lua"/>
 	-->
-
-	<!-- CUSTOM ITEMS -->
-	<!-- BOOTS SECTOR -->
+	
+	*CUSTOM ITEMS
+	*BOOTS SECTOR
 	<movevent type="Equip" itemid="12673" slot="feet" event="function" value="onEquipItem"/>
 	<movevent type="DeEquip" itemid="12673" slot="feet" event="function" value="onDeEquipItem"/>
 	<movevent type="Equip" itemid="12672" slot="feet" event="function" value="onEquipItem"/>
@@ -106,7 +102,7 @@
 	<movevent type="Equip" itemid="12674" slot="feet" event="function" value="onEquipItem"/>
 	<movevent type="DeEquip" itemid="12674" slot="feet" event="function" value="onDeEquipItem"/>
 		
-	<!-- RINGS SECTOR -->
+	*RINGS SECTOR
 	<movevent type="Equip" itemid="12676" slot="ring" event="function" value="onEquipItem"/>
 	<movevent type="Equip" itemid="12679" slot="ring" event="function" value="onEquipItem"/>
 	<movevent type="DeEquip" itemid="12679" slot="ring" event="function" value="onDeEquipItem"/>
@@ -119,7 +115,7 @@
 	<movevent type="Equip" itemid="12681" slot="ring" event="function" value="onEquipItem"/>
 	<movevent type="DeEquip" itemid="12681" slot="ring" event="function" value="onDeEquipItem"/>
 	
-	<!-- Iron Ring -->
+	*Iron Ring
 	<movevent type="Equip" itemid="12682" slot="ring" event="function" value="onEquipItem">
 		<vocation id="4"/>
 		<vocation id="8" showInDescription="0"/>
@@ -131,7 +127,7 @@
 	<movevent type="Equip" itemid="12685" slot="ring" event="function" value="onEquipItem"/>
 	<movevent type="DeEquip" itemid="12685" slot="ring" event="function" value="onDeEquipItem"/>
 	
-	<!-- Bullseye Ring -->
+	*Bullseye Ring
 	<movevent type="Equip" itemid="12686" slot="ring" event="function" value="onEquipItem">
 		<vocation id="4"/>
 		<vocation id="8" showInDescription="0"/>
@@ -147,7 +143,6 @@
 	</movevent>	
 	<movevent type="Equip" itemid="12689" slot="ring" event="function" value="onEquipItem"/>
 	<movevent type="DeEquip" itemid="12689" slot="ring" event="function" value="onDeEquipItem"/>
-
 
 	<!-- Decaying tiles -->
 	<movevent type="StepIn" itemid="293" event="script" value="decay.lua"/>
