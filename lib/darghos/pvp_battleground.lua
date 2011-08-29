@@ -2,8 +2,62 @@ pvpBattleground = {
 	team1 = {},
 	team2 = {},
 	team1_outfit = {body = 114, legs = 114, head = 82, feet = 91},
-	team2_outfit = {body = 114, legs = 114, head = 94, feet = 0}
+	team2_outfit = {body = 94, legs = 94, head = 77, feet = 79},
+	init = false
 }
+
+function pvpBattleground.onInit()
+	pvpBattleground.init = true
+	addEvent(pvpBattleground.broadcastStatistics, 1000 * 60 * 20)
+end
+
+function pvpBattleground.broadcastStatistics()
+
+	local datePattern = os.time() - 60 * 20
+
+	local data, result = {}, db.getResult("SELECT result.player_id, players.name, result.kills, result.assists, result.deaths FROM ((SELECT player_id, COUNT(*) as kills, 0 as assists, 0 as deaths FROM battleground_kills WHERE is_frag = 1 AND `date` > " .. datePattern .. " GROUP BY player_id) UNION (SELECT player_id, 0 as kills, 0 as assists, COUNT(*) as deaths FROM battleground_deaths WHERE  `date` > " .. datePattern .. " GROUP BY player_id) UNION (SELECT player_id, 0 as kills, COUNT(*) as assists, 0 as deaths FROM battleground_kills WHERE `date` > " .. datePattern .. " GROUP BY player_id)) AS result LEFT JOIN players ON players.id = result.player_id ORDER BY result.kills DESC, result.deaths ASC;")
+	if(result:getID() ~= -1) then
+		repeat
+			data[result:getDataInt("player_id")] = {name = result:getDataString("name"), kills = result:getDataInt("kills"), assists = result:getDataInt("assists"), deaths = result:getDataInt("deaths")}
+		until not(result:next())
+		result:free()
+	end
+	
+	local msg = "Estatisticas Battleground (ultimos 20 minutos):\n\n";
+	
+	msg = msg .. "Nome (Time) 				Matou / Morreu ( Pariticipações )\n";
+	
+	local i = 1
+	for k,v in pairs(data) do
+		
+		local pid = getPlayerByNameWildcard(v.name)
+		if(pid ~= nil) then
+			local team = nil
+		
+			if(pvpBattleground.team1[pid] ~= nil) then
+				team = "Time A"
+			elseif(pvpBattleground.team2[pid] ~= nil) then
+				team = "Time B"
+			end
+			
+			if(team ~= nil) then
+				msg = msg .. i .. ". " .. v.name .. " (" .. team .. ")				" .. v.kills .. " / " .. v.deaths .. " (" .. v.assists .. ")\n";
+		
+				i = i + 1
+			end	
+		end
+	end
+	
+	for k,v in pairs(pvpBattleground.team1) do
+		doPlayerSendTextMessage(v, MESSAGE_STATUS_CONSOLE_ORANGE, msg)
+	end
+	
+	for k,v in pairs(pvpBattleground.team2) do
+		doPlayerSendTextMessage(v, MESSAGE_STATUS_CONSOLE_ORANGE, msg)
+	end	
+
+	addEvent(pvpBattleground.broadcastStatistics, 1000 * 60 * 20)
+end
 
 function pvpBattleground.saveKill(cid, isfrag)
 
@@ -18,6 +72,7 @@ function pvpBattleground.onKill(cid, target, flags)
 
 	-- preve fogo amigo
 	if(getPlayerTown(target) == getPlayerTown(cid)) then
+		pvpBattleground.onInit()
 		return
 	end
 
@@ -32,6 +87,10 @@ function pvpBattleground.onKill(cid, target, flags)
 end
 
 function pvpBattleground.onEnter(cid)
+
+	if(not pvpBattleground.init) then
+		pvpBattleground.onInit()
+	end
 
 	local team1, team2, team1_outfit, team2_outfit = pvpBattleground.team1, pvpBattleground.team2, pvpBattleground.team1_outfit, pvpBattleground.team2_outfit
 	
