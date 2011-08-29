@@ -15,15 +15,24 @@ function pvpBattleground.broadcastStatistics()
 
 	local datePattern = os.time() - (60 * 20)
 
+	local msg = "Estatisticas Battleground (ultimos 20 minutos):\n\n";
+	
 	local data, result = {}, db.getResult("SELECT result.player_id, players.name, result.kills, result.assists, result.deaths FROM ((SELECT player_id, COUNT(*) as kills, 0 as assists, 0 as deaths FROM battleground_kills WHERE is_frag = 1 AND `date` > " .. datePattern .. " GROUP BY player_id) UNION (SELECT player_id, 0 as kills, 0 as assists, COUNT(*) as deaths FROM battleground_deaths WHERE  `date` > " .. datePattern .. " GROUP BY player_id) UNION (SELECT player_id, 0 as kills, COUNT(*) as assists, 0 as deaths FROM battleground_kills WHERE `date` > " .. datePattern .. " GROUP BY player_id)) AS result LEFT JOIN players ON players.id = result.player_id ORDER BY result.kills DESC, result.deaths ASC;")
 	if(result:getID() ~= -1) then
 		repeat
-			data[result:getDataInt("player_id")] = {name = result:getDataString("name"), kills = result:getDataInt("kills"), assists = result:getDataInt("assists"), deaths = result:getDataInt("deaths")}
+			if(data[result:getDataInt("player_id")] == nil) then
+				data[result:getDataInt("player_id")] = {name = result:getDataString("name"), kills = result:getDataInt("kills"), assists = result:getDataInt("assists"), deaths = result:getDataInt("deaths")}
+			else
+				data[result:getDataInt("player_id")]["kills"] = data[result:getDataInt("player_id")]["kills"] + result:getDataInt("kills")
+				data[result:getDataInt("player_id")]["assists"] = data[result:getDataInt("player_id")]["assists"] + result:getDataInt("assists")
+				data[result:getDataInt("player_id")]["deaths"] = data[result:getDataInt("player_id")]["deaths"] + result:getDataInt("deaths")
+			end
 		until not(result:next())
 		result:free()
+	else
+		addEvent(pvpBattleground.broadcastStatistics, 1000 * 60 * 1)
+		return
 	end
-	
-	local msg = "Estatisticas Battleground (ultimos 20 minutos):\n\n";
 	
 	local i = 1
 	for k,v in pairs(data) do
@@ -32,17 +41,20 @@ function pvpBattleground.broadcastStatistics()
 		if(pid ~= nil) then
 			local team = nil
 		
-			if(pvpBattleground.team1[pid] ~= nil) then
+			if(table.find(pvpBattleground.team1, pid) ~= nil) then
 				team = "Time A"
-			elseif(pvpBattleground.team2[pid] ~= nil) then
+			elseif(table.find(pvpBattleground.team2, pid) ~= nil) then
 				team = "Time B"
 			end
 			
+			local spaces_c = 40 - string.len(v.name)
+			
+			local spaces = ""	
+			for i=1, spaces_c do spaces = spaces .. " " end
+			
+			
 			if(team ~= nil) then
-				msg = msg .. i .. "# " .. v.name .. " (" .. team .. ")\n" 
-				msg = msg .. "Matou: " .. v.kills .. ", Morreu: " .. v.deaths .. ", Participou: " .. v.assists .. "\n"
-				msg = msg .. "---------------------------------------------------------------------------------\n"
-		
+				msg = msg .. i .. "# " .. v.name .. " (" .. team .. ")".. spaces .. "" .. v.kills .. " / " .. v.deaths .. "  [" .. v.assists .. "] \n"	
 				i = i + 1
 			end	
 		end
