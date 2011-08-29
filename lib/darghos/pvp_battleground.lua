@@ -86,7 +86,6 @@ function pvpBattleground.onKill(cid, target, flags)
 
 	-- preve fogo amigo
 	if(getPlayerTown(target) == getPlayerTown(cid)) then
-		pvpBattleground.onInit()
 		return
 	end
 
