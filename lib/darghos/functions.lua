@@ -29,7 +29,7 @@ end
 
 function unlockChangeOutfit(cid)
 	unregisterCreatureEvent(cid, "OnChangeOutfit")
-	getPlayerStorageValue(cid, sid.CHANGE_OUTFIT_LOCK, -1)
+	setPlayerStorageValue(cid, sid.CHANGE_OUTFIT_LOCK, -1)
 end
 
 function changeOutfitIsLocked(cid)
@@ -37,12 +37,10 @@ function changeOutfitIsLocked(cid)
 end
 
 function lockTeleportScroll(cid)
-
 	setPlayerStorageValue(cid, sid.TELEPORT_RUNE_LOCK, 1)
 end
 
 function unlockTeleportScroll(cid)
-
 	setPlayerStorageValue(cid, sid.TELEPORT_RUNE_LOCK, -1)
 end
 

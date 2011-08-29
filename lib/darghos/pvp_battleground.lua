@@ -1,3 +1,5 @@
+BROADCAST_STATISTICS_INTERVAL = 20
+
 pvpBattleground = {
 	team1 = {},
 	team2 = {},
@@ -13,9 +15,9 @@ end
 
 function pvpBattleground.broadcastStatistics()
 
-	local datePattern = os.time() - (60 * 20)
+	local datePattern = os.time() - (60 * BROADCAST_STATISTICS_INTERVAL)
 
-	local msg = "Estatisticas Battleground (ultimos 20 minutos):\n\n";
+	local msg = "Estatisticas Battleground (ultimos " .. BROADCAST_STATISTICS_INTERVAL .. " minutos):\n\n";
 	
 	local data, result = {}, db.getResult("SELECT result.player_id, players.name, result.kills, result.assists, result.deaths FROM ((SELECT player_id, COUNT(*) as kills, 0 as assists, 0 as deaths FROM battleground_kills WHERE is_frag = 1 AND `date` > " .. datePattern .. " GROUP BY player_id) UNION (SELECT player_id, 0 as kills, 0 as assists, COUNT(*) as deaths FROM battleground_deaths WHERE  `date` > " .. datePattern .. " GROUP BY player_id) UNION (SELECT player_id, 0 as kills, COUNT(*) as assists, 0 as deaths FROM battleground_kills WHERE `date` > " .. datePattern .. " GROUP BY player_id)) AS result LEFT JOIN players ON players.id = result.player_id ORDER BY result.kills DESC, result.deaths ASC;")
 	if(result:getID() ~= -1) then
@@ -30,7 +32,7 @@ function pvpBattleground.broadcastStatistics()
 		until not(result:next())
 		result:free()
 	else
-		addEvent(pvpBattleground.broadcastStatistics, 1000 * 60 * 1)
+		addEvent(pvpBattleground.broadcastStatistics, 1000 * 60 * BROADCAST_STATISTICS_INTERVAL)
 		return
 	end
 	
@@ -61,14 +63,14 @@ function pvpBattleground.broadcastStatistics()
 	end
 	
 	for k,v in pairs(pvpBattleground.team1) do
-		doPlayerSendTextMessage(v, MESSAGE_STATUS_CONSOLE_ORANGE, msg)
+		if(isPlayer(v)) then doPlayerSendTextMessage(v, MESSAGE_STATUS_CONSOLE_ORANGE, msg) end
 	end
 	
 	for k,v in pairs(pvpBattleground.team2) do
-		doPlayerSendTextMessage(v, MESSAGE_STATUS_CONSOLE_ORANGE, msg)
+		if(isPlayer(v)) then doPlayerSendTextMessage(v, MESSAGE_STATUS_CONSOLE_ORANGE, msg) end
 	end	
 
-	addEvent(pvpBattleground.broadcastStatistics, 1000 * 60 * 1)
+	addEvent(pvpBattleground.broadcastStatistics, 1000 * 60 * BROADCAST_STATISTICS_INTERVAL)
 end
 
 function pvpBattleground.saveKill(cid, isfrag)
