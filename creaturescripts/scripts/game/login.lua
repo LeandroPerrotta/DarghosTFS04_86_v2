@@ -29,6 +29,7 @@ function onLogin(cid)
 	Dungeons.onLogin(cid)
 	--defineFirstItems(cid)
 	restoreAddon(cid)
+	onLoginNotify(cid)
 	
 	-- premium test
 	if(canReceivePremiumTest(cid, getPlayerLevel(cid))) then
