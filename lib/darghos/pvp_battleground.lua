@@ -10,7 +10,7 @@ pvpBattleground = {
 
 function pvpBattleground.onInit()
 	pvpBattleground.init = true
-	addEvent(pvpBattleground.broadcastStatistics, 1000 * 60 * 1)
+	addEvent(pvpBattleground.broadcastStatistics, 1000 * 60 * BROADCAST_STATISTICS_INTERVAL)
 end
 
 function pvpBattleground.broadcastStatistics()
