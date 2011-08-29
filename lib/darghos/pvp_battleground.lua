@@ -13,7 +13,7 @@ end
 
 function pvpBattleground.broadcastStatistics()
 
-	local datePattern = os.time() - 60 * 20
+	local datePattern = os.time() - (60 * 20)
 
 	local data, result = {}, db.getResult("SELECT result.player_id, players.name, result.kills, result.assists, result.deaths FROM ((SELECT player_id, COUNT(*) as kills, 0 as assists, 0 as deaths FROM battleground_kills WHERE is_frag = 1 AND `date` > " .. datePattern .. " GROUP BY player_id) UNION (SELECT player_id, 0 as kills, 0 as assists, COUNT(*) as deaths FROM battleground_deaths WHERE  `date` > " .. datePattern .. " GROUP BY player_id) UNION (SELECT player_id, 0 as kills, COUNT(*) as assists, 0 as deaths FROM battleground_kills WHERE `date` > " .. datePattern .. " GROUP BY player_id)) AS result LEFT JOIN players ON players.id = result.player_id ORDER BY result.kills DESC, result.deaths ASC;")
 	if(result:getID() ~= -1) then
@@ -24,8 +24,6 @@ function pvpBattleground.broadcastStatistics()
 	end
 	
 	local msg = "Estatisticas Battleground (ultimos 20 minutos):\n\n";
-	
-	msg = msg .. "Nome (Time) 				Matou / Morreu ( Pariticipações )\n";
 	
 	local i = 1
 	for k,v in pairs(data) do
@@ -41,7 +39,9 @@ function pvpBattleground.broadcastStatistics()
 			end
 			
 			if(team ~= nil) then
-				msg = msg .. i .. ". " .. v.name .. " (" .. team .. ")				" .. v.kills .. " / " .. v.deaths .. " (" .. v.assists .. ")\n";
+				msg = msg .. i .. "# " .. v.name .. " (" .. team .. ")\n" 
+				msg = msg .. "Matou: " .. v.kills .. ", Morreu: " .. v.deaths .. ", Participou: " .. v.assists .. "\n"
+				msg = msg .. "---------------------------------------------------------------------------------\n"
 		
 				i = i + 1
 			end	
@@ -56,7 +56,7 @@ function pvpBattleground.broadcastStatistics()
 		doPlayerSendTextMessage(v, MESSAGE_STATUS_CONSOLE_ORANGE, msg)
 	end	
 
-	addEvent(pvpBattleground.broadcastStatistics, 1000 * 60 * 20)
+	addEvent(pvpBattleground.broadcastStatistics, 1000 * 60 * 1)
 end
 
 function pvpBattleground.saveKill(cid, isfrag)
