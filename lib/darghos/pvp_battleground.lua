@@ -84,6 +84,10 @@ end
 
 function pvpBattleground.onKill(cid, target, flags)
 
+	if(not isPlayer(cid) or not isPlayer(target)) then
+		return
+	end
+
 	-- preve fogo amigo
 	if(getPlayerTown(target) == getPlayerTown(cid)) then
 		return
