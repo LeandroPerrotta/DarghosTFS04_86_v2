@@ -6,8 +6,9 @@ function customStaminaUpdate(cid)
 
 	local event = getPlayerStorageValue(cid, sid.EVENT_STAMINA)
 	local onIsland = (getPlayerStorageValue(cid, sid.IS_ON_TRAINING_ISLAND) == 1) and true or false
+	local staminaNextUpdate = getPlayerStorageValue(cid, sid.STAMINA_NEXT_UPDATE)
 	
-	if(not onIsland) then
+	if(not onIsland or os.time() < staminaNextUpdate) then
 		return
 	end		
 		
@@ -37,16 +38,12 @@ function customStaminaUpdate(cid)
 		interval = lowStaminaInterval
 	end
 	
-	if(event ~= -1) then
-		if(stopEvent(event)) then
-			setPlayerStorageValue(cid, sid.EVENT_STAMINA, addEvent(customStaminaUpdate, 1000 * interval, cid))
-			return
-		end
-	
+	if(event ~= -1) then	
 		doPlayerSetStamina(cid, newStamina)
 		doSendAnimatedText(getPlayerPosition(cid), "STAMINA +1", TEXTCOLOR_PURPLE)
 	end
 	
+	setPlayerStorageValue(cid, sid.STAMINA_NEXT_UPDATE, os.time() + interval)
 	setPlayerStorageValue(cid, sid.EVENT_STAMINA, addEvent(customStaminaUpdate, 1000 * interval, cid))
 end
 
