@@ -1,3 +1,49 @@
+function customStaminaUpdate(cid)
+
+	if(not isPlayer(cid)) then
+		return
+	end
+
+	local event = getPlayerStorageValue(cid, sid.EVENT_STAMINA)
+	local onIsland = (getPlayerStorageValue(cid, sid.IS_ON_TRAINING_ISLAND) == 1) and true or false
+	
+	if(not onIsland) then
+		return
+	end		
+		
+	local bonusStamina = 40 * 60
+	local maxStamina = 42 * 60
+	
+	local staminaMinutes = getPlayerStamina(cid)
+	local newStamina = staminaMinutes + 1
+	
+	local highStaminaInterval = (60 * 10)
+	local lowStaminaInterval = (60 * 3)
+	
+	if(isPremium(cid)) then
+		highStaminaInterval = (60 * 7)
+		lowStaminaInterval = (60 * 2)	
+	end
+	
+	if(staminaMinutes >= maxStamina and event ~= -1) then
+		return
+	end
+	
+	local interval = nil
+	
+	if(newStamina >= bonusStamina) then		
+		interval = highStaminaInterval
+	else	
+		interval = lowStaminaInterval
+	end
+	
+	if(event ~= -1) then
+		doPlayerSetStamina(cid, newStamina)
+	end
+	
+	setPlayerStorageValue(cid, sid.EVENT_STAMINA, addEvent(customStaminaUpdate, 1000 * interval, cid))
+end
+
 function storePlayerOutfit(cid)
 	local json = require("json")
 	setPlayerStorageValue(cid, sid.OUTFIT, json.encode(getCreatureOutfit(cid)))
@@ -335,6 +381,15 @@ function setPlayerLight(cid, lightmode)
 		doRemoveCondition(cid, CONDITION_LIGHT)
 		setPlayerStorageValue(cid, sid.HACKS_LIGHT, LIGHT_NONE)
 	end
+end
+
+function playerAutoEat(cid)
+	if(not darghos_need_eat and isPlayer(cid)) then
+		if(getPlayerFood(cid) == 0) then
+			doPlayerFeed(cid, 1200)
+			setPlayerStorageValue(cid, sid.EVENT_AUTO_EAT, addEvent(playerAutoEat, 1000 * (60 * 20) + 1, cid))
+		end
+	end	
 end
 
 function getLuaFunctions()-- by Mock
