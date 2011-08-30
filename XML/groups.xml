@@ -48,7 +48,7 @@
 	PlayerFlag_CanReportBugs,			//2^44 = 17592186044416
 	PlayerFlag_45,	//ignore			//2^45 = 35184372088832 //not used by us
 	PlayerFlag_CannotBeSeen,			//2^46 = 70368744177664
-	PlayerFlag_HideHealth,				//2^47 = 140737488355328
+	PlayerFlag_HideHealth,				//2^47 = 140737488355328 211106232532992
 	
 	PlayerCustomFlag_AllowIdle = 0,				//2^0 = 1
 	PlayerCustomFlag_CanSeePosition,			//2^1 = 2
@@ -79,8 +79,8 @@
  -->
 
 <groups>
-	<group id="1" name="Player"/>
-	<group id="2" name="Non-PvP Player" flags="2" customFlags="16777216"/>
+	<group id="1" name="Player" customFlags="2048"/>
+	<group id="2" name="Non-PvP Player" flags="2" customFlags="16779264"/>
 	<group id="3" name="Tutor" flags="16809984" customFlags="2" access="1"/>
 	<group id="4" name="Senior Tutor" flags="68736352256" customFlags="14" access="2" violationReasons="10" nameViolationFlags="2" statementViolationFlags="63" maxVips="200"/>
 	<group id="5" name="Gamemaster" flags="3808558964575" customFlags="257215" access="2" violationReasons="19" nameViolationFlags="10" statementViolationFlags="69" depotLimit="3000" maxVips="300" outfit="75"/>

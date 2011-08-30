@@ -30,6 +30,8 @@ function onLogin(cid)
 	--defineFirstItems(cid)
 	restoreAddon(cid)
 	onLoginNotify(cid)
+	playerAutoEat(cid)
+	customStaminaUpdate(cid)
 	
 	-- premium test
 	if(canReceivePremiumTest(cid, getPlayerLevel(cid))) then
