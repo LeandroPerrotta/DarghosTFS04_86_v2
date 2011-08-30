@@ -39,6 +39,7 @@ function customStaminaUpdate(cid)
 	
 	if(event ~= -1) then
 		doPlayerSetStamina(cid, newStamina)
+		doSendAnimatedText(getPlayerPosition(cid), "STAMINA +1", TEXTCOLOR_PURPLE)
 	end
 	
 	setPlayerStorageValue(cid, sid.EVENT_STAMINA, addEvent(customStaminaUpdate, 1000 * interval, cid))

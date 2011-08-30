@@ -104,7 +104,7 @@ function onLoginNotify(cid)
 			msg = (eventState == EVENT_STATE_INIT) and "Evento do dia (ABERTO!!):\n\n" or "Evento do dia:\n\n"			
 			msg = msg .. "Não se esqueça que hoje é dia do evento semanal Warmaster a partir das 15:00 PM! \n\n"
 			msg = msg .. "O Warmaster é um evento de PvP que acontece as terças e domingos e premia o vencedor com um ticket para o Warmaster Outfit. \n"
-			msg = msg .. "Para entrar no evento va para o deserto ao oeste de Quendor e lá você encontrará uma estrutura com teleports que levam para dentro do evento.\n"
+			msg = msg .. "A entrada do evento fica no deserto ao oeste de Quendor, em estrutura com teleports.\n"
 			msg = msg .. "Dentro do evento tudo é Hardcore PvP e se você morrer você não perderá nada. O objetivo é simplesmente destruir os obstaculos e se manter vivo!\n"
 			msg = msg .. "Na ultima sala existirá o boss que ao ser derrotado dropará o premio!\n"
 		end
