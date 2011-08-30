@@ -99,6 +99,7 @@ function pvpBattleground.onKill(cid, target, flags)
 	pvpBattleground.saveKill(cid, isfrag)
 	
 	if(isfrag) then
+		doSendAnimatedText(getPlayerPosition(cid), "FRAG!", TEXTCOLOR_DARKRED)
 		pvpBattleground.saveDeath(target)
 	end
 end
