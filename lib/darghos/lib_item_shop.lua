@@ -124,14 +124,14 @@ function itemShop:onLogin(cid)
 			local item_params = json.decode(result:getDataString("params"))
 			local item_action_id = item_params["item_action_id"] or 0
 			
-			totalWeight = totalWeight + getItemWeightById(item_params["item_id"], item_params["item_count"])
+			totalWeight = totalWeight + getItemWeightById(tonumber(item_params["item_id"]), tonumber(item_params["item_count"]))
 			
 			if(getPlayerFreeCap(cid) > totalWeight) then
 						
 				table.insert(self.receive_list, {
 					log_id = result:getDataInt("id"), 
-					item_id = item_params["item_id"], 
-					item_count = item_params["item_count"], 
+					item_id = tonumber(item_params["item_id"]), 
+					item_count = tonumber(item_params["item_count"]), 
 					item_name = result:getDataString("name"), 
 					item_action_id = item_action_id
 				})
