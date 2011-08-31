@@ -1214,7 +1214,7 @@ end
 
 function table.copy(table)
 	local _copy = {}
-	for k,v in pais(table) do
+	for k,v in pairs(table) do
 		_copy[k] = v
 	end
 	
