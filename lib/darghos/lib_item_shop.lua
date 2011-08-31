@@ -42,15 +42,15 @@ function itemShop:notify()
 	local msg = ""
 	
 	if(self.count == #self.receive_list and #self.not_received_list == 0) then
-		msg = msg + "Todas as suas " .. #self.receive_list .. " compras obtidas no Item Shop foram entregues com sucesso em sua backpack principal!\n\n"
-		msg = msg + "Tenha um bom jogo!"		
+		msg = msg .. "Todas as suas " .. #self.receive_list .. " compras obtidas no Item Shop foram entregues com sucesso em sua backpack principal!\n\n"
+		msg = msg .. "Tenha um bom jogo!"		
 	elseif(#self.not_received_list > 0 and #self.not_received_list < #self.receive_list) then
 		local receivedItems = #self.receive_list - #self.not_received_list
-		msg = msg + "Parte de suas compras (" .. receivedItems .. ") obtidas no Item Shop foram entregues com sucesso em sua backpack principal!\n\n"
-		msg = msg + "Obs:\n"
-		msg = msg + "Ainda há " .. #self.not_received_list .." compra(s) pendentes para serem entregue(s), por favor, certifique-se de possuir capacidade para carregar e slots livres em sua backpack principal e re-faça o login para receber as compras. Obrigado."
+		msg = msg .. "Parte de suas compras (" .. receivedItems .. ") obtidas no Item Shop foram entregues com sucesso em sua backpack principal!\n\n"
+		msg = msg .. "Obs:\n"
+		msg = msg .. "Ainda há " .. #self.not_received_list .." compra(s) pendentes para serem entregue(s), por favor, certifique-se de possuir capacidade para carregar e slots livres em sua backpack principal e re-faça o login para receber as compras. Obrigado."
 	elseif(#self.not_received_list == #self.receive_list) then
-		msg = msg + "Há " .. #self.receive_list .. "  compra(s) no Item Shop pendentes para serem entregue(s), por favor, certifique-se de possuir capacidade para carregar e slots livres em sua backpack principal e re-faça o login para receber a(s) compra(s). Obrigado."	
+		msg = msg .. "Há " .. #self.receive_list .. "  compra(s) no Item Shop pendentes para serem entregue(s), por favor, certifique-se de possuir capacidade para carregar e slots livres em sua backpack principal e re-faça o login para receber a(s) compra(s). Obrigado."	
 	else
 		self:log("Problema ilogico não previsto: Total de itens " .. self.count .. ", Itens não recebidos " .. #self.not_received_list .. ", Itens a Receber " .. #self.receive_list .. ".")
 		return
