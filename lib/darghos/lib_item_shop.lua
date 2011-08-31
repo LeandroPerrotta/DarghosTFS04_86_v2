@@ -61,7 +61,7 @@ end
 
 function itemShop:giveList()
 
-	self.not_received_list = self.receive_list
+	self.not_received_list = table.copy(self.receive_list)
 
 	for _, item in pairs(self.receive_list) do
 		if(self:giveItem(item)) then
