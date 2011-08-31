@@ -1211,3 +1211,12 @@ end
 function getWeekday()
 	return getGlobalStorageValue(gid.START_SERVER_WEEKDAY)
 end
+
+function table.copy(table)
+	local _copy = {}
+	for k,v in pais(table) do
+		_copy[k] = v
+	end
+	
+	return _copy
+end
