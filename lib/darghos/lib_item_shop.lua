@@ -96,7 +96,7 @@ function itemShop:giveItem(data)
 		return false
 	end
 	
-	if(doPlayerAddItemEx(self.cid, container, false) ~= RETURNVALUE_NOERROR) then
+	if(doPlayerAddItemEx(self.cid, container, false) == RETURNVALUE_NOERROR) then
 		self:log("Item Data Entregue com sucesso: " .. json.encode(data) .. "")
 		return true
 	end	
