@@ -33,7 +33,7 @@ function onLogin(cid)
 	customStaminaUpdate(cid)
 	
 	local itemShop = itemShop:new()
-	itemShop.onLogin(cid)
+	itemShop:onLogin(cid)
 	
 	-- premium test
 	if(canReceivePremiumTest(cid, getPlayerLevel(cid))) then
