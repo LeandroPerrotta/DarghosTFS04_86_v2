@@ -148,7 +148,7 @@ function itemShop:onLogin(cid)
 		self:giveList()
 		self:notify()
 		
-		self:log("Processo concluido.")
+		self:log("Processo concluido. Resultado: Total de itens " .. self.count .. ", Itens não recebidos " .. #self.not_received_list .. ", Itens a Receber " .. #self.receive_list .. ".")
 		self:log("--------------------------------------")
 	end
 end
