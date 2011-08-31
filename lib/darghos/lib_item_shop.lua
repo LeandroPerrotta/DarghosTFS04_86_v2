@@ -109,7 +109,7 @@ end
 -- Usado em creaturescripts/login.lua
 function itemShop:onLogin(cid)
 
-	local result = db.getResult("SELECT `shop`.`name`, `shop`.`params`, `log`.`id` FROM `wb_itemshop_log` `log` LEFT JOIN `wb_itemshop` ON `log`.`shop_id` = `shop`.`id` WHERE `log`.`player_id` = " .. getPlayerGUID(cid) .. " AND `log`.`received` = 0;")
+	local result = db.getResult("SELECT `shop`.`name`, `shop`.`params`, `log`.`id` FROM `wb_itemshop_log` `log` LEFT JOIN `wb_itemshop` `shop` ON `log`.`shop_id` = `shop`.`id` WHERE `log`.`player_id` = " .. getPlayerGUID(cid) .. " AND `log`.`received` = 0;")
 	
 	local totalWeight = 0
 	
