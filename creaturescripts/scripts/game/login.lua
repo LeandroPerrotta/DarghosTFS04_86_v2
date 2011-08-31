@@ -24,7 +24,6 @@ function onLogin(cid)
 	runPremiumSystem(cid)
 	setRateStage(cid, getPlayerLevel(cid))
 	setLoginSkillsRateStage(cid)
-	checkItemShop(cid)
 	OnKillCreatureMission(cid)
 	Dungeons.onLogin(cid)
 	--defineFirstItems(cid)
@@ -32,6 +31,9 @@ function onLogin(cid)
 	onLoginNotify(cid)
 	playerAutoEat(cid)
 	customStaminaUpdate(cid)
+	
+	local itemShop = itemShop:new()
+	itemShop.onLogin(cid)
 	
 	-- premium test
 	if(canReceivePremiumTest(cid, getPlayerLevel(cid))) then
