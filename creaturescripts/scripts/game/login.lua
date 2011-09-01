@@ -19,6 +19,7 @@ function onLogin(cid)
 	
 	registerCreatureEvent(cid, "Hacks")
 	registerCreatureEvent(cid, "GainStamina")
+	registerCreatureEvent(cid, "onLeaveChannel")
 	
 	playerRecord()
 	runPremiumSystem(cid)
