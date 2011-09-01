@@ -36,8 +36,8 @@ function useGlobalList(name)
 	return db.lastInsertId()
 end
 
-function getGlobalListValue(name, key)
-	local result = db.getResult("SELECT `v`.`value` FROM `lua_global_value` `v` LEFT JOIN `lua_global_table` `t` ON `t`.`id` = `v`.`table_id` WHERE `t`.`name` = '".. name .."' AND `v`.`key` = '" .. key .. "';")
+function getGlobalListValue(guid, key)
+	local result = db.getResult("SELECT `value` FROM `lua_global_value` WHERE `table_id` = '" .. guid .. "' AND `key` = '" .. key .. "';")
 	
 	local value = nil
 	
@@ -49,12 +49,12 @@ function getGlobalListValue(name, key)
 	return value
 end
 
-function setGlobalListValue(name, key, value)
+function setGlobalListValue(guid, key, value)
 
 	if(getGlobalListValue(name, key) == nil) then
-		db.executeQuery("INSERT INTO `lua_global_value` (`table_id`, `key`, `value`) VALUES ((SELECT `id` FROM `lua_global_table` WHERE `name` = '" .. name .. "'), '" .. key .. "', '".. value .. "');")
+		db.executeQuery("INSERT INTO `lua_global_value` (`table_id`, `key`, `value`) VALUES ('" .. guid .. "', '" .. key .. "', '".. value .. "');")
 	else
-		db.executeQuery("UPDATE `lua_global_value` `v` LEFT JOIN `lua_global_table` `t` ON `v`.`table_id` = `t`.`id` SET `value` = '".. value .. "' WHERE `t`.`name` = '" .. name .. "' AND `v`.`key` = '" .. key .. "';")
+		db.executeQuery("UPDATE `lua_global_value` SET `value` = '".. value .. "' WHERE `table_id` = '" .. guid .. "' AND `key` = '" .. key .. "';")
 	end
 end
 
