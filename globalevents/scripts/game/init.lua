@@ -30,6 +30,20 @@ function onStartup()
 	
 	luaGlobal.truncate()
 	
+	local g_table = global_table("testTable")
+	
+	if(g_table["somevalue"] == nil) then
+		g_table["somevalue"] = "myvalue"
+	end
+	
+	g_table[3] = 45
+	print(table.show(g_table))
+	
+	table.insert(g_table, "inserted value")
+	
+	print(table.show(g_table))
+	
+	
 	return true
 end
 
