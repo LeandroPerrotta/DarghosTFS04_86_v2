@@ -148,7 +148,7 @@ function pvpBattleground.onEnter(cid)
 	doSendMagicEffect(destPos, CONST_ME_MAGIC_BLUE)
 	registerCreatureEvent(cid, "pvpBattleground_onKill")
 	
-	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground - " .. team_str .. "] O jogador " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") juntou-se a batalha.")
+	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground - " .. team_str .. "] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") juntou-se a batalha.")
 	
 	return true
 end
@@ -187,6 +187,6 @@ function pvpBattleground.onExit(cid)
 		return false
 	end
 	
-	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground - " .. team_str .. "] O jogador " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") saiu da batalha.")
+	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground - " .. team_str .. "] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") saiu da batalha.")
 	return true
 end
