@@ -62,14 +62,7 @@ function pvpBattleground.broadcastStatistics()
 		end
 	end
 	
-	for k,v in pairs(pvpBattleground.team1) do
-		if(isPlayer(v)) then doPlayerSendTextMessage(v, MESSAGE_STATUS_CONSOLE_ORANGE, msg) end
-	end
-	
-	for k,v in pairs(pvpBattleground.team2) do
-		if(isPlayer(v)) then doPlayerSendTextMessage(v, MESSAGE_STATUS_CONSOLE_ORANGE, msg) end
-	end	
-
+	broadcastChannel(CUSTOM_CHANNEL_PVP, msg, TALKTYPE_TYPES["channel-orange"])
 	addEvent(pvpBattleground.broadcastStatistics, 1000 * 60 * BROADCAST_STATISTICS_INTERVAL)
 end
 
@@ -101,6 +94,8 @@ function pvpBattleground.onKill(cid, target, flags)
 	if(isfrag) then
 		doSendAnimatedText(getPlayerPosition(cid), "FRAG!", TEXTCOLOR_DARKRED)
 		pvpBattleground.saveDeath(target)
+		local team_str = (getPlayerTown(cid) == temp_towns.BATTLEGROUND_TEAM_1) and "Time A" or "Time B"
+		broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground - " .. team_str .. "] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") matou " .. getPlayerName(target) .. " (" .. getPlayerLevel(target) .. ")!")
 	end
 end
 
@@ -122,6 +117,7 @@ function pvpBattleground.onEnter(cid)
 	outfit.lookFeet = team1_outfit.feet
 	
 	local respawn = temp_towns.BATTLEGROUND_TEAM_1
+	local team_str = "Time A"
 	
 	if(#team1 > #team2) then
 		goIn = team2
@@ -131,6 +127,8 @@ function pvpBattleground.onEnter(cid)
 		outfit.lookLegs = team2_outfit.legs		
 		outfit.lookHead = team2_outfit.head		
 		outfit.lookFeet = team2_outfit.feet		
+		
+		team_str = "Time B"
 	end
 	
 	table.insert(goIn, cid)
@@ -149,6 +147,8 @@ function pvpBattleground.onEnter(cid)
 	doTeleportThing(cid, destPos)
 	doSendMagicEffect(destPos, CONST_ME_MAGIC_BLUE)
 	registerCreatureEvent(cid, "pvpBattleground_onKill")
+	
+	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground - " .. team_str .. "] O jogador " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") juntou-se a batalha.")
 	
 	return true
 end
@@ -172,18 +172,21 @@ function pvpBattleground.onExit(cid)
 	doSendMagicEffect(destPos, CONST_ME_MAGIC_BLUE)	
 	
 	local pos = nil
+	local team_str = nil
 	
 	if(respawn == temp_towns.BATTLEGROUND_TEAM_1) then
 		pos = table.find(team1, cid)
 		team1[pos] = nil	
+		team_str = "Time A"
 	elseif(respawn == temp_towns.BATTLEGROUND_TEAM_2) then
 		pos = table.find(team2, cid)
 		team2[pos] = nil	
+		team_str = "Time B"
 	else
 		print("[PvP Battleground] Player exiting with temporary town respawn wrong: " .. getPlayerName(cid))
 		return false
 	end
 	
-	
+	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground - " .. team_str .. "] O jogador " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") saiu da batalha.")
 	return true
 end

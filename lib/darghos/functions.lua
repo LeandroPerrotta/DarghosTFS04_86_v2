@@ -1,3 +1,12 @@
+function broadcastChannel(channelId, message, talktype)
+	local users = getChannelUsers(channelId)
+	talktype = talktype or TALKTYPE_TYPES["channel-white"]
+	
+	for k,v in pairs(users) do
+		doPlayerSendChannelMessage(v, "", message, talktype, channelId)
+	end
+end
+
 function customStaminaUpdate(cid)
 
 	if(not isPlayer(cid)) then
