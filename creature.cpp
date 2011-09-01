@@ -686,7 +686,12 @@ bool Creature::onDeath()
 	if(deny)
 		return false;
 
+    #ifdef __DARGHOS_CUSTOM__
+    int32_t i = 0, size = deathList.size(), limit = g_config.getNumber(ConfigManager::DEATH_FRAGGERS) + 1;
+    #else
 	int32_t i = 0, size = deathList.size(), limit = g_config.getNumber(ConfigManager::DEATH_ASSISTS) + 1;
+	#endif
+
 	if(limit > 0 && size > limit)
 		size = limit;
 

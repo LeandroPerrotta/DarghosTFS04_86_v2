@@ -262,6 +262,9 @@ bool ConfigManager::load()
 	m_confNumber[MAXIMUM_DOOR_LEVEL] = getGlobalNumber("maximumDoorLevel", 500);
 	m_confBool[DEATH_LIST] = getGlobalBool("deathListEnabled", true);
 	m_confNumber[DEATH_ASSISTS] = getGlobalNumber("deathAssistCount", 1);
+	#ifdef __DARGHOS_CUSTOM__
+	m_confNumber[DEATH_FRAGGERS] = getGlobalNumber("deathFraggersCount", 1);
+	#endif
 	m_confNumber[RED_DAILY_LIMIT] = getGlobalNumber("dailyFragsToRedSkull", 3);
 	m_confNumber[RED_WEEKLY_LIMIT] = getGlobalNumber("weeklyFragsToRedSkull", 5);
 	m_confNumber[RED_MONTHLY_LIMIT] = getGlobalNumber("monthlyFragsToRedSkull", 10);
