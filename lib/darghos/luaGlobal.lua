@@ -24,7 +24,7 @@ function createNewGlobalList(name)
 end
 
 function getGlobalListValue(name, key)
-	local result = db.getResult("SELECT `v`.`value` FROM `lua_global_values` `v` LEFT JOIN `lua_global_table` `t` ON `t`.`id` = `v`.`table_id` WHERE `t`.`name` = '".. name .."' AND `v`.`key` = '" .. key .. "';")
+	local result = db.getResult("SELECT `v`.`value` FROM `lua_global_value` `v` LEFT JOIN `lua_global_table` `t` ON `t`.`id` = `v`.`table_id` WHERE `t`.`name` = '".. name .."' AND `v`.`key` = '" .. key .. "';")
 	
 	local value = nil
 	
@@ -37,7 +37,7 @@ function getGlobalListValue(name, key)
 end
 
 function setGlobalListValue(name, key, value)
-	db.executeQuery("UPDATE `lua_global_value` `v` LEFT JOIN `lua_global_table` `v` ON `v`.`table_id` = `t`.`id` SET `value` = '".. value .. "' WHERE `t`.`name` = '" .. name .. "' AND `v`.`key` = '" .. key .. "';")
+	db.executeQuery("UPDATE `lua_global_value` `v` LEFT JOIN `lua_global_table` `t` ON `v`.`table_id` = `t`.`id` SET `value` = '".. value .. "' WHERE `t`.`name` = '" .. name .. "' AND `v`.`key` = '" .. key .. "';")
 end
 
 luaGlobal = {}
