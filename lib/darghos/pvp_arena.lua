@@ -222,6 +222,7 @@ function pvpArena:addPlayer(cid, inFirst)
 	
 	registerCreatureEvent(cid, "pvpArena_onLogout")
 	
+	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Arena] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") junto-se a fila para um desafio de Arena 1x1. Quer tentar derrotar-lo? Digite \"!arena join\"!")
 	doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Você se juntou a fila para um duelo de arena. Agora você deve aguardar até que apareça algum adversário, isto pode levar de alguns segundos a vários minutos.")
 	pvpArena.log(T_LOG_ALL, "pvpArena:addPlayer", "Jogador engressou na fila", {name=getCreatureName(cid)})
 	self:prepareGame()
@@ -240,6 +241,8 @@ function pvpArena:finishGame(winner)
 	
 	log.teams = teams
 	
+	local looser = nil
+		
 	for tk, tv in pairs(teams) do
 		local team = tv
 	
@@ -254,6 +257,7 @@ function pvpArena:finishGame(winner)
 					unregisterCreatureEvent(tmp_player.cid, "pvpArena_onKill")
 					doPlayerSendTextMessage(tmp_player.cid, MESSAGE_STATUS_CONSOLE_BLUE, "Parabens! É um verdadeiro vencedor! Você será levado ao local aonde estava em alguns instantes...")	
 				else
+					looser = tmp_player.cid
 					self:teleportPlayerOut(tmp_player)
 					unregisterCreatureEvent(tmp_player.cid, "pvpArena_onKill")
 					doPlayerSendTextMessage(tmp_player.cid, MESSAGE_STATUS_CONSOLE_BLUE, "Mas que pena, não foi desta vez! Você será levado ao local aonde estava em alguns instantes...")					
@@ -267,6 +271,7 @@ function pvpArena:finishGame(winner)
 		end
 	end
 	
+	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Arena] " .. getPlayerName(winner) .. " (" .. getPlayerLevel(winner) .. ") derrotou " .. getPlayerName(looser) .. " (" .. getPlayerLevel(looser) .. ") e foi o VENCEDOR da Arena 1x1!", TALKTYPE_TYPES["channel-orange"])
 	pvpArena.log(T_LOG_ALL, "pvpArena:finishGame", "Arena finalizada.", log)
 end
 
@@ -485,6 +490,7 @@ function pvpArena:run()
 	
 	addEvent(pvpArena.eventTimeRunningOut, 1000 * 60 * 4, self)
 	pvpArena.log(T_LOG_ALL, "pvpArena:run", "Arena iniciou.")
+	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Arena] Foi iniciado um duelo 1x1 entre " .. getPlayerName(team_one[1].cid) .. " (" .. getPlayerLevel(team_one[1].cid) .. ") vs " .. getPlayerName(team_two[1].cid) .. " (" .. getPlayerLevel(team_two[1].cid) .. ") na Arena!")
 	
 	return true
 end
