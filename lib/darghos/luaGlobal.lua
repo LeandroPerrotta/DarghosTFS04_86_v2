@@ -37,7 +37,12 @@ function getGlobalListValue(name, key)
 end
 
 function setGlobalListValue(name, key, value)
-	db.executeQuery("UPDATE `lua_global_value` `v` LEFT JOIN `lua_global_table` `t` ON `v`.`table_id` = `t`.`id` SET `value` = '".. value .. "' WHERE `t`.`name` = '" .. name .. "' AND `v`.`key` = '" .. key .. "';")
+
+	if(getGlobalListValue(name, key) == nil) then
+		db.executeQuery("INSERT INTO `lua_global_value` (`table_id`, `key`, `value`) VALUES ((SELECT `id` FROM `lua_global_table` WHERE `name` = '" .. name .. "'), '" .. key .. "', '".. value .. "');")
+	else
+		db.executeQuery("UPDATE `lua_global_value` `v` LEFT JOIN `lua_global_table` `t` ON `v`.`table_id` = `t`.`id` SET `value` = '".. value .. "' WHERE `t`.`name` = '" .. name .. "' AND `v`.`key` = '" .. key .. "';")
+	end
 end
 
 luaGlobal = {}
