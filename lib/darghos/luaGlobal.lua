@@ -11,16 +11,29 @@ local GlobalTable_mt = {
 	end
 }
  
-function global_table(guid)
+function global_table(name)
 	local t = {}
-	createNewGlobalList(guid)
+	local guid = useGlobalList(name)
 	t.__name = guid
 	setmetatable(t, GlobalTable_mt)
 	return t
 end
 
-function createNewGlobalList(name)
+function useGlobalList(name)
+
+	local result = db.getResult("SELECT `id` FROM `lua_global_table` WHERE `name` = '".. name .."';")
+	
+	local guid = nil
+	
+	if(result:getID() ~= -1) then
+		guid = result:getDataInt("id")
+		result:free()
+		
+		return guid
+	end	
+
 	db.executeQuery("INSERT INTO `lua_global_table` (`name`) VALUES ('" .. name .. "');")
+	return db.lastInsertId()
 end
 
 function getGlobalListValue(name, key)
