@@ -11,6 +11,8 @@
 	<event type="think" name="SkullCheck" event="script" value="skullcheck.lua"/>
 	
 	<!-- DARGHOS -->
+	<event type="leavechannel" name="onLeaveChannel" event="script" value="game/channel.lua"/>
+	
 	<event type="look" name="lookItem" event="script" value="game/look.lua"/>
 	<event type="login" name="CustomPlayerLogin" event="script" value="game/login.lua"/>
 	<event type="kill" name="pvpArena_onKill" event="script" value="game/pvp_arena.lua"/>
