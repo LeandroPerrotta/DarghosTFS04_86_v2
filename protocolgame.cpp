@@ -3095,6 +3095,18 @@ void ProtocolGame::sendChannelMessage(std::string author, std::string text, Spea
 		msg->putString(author);
 		msg->put<uint16_t>(0x00);
 		msg->put<char>(type);
+
+		#ifdef __DARGHOS_CUSTOM__
+		switch(type)
+		{
+		    case SPEAK_PRIVATE_NP:
+		    {
+		        msg->putPosition(Position(0,0,7));
+		        break;
+		    }
+		}
+		#endif
+
 		msg->put<uint16_t>(channel);
 		msg->putString(text);
 	}
