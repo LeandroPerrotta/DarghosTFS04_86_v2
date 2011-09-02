@@ -583,7 +583,7 @@ bool Combat::CombatManaFunc(Creature* caster, Creature* target, const CombatPara
     {
         uint32_t temp_towns[] = {12, 13};
 
-        if(caster->getTown() == _temp_towns[0] || target->getTown() == temp_towns[1])
+        if(caster->getTown() == temp_towns[0] || target->getTown() == temp_towns[1])
         {
             if(caster->getTown() == target->getTown())
                 change = change / 4;
