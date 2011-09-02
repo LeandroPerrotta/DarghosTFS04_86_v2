@@ -542,8 +542,19 @@ bool Combat::CombatHealthFunc(Creature* caster, Creature* target, const CombatPa
 		return false;
 
     #ifdef __DARGHOS_CUSTOM__
-    if(change < 0 && caster && caster->getPlayer() && target->getPlayer() && target->getPlayer()->getSkull() != SKULL_BLACK && !target->getPlayer()->isDoubleDamage())
-        change = change / 2;
+    if(change < 0 && caster && target && caster->getPlayer() && target->getPlayer())
+    {
+        uint32_t temp_towns[] = {12, 13};
+
+        if(caster->getTown() == _temp_towns[0] || target->getTown() == temp_towns[1])
+        {
+            if(caster->getTown() == target->getTown())
+                change = change / 4;
+        }
+
+        else if(target->getPlayer()->getSkull() != SKULL_BLACK && !target->getPlayer()->isDoubleDamage())
+            change = change / 2;
+    }
     #else
 	if(change < 0 && caster && caster->getPlayer() && target->getPlayer() && target->getPlayer()->getSkull() != SKULL_BLACK)
         change = change / 2;

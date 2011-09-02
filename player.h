@@ -745,6 +745,8 @@ class Player : public Creature, public Cylinder
 		void setDoubleDamage();
 		void removeDoubleDamage();
 		bool isDoubleDamage();
+
+
 		#endif
 
 	protected:
@@ -843,6 +845,11 @@ class Player : public Creature, public Cylinder
 
         #ifdef __DARGHOS_CUSTOM__
         bool doubleDamage;
+
+        #ifdef __DARGHOS_PVP__
+        bool isInBattleground;
+        uint8_t team_id;
+        #endif
         #endif
 
 		OperatingSystem_t operatingSystem;
