@@ -542,13 +542,13 @@ bool Combat::CombatHealthFunc(Creature* caster, Creature* target, const CombatPa
 		return false;
 
     #ifdef __DARGHOS_CUSTOM__
-    if(change < 0 && caster && target && caster = caster->getPlayer() && target = target->getPlayer())
+    if(change < 0 && caster && target && caster->getPlayer() && target->getPlayer())
     {
         uint32_t temp_towns[] = {12, 13};
 
-        if(caster->getTown() == temp_towns[0] || target->getTown() == temp_towns[1])
+        if(caster->getPlayer()->getTown() == temp_towns[0] || target->getPlayer()->getTown() == temp_towns[1])
         {
-            if(caster->getTown() == target->getTown())
+            if(caster->getPlayer()->getTown() == target->getPlayer()->getTown())
                 change = change / 4;
         }
 
@@ -579,13 +579,13 @@ bool Combat::CombatManaFunc(Creature* caster, Creature* target, const CombatPara
 	}
 
     #ifdef __DARGHOS_CUSTOM__
-    if(change < 0 && caster && target && caster = caster->getPlayer() && target = target->getPlayer())
+    if(change < 0 && caster && target && caster->getPlayer() && target->getPlayer())
     {
         uint32_t temp_towns[] = {12, 13};
 
-        if(caster->getTown() == temp_towns[0] || target->getTown() == temp_towns[1])
+        if(caster->getPlayer()->getTown() == temp_towns[0] || target->getPlayer()->getTown() == temp_towns[1])
         {
-            if(caster->getTown() == target->getTown())
+            if(caster->getPlayer()->getTown() == target->getPlayer()->getTown())
                 change = change / 4;
         }
 
