@@ -542,7 +542,7 @@ bool Combat::CombatHealthFunc(Creature* caster, Creature* target, const CombatPa
 		return false;
 
     #ifdef __DARGHOS_CUSTOM__
-    if(change < 0 && caster && target && caster->getPlayer() && target->getPlayer())
+    if(change < 0 && caster && target && caster = caster->getPlayer() && target = target->getPlayer())
     {
         uint32_t temp_towns[] = {12, 13};
 
