@@ -28,7 +28,11 @@ function onStepIn(cid, item, position, fromPosition)
 	if(item.actionid == aid.BATTLEGROUND_ENTRANCE) then
 		return pvpBattleground.onEnter(cid)
 	elseif(item.actionid == aid.BATTLEGROUND_EXIT) then
-		return pvpBattleground.onExit(cid)
+		local ret = pvpBattleground.onExit(cid)
+		if(not ret) then
+			pushBack(cid, position, fromPosition)
+			return false
+		end
 	end
 	
 	if(item.actionid >= aid.SHRINE_MIN and item.actionid <= aid.SHRINE_MAX) then
