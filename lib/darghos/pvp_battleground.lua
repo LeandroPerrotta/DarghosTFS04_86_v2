@@ -36,6 +36,8 @@ function pvpBattleground.broadcastStatistics()
 		return
 	end
 	
+	table.sort(data, function(a, b) return (a.kills ~= b.kills) and a.kills > b.kills or a.deaths < b.deaths end)
+	
 	local i = 1
 	for k,v in pairs(data) do
 		
@@ -147,6 +149,7 @@ function pvpBattleground.onEnter(cid)
 	doTeleportThing(cid, destPos)
 	doSendMagicEffect(destPos, CONST_ME_MAGIC_BLUE)
 	registerCreatureEvent(cid, "pvpBattleground_onKill")
+	setPlayerStorageValue(cid, sid.LAST_BATTLEGROUND_JOIN, os.time())
 	
 	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground - " .. team_str .. "] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") juntou-se a batalha.")
 	
@@ -154,6 +157,13 @@ function pvpBattleground.onEnter(cid)
 end
 
 function pvpBattleground.onExit(cid)
+
+	local lastJoin = getPlayerStorageValue(cid, sid.LAST_BATTLEGROUND_JOIN)
+	
+	if(lastJoin ~= -1 and os.time() < lastJoin + 60) then
+		doPlayerSendCancel(cid, "Após entrar em uma Battleground é necessario aguardar 1 minuto para sair.")
+		return false
+	end
 
 	local team1, team2 = pvpBattleground.team1, pvpBattleground.team2
 	local respawn = getPlayerTown(cid)
