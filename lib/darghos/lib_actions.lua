@@ -19,9 +19,9 @@ function defaultActions(cid, item, fromPosition, itemEx, toPosition)
 	return ret
 end
 
-unholysword = {}
+unholySword = {}
 
-function unholysword.onUse(cid, item, fromPosition, itemEx, toPosition)
+function unholySword.onUse(cid, item, fromPosition, itemEx, toPosition)
 
 	if(item2.actionid == aid.CHURCH_ALTAR) then
 		doRemoveItem(item2.uid, 1)
