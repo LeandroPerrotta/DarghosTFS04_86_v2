@@ -23,8 +23,8 @@ unholySword = {}
 
 function unholySword.onUse(cid, item, fromPosition, itemEx, toPosition)
 
-	if(item2.actionid == aid.CHURCH_ALTAR) then
-		doRemoveItem(item2.uid, 1)
+	if(itemEx.actionid == aid.CHURCH_ALTAR) then
+		doRemoveItem(itemEx.uid, 1)
 	end
 end
 
