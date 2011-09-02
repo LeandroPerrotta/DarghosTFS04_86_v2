@@ -19,6 +19,15 @@ function defaultActions(cid, item, fromPosition, itemEx, toPosition)
 	return ret
 end
 
+unholysword = {}
+
+function unholysword.onUse(cid, item, fromPosition, itemEx, toPosition)
+
+	if(item2.actionid == aid.CHURCH_ALTAR) then
+		doRemoveItem(item2.uid, 1)
+	end
+end
+
 outfitTicket = {}
 
 function outfitTicket.onUse(cid, item, fromPosition, itemEx, toPosition)
