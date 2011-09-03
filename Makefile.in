@@ -55,6 +55,7 @@ am__theforgottenserver_SOURCES_DIST = account.h actions.cpp actions.h \
 	configmanager.h connection.cpp connection.h const.h \
 	container.cpp container.h creature.cpp creature.h \
 	creatureevent.cpp creatureevent.h cylinder.cpp cylinder.h \
+	darghos_pvp.cpp darghos_pvp.h darghos_const.h \
 	database.cpp database.h databasemanager.cpp databasemanager.h \
 	databasemysql.cpp databasemysql.h databasesqlite.cpp \
 	databasesqlite.h databasepgsql.cpp databasepgsql.h depot.cpp \
@@ -92,7 +93,7 @@ am_theforgottenserver_OBJECTS = actions.$(OBJEXT) $(am__objects_1) \
 	chat.$(OBJEXT) combat.$(OBJEXT) condition.$(OBJEXT) \
 	configmanager.$(OBJEXT) connection.$(OBJEXT) \
 	container.$(OBJEXT) creature.$(OBJEXT) creatureevent.$(OBJEXT) \
-	cylinder.$(OBJEXT) database.$(OBJEXT) \
+	cylinder.$(OBJEXT) darghos_pvp.$(OBJEXT) database.$(OBJEXT) \
 	databasemanager.$(OBJEXT) $(am__objects_2) $(am__objects_3) \
 	$(am__objects_4) depot.$(OBJEXT) dispatcher.$(OBJEXT) \
 	exception.$(OBJEXT) fileloader.$(OBJEXT) game.$(OBJEXT) \
@@ -263,7 +264,8 @@ theforgottenserver_SOURCES = account.h actions.cpp actions.h $(MAYBE_OTADMIN) \
 	beds.h chat.cpp chat.h combat.cpp combat.h condition.cpp condition.h \
 	config.h configmanager.cpp configmanager.h connection.cpp connection.h \
 	const.h container.cpp container.h creature.cpp creature.h \
-	creatureevent.cpp creatureevent.h cylinder.cpp cylinder.h database.cpp \
+	creatureevent.cpp creatureevent.h cylinder.cpp cylinder.h \
+	darghos_pvp.cpp darghos_pvp.h darghos_const.h database.cpp \
 	database.h databasemanager.cpp databasemanager.h $(MAYBE_MYSQL) \
 	$(MAYBE_SQLITE) $(MAYBE_PGSQL) depot.cpp depot.h dispatcher.cpp \
 	dispatcher.h exception.cpp exception.h fileloader.cpp fileloader.h \
@@ -371,6 +373,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/creature.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/creatureevent.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cylinder.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/darghos_pvp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/database.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/databasemanager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/databasemysql.Po@am__quote@
