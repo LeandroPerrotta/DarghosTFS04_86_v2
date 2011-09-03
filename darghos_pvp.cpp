@@ -18,7 +18,7 @@ LuaInterface("Battleground Interface")
     team_one.look.legs = 114;
     team_one.look.feet = 91;
 
-	Thing* thing = env->getThingByUID(DarghosUids::BATTLEGROUND_TEAM_1_SPAWN);
+	Thing* thing = env->getThingByUID(BATTLEGROUND_TEAM_1_SPAWN);
 	team_one.spawn_pos = thing->getPosition();
 
     teams[0] = team_one;
@@ -30,7 +30,7 @@ LuaInterface("Battleground Interface")
     team_two.look.legs = 94;
     team_two.look.feet = 79;
 
-	thing = env->getThingByUID(DarghosUids::BATTLEGROUND_TEAM_2_SPAWN);
+	thing = env->getThingByUID(BATTLEGROUND_TEAM_2_SPAWN);
 	team_two.spawn_pos = thing->getPosition();
 
     teams[1] = team_two;
