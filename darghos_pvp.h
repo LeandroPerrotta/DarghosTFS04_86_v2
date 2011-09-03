@@ -29,7 +29,7 @@ class Battleground
         bool onPlayerJoin(Player* player);
         void setState(bool state){ open = state; }
         bool isOpen(){ return open; }
-		bool addTeam(const Position spawn_pos, BattlegroundTeamLook look);
+		void onInit();
 
     private:
         bool open;

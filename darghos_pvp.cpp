@@ -8,7 +8,17 @@ extern Game g_game;
 
 Battleground::Battleground()
 {
-    BattlegroundTeam team_one;
+  
+}
+
+Battleground::~Battleground()
+{
+
+}
+
+void Battleground::onInit()
+{
+  BattlegroundTeam team_one;
 
     team_one.look.head = 82;
     team_one.look.body = 114;
@@ -33,16 +43,6 @@ Battleground::Battleground()
     teams[1] = team_two;
 
     open = true;
-}
-
-Battleground::~Battleground()
-{
-
-}
-
-bool Battleground::addTeam(const Position spawn_pos, BattlegroundTeamLook look)
-{
-
 }
 
 bool Battleground::onPlayerJoin(Player* player)

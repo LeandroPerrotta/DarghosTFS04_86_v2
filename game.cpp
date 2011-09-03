@@ -54,6 +54,10 @@
 #include "vocation.h"
 #include "group.h"
 
+#ifdef __DARGHOS_PVP_SYSTEM__
+#include "darghos_pvp.h"
+#endif
+
 #ifdef __EXCEPTION_TRACER__
 #include "exception.h"
 #endif
@@ -69,6 +73,7 @@ extern MoveEvents* g_moveEvents;
 extern Weapons* g_weapons;
 extern CreatureEvents* g_creatureEvents;
 extern GlobalEvents* g_globalEvents;
+extern Battleground g_battleground;
 
 Game::Game()
 {
@@ -193,6 +198,10 @@ void Game::setGameState(GameState_t newState)
 
 				loadGameState();
 				g_globalEvents->startup();
+
+				#ifdef __DARGHOS_PVP_SYSTEM__
+				g_battleground.onInit();
+				#endif
 
 				IOBan::getInstance()->clearTemporials();
 				if(g_config.getBool(ConfigManager::INIT_PREMIUM_UPDATE))
