@@ -1,15 +1,14 @@
 #include "otpch.h"
 #include "darghos_pvp.h"
 #include "darghos_const.h"
+#include "luascript.h"
 #include "game.h"
 
 extern Game g_game;
 
-Battleground::Battleground() :
-LuaInterface("Battleground Interface")
+Battleground::Battleground()
 {
-	initState();
-	ScriptEnviroment* env = getEnv();
+	ScriptEnviroment* env = LuaInterface::getEnv();
 
     BattlegroundTeam team_one;
 
@@ -38,7 +37,12 @@ LuaInterface("Battleground Interface")
     open = true;
 }
 
-Game::~Game()
+Battleground::~Battleground()
+{
+
+}
+
+bool Battleground::addTeam(const Position spawn_pos, BattlegroundTeamLook look)
 {
 
 }

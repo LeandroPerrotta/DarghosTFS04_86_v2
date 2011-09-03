@@ -2,7 +2,6 @@
 #define __DARGHOS_PVP__
 
 #include "player.h"
-#include "luascript.h"
 #include "creature.h"
 
 typedef std::vector<Player*> PlayerVector;
@@ -22,7 +21,7 @@ typedef std::map<uint16_t, BattlegroundTeam> BattlegroundTeamMap;
 
 class Game;
 
-class Battleground : public LuaInterface
+class Battleground
 {
     public:
         Battleground();
@@ -30,6 +29,7 @@ class Battleground : public LuaInterface
         bool onPlayerJoin(Player* player);
         void setState(bool state){ open = state; }
         bool isOpen(){ return open; }
+		bool addTeam(const Position spawn_pos, BattlegroundTeamLook look);
 
     private:
         bool open;
