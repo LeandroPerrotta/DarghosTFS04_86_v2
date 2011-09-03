@@ -35,6 +35,11 @@
 #include "party.h"
 #include "npc.h"
 
+#ifdef __DARGHOS_PVP_SYSTEM__
+#include "darghos_pvp.h"
+#include "darghos_const.h"
+#endif
+
 class House;
 class NetworkMessage;
 class Weapon;
@@ -753,8 +758,8 @@ class Player : public Creature, public Cylinder
 		{ 
 			onBattleground = in; 
 		}
-		uint8_t getBattlegroundTeam() const { return team_id; }
-		void setBattlegroundTeam(uint8_t btid) { team_id = btid; onBattleground = true; }
+		Bg_Teams_t getBattlegroundTeam() const { return team_id; }
+		void setBattlegroundTeam(Bg_Teams_t tid) { team_id = tid; onBattleground = (tid == BATTLEGROUND_TEAM_NONE) ? false : true; }
 		#endif
 
 	protected:
@@ -857,7 +862,7 @@ class Player : public Creature, public Cylinder
 
         #ifdef __DARGHOS_PVP_SYSTEM__
         bool onBattleground;
-        uint8_t team_id;
+        Bg_Teams_t team_id;
         #endif
 
 		OperatingSystem_t operatingSystem;
