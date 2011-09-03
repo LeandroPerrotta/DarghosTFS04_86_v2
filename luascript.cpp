@@ -53,12 +53,20 @@
 #include "game.h"
 #include "chat.h"
 
+#ifdef __DARGHOS_PVP__
+#include "darghos_pvp.h"
+#endif
+
 extern Game g_game;
 extern Monsters g_monsters;
 extern Chat g_chat;
 extern ConfigManager g_config;
 extern Spells* g_spells;
 extern TalkActions* g_talkActions;
+
+#ifdef __DARGHOS_PVP__
+extern Battleground g_battleground;
+#endif
 
 enum
 {
@@ -2447,6 +2455,11 @@ void LuaInterface::registerFunctions()
 
 	//doPlayerRemoveDoubleDamage(cid)
 	lua_register(m_luaState, "doPlayerRemoveDoubleDamage", LuaInterface::luaDoPlayerRemoveDoubleDamage);
+	#endif
+
+	#ifdef __DARGHOS_PVP__
+	//doPlayerJoinBattleground(cid)
+	lua_register(m_luaState, "doPlayerJoinBattleground", LuaInterface::luaDoPlayerJoinBattleground);
 	#endif
 }
 
@@ -10322,6 +10335,25 @@ int32_t LuaInterface::luaDoPlayerRemoveDoubleDamage(lua_State* L)
 	{
 		player->removeDoubleDamage();
 		lua_pushboolean(L, true);
+	}
+	else
+	{
+		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushboolean(L, false);
+	}
+
+	return 1;
+}
+#endif
+
+#ifdef __DARGHOS_PVP__
+int32_t LuaInterface::luaDoPlayerJoinBattleground(lua_State* L)
+{
+	//doPlayerRemoveDoubleDamage(cid)
+	ScriptEnviroment* env = getEnv();
+	if(Player* player = env->getPlayerByUID(popNumber(L)))
+	{		
+		lua_pushboolean(L, g_battleground.onPlayerJoin(player));
 	}
 	else
 	{

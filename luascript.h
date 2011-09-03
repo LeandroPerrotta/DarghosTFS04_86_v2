@@ -79,6 +79,10 @@ class Combat;
 class CombatArea;
 class Condition;
 
+#ifdef __DARGHOS_PVP__
+class Battleground;
+#endif
+
 struct Outfit_t;
 class ScriptEnviroment
 {
@@ -720,6 +724,10 @@ class LuaInterface
 		#ifdef __DARGHOS_CUSTOM__
 		static int32_t luaDoPlayerSetDoubleDamage(lua_State* L);
 		static int32_t luaDoPlayerRemoveDoubleDamage(lua_State* L);
+		#endif
+
+		#ifdef __DARGHOS_PVP__
+		static int32_t luaDoPlayerJoinBattleground(lua_State* L);
 		#endif
 
 		lua_State* m_luaState;

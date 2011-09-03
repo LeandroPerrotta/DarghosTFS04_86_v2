@@ -745,6 +745,7 @@ class Player : public Creature, public Cylinder
 		void setDoubleDamage();
 		void removeDoubleDamage();
 		bool isDoubleDamage();
+		#endif
 
 		#ifdef __DARGHOS_PVP__
 		bool isInBattleground() const { return onBattleground; }
@@ -754,7 +755,6 @@ class Player : public Creature, public Cylinder
 		}
 		uint8_t getBattlegroundTeam() const { return team_id; }
 		void setBattlegroundTeam(uint8_t btid) { team_id = btid; onBattleground = true; }
-		#endif
 		#endif
 
 	protected:
@@ -853,11 +853,11 @@ class Player : public Creature, public Cylinder
 
         #ifdef __DARGHOS_CUSTOM__
         bool doubleDamage;
+        #endif
 
         #ifdef __DARGHOS_PVP__
         bool onBattleground;
         uint8_t team_id;
-        #endif
         #endif
 
 		OperatingSystem_t operatingSystem;

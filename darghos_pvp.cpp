@@ -38,6 +38,11 @@ LuaInterface("Battleground Interface")
     open = true;
 }
 
+Game::~Game()
+{
+
+}
+
 bool Battleground::onPlayerJoin(Player* player)
 {
     if(!isOpen())

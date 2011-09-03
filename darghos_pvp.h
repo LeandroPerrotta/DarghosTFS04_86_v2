@@ -20,12 +20,11 @@ struct BattlegroundTeam {
 
 typedef std::map<uint16_t, BattlegroundTeam> BattlegroundTeamMap;
 
-
-class Battleground;
 class Battleground : public LuaInterface
 {
     public:
         Battleground();
+		virtual ~Battleground();
         bool onPlayerJoin(Player* player);
         void setState(bool state){ open = state; }
         bool isOpen(){ return open; }

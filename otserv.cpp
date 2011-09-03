@@ -62,6 +62,10 @@
 #include "vocation.h"
 #include "group.h"
 
+#ifdef __DARGHOS_PVP__
+#include "darghos_pvp.h"
+#endif
+
 #include "monsters.h"
 #ifdef __OTSERV_ALLOCATOR__
 #include "allocator.h"
@@ -88,6 +92,10 @@ Game g_game;
 Chat g_chat;
 Monsters g_monsters;
 Npcs g_npcs;
+
+#ifdef __DARGHOS_PVP__
+Battleground g_battleground;
+#endif
 
 boost::mutex g_loaderLock;
 boost::condition_variable g_loaderSignal;
