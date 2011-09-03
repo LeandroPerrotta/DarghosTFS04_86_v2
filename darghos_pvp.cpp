@@ -8,8 +8,6 @@ extern Game g_game;
 
 Battleground::Battleground()
 {
-	ScriptEnviroment* env = LuaInterface::getEnv();
-
     BattlegroundTeam team_one;
 
     team_one.look.head = 82;
