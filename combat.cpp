@@ -541,21 +541,28 @@ bool Combat::CombatHealthFunc(Creature* caster, Creature* target, const CombatPa
 	if(g_game.combatBlockHit(params.combatType, caster, target, change, params.blockedByShield, params.blockedByArmor))
 		return false;
 
-    #ifdef __DARGHOS_CUSTOM__
+
+	#ifdef __DARGHOS_CUSTOM__ || __DARGHOS_PVP_SYSTEM__
     if(change < 0 && caster && target && caster->getPlayer() && target->getPlayer())
     {
-        uint32_t temp_towns[] = {12, 13};
+		bool casterOnBattleground = false;
 
-        if(caster->getPlayer()->getTown() == temp_towns[0] || target->getPlayer()->getTown() == temp_towns[1])
-        {
-            if(caster->getPlayer()->getTown() == target->getPlayer()->getTown())
-                change = change / 4;
-        }
+		#ifdef __DARGHOS_PVP_SYSTEM__
+		if(caster->getPlayer()->isInBattleground())
+		{
+			casterOnBattleground = true;
 
-        else if(target->getPlayer()->getSkull() != SKULL_BLACK && !target->getPlayer()->isDoubleDamage())
+			if(caster->getPlayer()->getBattlegroundTeam() == target->getPlayer()->getBattlegroundTeam())
+				change = change / 4;		
+		}
+		#endif
+
+        else if(!casterOnBattleground && target->getPlayer()->getSkull() != SKULL_BLACK && !target->getPlayer()->isDoubleDamage())
             change = change / 2;
     }
-    #else
+	#endif
+
+	#ifndef __DARGHOS_CUSTOM__ && __DARGHOS_PVP_SYSTEM__
 	if(change < 0 && caster && caster->getPlayer() && target->getPlayer() && target->getPlayer()->getSkull() != SKULL_BLACK)
         change = change / 2;
 	#endif
@@ -578,21 +585,27 @@ bool Combat::CombatManaFunc(Creature* caster, Creature* target, const CombatPara
 			change = random_range(var->minChange, var->maxChange, DISTRO_NORMAL);
 	}
 
-    #ifdef __DARGHOS_CUSTOM__
+	#ifdef __DARGHOS_CUSTOM__ || __DARGHOS_PVP_SYSTEM__
     if(change < 0 && caster && target && caster->getPlayer() && target->getPlayer())
     {
-        uint32_t temp_towns[] = {12, 13};
+		bool casterOnBattleground = false;
 
-        if(caster->getPlayer()->getTown() == temp_towns[0] || target->getPlayer()->getTown() == temp_towns[1])
-        {
-            if(caster->getPlayer()->getTown() == target->getPlayer()->getTown())
-                change = change / 4;
-        }
+		#ifdef __DARGHOS_PVP_SYSTEM__
+		if(caster->getPlayer()->isInBattleground())
+		{
+			casterOnBattleground = true;
 
-        else if(target->getPlayer()->getSkull() != SKULL_BLACK && !target->getPlayer()->isDoubleDamage())
+			if(caster->getPlayer()->getBattlegroundTeam() == target->getPlayer()->getBattlegroundTeam())
+				change = change / 4;
+		}
+		#endif
+
+        else if(!casterOnBattleground && target->getPlayer()->getSkull() != SKULL_BLACK && !target->getPlayer()->isDoubleDamage())
             change = change / 2;
     }
-    #else
+	#endif
+
+	#ifndef __DARGHOS_CUSTOM__ && __DARGHOS_PVP_SYSTEM__
 	if(change < 0 && caster && caster->getPlayer() && target->getPlayer() && target->getPlayer()->getSkull() != SKULL_BLACK)
         change = change / 2;
 	#endif

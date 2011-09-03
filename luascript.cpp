@@ -2468,6 +2468,9 @@ void LuaInterface::registerFunctions()
 	#ifdef __DARGHOS_PVP_SYSTEM__
 	//doPlayerJoinBattleground(cid)
 	lua_register(m_luaState, "doPlayerJoinBattleground", LuaInterface::luaDoPlayerJoinBattleground);
+
+	//doPlayerLeaveBattleground(cid)
+	lua_register(m_luaState, "doPlayerLeaveBattleground", LuaInterface::luaDoPlayerLeaveBattleground);
 	#endif
 }
 
@@ -10357,11 +10360,28 @@ int32_t LuaInterface::luaDoPlayerRemoveDoubleDamage(lua_State* L)
 #ifdef __DARGHOS_PVP_SYSTEM__
 int32_t LuaInterface::luaDoPlayerJoinBattleground(lua_State* L)
 {
-	//doPlayerRemoveDoubleDamage(cid)
+	//doPlayerJoinBattleground(cid)
 	ScriptEnviroment* env = getEnv();
 	if(Player* player = env->getPlayerByUID(popNumber(L)))
 	{		
 		lua_pushboolean(L, g_battleground.onPlayerJoin(player));
+	}
+	else
+	{
+		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushboolean(L, false);
+	}
+
+	return 1;
+}
+
+int32_t LuaInterface::luaDoPlayerLeaveBattleground(lua_State* L)
+{
+	//doPlayerLeaveBattleground(cid)
+	ScriptEnviroment* env = getEnv();
+	if(Player* player = env->getPlayerByUID(popNumber(L)))
+	{		
+		lua_pushboolean(L, g_battleground.playerKick(player));
 	}
 	else
 	{

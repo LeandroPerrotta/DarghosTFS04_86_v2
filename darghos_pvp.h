@@ -2,22 +2,29 @@
 #define __DARGHOS_PVP__
 
 #include "player.h"
-#include "creature.h"
 
-typedef std::vector<Player*> PlayerVector;
+#define PLAYER_LEAVE_TIME_LIMIT 60
 
-struct BattlegroundTeamLook
+typedef std::map<uint32_t, Bg_PlayerInfo_t> PlayersMap;
+typedef std::map<Bg_Teams_t, Bg_Team_t> BgTeamsMap;
+
+struct Bg_TeamLook_t
 {
     uint8_t head, body, legs, feet;
 };
 
-struct BattlegroundTeam {
-    PlayerVector players;
-    BattlegroundTeamLook look;
-    Position spawn_pos;
+struct Bg_PlayerInfo_t
+{
+	Player* player;
+	time_t join_in;
+	Outfit_t default_outfit;
 };
 
-typedef std::map<uint16_t, BattlegroundTeam> BattlegroundTeamMap;
+struct Bg_Team_t {
+    PlayersMap players;
+    Bg_TeamLook_t look;
+    Position spawn_pos;
+};
 
 class Game;
 
@@ -27,13 +34,15 @@ class Battleground
         Battleground();
 		virtual ~Battleground();
         bool onPlayerJoin(Player* player);
+		bool playerKick(Player* player);
         void setState(bool state){ open = state; }
         bool isOpen(){ return open; }
 		void onInit();
 
     private:
         bool open;
-        BattlegroundTeamMap teams;
+        BgTeamsMap teamsMap;
+		Position leave_pos;
 };
 
 #endif
