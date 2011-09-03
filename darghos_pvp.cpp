@@ -82,7 +82,7 @@ bool Battleground::onPlayerJoin(Player* player)
 	g_game.internalTeleport(player, team.spawn_pos, true);
 	g_game.addMagicEffect(oldPos, MAGIC_EFFECT_TELEPORT);
 
-	team.players.insert(playerInfo);
+	team.players[player->getGUID()] = playerInfo;
 
     return true;
 }
