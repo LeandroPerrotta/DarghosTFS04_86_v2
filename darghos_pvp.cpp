@@ -1,6 +1,5 @@
 #include "otpch.h"
 #include "darghos_pvp.h"
-#include "darghos_const.h"
 #include "luascript.h"
 #include "game.h"
 #include "creature.h"
