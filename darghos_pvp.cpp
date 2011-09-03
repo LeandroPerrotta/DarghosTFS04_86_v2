@@ -57,7 +57,7 @@ bool Battleground::onPlayerJoin(Player* player)
     if(!isOpen())
         return false;
 
-	Bg_Teams_t team_id = (teamsMap.find(BATTLEGROUND_TEAM_ONE) > teamsMap.find(BATTLEGROUND_TEAM_TWO)) ? BATTLEGROUND_TEAM_TWO : BATTLEGROUND_TEAM_ONE;
+	Bg_Teams_t team_id = (teamsMap[BATTLEGROUND_TEAM_ONE].players.size() > teamsMap[BATTLEGROUND_TEAM_TWO].players.size()) ? BATTLEGROUND_TEAM_TWO : BATTLEGROUND_TEAM_ONE;
 	Bg_Team_t team = teamsMap[team_id];
 
 	player->setBattlegroundTeam(team_id);
@@ -89,13 +89,13 @@ bool Battleground::onPlayerJoin(Player* player)
 
 bool Battleground::playerKick(Player* player)
 {
-	Bg_Team_t team = teamsMap.find(player->getBattlegroundTeam());
+	Bg_Team_t team = teamsMap[player->getBattlegroundTeam()];
 	Bg_PlayerInfo_t playerInfo = team.players[player->getGUID()];
 
 	if(playerInfo.join_in + PLAYER_LEAVE_TIME_LIMIT < time(NULL))
 		return false;
 
-	player->setBattlegroundTeam((uint8_t)BATTLEGROUND_TEAM_NONE);
+	player->setBattlegroundTeam(BATTLEGROUND_TEAM_NONE);
 
 	Outfit_t outfit_default = playerInfo.default_outfit;
 	player->changeOutfit(outfit_default, false);
