@@ -237,6 +237,14 @@ void ScriptEnviroment::removeUniqueThing(Thing* thing)
 		m_globalMap.erase(it);
 }
 
+#ifdef __DARGHOS_CUSTOM__
+Thing* ScriptEnviroment::getUniqueThing(uint32_t uid)
+{
+	Thing* thing = m_globalMap[uid];
+	return thing;
+}
+#endif
+
 uint32_t ScriptEnviroment::addThing(Thing* thing)
 {
 	if(!thing || thing->isRemoved())

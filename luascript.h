@@ -143,6 +143,9 @@ class ScriptEnviroment
 
 		static void addUniqueThing(Thing* thing);
 		static void removeUniqueThing(Thing* thing);
+		#ifdef __DARGHOS_CUSTOM__
+		static Thing* getUniqueThing(uint32_t uid);
+		#endif
 
 		static uint32_t getLastConditionId() {return m_lastConditionId;}
 		static uint32_t getLastCombatId() {return m_lastCombatId;}
