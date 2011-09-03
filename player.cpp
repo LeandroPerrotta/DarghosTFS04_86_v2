@@ -70,7 +70,7 @@ Player::Player(const std::string& _name, ProtocolGame* p):
     doubleDamage = false;
 
     #ifdef __DARGHOS_PVP__
-    isInBattleground = false;
+    onBattleground = false;
     team_id = 0;
     #endif
     #endif

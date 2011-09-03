@@ -35,6 +35,7 @@
 
 #define __REMOVE_AFK_FROM_STATUS__
 #define __DARGHOS_CUSTOM__
+#define __DARGHOS_PVP__
 
 #undef MULTI_SQL_DRIVERS
 #define SQL_DRIVERS __USE_SQLITE__+__USE_MYSQL__+__USE_PGSQL__
