@@ -1,3 +1,5 @@
+#ifndef __DARGHOS_CONST__
+#define __DARGHOS_CONST__
 
 #define UIDS_START_RANGE 20000
 
@@ -14,3 +16,5 @@ enum DarghosUids
     BATTLEGROUND_TEAM_2_SPAWN,
 	BATTLEGROUND_LEAVE_POINT
 };
+
+#endif
