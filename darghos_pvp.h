@@ -9,11 +9,6 @@ typedef std::vector<Player*> PlayerVector;
 
 struct BattlegroundTeamLook
 {
-	BattlegroundTeamLook()
-	{
-		head, body, legs, feet = 0;
-	}
-
     uint8_t head, body, legs, feet;
 };
 
