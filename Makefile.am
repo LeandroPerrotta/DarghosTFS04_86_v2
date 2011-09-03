@@ -28,7 +28,7 @@ theforgottenserver_SOURCES = account.h actions.cpp actions.h $(MAYBE_OTADMIN) \
 	beds.h chat.cpp chat.h combat.cpp combat.h condition.cpp condition.h \
 	config.h configmanager.cpp configmanager.h connection.cpp connection.h \
 	const.h container.cpp container.h creature.cpp creature.h \
-	creatureevent.cpp creatureevent.h cylinder.cpp cylinder.h arghos_pvp.cpp darghos_pvp.h darghos_const.h database.cpp \
+	creatureevent.cpp creatureevent.h cylinder.cpp cylinder.h darghos_pvp.cpp darghos_pvp.h darghos_const.h database.cpp \
 	database.h databasemanager.cpp databasemanager.h $(MAYBE_MYSQL) \
 	$(MAYBE_SQLITE) $(MAYBE_PGSQL) depot.cpp depot.h dispatcher.cpp \
 	dispatcher.h exception.cpp exception.h fileloader.cpp fileloader.h \
