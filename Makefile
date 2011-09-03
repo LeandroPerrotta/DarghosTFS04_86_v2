@@ -55,7 +55,7 @@ am__theforgottenserver_SOURCES_DIST = account.h actions.cpp actions.h \
 	configmanager.h connection.cpp connection.h const.h \
 	container.cpp container.h creature.cpp creature.h \
 	creatureevent.cpp creatureevent.h cylinder.cpp cylinder.h \
-	database.cpp database.h databasemanager.cpp databasemanager.h \
+	darghos_pvp.cpp darghos_pvp.h darghos_const.h database.cpp database.h databasemanager.cpp databasemanager.h \
 	databasemysql.cpp databasemysql.h databasesqlite.cpp \
 	databasesqlite.h databasepgsql.cpp databasepgsql.h depot.cpp \
 	depot.h dispatcher.cpp dispatcher.h exception.cpp exception.h \
@@ -263,7 +263,7 @@ theforgottenserver_SOURCES = account.h actions.cpp actions.h $(MAYBE_OTADMIN) \
 	beds.h chat.cpp chat.h combat.cpp combat.h condition.cpp condition.h \
 	config.h configmanager.cpp configmanager.h connection.cpp connection.h \
 	const.h container.cpp container.h creature.cpp creature.h \
-	creatureevent.cpp creatureevent.h cylinder.cpp cylinder.h database.cpp \
+	creatureevent.cpp creatureevent.h cylinder.cpp cylinder.h darghos_pvp.cpp darghos_pvp.h darghos_const.h database.cpp \
 	database.h databasemanager.cpp databasemanager.h $(MAYBE_MYSQL) \
 	$(MAYBE_SQLITE) $(MAYBE_PGSQL) depot.cpp depot.h dispatcher.cpp \
 	dispatcher.h exception.cpp exception.h fileloader.cpp fileloader.h \
@@ -371,6 +371,7 @@ include ./$(DEPDIR)/container.Po
 include ./$(DEPDIR)/creature.Po
 include ./$(DEPDIR)/creatureevent.Po
 include ./$(DEPDIR)/cylinder.Po
+include ./$(DEPDIR)/darghos_pvp.Po
 include ./$(DEPDIR)/database.Po
 include ./$(DEPDIR)/databasemanager.Po
 include ./$(DEPDIR)/databasemysql.Po
