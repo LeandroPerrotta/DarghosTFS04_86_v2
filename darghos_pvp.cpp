@@ -8,7 +8,7 @@ extern Game g_game;
 Battleground::Battleground() :
 LuaInterface("Battleground Interface")
 {
-	LuaInterface.initState();
+	initState();
 	ScriptEnviroment* env = getEnv();
 
     BattlegroundTeam team_one;
@@ -30,7 +30,7 @@ LuaInterface("Battleground Interface")
     team_two.look.legs = 94;
     team_two.look.feet = 79;
 
-	Thing* thing = env->getThingByUID(DarghosUids::BATTLEGROUND_TEAM_2_SPAWN);
+	thing = env->getThingByUID(DarghosUids::BATTLEGROUND_TEAM_2_SPAWN);
 	team_two.spawn_pos = thing->getPosition();
 
     teams[1] = team_two;
