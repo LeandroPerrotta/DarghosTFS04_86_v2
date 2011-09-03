@@ -34,8 +34,6 @@ class Battleground : public LuaInterface
     private:
         bool open;
         BattlegroundTeamMap teams;
-
-		friend class Battleground;
 };
 
 #endif
