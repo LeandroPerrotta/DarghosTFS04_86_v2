@@ -585,7 +585,7 @@ bool Combat::CombatManaFunc(Creature* caster, Creature* target, const CombatPara
 			change = random_range(var->minChange, var->maxChange, DISTRO_NORMAL);
 	}
 
-	#ifdef __DARGHOS_CUSTOM__ || __DARGHOS_PVP_SYSTEM__
+	#if defined __DARGHOS_CUSTOM__ || defined __DARGHOS_PVP_SYSTEM__
     if(change < 0 && caster && target && caster->getPlayer() && target->getPlayer())
     {
 		bool casterOnBattleground = false;
@@ -605,7 +605,7 @@ bool Combat::CombatManaFunc(Creature* caster, Creature* target, const CombatPara
     }
 	#endif
 
-	#ifndef __DARGHOS_CUSTOM__ && __DARGHOS_PVP_SYSTEM__
+	#if defined __DARGHOS_CUSTOM__ && defined __DARGHOS_PVP_SYSTEM__
 	if(change < 0 && caster && caster->getPlayer() && target->getPlayer() && target->getPlayer()->getSkull() != SKULL_BLACK)
         change = change / 2;
 	#endif
