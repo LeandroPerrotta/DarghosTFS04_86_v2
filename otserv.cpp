@@ -62,7 +62,7 @@
 #include "vocation.h"
 #include "group.h"
 
-#ifdef __DARGHOS_PVP__
+#ifdef __DARGHOS_PVP_SYSTEM__
 #include "darghos_pvp.h"
 #endif
 
@@ -93,7 +93,7 @@ Chat g_chat;
 Monsters g_monsters;
 Npcs g_npcs;
 
-#ifdef __DARGHOS_PVP__
+#ifdef __DARGHOS_PVP_SYSTEM__
 Battleground g_battleground;
 #endif
 

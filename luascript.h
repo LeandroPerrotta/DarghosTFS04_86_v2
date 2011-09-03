@@ -79,7 +79,7 @@ class Combat;
 class CombatArea;
 class Condition;
 
-#ifdef __DARGHOS_PVP__
+#ifdef __DARGHOS_PVP_SYSTEM__
 class Battleground;
 #endif
 
@@ -726,7 +726,7 @@ class LuaInterface
 		static int32_t luaDoPlayerRemoveDoubleDamage(lua_State* L);
 		#endif
 
-		#ifdef __DARGHOS_PVP__
+		#ifdef __DARGHOS_PVP_SYSTEM__
 		static int32_t luaDoPlayerJoinBattleground(lua_State* L);
 		#endif
 

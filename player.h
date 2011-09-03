@@ -747,7 +747,7 @@ class Player : public Creature, public Cylinder
 		bool isDoubleDamage();
 		#endif
 
-		#ifdef __DARGHOS_PVP__
+		#ifdef __DARGHOS_PVP_SYSTEM__
 		bool isInBattleground() const { return onBattleground; }
 		void setIsInBattleground(bool in) 
 		{ 
@@ -855,7 +855,7 @@ class Player : public Creature, public Cylinder
         bool doubleDamage;
         #endif
 
-        #ifdef __DARGHOS_PVP__
+        #ifdef __DARGHOS_PVP_SYSTEM__
         bool onBattleground;
         uint8_t team_id;
         #endif

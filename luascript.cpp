@@ -53,7 +53,7 @@
 #include "game.h"
 #include "chat.h"
 
-#ifdef __DARGHOS_PVP__
+#ifdef __DARGHOS_PVP_SYSTEM__
 #include "darghos_pvp.h"
 #endif
 
@@ -64,7 +64,7 @@ extern ConfigManager g_config;
 extern Spells* g_spells;
 extern TalkActions* g_talkActions;
 
-#ifdef __DARGHOS_PVP__
+#ifdef __DARGHOS_PVP_SYSTEM__
 extern Battleground g_battleground;
 #endif
 
@@ -2457,7 +2457,7 @@ void LuaInterface::registerFunctions()
 	lua_register(m_luaState, "doPlayerRemoveDoubleDamage", LuaInterface::luaDoPlayerRemoveDoubleDamage);
 	#endif
 
-	#ifdef __DARGHOS_PVP__
+	#ifdef __DARGHOS_PVP_SYSTEM__
 	//doPlayerJoinBattleground(cid)
 	lua_register(m_luaState, "doPlayerJoinBattleground", LuaInterface::luaDoPlayerJoinBattleground);
 	#endif
@@ -10346,7 +10346,7 @@ int32_t LuaInterface::luaDoPlayerRemoveDoubleDamage(lua_State* L)
 }
 #endif
 
-#ifdef __DARGHOS_PVP__
+#ifdef __DARGHOS_PVP_SYSTEM__
 int32_t LuaInterface::luaDoPlayerJoinBattleground(lua_State* L)
 {
 	//doPlayerRemoveDoubleDamage(cid)

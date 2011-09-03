@@ -20,6 +20,8 @@ struct BattlegroundTeam {
 
 typedef std::map<uint16_t, BattlegroundTeam> BattlegroundTeamMap;
 
+class Game;
+
 class Battleground : public LuaInterface
 {
     public:
@@ -32,6 +34,8 @@ class Battleground : public LuaInterface
     private:
         bool open;
         BattlegroundTeamMap teams;
+
+		friend class Battleground;
 };
 
 #endif
