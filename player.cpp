@@ -72,7 +72,7 @@ Player::Player(const std::string& _name, ProtocolGame* p):
 
     #ifdef __DARGHOS_PVP_SYSTEM__
     onBattleground = false;
-    team_id = 0;
+    team_id = BATTLEGROUND_TEAM_NONE;
     #endif
 
 	lastAttackBlockType = BLOCK_NONE;
