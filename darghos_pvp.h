@@ -50,6 +50,8 @@ class Battleground
         bool open;
         BgTeamsMap teamsMap;
 		Position leave_pos;
+		void addPlayer(uint32_t player_id, Bg_PlayerInfo_t playerInfo, Bg_Teams_t team_id){ teamsMap[team_id].players[player_id] = playerInfo; }
+		void removePlayer(uint32_t player_id, Bg_Teams_t team_id){ teamsMap[team_id].players.erase(player_id); }
 };
 
 #endif

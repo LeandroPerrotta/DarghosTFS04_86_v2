@@ -557,7 +557,7 @@ bool Combat::CombatHealthFunc(Creature* caster, Creature* target, const CombatPa
 		}
 		#endif
 
-        else if(!casterOnBattleground && target->getPlayer()->getSkull() != SKULL_BLACK && !target->getPlayer()->isDoubleDamage())
+        if(!casterOnBattleground && target->getPlayer()->getSkull() != SKULL_BLACK && !target->getPlayer()->isDoubleDamage())
             change = change / 2;
     }
 	#endif
@@ -600,7 +600,7 @@ bool Combat::CombatManaFunc(Creature* caster, Creature* target, const CombatPara
 		}
 		#endif
 
-        else if(!casterOnBattleground && target->getPlayer()->getSkull() != SKULL_BLACK && !target->getPlayer()->isDoubleDamage())
+        if(!casterOnBattleground && target->getPlayer()->getSkull() != SKULL_BLACK && !target->getPlayer()->isDoubleDamage())
             change = change / 2;
     }
 	#endif

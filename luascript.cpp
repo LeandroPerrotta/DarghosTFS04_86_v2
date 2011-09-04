@@ -10364,7 +10364,14 @@ int32_t LuaInterface::luaDoPlayerJoinBattleground(lua_State* L)
 	ScriptEnviroment* env = getEnv();
 	if(Player* player = env->getPlayerByUID(popNumber(L)))
 	{		
-		lua_pushboolean(L, g_battleground.onPlayerJoin(player));
+		if(g_battleground.onPlayerJoin(player))
+		{
+			lua_pushnumber(L, player->getBattlegroundTeam());
+		}
+		else
+		{
+			lua_pushboolean(L, false);
+		}
 	}
 	else
 	{
