@@ -46,7 +46,7 @@ void Battleground::onInit()
 	if(thing)
 		team_two.spawn_pos = thing->getPosition();
 
-    teamsMap[BATTLEGROUND_TEAM_ONE] = team_two;
+    teamsMap[BATTLEGROUND_TEAM_TWO] = team_two;
 
     open = true;
 }
