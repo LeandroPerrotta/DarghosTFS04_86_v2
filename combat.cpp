@@ -562,7 +562,7 @@ bool Combat::CombatHealthFunc(Creature* caster, Creature* target, const CombatPa
     }
 	#endif
 
-	#if defined __DARGHOS_CUSTOM__ && defined __DARGHOS_PVP_SYSTEM__
+	#if !defined __DARGHOS_CUSTOM__ && !defined __DARGHOS_PVP_SYSTEM__
 	if(change < 0 && caster && caster->getPlayer() && target->getPlayer() && target->getPlayer()->getSkull() != SKULL_BLACK)
         change = change / 2;
 	#endif
@@ -605,7 +605,7 @@ bool Combat::CombatManaFunc(Creature* caster, Creature* target, const CombatPara
     }
 	#endif
 
-	#if defined __DARGHOS_CUSTOM__ && defined __DARGHOS_PVP_SYSTEM__
+	#if !defined __DARGHOS_CUSTOM__ && !defined __DARGHOS_PVP_SYSTEM__
 	if(change < 0 && caster && caster->getPlayer() && target->getPlayer() && target->getPlayer()->getSkull() != SKULL_BLACK)
         change = change / 2;
 	#endif
