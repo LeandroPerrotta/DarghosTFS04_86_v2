@@ -5,12 +5,26 @@
 #include "darghos_const.h"
 
 #define PLAYER_LEAVE_TIME_LIMIT 60
+#define LIMIT_FRAGS_SAME_TARGET 3
+
+typedef std::list<uint32_t> AssistsList;
+typedef std::list<Bg_DeathEntry_t> DeathsList;
+typedef std::map<uint32_t, DeathsList> DeathsMap;
+
+struct Bg_DeathEntry_t
+{
+	uint32_t lasthit;
+	time_t date;
+	AssistsList assists;
+};
 
 struct Bg_PlayerInfo_t
 {
 	Player* player;
 	time_t join_in;
 	Outfit_t default_outfit;
+	Position masterPosition;
+	uint16_t kills, assists, deaths;
 };
 
 struct Bg_TeamLook_t
@@ -42,6 +56,7 @@ class Battleground
 		virtual ~Battleground();
         bool onPlayerJoin(Player* player);
 		bool playerKick(Player* player);
+		void onPlayerDeath(Player* killer, DeathList deathList);
         void setState(bool state){ open = state; }
         bool isOpen(){ return open; }
 		void onInit();
@@ -49,9 +64,12 @@ class Battleground
     private:
         bool open;
         BgTeamsMap teamsMap;
+		DeathsMap deathsMap;
 		Position leave_pos;
 		void addPlayer(uint32_t player_id, Bg_PlayerInfo_t playerInfo, Bg_Teams_t team_id){ teamsMap[team_id].players.insert(std::make_pair(player_id, playerInfo)); }
 		void removePlayer(uint32_t player_id, Bg_Teams_t team_id){ teamsMap[team_id].players.erase(player_id); }
+		void addDeathEntry(uint32_t player_id, Bg_DeathEntry_t deathEntry);
+		bool isValidKiller(uint32_t killer_id, uint32_t target);
 };
 
 #endif

@@ -32,6 +32,11 @@
 #include "configmanager.h"
 #include "game.h"
 
+#ifdef __DARGHOS_PVP_SYSTEM__
+#include "darghos_pvp.h"
+#endif
+
+
 boost::recursive_mutex AutoId::lock;
 uint32_t AutoId::count = 1000;
 AutoId::List AutoId::list;
@@ -39,6 +44,10 @@ AutoId::List AutoId::list;
 extern Game g_game;
 extern ConfigManager g_config;
 extern CreatureEvents* g_creatureEvents;
+
+#ifdef __DARGHOS_PVP_SYSTEM__
+extern Battleground g_battleground;
+#endif
 
 Creature::Creature()
 {
@@ -685,6 +694,10 @@ bool Creature::onDeath()
 
 	if(deny)
 		return false;
+
+	#ifdef __DARGHOS_PVP_SYSTEM__
+	g_battleground.onPlayerDeath((this)->getPlayer(), deathList);
+	#endif
 
     #ifdef __DARGHOS_CUSTOM__
     int32_t i = 0, size = deathList.size(), limit = g_config.getNumber(ConfigManager::DEATH_FRAGGERS) + 1;

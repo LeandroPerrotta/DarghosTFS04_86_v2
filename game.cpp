@@ -73,7 +73,10 @@ extern MoveEvents* g_moveEvents;
 extern Weapons* g_weapons;
 extern CreatureEvents* g_creatureEvents;
 extern GlobalEvents* g_globalEvents;
+
+#ifdef __DARGHOS_PVP_SYSTEM__
 extern Battleground g_battleground;
+#endif
 
 Game::Game()
 {
