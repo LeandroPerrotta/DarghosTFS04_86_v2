@@ -8,8 +8,6 @@
 #define LIMIT_FRAGS_SAME_TARGET 3
 
 typedef std::list<uint32_t> AssistsList;
-typedef std::list<Bg_DeathEntry_t> DeathsList;
-typedef std::map<uint32_t, DeathsList> DeathsMap;
 
 struct Bg_DeathEntry_t
 {
@@ -17,6 +15,9 @@ struct Bg_DeathEntry_t
 	time_t date;
 	AssistsList assists;
 };
+
+typedef std::list<Bg_DeathEntry_t> DeathsList;
+typedef std::map<uint32_t, DeathsList> DeathsMap;
 
 struct Bg_PlayerInfo_t
 {
