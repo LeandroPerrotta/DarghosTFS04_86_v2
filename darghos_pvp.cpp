@@ -19,7 +19,8 @@ Battleground::~Battleground()
 void Battleground::onInit()
 {
 	Thing* thing = ScriptEnviroment::getUniqueThing((uint32_t)BATTLEGROUND_LEAVE_POINT);
-	leave_pos = thing->getPosition();
+	if(thing)
+		leave_pos = thing->getPosition();
 
     Bg_Team_t team_one;
 
@@ -29,7 +30,6 @@ void Battleground::onInit()
     team_one.look.feet = 91;
 
 	thing = ScriptEnviroment::getUniqueThing((uint32_t)BATTLEGROUND_TEAM_1_SPAWN);
-
 	if(thing)
 		team_one.spawn_pos = thing->getPosition();
 
@@ -43,7 +43,6 @@ void Battleground::onInit()
     team_two.look.feet = 79;
 
 	thing = ScriptEnviroment::getUniqueThing((uint32_t)BATTLEGROUND_TEAM_2_SPAWN);
-
 	if(thing)
 		team_two.spawn_pos = thing->getPosition();
 

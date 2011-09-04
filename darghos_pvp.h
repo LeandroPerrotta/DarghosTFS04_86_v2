@@ -21,6 +21,11 @@ struct Bg_TeamLook_t
 typedef std::map<uint32_t, Bg_PlayerInfo_t> PlayersMap;
 
 struct Bg_Team_t {
+
+	Bg_Team_t (){
+		
+	}
+
     PlayersMap players;
     Bg_TeamLook_t look;
     Position spawn_pos;
