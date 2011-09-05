@@ -302,11 +302,6 @@ bool Battleground::storePlayerKill(uint32_t player_id, bool lasthit)
 {
 	Database* db = Database::getInstance();
 	DBQuery query;
-
-	DBTransaction trans(db);
-	if(!trans.begin())
-		return false;
-
 	query << "INSERT INTO `custom_pvp_kills` (`player_id`, `is_frag`, `date`, `type`) VALUES (" << player_id << ", " << ((lasthit) ? 1 : 0) << ", " << time(NULL) << ", " << type << ")";
 	if(!db->query(query.str()))
 		return false;
@@ -318,10 +313,6 @@ bool Battleground::storePlayerDeath(uint32_t player_id)
 {
 	Database* db = Database::getInstance();
 	DBQuery query;
-
-	DBTransaction trans(db);
-	if(!trans.begin())
-		return false;
 
 	query << "INSERT INTO `custom_pvp_deaths` (`player_id`, `date`, `type`) VALUES (" << player_id << ", " << time(NULL) << ", " << type << ")";
 	if(!db->query(query.str()))

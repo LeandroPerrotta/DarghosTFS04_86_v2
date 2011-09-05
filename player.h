@@ -758,7 +758,7 @@ class Player : public Creature, public Cylinder
 		{ 
 			onBattleground = in; 
 		}
-		Bg_Teams_t getBattlegroundTeam() { return team_id; }
+		Bg_Teams_t getBattlegroundTeam() const { return team_id; }
 		void setBattlegroundTeam(Bg_Teams_t tid) { team_id = tid; onBattleground = (tid == BATTLEGROUND_TEAM_NONE) ? false : true; }
 		#endif
 
