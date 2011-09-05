@@ -51,6 +51,9 @@ enum CreatureEventType_t
 	CREATURE_EVENT_KILL,
 	CREATURE_EVENT_DEATH,
 	CREATURE_EVENT_PREPAREDEATH
+	#ifdef __DARGHOS_PVP_SYSTEM__
+	, CREATURE_EVENT_BG_FRAG
+	#endif
 };
 
 enum StatsChange_t
@@ -135,6 +138,10 @@ class CreatureEvent : public Event
 		uint32_t executeKill(Creature* creature, Creature* target, const DeathEntry& entry);
 		uint32_t executeDeath(Creature* creature, Item* corpse, DeathList deathList);
 		uint32_t executePrepareDeath(Creature* creature, DeathList deathList);
+
+		#ifdef __DARGHOS_PVP_SYSTEM__
+		uint32_t executeBgFrag(Player* killer, Player* target);
+		#endif
 		//
 
 	protected:

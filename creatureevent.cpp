@@ -202,6 +202,10 @@ bool CreatureEvent::configureEvent(xmlNodePtr p)
 		m_type = CREATURE_EVENT_DEATH;
 	else if(tmpStr == "preparedeath")
 		m_type = CREATURE_EVENT_PREPAREDEATH;
+	#ifdef __DARGHOS_PVP_SYSTEM__
+	else if(tmpStr == "bgfrag")
+		m_type = CREATURE_EVENT_BG_FRAG;
+	#endif
 	else
 	{
 		std::clog << "[Error - CreatureEvent::configureEvent] No valid type for creature event." << str << std::endl;
@@ -268,6 +272,10 @@ std::string CreatureEvent::getScriptEventName() const
 			return "onDeath";
 		case CREATURE_EVENT_PREPAREDEATH:
 			return "onPrepareDeath";
+		#ifdef __DARGHOS_PVP_SYSTEM__
+		case CREATURE_EVENT_BG_FRAG:
+			return "onBattlegroundFrag";
+		#endif
 		case CREATURE_EVENT_NONE:
 		default:
 			break;
@@ -317,6 +325,9 @@ std::string CreatureEvent::getScriptEventParams() const
 		case CREATURE_EVENT_COMBAT:
 		case CREATURE_EVENT_ATTACK:
 		case CREATURE_EVENT_CAST:
+		#ifdef __DARGHOS_PVP_SYSTEM__
+		case CREATURE_EVENT_BG_FRAG:
+		#endif
 			return "cid, target";
 		case CREATURE_EVENT_KILL:
 #ifndef __WAR_SYSTEM__
@@ -1894,3 +1905,59 @@ uint32_t CreatureEvent::executeFollow(Creature* creature, Creature* target)
 		return 0;
 	}
 }
+
+#ifdef __DARGHOS_PVP_SYSTEM__
+uint32_t CreatureEvent::executeBgFrag(Player* killer, Player* target)
+{
+	//onBattlegroundFrag(cid, target)
+	if(m_interface->reserveEnv())
+	{
+		ScriptEnviroment* env = m_interface->getEnv();
+		if(m_scripted == EVENT_SCRIPT_BUFFER)
+		{
+			env->setRealPos(killer->getPosition());
+			std::stringstream scriptstream;
+
+			scriptstream << "local cid = " << env->addThing(killer) << std::endl;
+			scriptstream << "local target = " << env->addThing(target) << std::endl;
+
+			scriptstream << m_scriptData;
+			bool result = true;
+			if(m_interface->loadBuffer(scriptstream.str()))
+			{
+				lua_State* L = m_interface->getState();
+				result = m_interface->getGlobalBool(L, "_result", true);
+			}
+
+			m_interface->releaseEnv();
+			return result;
+		}
+		else
+		{
+			#ifdef __DEBUG_LUASCRIPTS__
+			std::stringstream desc;
+			desc << creature->getName();
+			env->setEvent(desc.str());
+			#endif
+
+			env->setScriptId(m_scriptId, m_interface);
+			env->setRealPos(killer->getPosition());
+
+			lua_State* L = m_interface->getState();
+			m_interface->pushFunction(m_scriptId);
+
+			lua_pushnumber(L, env->addThing(killer));
+			lua_pushnumber(L, env->addThing(target));
+
+			bool result = m_interface->callFunction(2);
+			m_interface->releaseEnv();
+			return result;
+		}
+	}
+	else
+	{
+		std::clog << "[Error - CreatureEvent::executeFollow] Call stack overflow." << std::endl;
+		return 0;
+	}
+}
+#endif

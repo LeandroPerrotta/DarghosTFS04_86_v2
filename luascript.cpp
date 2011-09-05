@@ -2471,6 +2471,12 @@ void LuaInterface::registerFunctions()
 
 	//doPlayerLeaveBattleground(cid)
 	lua_register(m_luaState, "doPlayerLeaveBattleground", LuaInterface::luaDoPlayerLeaveBattleground);
+
+	//doPlayerIsInBattleground(cid)
+	lua_register(m_luaState, "doPlayerIsInBattleground", LuaInterface::luaDoPlayerIsInBattleground);
+
+	//getBattlegroundStatistics()
+	lua_register(m_luaState, "getBattlegroundStatistics", LuaInterface::luaGetBattlegroundStatistics);
 	#endif
 }
 
@@ -10394,6 +10400,59 @@ int32_t LuaInterface::luaDoPlayerLeaveBattleground(lua_State* L)
 	{
 		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
 		lua_pushboolean(L, false);
+	}
+
+	return 1;
+}
+
+int32_t LuaInterface::luaDoPlayerIsInBattleground(lua_State* L)
+{
+	//doPlayerIsInBattleground(cid)
+	ScriptEnviroment* env = getEnv();
+	if(Player* player = env->getPlayerByUID(popNumber(L)))
+	{		
+		if(player->isInBattleground())
+		{
+			lua_pushnumber(L, player->getBattlegroundTeam());
+		}
+		else
+		{
+			lua_pushboolean(L, false);
+		}		
+	}
+	else
+	{
+		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushboolean(L, false);
+	}
+
+	return 1;
+}
+
+int32_t LuaInterface::luaGetBattlegroundStatistics(lua_State* L)
+{
+	//getBattlegroundStatistics()
+	ScriptEnviroment* env = getEnv();
+
+	StatisticsList statisticsList = g_battleground.getStatistics();
+
+	if(statisticsList.size() == 0)
+	{
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	lua_newtable(L);
+
+	uint32_t i = 1;
+	for(StatisticsList::iterator it = statisticsList.begin(); it != statisticsList.end(); it++, i++)
+	{
+		createTable(L, i);
+		setField(L, "player_id", it->player_id);
+		setField(L, "kills", it->kills);
+		setField(L, "deaths", it->deaths);
+		setField(L, "assists", it->assists);
+		pushTable(L);
 	}
 
 	return 1;

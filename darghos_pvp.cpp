@@ -123,6 +123,7 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 
 	bool validate = (deathList.size() >= 3) ? false : true;
 
+	Player* killer = NULL;
 	Player* tmp = NULL;
 	for(DeathList::iterator it = deathList.begin(); it != deathList.end(); ++it)
 	{
@@ -140,15 +141,29 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 				return;
 
 			deahsEntry.lasthit = tmp->getGUID();
-			g_game.addAnimatedText(tmp->getPosition(), COLOR_DARKRED, "FRAG!");
+			killer = tmp;
+			incrementPlayerKill(tmp->getGUID());
+			incrementPlayerAssists(tmp->getGUID());
 		}
 		else
 		{
+			incrementPlayerAssists(tmp->getGUID());
 			deahsEntry.assists.push_back(tmp->getGUID());
 		}
 	}
 
+	incrementPlayerDeaths(player->getGUID());
 	addDeathEntry(player->getGUID(), deahsEntry);
+
+	bool deny = false;
+	CreatureEventList bgFragEvents = killer->getCreatureEvents(CREATURE_EVENT_BG_FRAG);
+	for(CreatureEventList::iterator it = bgFragEvents.begin(); it != bgFragEvents.end(); ++it)
+	{
+		if(!(*it)->executeBgFrag(killer, player))
+			deny = true;
+	}
+
+	//if(deny)
 }
 
 bool Battleground::isValidKiller(uint32_t killer_id, uint32_t target)
@@ -173,8 +188,7 @@ bool Battleground::isValidKiller(uint32_t killer_id, uint32_t target)
 
 void Battleground::addDeathEntry(uint32_t player_id, Bg_DeathEntry_t deathEntry)
 {
-	std::map<uint32_t, DeathsList>::iterator it;
-	it = deathsMap.find(player_id);
+	DeathsMap::iterator it = deathsMap.find(player_id);
 	if(it == deathsMap.end())
 	{
 		DeathsList deathList;
@@ -186,4 +200,70 @@ void Battleground::addDeathEntry(uint32_t player_id, Bg_DeathEntry_t deathEntry)
 	{
 		deathsMap[player_id].push_back(deathEntry);
 	}
+}
+
+void Battleground::incrementPlayerKill(int32_t player_id)
+{
+	for(StatisticsList::iterator it = statisticsList.begin(); it != statisticsList.end(); it++)
+	{
+		Bg_Statistic_t playerStatistic = (*it);
+		if(playerStatistic.player_id == player_id)
+		{
+			playerStatistic.kills++;
+			return;
+		}
+	}
+
+	Bg_Statistic_t playerStatistic;
+	playerStatistic.player_id = player_id;
+	playerStatistic.kills++;
+	statisticsList.push_back(playerStatistic);
+}
+
+void Battleground::incrementPlayerDeaths(int32_t player_id)
+{
+	for(StatisticsList::iterator it = statisticsList.begin(); it != statisticsList.end(); it++)
+	{
+		Bg_Statistic_t playerStatistic = (*it);
+		if(playerStatistic.player_id == player_id)
+		{
+			playerStatistic.deaths++;
+			return;
+		}
+	}
+
+	Bg_Statistic_t playerStatistic;
+	playerStatistic.player_id = player_id;
+	playerStatistic.deaths++;
+	statisticsList.push_back(playerStatistic);
+}
+
+void Battleground::incrementPlayerAssists(int32_t player_id)
+{
+	for(StatisticsList::iterator it = statisticsList.begin(); it != statisticsList.end(); it++)
+	{
+		Bg_Statistic_t playerStatistic = (*it);
+		if(playerStatistic.player_id == player_id)
+		{
+			playerStatistic.assists++;
+			return;
+		}
+	}
+
+	Bg_Statistic_t playerStatistic;
+	playerStatistic.player_id = player_id;
+	playerStatistic.assists++;
+	statisticsList.push_back(playerStatistic);
+}
+
+bool Battleground::order(Bg_Statistic_t first, Bg_Statistic_t second)
+{
+	if(first.kills == second.kills) return (first.deaths < second.deaths) ? true : false;
+	else return (first.kills > second.kills) ? true : false;
+}
+
+StatisticsList Battleground::getStatistics()
+{
+	statisticsList.sort(order);
+	return statisticsList;
 }
