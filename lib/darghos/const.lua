@@ -61,6 +61,8 @@
 		GOD = 5
 	}
 	
+	access = groups
+	
 	vocations =
 	{
 		NONE = 0,

@@ -1,5 +1,9 @@
 BROADCAST_STATISTICS_INTERVAL = 20
 
+BG_RET_NO_ERROR = 0
+BG_RET_CLOSED = 1
+BG_RET_CAN_NOT_LEAVE_OR_JOIN = 2
+
 pvpBattleground = {
 
 }
@@ -8,13 +12,20 @@ function pvpBattleground.onInit()
 	addEvent(pvpBattleground.broadcastStatistics, 1000 * 60 * BROADCAST_STATISTICS_INTERVAL)
 end
 
-function pvpBattleground.broadcastStatistics()
+function pvpBattleground.prepareServerSave()
+	battlegroundClose()
+	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] Sistema preparando-se para o server save em alguns minutos. Instancia fechada, estará novamente disponivel após o server save.", TALKTYPE_TYPES["channel-red"])
+end
+
+function pvpBattleground.broadcastStatistics(event, target)
+
+	event = event or true
 
 	local msg = "Estatisticas Battleground (ultimos " .. BROADCAST_STATISTICS_INTERVAL .. " minutos):\n\n";
 	
 	local data = getBattlegroundStatistics()
 	
-	if(not data) then
+	if(not data and event) then
 		addEvent(pvpBattleground.broadcastStatistics, 1000 * 60 * BROADCAST_STATISTICS_INTERVAL)
 		return
 	end
@@ -42,13 +53,62 @@ function pvpBattleground.broadcastStatistics()
 		end
 	end
 	
-	broadcastChannel(CUSTOM_CHANNEL_PVP, msg, TALKTYPE_TYPES["channel-orange"])
-	addEvent(pvpBattleground.broadcastStatistics, 1000 * 60 * BROADCAST_STATISTICS_INTERVAL)
+	if(target == nil) then
+		broadcastChannel(CUSTOM_CHANNEL_PVP, msg, TALKTYPE_TYPES["channel-orange"])
+	else
+		sendPlayerChannelMessage(target, msg, TALKTYPE_TYPES["channel-orange"])
+	end
+	
+	if(event) then
+		addEvent(pvpBattleground.broadcastStatistics, 1000 * 60 * BROADCAST_STATISTICS_INTERVAL)
+	end
+end
+
+function pvpBattleground.getInformations()
+	local msg = ""
+	msg = msg .. "Este é um sistema de Hardcore PvP do Darghos, e o objetivo é matar o maximo e morrer o minimo!\n"
+	msg = msg .. "Ao morrer você não perderá nada e nascera na base de seu time. Dentro da Battleground os danos são mais efetivos contra inimigos (100%) e diminuidos em aliados (25%)!\n"
+	msg = msg .. "De 20 em 20 minutos é exibido um relatorio para todos os jogadores online mostrando os jogadores com melhor desempenho na Battleground. Prepare-se e seja o melhor!\n"
+
+	return msg
+end
+
+function pvpBattleground.getPlayersTeamString(team_id)
+	local playersTeam = getBattlegroundPlayersByTeam(team_id)
+	
+	local teams = {[1] = "Time A", [2] = "Time B"}
+	
+	msg = msg .. "Membros do " .. teams[team_id] .. " (comando \"!bg team\"):\n"
+	
+	local i = 1
+	local islast = false
+	for k,v in pairs(playersTeam) do
+		
+		if(#playersTeam == i) then
+			islast = true
+		end
+		
+		local player = getPlayerByGUID(v)
+		msg = msg .. getPlayerName(player) .. " (" .. getPlayerLevel(player) .. ")"
+		msg = msg .. ((islast) and ".\n" or ", ")
+		
+		i = i + 1
+	end
+	
+	return msg
+end
+
+function pvpBattleground.sendPlayerChannelMessage(cid, msg, type)
+
+	type = (type ~= nil) and type or TALKTYPE_TYPES["channel-white"]
+	doPlayerSendChannelMessage(cid, "", msg, type, CUSTOM_CHANNEL_PVP)
 end
 
 function pvpBattleground.onEnter(cid)
 
-	if(doPlayerJoinBattleground(cid)) then
+	local ret = doPlayerJoinBattleground(cid)
+
+	if(ret == BG_RET_NO_ERROR) then
 		lockTeleportScroll(cid)
 	
 		local teams = { [1] = "Time A", [2] = "Time B" }
@@ -56,9 +116,26 @@ function pvpBattleground.onEnter(cid)
 		
 		registerCreatureEvent(cid, "onBattlegroundFrag")
 		
-		broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") juntou-se a batalha pelo " .. team .. ".")
+		local msg = "Bem vindo ao sistema de Battleground do Darghos!\n"
 		
+		local isFirstBattleground = getPlayerStorageValue(cid, sid.FIRST_BATTLEGROUND)		
+		if(isFirstBattleground == -1) then
+			msg = msg .. pvpBattleground.getInformations()
+			pvpBattleground.sendPlayerChannelMessage(cid, msg)
+			msg = ""
+			getPlayerStorageValue(cid, sid.FIRST_BATTLEGROUND, 1)	
+		end
+		
+		msg = msg .. pvpBattleground.getPlayerTeamString(doPlayerGetBattlegroundTeam(cid))
+		msg = msg .. "\nDivirta-se!"
+		
+		pvpBattleground.sendPlayerChannelMessage(cid, msg)
+		broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") juntou-se a batalha pelo " .. team .. ".")	
 		return true
+	elseif(ret == BG_RET_CLOSED) then
+		doPlayerSendCancel(cid, "A battleground está temporareamente fechada.")
+	elseif(ret == BG_RET_CAN_NOT_LEAVE_OR_JOIN) then
+		doPlayerSendCancel(cid, "Você deve aguardar 1 minuto para poder retornar a Battleground.")
 	end
 	
 	return false
@@ -66,14 +143,17 @@ end
 
 function pvpBattleground.onExit(cid)
 
-	if(doPlayerLeaveBattleground(cid)) then
+	local ret = doPlayerLeaveBattleground(cid)
+
+	if(ret == BG_RET_NO_ERROR) then
 		broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") saiu da batalha.")
 		unlockTeleportScroll(cid)
 		unregisterCreatureEvent(cid, "onBattlegroundFrag")
 		
 		return true
+	elseif(ret == BG_RET_CAN_NOT_LEAVE_OR_JOIN) then
+		doPlayerSendCancel(cid, "Você deve aguardar 1 minuto para poder sair da Battleground.")
 	end
 	
-	doPlayerSendCancel(cid, "Após entrar em uma Battleground é necessario aguardar 1 minuto para sair.")
 	return false	
 end

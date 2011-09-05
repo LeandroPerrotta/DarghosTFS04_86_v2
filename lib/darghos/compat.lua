@@ -1,7 +1,5 @@
 -- compatibilidade entre OTServ e TFS
 
-doPlayerGetBattlegroundTeam = doPlayerIsInBattleground
-
 if(darghos_distro == DISTROS_TFS) then
 	getTownIdByName = getTownId
 	getTownNameById = getTownName
