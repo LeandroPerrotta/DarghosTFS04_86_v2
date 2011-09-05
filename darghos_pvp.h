@@ -7,11 +7,9 @@
 #define PLAYER_LEAVE_TIME_LIMIT 60
 #define LIMIT_FRAGS_SAME_TARGET 3
 
-
-
 struct Bg_Statistic_t
 {
-	Bg_Statistic_t(){ player_id, kills, assists, deaths = 0; }
+	Bg_Statistic_t(){ player_id = kills = assists = deaths = 0; }
 	uint32_t player_id, kills, assists, deaths;
 };
 
@@ -50,7 +48,7 @@ struct Bg_Team_t {
 		
 	}
 
-    PlayersMap players;
+    PlayersMap* players;
     Bg_TeamLook_t look;
     Position spawn_pos;
 };
@@ -78,15 +76,12 @@ class Battleground
 		DeathsMap deathsMap;
 		StatisticsList statisticsList;
 		Position leave_pos;
-		void addPlayer(uint32_t player_id, Bg_PlayerInfo_t playerInfo, Bg_Teams_t team_id){ teamsMap[team_id].players.insert(std::make_pair(player_id, playerInfo)); }
-		void removePlayer(uint32_t player_id, Bg_Teams_t team_id){ teamsMap[team_id].players.erase(player_id); }
 		void addDeathEntry(uint32_t player_id, Bg_DeathEntry_t deathEntry);
 		bool isValidKiller(uint32_t killer_id, uint32_t target);
-		void incrementPlayerKill(int32_t player_id);
-		void incrementPlayerDeaths(int32_t player_id);
-		void incrementPlayerAssists(int32_t player_id);
-		bool order(Bg_Statistic_t first, Bg_Statistic_t second);
+		void incrementPlayerKill(uint32_t player_id);
+		void incrementPlayerDeaths(uint32_t player_id);
+		void incrementPlayerAssists(uint32_t player_id);
+		static bool order(Bg_Statistic_t first, Bg_Statistic_t second);
 };
 
 #endif
-

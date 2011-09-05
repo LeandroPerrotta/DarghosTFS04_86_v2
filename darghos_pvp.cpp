@@ -56,8 +56,8 @@ bool Battleground::onPlayerJoin(Player* player)
     if(!isOpen())
         return false;
 
-	Bg_Teams_t team_id = (teamsMap[BATTLEGROUND_TEAM_ONE].players.size() > teamsMap[BATTLEGROUND_TEAM_TWO].players.size()) ? BATTLEGROUND_TEAM_TWO : BATTLEGROUND_TEAM_ONE;
-	Bg_Team_t team = teamsMap[team_id];
+	Bg_Teams_t team_id = (teamsMap[BATTLEGROUND_TEAM_ONE].players->size() > teamsMap[BATTLEGROUND_TEAM_TWO].players->size()) ? BATTLEGROUND_TEAM_TWO : BATTLEGROUND_TEAM_ONE;
+	Bg_Team_t* team = &teamsMap[team_id];
 
 	player->setBattlegroundTeam(team_id);
 
@@ -68,23 +68,23 @@ bool Battleground::onPlayerJoin(Player* player)
 	Outfit_t player_outfit = player->getCreature()->getCurrentOutfit();
 	playerInfo.default_outfit = player_outfit;
 
-	player_outfit.lookHead = team.look.head;
-	player_outfit.lookBody = team.look.body;
-	player_outfit.lookLegs = team.look.legs;
-	player_outfit.lookFeet = team.look.feet;
+	player_outfit.lookHead = team->look.head;
+	player_outfit.lookBody = team->look.body;
+	player_outfit.lookLegs = team->look.legs;
+	player_outfit.lookFeet = team->look.feet;
 
 	player->changeOutfit(player_outfit, false);
 	g_game.internalCreatureChangeOutfit(player->getCreature(), player_outfit);
 
 	playerInfo.masterPosition = player->getMasterPosition();
-	player->setMasterPosition(team.spawn_pos);
+	player->setMasterPosition(team->spawn_pos);
 
 	const Position& oldPos = player->getPosition();
 
-	g_game.internalTeleport(player, team.spawn_pos, true);
+	g_game.internalTeleport(player, team->spawn_pos, true);
 	g_game.addMagicEffect(oldPos, MAGIC_EFFECT_TELEPORT);
 
-	addPlayer(player->getGUID(), playerInfo, team_id);
+	team->players->insert(std::make_pair(player->getGUID(), playerInfo));
     return true;
 }
 
@@ -92,8 +92,9 @@ bool Battleground::playerKick(Player* player)
 {
 
 	Bg_Teams_t team_id = player->getBattlegroundTeam();
-	Bg_Team_t team = teamsMap[team_id];
-	Bg_PlayerInfo_t playerInfo = team.players[player->getGUID()];
+	Bg_Team_t* team = &teamsMap[team_id];
+	PlayersMap::iterator it = team->players->find(player->getGUID());
+	Bg_PlayerInfo_t playerInfo = it->second;
 
 	if((playerInfo.join_in + PLAYER_LEAVE_TIME_LIMIT) > time(NULL))
 		return false;
@@ -110,8 +111,7 @@ bool Battleground::playerKick(Player* player)
 	g_game.internalTeleport(player, leave_pos, true);
 	g_game.addMagicEffect(oldPos, MAGIC_EFFECT_TELEPORT);
 
-	removePlayer(player->getGUID(), team_id);
-
+	team->players->erase(player->getGUID());
 	return true;
 }
 
@@ -202,14 +202,14 @@ void Battleground::addDeathEntry(uint32_t player_id, Bg_DeathEntry_t deathEntry)
 	}
 }
 
-void Battleground::incrementPlayerKill(int32_t player_id)
+void Battleground::incrementPlayerKill(uint32_t player_id)
 {
 	for(StatisticsList::iterator it = statisticsList.begin(); it != statisticsList.end(); it++)
 	{
 		Bg_Statistic_t playerStatistic = (*it);
-		if(playerStatistic.player_id == player_id)
+		if(it->player_id == player_id)
 		{
-			playerStatistic.kills++;
+			it->kills++;
 			return;
 		}
 	}
@@ -220,14 +220,13 @@ void Battleground::incrementPlayerKill(int32_t player_id)
 	statisticsList.push_back(playerStatistic);
 }
 
-void Battleground::incrementPlayerDeaths(int32_t player_id)
+void Battleground::incrementPlayerDeaths(uint32_t player_id)
 {
 	for(StatisticsList::iterator it = statisticsList.begin(); it != statisticsList.end(); it++)
 	{
-		Bg_Statistic_t playerStatistic = (*it);
-		if(playerStatistic.player_id == player_id)
+		if(it->player_id == player_id)
 		{
-			playerStatistic.deaths++;
+			it->deaths++;
 			return;
 		}
 	}
@@ -238,14 +237,13 @@ void Battleground::incrementPlayerDeaths(int32_t player_id)
 	statisticsList.push_back(playerStatistic);
 }
 
-void Battleground::incrementPlayerAssists(int32_t player_id)
+void Battleground::incrementPlayerAssists(uint32_t player_id)
 {
 	for(StatisticsList::iterator it = statisticsList.begin(); it != statisticsList.end(); it++)
 	{
-		Bg_Statistic_t playerStatistic = (*it);
-		if(playerStatistic.player_id == player_id)
+		if(it->player_id == player_id)
 		{
-			playerStatistic.assists++;
+			it->assists++;
 			return;
 		}
 	}
@@ -264,6 +262,6 @@ bool Battleground::order(Bg_Statistic_t first, Bg_Statistic_t second)
 
 StatisticsList Battleground::getStatistics()
 {
-	statisticsList.sort(order);
+	statisticsList.sort(Battleground::order);
 	return statisticsList;
 }
