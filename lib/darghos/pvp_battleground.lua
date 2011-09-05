@@ -80,6 +80,8 @@ function pvpBattleground.getPlayersTeamString(team_id)
 	local teams = {[1] = "Time A", [2] = "Time B"}
 	local msg = "Membros do " .. teams[team_id] .. " (comando \"!bg team\"):\n"
 	
+	if(#playersTeam == 0) then return msg .. "Nenhum" end
+	
 	local islast = false
 	for k,v in pairs(playersTeam) do
 		
@@ -120,7 +122,7 @@ function pvpBattleground.onEnter(cid)
 			msg = msg .. pvpBattleground.getInformations()
 			pvpBattleground.sendPlayerChannelMessage(cid, msg)
 			msg = ""
-			getPlayerStorageValue(cid, sid.FIRST_BATTLEGROUND, 1)	
+			setPlayerStorageValue(cid, sid.FIRST_BATTLEGROUND, 1)	
 		end
 		
 		msg = msg .. pvpBattleground.getPlayersTeamString(doPlayerGetBattlegroundTeam(cid))

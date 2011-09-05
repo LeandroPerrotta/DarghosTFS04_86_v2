@@ -6,7 +6,6 @@ function onSay(cid, words, param)
 	
 		local msg = "O uso deste comando requer um ou mais parametros. Exemplos:\n"
 		msg = msg .. "!bg sobre, !bg info, !bg help -> Exibe informações sobre o sistema de Battlegrounds.\n"
-		msg = msg .. "!bg team -> Exibe os membros de seu time (requer estar dentro da Battleground).\n"
 	
 		if(_access >= access.COMMUNITY_MANAGER) then
 			msg = msg .. "!bg team team_id -> Exibe as informações de um time (1 ou 2).\n"
