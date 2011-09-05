@@ -35,6 +35,6 @@ enum DarghosPvpTypes
 {
 	PVP_SIMPLE_BATTLEGROUND = 0,
 	PVP_ARENA_1X1
-}
+};
 
 #endif

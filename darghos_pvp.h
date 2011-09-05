@@ -9,7 +9,10 @@
 
 struct Bg_Statistic_t
 {
-	Bg_Statistic_t(){ player_id = kills = assists = deaths = 0; }
+	Bg_Statistic_t(){ 
+		player_id = kills = assists = deaths = 0; 
+	}
+
 	uint32_t player_id, kills, assists, deaths;
 };
 

@@ -2474,9 +2474,12 @@ void LuaInterface::registerFunctions()
 
 	//doPlayerGetBattlegroundTeam(cid)
 	lua_register(m_luaState, "doPlayerGetBattlegroundTeam", LuaInterface::luaDoPlayerGetBattlegroundTeam);
-
+	
 	//getBattlegroundStatistics()
 	lua_register(m_luaState, "getBattlegroundStatistics", LuaInterface::luaGetBattlegroundStatistics);
+
+	//clearBattlegroundStatistics()
+	lua_register(m_luaState, "clearBattlegroundStatistics", LuaInterface::luaClearBattlegroundStatistics);
 
 	//battlegroundClose()
 	lua_register(m_luaState, "battlegroundClose", LuaInterface::luaBattlegroundClose);
@@ -10431,6 +10434,13 @@ int32_t LuaInterface::luaDoPlayerGetBattlegroundTeam(lua_State* L)
 	return 1;
 }
 
+int32_t LuaInterface::luaClearBattlegroundStatistics(lua_State* L)
+{
+	//clearBattlegroundStatistics()
+	g_battleground.clearStatistics();
+	return 1;
+}
+
 int32_t LuaInterface::luaGetBattlegroundStatistics(lua_State* L)
 {
 	//getBattlegroundStatistics()
@@ -10488,12 +10498,13 @@ int32_t LuaInterface::luaGetBattlegroundPlayersByTeam(lua_State* L)
 		return 1;
 	}
 
-	uint32_t i = 0;
+	uint32_t i = 1;
 	lua_newtable(L);
 	for(PlayersMap::iterator it = players.begin(); it != players.end(); it++, i++)
 	{
 		lua_pushnumber(L, i);
 		lua_pushnumber(L, it->second.player->getGUID());
+		pushTable(L);
 	}
 
 	return 1;

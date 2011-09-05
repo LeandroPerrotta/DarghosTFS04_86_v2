@@ -26,6 +26,8 @@ void Battleground::onClose()
 			playerKick(it_players->second.player, true);
 		}
 	}
+
+	clearStatistics();
 }
 
 void Battleground::onInit()
@@ -70,7 +72,7 @@ BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
 
 	time_t lastLeave;
 	std::string tmpStr;
-	if(player->getStorage(DARGHOS_STORAGE_LAST_BATTLEGROUND_JOIN, tmpStr)) lastLeave = atoi(tmpStr.c_str());
+	if(player->getStorage(DARGHOS_STORAGE_LAST_BATTLEGROUND_LEAVE, tmpStr)) lastLeave = atoi(tmpStr.c_str());
 
 	if(lastLeave + LIMIT_TARGET_FRAGS_INTERVAL > time(NULL))
 		return BATTLEGROUND_CAN_NOT_LEAVE_OR_JOIN;
@@ -102,14 +104,16 @@ BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
 	g_game.internalTeleport(player, team->spawn_pos, true);
 	g_game.addMagicEffect(oldPos, MAGIC_EFFECT_TELEPORT);
 
-	player->setStorage(DARGHOS_STORAGE_LAST_BATTLEGROUND_JOIN, std::to_string(time(NULL)));
+	std::stringstream ss;
+	ss << time(NULL);
+	player->setStorage(DARGHOS_STORAGE_LAST_BATTLEGROUND_JOIN, ss.str());
 	player->eraseStorage(DARGHOS_STORAGE_LAST_BATTLEGROUND_LEAVE);
 
 	team->players.insert(std::make_pair(player->getGUID(), playerInfo));
     return BATTLEGROUND_NO_ERROR;
 }
 
-BattlegrondRetValue Battleground::playerKick(Player* player, bool force = false)
+BattlegrondRetValue Battleground::playerKick(Player* player, bool force)
 {
 
 	Bg_Teams_t team_id = player->getBattlegroundTeam();
@@ -136,7 +140,9 @@ BattlegrondRetValue Battleground::playerKick(Player* player, bool force = false)
 	g_game.internalTeleport(player, leave_pos, true);
 	g_game.addMagicEffect(oldPos, MAGIC_EFFECT_TELEPORT);
 
-	player->setStorage(DARGHOS_STORAGE_LAST_BATTLEGROUND_LEAVE, std::to_string(time(NULL)));
+	std::stringstream ss;
+	ss << time(NULL);
+	player->setStorage(DARGHOS_STORAGE_LAST_BATTLEGROUND_LEAVE, ss.str());
 	player->eraseStorage(DARGHOS_STORAGE_LAST_BATTLEGROUND_JOIN);
 
 	team->players.erase(player->getGUID());
