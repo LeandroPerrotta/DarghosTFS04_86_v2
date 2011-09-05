@@ -2473,7 +2473,7 @@ void LuaInterface::registerFunctions()
 	lua_register(m_luaState, "doPlayerLeaveBattleground", LuaInterface::luaDoPlayerLeaveBattleground);
 
 	//doPlayerGetBattlegroundTeam(cid)
-	lua_register(m_luaState, "doPlayerIsInBattleground", LuaInterface::luaDoPlayerGetBattlegroundTeam);
+	lua_register(m_luaState, "doPlayerGetBattlegroundTeam", LuaInterface::luaDoPlayerGetBattlegroundTeam);
 
 	//getBattlegroundStatistics()
 	lua_register(m_luaState, "getBattlegroundStatistics", LuaInterface::luaGetBattlegroundStatistics);
