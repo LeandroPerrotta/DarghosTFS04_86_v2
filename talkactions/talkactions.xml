@@ -19,6 +19,7 @@
 	<talkaction words="!voteinfo" access="0" event="script" value="game/voteinfo.lua"/>
 	<talkaction words="!aceitotp" access="0" event="script" value="game/accept_teleport.lua"/>
 	<talkaction words="!online;/online" event="script" value="game/online.lua"/>
+	<talkaction words="!bg;/bg;!battleground;/battleground" event="script" value="game/battleground.lua"/>
 	
 	<talkaction default="true" channel="9" event="script" value="game/help.lua"/> <!-- Help Channel -->	
 
@@ -94,13 +95,13 @@
 	<talkaction words="!software;/software" event="function" value="software"/>
 
 	<!-- Houses -->
-	<talkaction words="alevo grav" filter="word-spaced" event="function" value="houseBuy"/>
-	<talkaction words="alito som" filter="word-spaced" event="function" value="houseSell"/>
+	<talkaction words="alevo grav;!buyhouse" filter="word-spaced" event="function" value="houseBuy"/>
+	<talkaction words="alito som;!sellhouse" filter="word-spaced" event="function" value="houseSell"/>
 	<talkaction words="alana sio" filter="word-spaced" event="function" value="houseKick"/>
 	<talkaction words="aleta grav" filter="word-spaced" event="function" value="houseDoorList"/>
 	<talkaction words="aleta sio" filter="word-spaced" event="function" value="houseGuestList"/>
 	<talkaction words="aleta som" filter="word-spaced" event="function" value="houseSubOwnerList"/>
-	<talkaction words="alito sio" filter="word-spaced" event="script" value="leavehouse.lua"/>
+	<talkaction words="alito sio;!leavehouse" filter="word-spaced" event="script" value="leavehouse.lua"/>
 
 	<!-- Guilds -->
 	<!-- 

@@ -1,3 +1,5 @@
+function doPlayerIsInBattleground(cid) return doPlayerGetBattlegroundTeam(cid) > 0 end
+
 function broadcastChannel(channelId, message, talktype)
 	local users = getChannelUsers(channelId)
 	talktype = talktype or TALKTYPE_TYPES["channel-white"]
