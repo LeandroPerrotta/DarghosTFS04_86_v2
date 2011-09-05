@@ -48,7 +48,7 @@ struct Bg_Team_t {
 		
 	}
 
-    PlayersMap* players;
+    PlayersMap players;
     Bg_TeamLook_t look;
     Position spawn_pos;
 };

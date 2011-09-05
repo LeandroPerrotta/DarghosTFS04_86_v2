@@ -10432,8 +10432,6 @@ int32_t LuaInterface::luaDoPlayerIsInBattleground(lua_State* L)
 int32_t LuaInterface::luaGetBattlegroundStatistics(lua_State* L)
 {
 	//getBattlegroundStatistics()
-	ScriptEnviroment* env = getEnv();
-
 	StatisticsList statisticsList = g_battleground.getStatistics();
 
 	if(statisticsList.size() == 0)

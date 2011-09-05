@@ -56,7 +56,7 @@ bool Battleground::onPlayerJoin(Player* player)
     if(!isOpen())
         return false;
 
-	Bg_Teams_t team_id = (teamsMap[BATTLEGROUND_TEAM_ONE].players->size() > teamsMap[BATTLEGROUND_TEAM_TWO].players->size()) ? BATTLEGROUND_TEAM_TWO : BATTLEGROUND_TEAM_ONE;
+	Bg_Teams_t team_id = (teamsMap[BATTLEGROUND_TEAM_ONE].players.size() > teamsMap[BATTLEGROUND_TEAM_TWO].players.size()) ? BATTLEGROUND_TEAM_TWO : BATTLEGROUND_TEAM_ONE;
 	Bg_Team_t* team = &teamsMap[team_id];
 
 	player->setBattlegroundTeam(team_id);
@@ -84,7 +84,7 @@ bool Battleground::onPlayerJoin(Player* player)
 	g_game.internalTeleport(player, team->spawn_pos, true);
 	g_game.addMagicEffect(oldPos, MAGIC_EFFECT_TELEPORT);
 
-	team->players->insert(std::make_pair(player->getGUID(), playerInfo));
+	team->players.insert(std::make_pair(player->getGUID(), playerInfo));
     return true;
 }
 
@@ -93,7 +93,7 @@ bool Battleground::playerKick(Player* player)
 
 	Bg_Teams_t team_id = player->getBattlegroundTeam();
 	Bg_Team_t* team = &teamsMap[team_id];
-	PlayersMap::iterator it = team->players->find(player->getGUID());
+	PlayersMap::iterator it = team->players.find(player->getGUID());
 	Bg_PlayerInfo_t playerInfo = it->second;
 
 	if((playerInfo.join_in + PLAYER_LEAVE_TIME_LIMIT) > time(NULL))
@@ -111,7 +111,7 @@ bool Battleground::playerKick(Player* player)
 	g_game.internalTeleport(player, leave_pos, true);
 	g_game.addMagicEffect(oldPos, MAGIC_EFFECT_TELEPORT);
 
-	team->players->erase(player->getGUID());
+	team->players.erase(player->getGUID());
 	return true;
 }
 
