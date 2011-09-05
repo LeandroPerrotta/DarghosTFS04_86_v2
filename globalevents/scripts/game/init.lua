@@ -29,6 +29,7 @@ function onStartup()
 	addEvent(autoBroadcast, 1000 * 60 * 30)
 	
 	luaGlobal.truncate()
+	pvpBattleground.onInit()
 	return true
 end
 
