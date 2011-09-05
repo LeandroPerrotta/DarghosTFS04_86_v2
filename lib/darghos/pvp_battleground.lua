@@ -39,11 +39,11 @@ function pvpBattleground.broadcastStatistics(event, target)
 			local teams = { [1] = "Time A", [2] = "Time B" }
 			local team = teams[doPlayerGetBattlegroundTeam(cid)]
 			
-			if(team ~= nil) then
+			if(team == nil) then
 				team = "Fora"
 			end
 			
-			local spaces_c = 40 - string.len(getPlayerName(cid))
+			local spaces_c = 40 - string.len(getPlayerName(cid)) - string.len(team)
 			
 			local spaces = ""	
 			for i=1, spaces_c do spaces = spaces .. " " end
@@ -56,10 +56,11 @@ function pvpBattleground.broadcastStatistics(event, target)
 	if(target == nil) then
 		broadcastChannel(CUSTOM_CHANNEL_PVP, msg, TALKTYPE_TYPES["channel-orange"])
 	else
-		sendPlayerChannelMessage(target, msg, TALKTYPE_TYPES["channel-orange"])
+		pvpBattleground.sendPlayerChannelMessage(target, msg, TALKTYPE_TYPES["channel-orange"])
 	end
 	
 	if(event) then
+		clearBattlegroundStatistics()
 		addEvent(pvpBattleground.broadcastStatistics, 1000 * 60 * BROADCAST_STATISTICS_INTERVAL)
 	end
 end
@@ -74,25 +75,21 @@ function pvpBattleground.getInformations()
 end
 
 function pvpBattleground.getPlayersTeamString(team_id)
+	team_id = tonumber(team_id)
 	local playersTeam = getBattlegroundPlayersByTeam(team_id)
-	
 	local teams = {[1] = "Time A", [2] = "Time B"}
+	local msg = "Membros do " .. teams[team_id] .. " (comando \"!bg team\"):\n"
 	
-	msg = msg .. "Membros do " .. teams[team_id] .. " (comando \"!bg team\"):\n"
-	
-	local i = 1
 	local islast = false
 	for k,v in pairs(playersTeam) do
 		
-		if(#playersTeam == i) then
+		if(#playersTeam == k) then
 			islast = true
 		end
 		
 		local player = getPlayerByGUID(v)
 		msg = msg .. getPlayerName(player) .. " (" .. getPlayerLevel(player) .. ")"
 		msg = msg .. ((islast) and ".\n" or ", ")
-		
-		i = i + 1
 	end
 	
 	return msg
@@ -126,7 +123,7 @@ function pvpBattleground.onEnter(cid)
 			getPlayerStorageValue(cid, sid.FIRST_BATTLEGROUND, 1)	
 		end
 		
-		msg = msg .. pvpBattleground.getPlayerTeamString(doPlayerGetBattlegroundTeam(cid))
+		msg = msg .. pvpBattleground.getPlayersTeamString(doPlayerGetBattlegroundTeam(cid))
 		msg = msg .. "\nDivirta-se!"
 		
 		pvpBattleground.sendPlayerChannelMessage(cid, msg)
