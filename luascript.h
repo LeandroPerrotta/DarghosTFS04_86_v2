@@ -732,8 +732,11 @@ class LuaInterface
 		#ifdef __DARGHOS_PVP_SYSTEM__
 		static int32_t luaDoPlayerJoinBattleground(lua_State* L);
 		static int32_t luaDoPlayerLeaveBattleground(lua_State* L);
-		static int32_t luaDoPlayerIsInBattleground(lua_State* L);
+		static int32_t luaDoPlayerGetBattlegroundTeam(lua_State* L);
 		static int32_t luaGetBattlegroundStatistics(lua_State* L);
+		static int32_t luaBattlegroundClose(lua_State* L);
+		static int32_t luaBattlegroundOpen(lua_State* L);
+		static int32_t luaGetBattlegroundPlayersByTeam(lua_State* L);
 		#endif
 
 		lua_State* m_luaState;

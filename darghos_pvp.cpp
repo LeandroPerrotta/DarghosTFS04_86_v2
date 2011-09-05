@@ -9,11 +9,23 @@ extern Game g_game;
 Battleground::Battleground()
 {
 	open = false;
+	type = PVP_SIMPLE_BATTLEGROUND;
 }
 
 Battleground::~Battleground()
 {
 
+}
+
+void Battleground::onClose()
+{
+	for(BgTeamsMap::iterator it_teams = teamsMap.begin(); it_teams != teamsMap.end(); it_teams++)
+	{
+		for(PlayersMap::iterator it_players = it_teams->second.players.begin(); it_players != it_teams->second.players.end(); it_players++)
+		{
+			playerKick(it_players->second.player, true);
+		}
+	}
 }
 
 void Battleground::onInit()
@@ -51,10 +63,17 @@ void Battleground::onInit()
     open = true;
 }
 
-bool Battleground::onPlayerJoin(Player* player)
+BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
 {
     if(!isOpen())
-        return false;
+        return BATTLEGROUND_CLOSED;
+
+	time_t lastLeave;
+	std::string tmpStr;
+	if(player->getStorage(DARGHOS_STORAGE_LAST_BATTLEGROUND_JOIN, tmpStr)) lastLeave = atoi(tmpStr.c_str());
+
+	if(lastLeave + LIMIT_TARGET_FRAGS_INTERVAL > time(NULL))
+		return BATTLEGROUND_CAN_NOT_LEAVE_OR_JOIN;
 
 	Bg_Teams_t team_id = (teamsMap[BATTLEGROUND_TEAM_ONE].players.size() > teamsMap[BATTLEGROUND_TEAM_TWO].players.size()) ? BATTLEGROUND_TEAM_TWO : BATTLEGROUND_TEAM_ONE;
 	Bg_Team_t* team = &teamsMap[team_id];
@@ -63,7 +82,6 @@ bool Battleground::onPlayerJoin(Player* player)
 
 	Bg_PlayerInfo_t playerInfo;
 	playerInfo.player = player;
-	playerInfo.join_in = time(NULL);
 
 	Outfit_t player_outfit = player->getCreature()->getCurrentOutfit();
 	playerInfo.default_outfit = player_outfit;
@@ -84,11 +102,14 @@ bool Battleground::onPlayerJoin(Player* player)
 	g_game.internalTeleport(player, team->spawn_pos, true);
 	g_game.addMagicEffect(oldPos, MAGIC_EFFECT_TELEPORT);
 
+	player->setStorage(DARGHOS_STORAGE_LAST_BATTLEGROUND_JOIN, std::to_string(time(NULL)));
+	player->eraseStorage(DARGHOS_STORAGE_LAST_BATTLEGROUND_LEAVE);
+
 	team->players.insert(std::make_pair(player->getGUID(), playerInfo));
-    return true;
+    return BATTLEGROUND_NO_ERROR;
 }
 
-bool Battleground::playerKick(Player* player)
+BattlegrondRetValue Battleground::playerKick(Player* player, bool force = false)
 {
 
 	Bg_Teams_t team_id = player->getBattlegroundTeam();
@@ -96,8 +117,12 @@ bool Battleground::playerKick(Player* player)
 	PlayersMap::iterator it = team->players.find(player->getGUID());
 	Bg_PlayerInfo_t playerInfo = it->second;
 
-	if((playerInfo.join_in + PLAYER_LEAVE_TIME_LIMIT) > time(NULL))
-		return false;
+	time_t lastJoin;
+	std::string tmpStr;
+	if(player->getStorage(DARGHOS_STORAGE_LAST_BATTLEGROUND_JOIN, tmpStr)) lastJoin = atoi(tmpStr.c_str());
+
+	if(!force && lastJoin + LIMIT_TARGET_FRAGS_INTERVAL > time(NULL))
+		return BATTLEGROUND_CAN_NOT_LEAVE_OR_JOIN;
 
 	player->setBattlegroundTeam(BATTLEGROUND_TEAM_NONE);
 
@@ -111,8 +136,12 @@ bool Battleground::playerKick(Player* player)
 	g_game.internalTeleport(player, leave_pos, true);
 	g_game.addMagicEffect(oldPos, MAGIC_EFFECT_TELEPORT);
 
+	player->setStorage(DARGHOS_STORAGE_LAST_BATTLEGROUND_LEAVE, std::to_string(time(NULL)));
+	player->eraseStorage(DARGHOS_STORAGE_LAST_BATTLEGROUND_JOIN);
+
 	team->players.erase(player->getGUID());
-	return true;
+	deathsMap.erase(player->getGUID());
+	return BATTLEGROUND_NO_ERROR;
 }
 
 void Battleground::onPlayerDeath(Player* player, DeathList deathList)
@@ -144,11 +173,13 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 			killer = tmp;
 			incrementPlayerKill(tmp->getGUID());
 			incrementPlayerAssists(tmp->getGUID());
+			storePlayerKill(tmp->getGUID(), true);
 		}
 		else
 		{
 			incrementPlayerAssists(tmp->getGUID());
 			deahsEntry.assists.push_back(tmp->getGUID());
+			storePlayerKill(tmp->getGUID(), false);
 		}
 	}
 
@@ -168,7 +199,7 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 
 bool Battleground::isValidKiller(uint32_t killer_id, uint32_t target)
 {
-	time_t timeLimit = time(NULL) - (60 * 5);
+	time_t timeLimit = time(NULL) - LIMIT_TARGET_FRAGS_INTERVAL;
 	DeathsList deathsList = deathsMap[target];
 
 	uint8_t found = 0;
@@ -180,8 +211,13 @@ bool Battleground::isValidKiller(uint32_t killer_id, uint32_t target)
 			found++;
 	}
 
-	if(found >= LIMIT_FRAGS_SAME_TARGET)
+	if(found >= LIMIT_TARGET_FRAGS_PER_INTERVAL)
 		return false;
+
+	if(found == 0 && deathsList.size() > 0)
+	{
+		deathsMap.erase(target);
+	}
 
 	return true;
 }
@@ -235,6 +271,8 @@ void Battleground::incrementPlayerDeaths(uint32_t player_id)
 	playerStatistic.player_id = player_id;
 	playerStatistic.deaths++;
 	statisticsList.push_back(playerStatistic);
+
+	storePlayerDeath(player_id);
 }
 
 void Battleground::incrementPlayerAssists(uint32_t player_id)
@@ -254,6 +292,38 @@ void Battleground::incrementPlayerAssists(uint32_t player_id)
 	statisticsList.push_back(playerStatistic);
 }
 
+bool Battleground::storePlayerKill(uint32_t player_id, bool lasthit)
+{
+	Database* db = Database::getInstance();
+	DBQuery query;
+
+	DBTransaction trans(db);
+	if(!trans.begin())
+		return false;
+
+	query << "INSERT INTO `custom_pvp_kills` (`player_id`, `is_frag`, `date`, `type`) VALUES (" << player_id << ", " << ((lasthit) ? 1 : 0) << ", " << time(NULL) << ", " << type << ")";
+	if(!db->query(query.str()))
+		return false;
+
+	return true;
+}
+
+bool Battleground::storePlayerDeath(uint32_t player_id)
+{
+	Database* db = Database::getInstance();
+	DBQuery query;
+
+	DBTransaction trans(db);
+	if(!trans.begin())
+		return false;
+
+	query << "INSERT INTO `custom_pvp_deaths` (`player_id`, `date`, `type`) VALUES (" << player_id << ", " << time(NULL) << ", " << type << ")";
+	if(!db->query(query.str()))
+		return false;
+
+	return true;
+}
+
 bool Battleground::order(Bg_Statistic_t first, Bg_Statistic_t second)
 {
 	if(first.kills == second.kills) return (first.deaths < second.deaths) ? true : false;
@@ -264,4 +334,16 @@ StatisticsList Battleground::getStatistics()
 {
 	statisticsList.sort(Battleground::order);
 	return statisticsList;
+}
+
+PlayersMap Battleground::listPlayersOfTeam(Bg_Teams_t team)
+{
+	BgTeamsMap::iterator it = teamsMap.find(team);
+
+	PlayersMap playersMap;
+	if(it == teamsMap.end())
+		return playersMap;
+
+	playersMap = it->second.players;
+	return playersMap;
 }

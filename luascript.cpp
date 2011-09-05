@@ -2472,11 +2472,20 @@ void LuaInterface::registerFunctions()
 	//doPlayerLeaveBattleground(cid)
 	lua_register(m_luaState, "doPlayerLeaveBattleground", LuaInterface::luaDoPlayerLeaveBattleground);
 
-	//doPlayerIsInBattleground(cid)
-	lua_register(m_luaState, "doPlayerIsInBattleground", LuaInterface::luaDoPlayerIsInBattleground);
+	//doPlayerGetBattlegroundTeam(cid)
+	lua_register(m_luaState, "doPlayerIsInBattleground", LuaInterface::luaDoPlayerGetBattlegroundTeam);
 
 	//getBattlegroundStatistics()
 	lua_register(m_luaState, "getBattlegroundStatistics", LuaInterface::luaGetBattlegroundStatistics);
+
+	//battlegroundClose()
+	lua_register(m_luaState, "battlegroundClose", LuaInterface::luaBattlegroundClose);
+
+	//battlegroundOpen()
+	lua_register(m_luaState, "battlegroundOpen", LuaInterface::luaBattlegroundOpen);
+
+	//getBattlegroundPlayersByTeam()
+	lua_register(m_luaState, "getBattlegroundPlayersByTeam", LuaInterface::luaGetBattlegroundPlayersByTeam);
 	#endif
 }
 
@@ -10370,14 +10379,7 @@ int32_t LuaInterface::luaDoPlayerJoinBattleground(lua_State* L)
 	ScriptEnviroment* env = getEnv();
 	if(Player* player = env->getPlayerByUID(popNumber(L)))
 	{		
-		if(g_battleground.onPlayerJoin(player))
-		{
-			lua_pushnumber(L, player->getBattlegroundTeam());
-		}
-		else
-		{
-			lua_pushboolean(L, false);
-		}
+		lua_pushnumber(L, g_battleground.onPlayerJoin(player));
 	}
 	else
 	{
@@ -10394,7 +10396,7 @@ int32_t LuaInterface::luaDoPlayerLeaveBattleground(lua_State* L)
 	ScriptEnviroment* env = getEnv();
 	if(Player* player = env->getPlayerByUID(popNumber(L)))
 	{		
-		lua_pushboolean(L, g_battleground.playerKick(player));
+		lua_pushnumber(L, g_battleground.playerKick(player));
 	}
 	else
 	{
@@ -10405,9 +10407,9 @@ int32_t LuaInterface::luaDoPlayerLeaveBattleground(lua_State* L)
 	return 1;
 }
 
-int32_t LuaInterface::luaDoPlayerIsInBattleground(lua_State* L)
+int32_t LuaInterface::luaDoPlayerGetBattlegroundTeam(lua_State* L)
 {
-	//doPlayerIsInBattleground(cid)
+	//doPlayerGetBattlegroundTeam(cid)
 	ScriptEnviroment* env = getEnv();
 	if(Player* player = env->getPlayerByUID(popNumber(L)))
 	{		
@@ -10417,7 +10419,7 @@ int32_t LuaInterface::luaDoPlayerIsInBattleground(lua_State* L)
 		}
 		else
 		{
-			lua_pushboolean(L, false);
+			lua_pushnumber(L, BATTLEGROUND_TEAM_NONE);
 		}		
 	}
 	else
@@ -10451,6 +10453,47 @@ int32_t LuaInterface::luaGetBattlegroundStatistics(lua_State* L)
 		setField(L, "deaths", it->deaths);
 		setField(L, "assists", it->assists);
 		pushTable(L);
+	}
+
+	return 1;
+}
+
+int32_t LuaInterface::luaBattlegroundClose(lua_State* L)
+{
+	//battlegroundClose()
+	g_battleground.setClosed();
+	lua_pushboolean(L, true);
+
+	return 1;
+}
+
+int32_t LuaInterface::luaBattlegroundOpen(lua_State* L)
+{
+	//battlegroundOpen()
+	g_battleground.setOpen();
+	lua_pushboolean(L, true);
+
+	return 1;
+}
+
+int32_t LuaInterface::luaGetBattlegroundPlayersByTeam(lua_State* L)
+{
+	//getBattlegroundPlayersByTeam(team_id)
+	Bg_Teams_t team = (Bg_Teams_t)popNumber(L);
+	PlayersMap players = g_battleground.listPlayersOfTeam(team);
+
+	if(players.size() == 0)
+	{
+		lua_pushnil(L);
+		return 1;
+	}
+
+	uint32_t i = 0;
+	lua_newtable(L);
+	for(PlayersMap::iterator it = players.begin(); it != players.end(); it++, i++)
+	{
+		lua_pushnumber(L, i);
+		lua_pushnumber(L, it->second.player->getGUID());
 	}
 
 	return 1;
