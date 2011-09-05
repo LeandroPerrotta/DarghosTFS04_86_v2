@@ -23,20 +23,22 @@ function pvpBattleground.broadcastStatistics()
 	for k,v in pairs(data) do
 		
 		local cid = getPlayerByGUID(v.player_id)
-		if(pid ~= nil) then
+		if(cid ~= nil) then
 		
 			local teams = { [1] = "Time A", [2] = "Time B" }
 			local team = teams[doPlayerGetBattlegroundTeam(cid)]
+			
+			if(team ~= nil) then
+				team = "Fora"
+			end
 			
 			local spaces_c = 40 - string.len(getPlayerName(cid))
 			
 			local spaces = ""	
 			for i=1, spaces_c do spaces = spaces .. " " end
 					
-			if(team ~= nil) then
-				msg = msg .. i .. "# " .. getPlayerName(cid) .. " (" .. team .. ")".. spaces .. "" .. v.kills .. " / " .. v.deaths .. "  [" .. v.assists .. "] \n"	
-				i = i + 1
-			end	
+			msg = msg .. i .. "# " .. getPlayerName(cid) .. " (" .. team .. ")".. spaces .. "" .. v.kills .. " / " .. v.deaths .. "  [" .. v.assists .. "] \n"	
+			i = i + 1
 		end
 	end
 	
@@ -50,7 +52,9 @@ function pvpBattleground.onEnter(cid)
 		lockTeleportScroll(cid)
 	
 		local teams = { [1] = "Time A", [2] = "Time B" }
-		local team = teams[doPlayerGetBattlegroundTeam(cid)]		
+		local team = teams[doPlayerGetBattlegroundTeam(cid)]
+		
+		registerCreatureEvent(cid, "onBattlegroundFrag")
 		
 		broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") juntou-se a batalha pelo " .. team .. ".")
 		
@@ -65,6 +69,7 @@ function pvpBattleground.onExit(cid)
 	if(doPlayerLeaveBattleground(cid)) then
 		broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") saiu da batalha.")
 		unlockTeleportScroll(cid)
+		unregisterCreatureEvent(cid, "onBattlegroundFrag")
 		
 		return true
 	end
