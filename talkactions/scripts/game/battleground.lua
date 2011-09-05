@@ -5,29 +5,32 @@ function onSay(cid, words, param)
 	if(param == "") then
 	
 		local msg = "O uso deste comando requer um ou mais parametros. Exemplos:\n"
-		msg = msg .. "!bg sobre, !bg info, !bg help -> Exibe informaÃ§Ãµes sobre o sistema de Battlegrounds."
-		msg = msg .. "!bg team -> Exibe os membros de seu time (requer estar dentro da Battleground)."
+		msg = msg .. "!bg sobre, !bg info, !bg help -> Exibe informações sobre o sistema de Battlegrounds.\n"
+		msg = msg .. "!bg team -> Exibe os membros de seu time (requer estar dentro da Battleground).\n"
 	
 		if(_access >= access.COMMUNITY_MANAGER) then
-			msg = msg .. "!bg team team_id -> Exibe as informaÃ§Ãµes de um time (1 ou 2)."
-			msg = msg .. "!bg close -> Expulsa todos jogadores na battleground e a fecha."
-			msg = msg .. "!bg open -> Permite que jogadores entrem na battleground."
-			msg = msg .. "!bg stats -> Exibe as estatisticas (para vocÃª)."
-			msg = msg .. "!bg statsall -> Exibe as estatisticas (para todos no canal)."
+			msg = msg .. "!bg team team_id -> Exibe as informações de um time (1 ou 2).\n"
+			msg = msg .. "!bg close -> Expulsa todos jogadores na battleground e a fecha.\n"
+			msg = msg .. "!bg open -> Permite que jogadores entrem na battleground.\n"
+			msg = msg .. "!bg stats -> Exibe as estatisticas (para você).\n"
+			msg = msg .. "!bg statsall -> Exibe as estatisticas (para todos no canal).\n"
 		else
-			msg = msg .. "!bg team -> Exibe os membros de seu time (requer estar dentro da Battleground)."
+			msg = msg .. "!bg team -> Exibe os membros de seu time (requer estar dentro da Battleground).\n"
 		end
 	
 		pvpBattleground.sendPlayerChannelMessage(cid, msg)
 		return TRUE
 	end
 	
-	local option, param = string.explode(param, " ", 1)
+	local explode = string.explode(param, " ", 1)
+	
+	option = explode[1]
+	param = explode[2] or nil
 	
 	msg = ""
 	
-	if(iInArray({"info", "sobre", "help"}, option)) then	
-		msg = msg .. "InformaÃ§Ãµes sobre o sistema de Battlegrounds:\n"
+	if(isInArray({"info", "sobre", "help"}, option)) then	
+		msg = msg .. "Informações sobre o sistema de Battlegrounds:\n"
 		msg = msg .. pvpBattleground.getInformations()
 	elseif(option == "team") then
 	
@@ -35,7 +38,7 @@ function onSay(cid, words, param)
 		local error = false
 		
 		if(not doPlayerIsInBattleground(cid) and _access < access.COMMUNITY_MANAGER) then
-			msg = msg .. "Para usar o comando \"!bg team\" Ã© preciso estar dentro de uma Battleground."
+			msg = msg .. "Para usar o comando \"!bg team\" é preciso estar dentro de uma Battleground."
 			error = true
 		end
 		
@@ -43,7 +46,7 @@ function onSay(cid, words, param)
 			team = doPlayerGetBattlegroundTeam(cid)
 		end
 	
-		if(_access >= access.COMMUNITY_MANAGER and inInArray({1, 2}, param)) then
+		if(_access >= access.COMMUNITY_MANAGER and isInArray({1, 2}, param)) then
 			error = false
 			team = param
 		end
