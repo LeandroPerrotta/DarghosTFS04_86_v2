@@ -12,7 +12,7 @@ REQUIRED_POINTS = 20
 function process(cid, message, keywords, parameters, node)
 	
 	local npcHandler = parameters.npcHandler
-	local talkState = parameters.talkState
+	local talkState = parameters.talk_state
 	
     if(not npcHandler:isFocused(cid)) then
         return false
@@ -57,7 +57,7 @@ function process(cid, message, keywords, parameters, node)
     elseif(talkState == 3) then
 		
 		npcHandler:say("Perfeito, retorne quando a tiver concluido, estarei o aguardando!", cid)
-		setPlayerStorageValue(cid, sid.DAILY_BATTLEGROUND_ACTIVE)
+		setPlayerStorageValue(cid, sid.DAILY_BATTLEGROUND_ACTIVE, 1)
     	npcHandler:resetNpc()		
     end
     

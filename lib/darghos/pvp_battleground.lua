@@ -122,6 +122,10 @@ end
 
 function pvpBattleground.onEnter(cid)
 
+	if(not isPlayer(cid)) then
+		return false
+	end
+
 	local ret = doPlayerJoinBattleground(cid)
 
 	if(ret == BG_RET_NO_ERROR) then

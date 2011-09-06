@@ -17,9 +17,9 @@ function onBattlegroundFrag(cid, target)
 			points = math.min(points, DAILY_REQUIRED_POINTS)
 			
 			if(points < DAILY_REQUIRED_POINTS) then
-				doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_ORANGE, "VocÃª precisa derrotar mais " .. (points - DAILY_REQUIRED_POINTS) .. " adversÃ¡rios para completar a sua missÃ£o.")
+				doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_ORANGE, "Você precisa derrotar mais " .. (DAILY_REQUIRED_POINTS - points) .. " adversários para completar a sua missão.")
 			elseif(points == DAILY_REQUIRED_POINTS) then
-				doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_ORANGE, "VocÃª concluiu a sua missÃ£o! Volte a falar com Dhor'Thar para receber a sua recompensa!")
+				doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_ORANGE, "Você concluiu a sua missão! Volte a falar com Dhor'Thar para receber a sua recompensa!")
 			end
 			
 			setPlayerStorageValue(cid, sid.DAILY_BATTLEGROUND_POINTS, points)
@@ -28,10 +28,10 @@ function onBattlegroundFrag(cid, target)
 	
 	dailyActive = (getPlayerStorageValue(target, sid.DAILY_BATTLEGROUND_ACTIVE) == 1) and true or false	
 	if(dailyActive) then
-		local points math.max(getPlayerStorageValue(target, sid.DAILY_BATTLEGROUND_POINTS), 0)
+		local points = math.max(getPlayerStorageValue(target, sid.DAILY_BATTLEGROUND_POINTS), 0)
 		if(points > 0) then
 			points = points - 1
-			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_ORANGE, "VocÃª foi derrotado por outro jogador na battleground e perdeu 1 ponto, vocÃª precisa derrotar mais " .. (points - DAILY_REQUIRED_POINTS) .. " adversÃ¡rios para completar a sua missÃ£o.")
+			doPlayerSendTextMessage(target, MESSAGE_STATUS_CONSOLE_ORANGE, "Você foi derrotado por outro jogador na battleground e perdeu 1 ponto, você precisa derrotar mais " .. (DAILY_REQUIRED_POINTS - points) .. " adversários para completar a sua missão.")
 			setPlayerStorageValue(target, sid.DAILY_BATTLEGROUND_POINTS, points)
 		end
 	end
