@@ -868,12 +868,21 @@ void ProtocolGame::GetTileDescription(const Tile* tile, NetworkMessage_ptr msg)
 
 			#ifdef __DARGHOS_PVP_SYSTEM__
 			checkCreatureAsKnown((*cit)->getID(), known, removedKnown);
-			if(known && (*cit)->getPlayer() && (*cit)->getPlayer()->isInBattleground())
+			if(known && (*cit)->getPlayer())
 			{ 
-				known = false; removedKnown = (*cit)->getID();
+				if((*cit)->getPlayer()->isInBattleground() && !alreadyKnowBgPlayer((*cit)->getPlayer()->getGUID()))
+				{
+					knowBgPlayersList.push_back((*cit)->getPlayer()->getGUID());
+					known = false; removedKnown = (*cit)->getID();
+				}
+				else if(alreadyKnowBgPlayer((*cit)->getPlayer()->getGUID()))
+				{
+					knowBgPlayersList.remove((*cit)->getPlayer()->getGUID());
+					known = false; removedKnown = (*cit)->getID();
+				}
 			}
 			#else
-			checkCreatureAsKnown((*cit)->getID(), known, removedKnown);
+			checkCreatureAsKnown(creature->getID(), known, removedKnown);
 			#endif
 
 			AddCreature(msg, (*cit), known, removedKnown);
@@ -2941,9 +2950,18 @@ void ProtocolGame::AddTileCreature(NetworkMessage_ptr msg, const Position& pos, 
 
 	#ifdef __DARGHOS_PVP_SYSTEM__
 	checkCreatureAsKnown(creature->getID(), known, removedKnown);
-	if(known && creature->getPlayer() && creature->getPlayer()->isInBattleground())
+	if(known && creature->getPlayer())
 	{ 
-		known = false; removedKnown = creature->getID();
+		if(creature->getPlayer()->isInBattleground() && !alreadyKnowBgPlayer(creature->getPlayer()->getGUID()))
+		{
+			knowBgPlayersList.push_back(creature->getPlayer()->getGUID());
+			known = false; removedKnown = creature->getID();
+		}
+		else if(alreadyKnowBgPlayer(creature->getPlayer()->getGUID()))
+		{
+			knowBgPlayersList.remove(creature->getPlayer()->getGUID());
+			known = false; removedKnown = creature->getID();
+		}
 	}
 	#else
 	checkCreatureAsKnown(creature->getID(), known, removedKnown);
