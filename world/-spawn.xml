@@ -1424,7 +1424,7 @@
   <spawn centerx="1469" centery="1822" centerz="5" radius="1">
     <monster name="Beholder" x="-1" y="-1" z="5" spawntime="60"/>
   </spawn>
-  <spawn centerx="2205" centery="1827" centerz="5" radius="1">
+  <spawn centerx="2207" centery="1827" centerz="5" radius="1">
     <npc name="quendor.pvp" x="0" y="0" z="5" spawntime="60"/>
   </spawn>
   <spawn centerx="1462" centery="1851" centerz="5" radius="1">
