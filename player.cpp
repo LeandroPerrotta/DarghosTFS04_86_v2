@@ -3744,16 +3744,25 @@ void Player::onTargetCreatureGainHealth(Creature* target, int32_t points)
 GuildEmblems_t Player::getGuildEmblem(const Creature* creature) const
 {
 	const Player* player = creature->getPlayer();
-	
-	#ifdef __DARGHOS_PVP_SYSTEM__
-	if(player->isInBattleground())
-	{
-		return (player->getBattlegroundTeam() == getBattlegroundTeam()) ? EMBLEM_GREEN : EMBLEM_RED;
-	}
-	#endif
 
+	#ifndef __DARGHOS_PVP_SYSTEM__
 	if(!player || !player->hasEnemy())
 		return Creature::getGuildEmblem(creature);
+	#else
+
+	if(player && player->isInBattleground())
+	{
+		if(!isInBattleground())
+			return EMBLEM_NONE;
+
+		return (player->getBattlegroundTeam() == getBattlegroundTeam()) ? EMBLEM_GREEN : EMBLEM_RED;
+	}
+
+	if(!player || !player->hasEnemy())
+	{
+		return Creature::getGuildEmblem(creature);
+	}
+	#endif
 
 	if(player->isEnemy(this, false))
 		return EMBLEM_RED;

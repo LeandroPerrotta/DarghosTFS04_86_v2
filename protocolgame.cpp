@@ -865,7 +865,16 @@ void ProtocolGame::GetTileDescription(const Tile* tile, NetworkMessage_ptr msg)
 
 			bool known;
 			uint32_t removedKnown;
+
+			#ifdef __DARGHOS_PVP_SYSTEM__
 			checkCreatureAsKnown((*cit)->getID(), known, removedKnown);
+			if(known && (*cit)->getPlayer() && (*cit)->getPlayer()->isInBattleground())
+			{ 
+				known = false; removedKnown = (*cit)->getID();
+			}
+			#else
+			checkCreatureAsKnown((*cit)->getID(), known, removedKnown);
+			#endif
 
 			AddCreature(msg, (*cit), known, removedKnown);
 			count++;
@@ -2929,7 +2938,17 @@ void ProtocolGame::AddTileCreature(NetworkMessage_ptr msg, const Position& pos, 
 
 	bool known;
 	uint32_t removedKnown;
+
+	#ifdef __DARGHOS_PVP_SYSTEM__
 	checkCreatureAsKnown(creature->getID(), known, removedKnown);
+	if(known && creature->getPlayer() && creature->getPlayer()->isInBattleground())
+	{ 
+		known = false; removedKnown = creature->getID();
+	}
+	#else
+	checkCreatureAsKnown(creature->getID(), known, removedKnown);
+	#endif
+
 	AddCreature(msg, creature, known, removedKnown);
 }
 
