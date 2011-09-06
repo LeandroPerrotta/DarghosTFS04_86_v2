@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<npc name="Dhor'Thar" floorchange="0" walkinterval="2000" speed="220" script="|DATA|/game/quendor.pvp.lua">
+	<health now="150" max="150"/>
+	<look type="128" head="115" body="100" legs="105" feet="76" addons="0"/>
+  
+	<parameters>
+		<parameter key="module_keywords" value="1" />
+		<parameter key="keywords" value="job,função,ocupação,trabalho,emprego;battleground" />
+		<parameter key="message_greet" value="Olá |PLAYERNAME|! O portal leva para a {battleground}, aonde ocorre grandes batalhas!" />
+		
+		<parameter key="keyword_reply1" value="Eu sou um dos lideres das tropas fieis ao Rei Ordon, minha função é treinar e recrutar guerreiros exepcionais." />
+		<parameter key="keyword_reply1" value="Sim, mas fique tranquilo, ao ser derrotado em uma battleground você não sofre nenhuma punição. Algumas pessoas a frequentam para completar a {tarefa}." />
+	</parameters>  
+</npc>

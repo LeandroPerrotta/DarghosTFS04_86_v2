@@ -3,7 +3,7 @@ local message = 3
 function onTime(time)
 
 	-- preparos de desligamento
-	pvpBattleground.prepareServerSave()
+	pvpBattleground.close()
 	
 	-- desligamento em 5 minutos
 	addEvent(doSetGameState, 1000 * 60 * 5, GAMESTATE_CLOSING)
