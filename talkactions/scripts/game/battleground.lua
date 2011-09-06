@@ -55,7 +55,7 @@ function onSay(cid, words, param)
 		end
 	elseif(option == "close" and _access >= access.COMMUNITY_MANAGER) then
 		msg = msg .. "Battleground fechada."
-		battlegroundClose()
+		pvpBattleground.close()
 	elseif(option == "open" and _access >= access.COMMUNITY_MANAGER) then
 		msg = msg .. "Battleground aberta."
 		battlegroundOpen()	

@@ -12,9 +12,26 @@ function pvpBattleground.onInit()
 	addEvent(pvpBattleground.broadcastStatistics, 1000 * 60 * BROADCAST_STATISTICS_INTERVAL)
 end
 
-function pvpBattleground.prepareServerSave()
+-- para evitar problemas precisamos fazer alguns procedimentos ao fechar o battleground
+function pvpBattleground.prepareClose()
+
+	for i = 1, 2 do
+		local players = getBattlegroundPlayersByTeam(i)
+		
+		if(#players > 0) then
+			for k,v in pairs(players) do
+				unlockTeleportScroll(v)
+				unlockChangeOutfit(v)
+				unregisterCreatureEvent(v, "onBattlegroundFrag")			
+			end
+		end
+	end
+end
+
+function pvpBattleground.close()
+	pvpBattleground.prepareClose()
 	battlegroundClose()
-	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] Sistema preparando-se para o server save em alguns minutos. Instancia fechada, estará novamente disponivel após o server save.", TALKTYPE_TYPES["channel-red"])
+	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] Battleground temporareamente fechada. Voltará em alguns instantes.", TALKTYPE_TYPES["channel-red"])
 end
 
 function pvpBattleground.broadcastStatistics(event, target)
@@ -109,6 +126,7 @@ function pvpBattleground.onEnter(cid)
 
 	if(ret == BG_RET_NO_ERROR) then
 		lockTeleportScroll(cid)
+		lockChangeOutfit(cid)
 	
 		local teams = { [1] = "Time A", [2] = "Time B" }
 		local team = teams[doPlayerGetBattlegroundTeam(cid)]
@@ -147,6 +165,7 @@ function pvpBattleground.onExit(cid)
 	if(ret == BG_RET_NO_ERROR) then
 		broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") saiu da batalha.")
 		unlockTeleportScroll(cid)
+		unlockChangeOutfit(cid)
 		unregisterCreatureEvent(cid, "onBattlegroundFrag")
 		
 		return true
