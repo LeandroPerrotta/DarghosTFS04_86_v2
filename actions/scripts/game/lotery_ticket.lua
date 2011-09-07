@@ -11,6 +11,6 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 		doSendMagicEffect(fromPosition, 2)		
 	end
 	
-	doRemoveItem(item.uid)	
+	doRemoveItem(item.uid)
 	return TRUE
 end

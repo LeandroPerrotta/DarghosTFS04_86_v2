@@ -5,6 +5,10 @@
 	<!-- Hack for default script for Use With items... -->
 	<action itemid="12670" script="default.lua"/>
 
+	<!-- Koshei's (Blue Legs) -->
+	<action uniqueid="1075-1076" script="game/koshei.lua"/>
+	<action itemid="8266" script="game/koshei.lua"/>
+	
 	<!-- Divine Ankh -->
 	<action itemid="2193" script="game/ankh.lua"/>
 
@@ -32,7 +36,7 @@
 
 	
 	<!-- Quests -->
-	<action uniqueid="2001-2092" script="game/quests/chest.lua"/>
+	<action uniqueid="2001-2097" script="game/quests/chest.lua"/>
 
 	<!-- Quests -->
 	<!--  
