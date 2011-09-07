@@ -15,7 +15,6 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 	local now = statues[statue_id]
 	local new = (now == 1) and 0 or 1
 	statues[statue_id] = new
-	print(table.show(statues))
 	
 	local ret = getBooleanFromString(statues[statue_id])
 	
@@ -45,6 +44,7 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 			event = nil
 		end
 		restartState()
+		doSendAnimatedText(getThingPos(item.uid), "tick!", COLOR_ORANGE)
 	end
 	
 	return true
@@ -69,9 +69,9 @@ function onUseKosheiAmulet(cid, item, fromPosition, itemEx, toPosition)
 
 	local kosheiDeathDate = getItemAttribute(itemEx.uid, "kosheiDeathDate")
 		
-	if(kosheiDeathDate and kosheiDeathDate + 4 <= os.time()) then
+	if(kosheiDeathDate ~= nil and kosheiDeathDate + 3 < os.time()) then
 		setGlobalStorageValue(gid.KOSHEI_DEATH, 1)
-		doSendAnimatedText(getThingPos(itemEx.uid), "Arrrrggghhh! Este verme descobriu minha fraqueza!! Eu ainda retornarei!!", COLOR_ORANGE)
+		doSayInPosition(getThingPos(itemEx.uid), "Arrrrggghhh! Este verme descobriu minha fraqueza!! Eu ainda retornarei!!", TALKTYPE_ORANGE_1)
 		doRemoveItem(itemEx.uid)
 		doRemoveItem(item.uid)
 		kosheiSummoned = false
