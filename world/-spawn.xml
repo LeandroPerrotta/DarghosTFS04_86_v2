@@ -16015,9 +16015,9 @@
     <monster name="Tortoise" x="-10" y="19" z="8" spawntime="60"/>
   </spawn>
   <spawn centerx="2170" centery="2751" centerz="8" radius="1">
-    <monster name="Minotaur" x="-1" y="0" z="8" spawntime="60"/>
-    <monster name="Minotaur mage" x="-1" y="1" z="8" spawntime="60"/>
-    <monster name="Minotaur" x="1" y="1" z="8" spawntime="60"/>
+    <monster name="Minotaur guard" x="-1" y="-1" z="8" spawntime="60"/>
+    <monster name="Minotaur archer" x="1" y="0" z="8" spawntime="60"/>
+    <monster name="Minotaur guard" x="1" y="1" z="8" spawntime="60"/>
   </spawn>
   <spawn centerx="2700" centery="2751" centerz="8" radius="27"/>
   <spawn centerx="2805" centery="2772" centerz="8" radius="27">
@@ -21076,8 +21076,9 @@
     <monster name="Rotworm Queen" x="0" y="1" z="9" spawntime="61"/>
   </spawn>
   <spawn centerx="2148" centery="2740" centerz="9" radius="1">
+    <monster name="Minotaur mage" x="-1" y="-1" z="9" spawntime="60"/>
+    <monster name="Minotaur guard" x="0" y="-1" z="9" spawntime="60"/>
     <monster name="Minotaur mage" x="1" y="-1" z="9" spawntime="60"/>
-    <monster name="Minotaur" x="1" y="1" z="9" spawntime="60"/>
   </spawn>
   <spawn centerx="2640" centery="2747" centerz="9" radius="27">
     <monster name="Tortoise" x="26" y="-1" z="9" spawntime="60"/>
@@ -21118,15 +21119,17 @@
     <monster name="Tortoise" x="-6" y="12" z="9" spawntime="60"/>
   </spawn>
   <spawn centerx="2148" centery="2752" centerz="9" radius="1">
-    <monster name="Minotaur" x="0" y="-1" z="9" spawntime="60"/>
+    <monster name="Minotaur mage" x="-1" y="0" z="9" spawntime="60"/>
   </spawn>
   <spawn centerx="2164" centery="2753" centerz="9" radius="1">
-    <monster name="Minotaur" x="-1" y="0" z="9" spawntime="60"/>
-    <monster name="Minotaur" x="0" y="1" z="9" spawntime="60"/>
+    <monster name="Minotaur guard" x="0" y="-1" z="9" spawntime="60"/>
+    <monster name="Minotaur guard" x="-1" y="0" z="9" spawntime="60"/>
+    <monster name="Minotaur archer" x="0" y="1" z="9" spawntime="60"/>
   </spawn>
   <spawn centerx="2183" centery="2753" centerz="9" radius="1">
     <monster name="Minotaur mage" x="0" y="-1" z="9" spawntime="60"/>
-    <monster name="Minotaur" x="1" y="-1" z="9" spawntime="60"/>
+    <monster name="Minotaur archer" x="1" y="-1" z="9" spawntime="60"/>
+    <monster name="Minotaur guard" x="-1" y="0" z="9" spawntime="60"/>
   </spawn>
   <spawn centerx="2802" centery="2753" centerz="9" radius="27">
     <monster name="Tortoise" x="-6" y="-3" z="9" spawntime="60"/>
@@ -21151,21 +21154,23 @@
   </spawn>
   <spawn centerx="2774" centery="2754" centerz="9" radius="27"/>
   <spawn centerx="2142" centery="2760" centerz="9" radius="1">
-    <monster name="Minotaur mage" x="-1" y="-1" z="9" spawntime="60"/>
-    <monster name="Minotaur" x="1" y="-1" z="9" spawntime="60"/>
+    <monster name="Minotaur archer" x="0" y="-1" z="9" spawntime="60"/>
+    <monster name="Minotaur guard" x="-1" y="0" z="9" spawntime="60"/>
+    <monster name="Minotaur archer" x="-1" y="1" z="9" spawntime="60"/>
   </spawn>
   <spawn centerx="2156" centery="2760" centerz="9" radius="1">
-    <monster name="Minotaur" x="0" y="-1" z="9" spawntime="60"/>
+    <monster name="Minotaur mage" x="-1" y="0" z="9" spawntime="60"/>
   </spawn>
   <spawn centerx="2173" centery="2760" centerz="9" radius="1">
-    <monster name="Minotaur" x="-1" y="-1" z="9" spawntime="60"/>
+    <monster name="Minotaur guard" x="-1" y="0" z="9" spawntime="60"/>
   </spawn>
   <spawn centerx="2189" centery="2760" centerz="9" radius="1">
-    <monster name="Minotaur" x="-1" y="-1" z="9" spawntime="60"/>
+    <monster name="Minotaur archer" x="0" y="-1" z="9" spawntime="60"/>
     <monster name="Minotaur mage" x="1" y="-1" z="9" spawntime="60"/>
+    <monster name="Minotaur archer" x="0" y="0" z="9" spawntime="60"/>
   </spawn>
   <spawn centerx="2164" centery="2765" centerz="9" radius="1">
-    <monster name="Minotaur" x="0" y="-1" z="9" spawntime="60"/>
+    <monster name="Minotaur archer" x="0" y="-1" z="9" spawntime="60"/>
     <monster name="Minotaur mage" x="-1" y="0" z="9" spawntime="60"/>
   </spawn>
   <spawn centerx="2792" centery="2771" centerz="9" radius="27">
