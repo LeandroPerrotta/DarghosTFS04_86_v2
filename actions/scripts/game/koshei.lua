@@ -1,4 +1,4 @@
-local statues = { true, true }
+local statues = { 1, 1 }
 local ITEM_STAIR = 4835
 local ITEM_GROUND = 407
 local ITEM_KOSHEI_AMULET = 8266
@@ -12,9 +12,22 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 	end
 	
 	local statue_id = (uid.KOSHEI_STATUE_2 - item.uid) + 1
-	statues[statue_id] = (statues[statue_id]) and false or true
+	local now = statues[statue_id]
+	local new = (now == 1) and 0 or 1
+	statues[statue_id] = new
+	print(table.show(statues))
 	
-	if(not statues[1] and not statues[2]) then
+	local ret = getBooleanFromString(statues[statue_id])
+	
+	if(ret) then
+		doTransformItem(item.uid, item.itemid + 1)
+	else
+		doTransformItem(item.uid, item.itemid - 1)
+	end
+	
+	local statue1, statue2 = getBooleanFromString(statues[1]), getBooleanFromString(statues[2])
+	
+	if(not statue1 and not statue2) then
 		doTransformItem(uid.KOSHEI_STAIR, ITEM_STAIR)
 		event = addEvent(restartState, 1000 * 60, true)
 		
@@ -22,8 +35,8 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 		
 		if(not kosheiSummoned and not hasDefeatKoshei) then
 			local pos = getThingPos(uid.KOSHEI_POS)
-			local koshei = doSummonCreature("Koshei the Deathless")
-			addCreatureEvent(koshei, "monsterDeath")
+			local koshei = doSummonCreature("Koshei the Deathless", pos)
+			registerCreatureEvent(koshei, "monsterDeath")
 			kosheiSummoned = true
 		end
 	else
@@ -37,14 +50,16 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 	return true
 end
 
-function restartState(statues)
-	statues = statues or false
+function restartState(restartStatues)
+
+	restartStatues = restartStatues or false
 	
 	doTransformItem(uid.KOSHEI_STAIR, ITEM_GROUND)
 	
-	if(statues) then
-		doTransformItem(uid.KOSHEI_STATUE_1, getThing(KOSHEI_STATUE_1).itemid - 1)
-		doTransformItem(uid.KOSHEI_STATUE_1, getThing(KOSHEI_STATUE_2).itemid - 1)
+	if(restartStatues) then
+		statues = { 1, 1 }
+		doTransformItem(uid.KOSHEI_STATUE_1, getThing(uid.KOSHEI_STATUE_1).itemid + 1)
+		doTransformItem(uid.KOSHEI_STATUE_2, getThing(uid.KOSHEI_STATUE_2).itemid + 1)
 	end
 	
 	event = nil
@@ -52,10 +67,11 @@ end
 
 function onUseKosheiAmulet(cid, item, fromPosition, itemEx, toPosition)
 
-	local isKosheiCorpse = getItemAttribute(itemEx.uid, "kosheiCorpse")
-	
-	if(isKosheiCorpse) then
+	local kosheiDeathDate = getItemAttribute(itemEx.uid, "kosheiDeathDate")
+		
+	if(kosheiDeathDate and kosheiDeathDate + 4 <= os.time()) then
 		setGlobalStorageValue(gid.KOSHEI_DEATH, 1)
+		doSendAnimatedText(getThingPos(itemEx.uid), "Arrrrggghhh! Este verme descobriu minha fraqueza!! Eu ainda retornarei!!", COLOR_ORANGE)
 		doRemoveItem(itemEx.uid)
 		doRemoveItem(item.uid)
 		kosheiSummoned = false
