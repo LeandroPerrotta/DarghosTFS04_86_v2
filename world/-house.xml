@@ -293,4 +293,24 @@
   <house name="Wall Flat 13" houseid="653" entryx="2237" entryy="1798" entryz="5" rent="4000" townid="1" size="18"/>
   <house name="Fort Guard" houseid="654" entryx="2069" entryy="1839" entryz="7" rent="65000" townid="1" size="117"/>
   <house name="Castle of Wargrowth" houseid="655" entryx="1980" entryy="1791" entryz="7" rent="1000000" townid="1" size="1250"/>
+  <house name="South Flat 1" houseid="656" entryx="2186" entryy="2707" entryz="7" rent="6000" townid="5" size="20"/>
+  <house name="West Flat 1" houseid="657" entryx="2165" entryy="2705" entryz="7" rent="14000" townid="5" size="39"/>
+  <house name="West Flat 2" houseid="658" entryx="2172" entryy="2700" entryz="7" rent="3000" townid="5" size="4"/>
+  <house name="West Flat 3" houseid="659" entryx="2172" entryy="2703" entryz="7" rent="3000" townid="5" size="4"/>
+  <house name="West Flat 4" houseid="660" entryx="2168" entryy="2693" entryz="7" rent="5500" townid="5" size="13"/>
+  <house name="West Flat 5" houseid="661" entryx="2162" entryy="2693" entryz="7" rent="5500" townid="5" size="13"/>
+  <house name="West Flat 6" houseid="662" entryx="2158" entryy="2700" entryz="7" rent="3000" townid="5" size="4"/>
+  <house name="West Flat 7" houseid="663" entryx="2158" entryy="2702" entryz="7" rent="3000" townid="5" size="4"/>
+  <house name="West House 1" houseid="664" entryx="2148" entryy="2681" entryz="7" rent="20000" townid="5" size="41"/>
+  <house name="West House 2" houseid="665" entryx="2162" entryy="2681" entryz="7" rent="20000" townid="5" size="35"/>
+  <house name="West House 3" houseid="666" entryx="2156" entryy="2686" entryz="6" rent="20000" townid="5" size="34"/>
+  <house name="West House 4" houseid="667" entryx="2153" entryy="2687" entryz="6" rent="20000" townid="5" size="34"/>
+  <house name="West House 5" houseid="668" entryx="2155" entryy="2679" entryz="7" rent="31000" townid="5" size="51"/>
+  <house name="West House 6" houseid="669" entryx="2162" entryy="2679" entryz="7" rent="16000" townid="5" size="22"/>
+  <house name="Central House 1" houseid="670" entryx="2168" entryy="2687" entryz="7" rent="22500" townid="5" size="44"/>
+  <house name="Central House 2" houseid="671" entryx="2178" entryy="2691" entryz="7" rent="5200" townid="5" size="8"/>
+  <house name="Central Guildhall 1" houseid="672" entryx="2168" entryy="2678" entryz="7" rent="40000" townid="5" size="108"/>
+  <house name="Central House 3" houseid="673" entryx="2182" entryy="2683" entryz="7" rent="21000" townid="5" size="37"/>
+  <house name="Central Guildhall 2" houseid="674" entryx="2183" entryy="2680" entryz="7" rent="30000" townid="5" size="65"/>
+  <house name="Central House 4" houseid="675" entryx="2195" entryy="2677" entryz="7" rent="24000" townid="5" size="72"/>
 </houses>
