@@ -2033,19 +2033,6 @@ void ProtocolGame::sendCreatureSay(const Creature* creature, SpeakClasses type, 
 	}
 }
 
-#ifdef __DARGHOS_CUSTOM__
-void ProtocolGame::sendSayInPosition(Position* pos, SpeakClasses type, const std::string& text)
-{
-	NetworkMessage_ptr msg = getOutputBuffer();
-	if(msg)
-	{
-		TRACK_MESSAGE(msg);
-		const Creature* c;
-		AddCreatureSpeak(msg, c, type, text, 0, 0, pos);
-	}
-}
-#endif
-
 void ProtocolGame::sendToChannel(const Creature* creature, SpeakClasses type, const std::string& text, uint16_t channelId, uint32_t time /*= 0*/)
 {
 	NetworkMessage_ptr msg = getOutputBuffer();

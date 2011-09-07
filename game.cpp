@@ -3985,7 +3985,7 @@ bool Game::internalSayInPosition(Position* pos, SpeakClasses type, const std::st
 		if(!(tmpPlayer = (*it)->getPlayer()))
 			continue;
 
-		tmpPlayer->sendSayInPosition(pos, type, text);
+		tmpPlayer->sendCreatureSay(NULL, type, text, pos);
 	}
 
 	return true;
