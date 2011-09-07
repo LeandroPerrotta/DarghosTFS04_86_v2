@@ -2463,6 +2463,9 @@ void LuaInterface::registerFunctions()
 
 	//doPlayerRemoveDoubleDamage(cid)
 	lua_register(m_luaState, "doPlayerRemoveDoubleDamage", LuaInterface::luaDoPlayerRemoveDoubleDamage);
+
+	//doSayInPosition(pos, msg, type)
+	lua_register(m_luaState, "doSayInPosition", LuaInterface::luaDoSayInPosition);
 	#endif
 
 	#ifdef __DARGHOS_PVP_SYSTEM__
@@ -10371,6 +10374,30 @@ int32_t LuaInterface::luaDoPlayerRemoveDoubleDamage(lua_State* L)
 		lua_pushboolean(L, false);
 	}
 
+	return 1;
+}
+
+int32_t LuaInterface::luaDoSayInPosition(lua_State* L)
+{
+	//doSayInPosition(pos, msg, type)
+	uint32_t params = lua_gettop(L);
+
+	SpeakClasses type = SPEAK_SAY;
+	if(params > 2)
+		type = (SpeakClasses)popNumber(L);
+
+	std::string text = popString(L);
+	PositionEx pos;
+	popPosition(L, pos);
+
+	if((!pos.x || !pos.y))
+	{
+		errorEx("Invalid position specified.");
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	lua_pushboolean(L, g_game.internalSayInPosition(&pos, type, text));
 	return 1;
 }
 #endif

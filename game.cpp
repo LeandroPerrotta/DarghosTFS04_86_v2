@@ -3965,6 +3965,33 @@ bool Game::internalCreatureTurn(Creature* creature, Direction dir)
 	return true;
 }
 
+#ifdef __DARGHOS_CUSTOM__
+bool Game::internalSayInPosition(Position* pos, SpeakClasses type, const std::string& text)
+{
+	SpectatorVec list;
+	SpectatorVec::const_iterator it;
+
+	if(type != SPEAK_YELL && type != SPEAK_MONSTER_YELL)
+		getSpectators(list, (*pos), false, false,
+			Map::maxClientViewportX, Map::maxClientViewportX,
+			Map::maxClientViewportY, Map::maxClientViewportY);
+	else
+		getSpectators(list, (*pos), false, true, 18, 18, 14, 14);
+
+	//send to client
+	Player* tmpPlayer = NULL;
+	for(it = list.begin(); it != list.end(); ++it)
+	{
+		if(!(tmpPlayer = (*it)->getPlayer()))
+			continue;
+
+		tmpPlayer->sendSayInPosition(pos, type, text);
+	}
+
+	return true;
+}
+#endif
+
 bool Game::internalCreatureSay(Creature* creature, SpeakClasses type, const std::string& text,
 	bool ghostMode, SpectatorVec* spectators/* = NULL*/, Position* pos/* = NULL*/)
 {

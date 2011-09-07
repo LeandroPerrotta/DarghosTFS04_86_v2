@@ -441,6 +441,10 @@ class Game
 		bool internalCreatureSay(Creature* creature, SpeakClasses type, const std::string& text,
 			bool ghostMode, SpectatorVec* spectators = NULL, Position* pos = NULL);
 
+		#ifdef __DARGHOS_CUSTOM__
+		bool internalSayInPosition(Position* pos, SpeakClasses type, const std::string& text);
+		#endif
+
 		bool internalStartTrade(Player* player, Player* partner, Item* tradeItem);
 		bool internalCloseTrade(Player* player);
 

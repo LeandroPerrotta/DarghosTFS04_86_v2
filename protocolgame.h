@@ -197,6 +197,9 @@ class ProtocolGame : public Protocol
 		void sendPing();
 		void sendCreatureTurn(const Creature* creature, int16_t stackpos);
 		void sendCreatureSay(const Creature* creature, SpeakClasses type, const std::string& text, Position* pos = NULL);
+		#ifdef __DARGHOS_CUSTOM__
+		void sendSayInPosition(Position* pos, SpeakClasses type, const std::string& text);
+		#endif
 
 		void sendCancel(const std::string& message);
 		void sendCancelWalk();
