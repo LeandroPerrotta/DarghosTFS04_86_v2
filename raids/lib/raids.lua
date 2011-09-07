@@ -6,6 +6,7 @@ local raids = {
 			{centerx=2346, centery=1933, centerz=8, radius=5}, -- THORN DLAIR
 			{centerx=3299, centery=1992, centerz=8, radius=5}, -- ARACURA DLAIR
 			{centerx=2028, centery=2494, centerz=6, radius=5}, -- SALAZART DLAIR
+			{centerx=2341, centery=2638, centerz=12, radius=5}, -- SALAZART DLAIR (SOULTH)
 			{centerx=2813, centery=1144, centerz=8, radius=5} -- AARAGON DLAIR		
 		},
 		
