@@ -171,6 +171,7 @@
 	<monster name="Grorlam" file="bosses/grorlam.xml"/>
 	<monster name="Grynch Clan Goblin" file="bosses/grynch clan goblin.xml"/>
 	<monster name="Hellgorak" file="bosses/hellgorak.xml"/>
+	<monster name="Koshei the Deathless" file="bosses/koshei the deathless.xml"/>
 	<monster name="Latrivan" file="bosses/latrivan.xml"/>
 	<monster name="Lethal Lissy" file="bosses/lethal lissy.xml"/>
 	<monster name="Lord of the Elements" file="bosses/lord of the elements.xml"/>

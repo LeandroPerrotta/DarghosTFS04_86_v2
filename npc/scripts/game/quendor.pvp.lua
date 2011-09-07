@@ -34,10 +34,10 @@ function process(cid, message, keywords, parameters, node)
 				local totalExp = getPlayerExperience(cid)
 				local expAdd = math.floor(totalExp * 0.02)
 				doPlayerAddExperience(cid, expAdd)
-				local moneyAdd = rand(90000, 320000)
+				local moneyAdd = math.random(90000, 320000)
 				doPlayerAddMoney(cid, moneyAdd)
 				
-				doPlayerSendTextMessage(self.cid, MESSAGE_STATUS_CONSOLE_BLUE, "Você adquiriu " .. expAdd .. " pontos de expêriencia e " .. moneyAdd .. " gold coins por concluir a tarefa.")
+				doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Você adquiriu " .. expAdd .. " pontos de expêriencia e " .. moneyAdd .. " gold coins por concluir a tarefa.")
 			else
 				npcHandler:say("Você ainda não atingiu os 20 pontos! Não demore a completar sua missão! Quendor precisa de bravos guerreiros!", cid)
 				npcHandler:resetNpc()
@@ -71,5 +71,5 @@ local node1 = keywordHandler:addKeyword({'task', 'mission', 'tarefa', 'missão', 
     
     node1:addChildKeyword({'no', 'não', 'não'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'Volte quando estiver preparado para seu treinamento.', reset = true})
 
-
+npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 npcHandler:addModule(FocusModule:new())
