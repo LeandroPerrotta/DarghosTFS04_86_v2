@@ -504,7 +504,40 @@ local quests =
 			storageId = sid.DEMON_OAK_CHESTS,
 			rewardId = 8918,
 			count = 1
-		}
+		},
+		[uid.BLUE_LEGS] = {
+			storageId = sid.BLUE_LEGS,			
+			rewardContainer = 1995,
+			rewardContainerItems = { 
+				{ itemid = 7730, count = 1 },
+				{ itemid = 2152, count = 50 }
+			}			
+		},
+		[uid.KOSHEI_AMULET_FIRST_PIECE] = {
+			storageId = sid.KOSHEI_AMULET_FIRST_PIECE,			
+			rewardId = 8262,
+			count = 1,
+			showEmpty = false	
+		},
+		[uid.KOSHEI_AMULET_SECOND_PIECE] = {
+			storageId = sid.KOSHEI_AMULET_SECOND_PIECE,			
+			rewardId = 8263,
+			count = 1,
+			showEmpty = false		
+		},		
+		[uid.KOSHEI_AMULET_THIRD_PIECE] = {
+			storageId = sid.KOSHEI_AMULET_THIRD_PIECE,			
+			rewardId = 8264,
+			count = 1,
+			showEmpty = false		
+		},		
+		[uid.KOSHEI_AMULET_FOURTH_PIECE] = {
+			storageId = sid.KOSHEI_AMULET_FOURTH_PIECE,			
+			rewardId = 8265,
+			count = 1,
+			showEmpty = false		
+		},		
+		
 	}
 
 function useQuestChest(cid, quest, questActionId)
@@ -575,7 +608,10 @@ function useQuestChest(cid, quest, questActionId)
 		setPlayerStorageValue(cid, quest.storageId, 1)	
 		chestScripts(cid, questActionId)
 	else
-		doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "It is empty.")
+		local showEmpty = quest.showEmpty or true
+		if(showEmpty) then
+			doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "It is empty.")
+		end
 	end
 end
 
