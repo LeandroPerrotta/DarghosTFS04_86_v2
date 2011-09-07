@@ -18,7 +18,7 @@ function pvpBattleground.prepareClose()
 	for i = 1, 2 do
 		local players = getBattlegroundPlayersByTeam(i)
 		
-		if(#players > 0) then
+		if(players ~= nil and #players > 0) then
 			for k,v in pairs(players) do
 				unlockTeleportScroll(v)
 				unlockChangeOutfit(v)
@@ -97,7 +97,7 @@ function pvpBattleground.getPlayersTeamString(team_id)
 	local teams = {[1] = "Time A", [2] = "Time B"}
 	local msg = "Membros do " .. teams[team_id] .. " (comando \"!bg team\"):\n"
 	
-	if(#playersTeam == 0) then return msg .. "Nenhum" end
+	if(playersTeam == nil or #playersTeam == 0) then return msg .. "Nenhum" end
 	
 	local islast = false
 	for k,v in pairs(playersTeam) do
