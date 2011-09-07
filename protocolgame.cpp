@@ -870,12 +870,15 @@ void ProtocolGame::GetTileDescription(const Tile* tile, NetworkMessage_ptr msg)
 			checkCreatureAsKnown((*cit)->getID(), known, removedKnown);
 			if(known && (*cit)->getPlayer())
 			{ 
-				if((*cit)->getPlayer()->isInBattleground() && !alreadyKnowBgPlayer((*cit)->getPlayer()->getGUID()))
+				bool knownBg = alreadyKnowBgPlayer((*cit)->getPlayer()->getGUID());
+				bool inBg = (*cit)->getPlayer()->isInBattleground();
+
+				if(inBg && !knownBg)
 				{
 					knowBgPlayersList.push_back((*cit)->getPlayer()->getGUID());
 					known = false; removedKnown = (*cit)->getID();
 				}
-				else if(alreadyKnowBgPlayer((*cit)->getPlayer()->getGUID()))
+				else if(!inBg && knownBg)
 				{
 					knowBgPlayersList.remove((*cit)->getPlayer()->getGUID());
 					known = false; removedKnown = (*cit)->getID();
@@ -2952,12 +2955,14 @@ void ProtocolGame::AddTileCreature(NetworkMessage_ptr msg, const Position& pos, 
 	checkCreatureAsKnown(creature->getID(), known, removedKnown);
 	if(known && creature->getPlayer())
 	{ 
-		if(creature->getPlayer()->isInBattleground() && !alreadyKnowBgPlayer(creature->getPlayer()->getGUID()))
+		bool knownBg = alreadyKnowBgPlayer(creature->getPlayer()->getGUID());
+		bool inBg = creature->getPlayer()->isInBattleground();
+		if(inBg && !knownBg)
 		{
 			knowBgPlayersList.push_back(creature->getPlayer()->getGUID());
 			known = false; removedKnown = creature->getID();
 		}
-		else if(alreadyKnowBgPlayer(creature->getPlayer()->getGUID()))
+		else if(!inBg && knownBg)
 		{
 			knowBgPlayersList.remove(creature->getPlayer()->getGUID());
 			known = false; removedKnown = creature->getID();
