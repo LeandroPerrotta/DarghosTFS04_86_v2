@@ -21,8 +21,7 @@
 	<talkaction words="!online;/online" event="script" value="game/online.lua"/>
 	<talkaction words="!bg;/bg;!battleground;/battleground" event="script" value="game/battleground.lua"/>
 	
-	<talkaction default="true" channel="9" event="script" value="game/help.lua"/> <!-- Help Channel -->	
-	<talkaction default="true" channel="10" event="script" value="game/pvp_channel.lua"/> <!-- Help Channel -->	
+	<talkaction default="true" event="script" value="game/channels.lua"/> <!-- Help Channel -->	
 
 
 	<!-- Gods -->
