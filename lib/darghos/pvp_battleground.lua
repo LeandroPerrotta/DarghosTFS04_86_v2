@@ -135,6 +135,7 @@ function pvpBattleground.onEnter(cid)
 
 	if(ret == BG_RET_NO_ERROR) then
 		lockTeleportScroll(cid)
+		registerCreatureEvent(cid, "OnChangeOutfit")
 	
 		local teams = { [1] = "Time A", [2] = "Time B" }
 		local team = teams[doPlayerGetBattlegroundTeam(cid)]
@@ -174,6 +175,7 @@ function pvpBattleground.onExit(cid)
 		broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") saiu da batalha.")
 		unlockTeleportScroll(cid)
 		unregisterCreatureEvent(cid, "onBattlegroundFrag")
+		unregisterCreatureEvent(cid, "OnChangeOutfit")
 		
 		return true
 	elseif(ret == BG_RET_CAN_NOT_LEAVE_OR_JOIN) then
