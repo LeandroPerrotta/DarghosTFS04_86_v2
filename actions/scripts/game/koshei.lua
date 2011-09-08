@@ -17,7 +17,7 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 	local new = (now == 2) and 1 or 2
 	statues[statue_id] = new
 	
-	local ret = getBooleanFromString(statues[statue_id])
+	local ret = getBooleanFromString(statues[statue_id] - 1)
 	
 	if(ret) then
 		doTransformItem(item.uid, statuesId[new])
@@ -25,7 +25,7 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 		doTransformItem(item.uid, statuesId[new])
 	end
 	
-	local statue1, statue2 = getBooleanFromString(statues[1]), getBooleanFromString(statues[2])
+	local statue1, statue2 = getBooleanFromString(statues[1] - 1), getBooleanFromString(statues[2] - 1)
 	
 	if(not statue1 and not statue2) then
 		doTransformItem(uid.KOSHEI_STAIR, ITEM_STAIR)
