@@ -126,6 +126,11 @@ function pvpBattleground.onEnter(cid)
 		return false
 	end
 
+	if(getCreatureCondition(cid, CONDITION_OUTFIT)) then
+		doPlayerSendCancel(cid, "Você não pode entrar na battleground enquanto estiver sob certos efeitos magicos.")
+		return false
+	end
+
 	local ret = doPlayerJoinBattleground(cid)
 
 	if(ret == BG_RET_NO_ERROR) then
