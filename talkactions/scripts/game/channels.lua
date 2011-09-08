@@ -26,7 +26,7 @@ function pvp.onSay(cid, words, param, channel)
 		end	
 	end
 	
-	setPlayerStorageValue(cid, sid.LAST_HELP_MESSAGE, os.time())
+	setPlayerStorageValue(cid, sid.LAST_PVP_CHANNEL_MESSAGE, os.time())
 	return false
 end
 
