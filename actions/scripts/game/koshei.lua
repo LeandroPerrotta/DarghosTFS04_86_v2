@@ -1,4 +1,4 @@
-local statues = { 1, 1 }
+local statues = { 2, 2 }
 local statuesId = { 3697, 3698 }
 local ITEM_STAIR = 4835
 local ITEM_GROUND = 407
