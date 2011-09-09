@@ -107,8 +107,11 @@ function pvpBattleground.getPlayersTeamString(team_id)
 		end
 		
 		local player = getPlayerByGUID(v)
-		msg = msg .. getPlayerName(player) .. " (" .. getPlayerLevel(player) .. ")"
-		msg = msg .. ((islast) and ".\n" or ", ")
+		
+		if(player) then
+			msg = msg .. getPlayerName(player) .. " (" .. getPlayerLevel(player) .. ")"
+			msg = msg .. ((islast) and ".\n" or ", ")
+		end
 	end
 	
 	return msg
