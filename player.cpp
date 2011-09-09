@@ -3652,8 +3652,13 @@ void Player::onAttackedCreature(Creature* target)
 		))
 #ifdef __DARGHOS_CUSTOM__
 	{
-		pzLocked = true;
-		sendIcons();
+		if(!pzLocked)
+		{
+			pzLocked = true;
+			sendIcons();
+		}
+
+		return;
 	}
 #else
 		return;
