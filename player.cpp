@@ -3640,6 +3640,13 @@ void Player::onAttackedCreature(Creature* target)
 		return;
 	}
 
+	#ifdef __DARGHOS_CUSTOM__
+	if(Combat::isInPvpZone(this, targetPlayer) && !pzLocked)
+	{
+		pzLocked = true;
+		sendIcons();
+	}
+	#endif
 
 	if(Combat::isInPvpZone(this, targetPlayer) || isPartner(targetPlayer) ||
 #ifdef __WAR_SYSTEM__
@@ -3650,19 +3657,7 @@ void Player::onAttackedCreature(Creature* target)
 		&& !targetPlayer->isEnemy(this, false)
 #endif
 		))
-#ifdef __DARGHOS_CUSTOM__
-	{
-		if(!pzLocked)
-		{
-			pzLocked = true;
-			sendIcons();
-		}
-
 		return;
-	}
-#else
-		return;
-#endif
 
 	if(!pzLocked)
 	{

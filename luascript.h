@@ -728,6 +728,7 @@ class LuaInterface
 		static int32_t luaDoPlayerSetDoubleDamage(lua_State* L);
 		static int32_t luaDoPlayerRemoveDoubleDamage(lua_State* L);
 		static int32_t luaDoSayInPosition(lua_State* L);
+		static int32_t luaWordsIsSpell(lua_State* L);
 		#endif
 
 		#ifdef __DARGHOS_PVP_SYSTEM__

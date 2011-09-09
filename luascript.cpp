@@ -2466,6 +2466,9 @@ void LuaInterface::registerFunctions()
 
 	//doSayInPosition(pos, msg, type)
 	lua_register(m_luaState, "doSayInPosition", LuaInterface::luaDoSayInPosition);
+
+	//wordsIsSpell(words)
+	lua_register(m_luaState, "doSayInPosition", LuaInterface::luaWordsIsSpell);	
 	#endif
 
 	#ifdef __DARGHOS_PVP_SYSTEM__
@@ -3236,6 +3239,7 @@ int32_t LuaInterface::luaGetInstantSpellInfo(lua_State* L)
 {
 	//getInstantSpellInfo(name)
 	InstantSpell* spell = g_spells->getInstantSpellByName(popString(L));
+	g_spells->getInstantSpell
 	if(!spell)
 	{
 		errorEx(getError(LUA_ERROR_SPELL_NOT_FOUND));
@@ -3252,6 +3256,24 @@ int32_t LuaInterface::luaGetInstantSpellInfo(lua_State* L)
 	setField(L, "manapercent", spell->getManaPercent());
 	return 1;
 }
+
+#ifdef __DARGHOS_CUSTOM__
+int32_t LuaInterface::luaWordsIsSpell(lua_State* L)
+{
+	//wordsIsSpell(words)
+	std::string reWords = popString(L);
+	trimString(reWords);
+	InstantSpell* spell = g_spells->getInstantSpell(reWords);
+	if(!spell)
+	{
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	lua_pushboolean(L, true);
+	return 1;
+}
+#endif
 
 int32_t LuaInterface::luaDoRemoveItem(lua_State* L)
 {

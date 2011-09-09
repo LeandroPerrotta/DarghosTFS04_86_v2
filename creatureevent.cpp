@@ -23,6 +23,14 @@
 #include "player.h"
 #include "tools.h"
 
+#ifdef __DARGHOS_PVP_SYSTEM__
+#include "darghos_pvp.h"
+#endif
+
+#ifdef __DARGHOS_PVP_SYSTEM__
+extern Battleground g_battleground;
+#endif
+
 CreatureEvents::CreatureEvents():
 m_interface("CreatureScript Interface")
 {
@@ -112,6 +120,14 @@ bool CreatureEvents::playerLogin(Player* player)
 
 bool CreatureEvents::playerLogout(Player* player, bool forceLogout)
 {
+	#ifdef __DARGHOS_PVP__
+	// em teoria um player nunca conseguiria deslogar dentro de uma battleground, mas.. vai saber se por acidente alguem dá um /closeserver nao é verdade?
+	if(player->isInBattleground())
+	{
+		g_battleground.playerKick(player, true);
+	}
+	#endif
+
 	//fire global event if is registered
 	bool result = true;
 	for(CreatureEventList::iterator it = m_creatureEvents.begin(); it != m_creatureEvents.end(); ++it)
