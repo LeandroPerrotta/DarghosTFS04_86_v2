@@ -68,11 +68,13 @@ Player::Player(const std::string& _name, ProtocolGame* p):
 
     #ifdef __DARGHOS_CUSTOM__
     doubleDamage = false;
+	lastKnowUpdate = time(NULL);
     #endif
 
     #ifdef __DARGHOS_PVP_SYSTEM__
     onBattleground = false;
     team_id = BATTLEGROUND_TEAM_NONE;
+	
     #endif
 
 	lastAttackBlockType = BLOCK_NONE;

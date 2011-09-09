@@ -750,6 +750,7 @@ class Player : public Creature, public Cylinder
 		void setDoubleDamage();
 		void removeDoubleDamage();
 		bool isDoubleDamage();
+		time_t getLastKnowUpdate() const { return lastKnowUpdate; }
 		#endif
 
 		#ifdef __DARGHOS_PVP_SYSTEM__
@@ -761,7 +762,7 @@ class Player : public Creature, public Cylinder
 		Bg_Teams_t getBattlegroundTeam() const { return team_id; }
 		void setBattlegroundTeam(Bg_Teams_t tid) { 
 			team_id = tid; onBattleground = (tid == BATTLEGROUND_TEAM_NONE) ? false : true; 
-			if(client) client->mustBeUpdateCreatureList.clear(); client->mustBeUpdateCreatureList = client->knownCreatureList;
+			lastKnowUpdate = time(NULL);
 		}
 		#endif
 
@@ -861,6 +862,7 @@ class Player : public Creature, public Cylinder
 
         #ifdef __DARGHOS_CUSTOM__
         bool doubleDamage;
+		time_t lastKnowUpdate;
         #endif
 
         #ifdef __DARGHOS_PVP_SYSTEM__

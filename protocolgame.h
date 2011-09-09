@@ -75,13 +75,24 @@ class ProtocolGame : public Protocol
 		std::list<uint32_t> knownCreatureList;
 		void checkCreatureAsKnown(uint32_t id, bool& known, uint32_t& removedKnown);
 
-		#ifdef __DARGHOS_PVP_SYSTEM__
-		std::list<uint32_t> mustBeUpdateCreatureList;
-		bool checkCreatureNeedUpdate(uint32_t player_id) {
-			for(std::list<uint32_t>::iterator it = mustBeUpdateCreatureList.begin(); it != mustBeUpdateCreatureList.end(); it++) 
-				if((*it) == player_id) 
-					return true; 
-			
+		#ifdef __DARGHOS_CUSTOM__
+		typedef std::map<uint32_t, time_t> LastKnowUpdateMap; 
+		LastKnowUpdateMap lastKnowUpdateMap;
+		bool checkPlayerNeedUpdate(uint32_t id, time_t lastUpdate) {
+
+			LastKnowUpdateMap::iterator it = lastKnowUpdateMap.find(id);
+			if(it == lastKnowUpdateMap.end())
+			{
+				lastKnowUpdateMap.insert(std::make_pair(id, time(NULL)));
+				return true;
+			}
+
+			if(lastUpdate > it->second)
+			{
+				it->second = time(NULL);
+				return true;
+			}
+
 			return false;
 		}
 		#endif

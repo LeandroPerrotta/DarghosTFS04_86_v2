@@ -866,17 +866,20 @@ void ProtocolGame::GetTileDescription(const Tile* tile, NetworkMessage_ptr msg)
 			bool known;
 			uint32_t removedKnown;
 
-			#ifdef __DARGHOS_PVP_SYSTEM__
-			checkCreatureAsKnown((*cit)->getID(), known, removedKnown);
-			if(known && mustBeUpdateCreatureList.size() > 0 && checkCreatureNeedUpdate((*cit)->getID()))
+			#ifdef __DARGHOS_CUSTOM__
+			uint32_t knowId = (*cit)->getID();
+			checkCreatureAsKnown(knowId, known, removedKnown);
+			if(known && (*cit)->getPlayer() && checkPlayerNeedUpdate(knowId, (*cit)->getPlayer()->getLastKnowUpdate()))
 			{ 
-				known = false; removedKnown = (*cit)->getID();
-				mustBeUpdateCreatureList.remove((*cit)->getID());
+				known = false; removedKnown = knowId;
 			}
 
-			if(!known && removedKnown && checkCreatureNeedUpdate(removedKnown))
+			if(!known)
 			{
-				mustBeUpdateCreatureList.remove((*cit)->getID());
+				if(removedKnown && removedKnown != 0)
+					lastKnowUpdateMap.erase(removedKnown);
+
+				lastKnowUpdateMap.insert(std::make_pair(knowId, time(NULL)));
 			}
 			#else
 			checkCreatureAsKnown(creature->getID(), known, removedKnown);
@@ -2945,17 +2948,20 @@ void ProtocolGame::AddTileCreature(NetworkMessage_ptr msg, const Position& pos, 
 	bool known;
 	uint32_t removedKnown;
 
-	#ifdef __DARGHOS_PVP_SYSTEM__
-	checkCreatureAsKnown(creature->getID(), known, removedKnown);
-	if(known && mustBeUpdateCreatureList.size() > 0 && checkCreatureNeedUpdate(creature->getID()))
+	#ifdef __DARGHOS_CUSTOM__
+	uint32_t knowId = creature->getID();
+	checkCreatureAsKnown(knowId, known, removedKnown);
+	if(known && creature->getPlayer() && checkPlayerNeedUpdate(knowId, creature->getPlayer()->getLastKnowUpdate()))
 	{ 
-		known = false; removedKnown = creature->getID();
-		mustBeUpdateCreatureList.remove(creature->getID());
+		known = false; removedKnown = knowId;
 	}
 
-	if(!known && removedKnown && checkCreatureNeedUpdate(removedKnown))
+	if(!known)
 	{
-		mustBeUpdateCreatureList.remove(creature->getID());
+		if(removedKnown && removedKnown != 0)
+			lastKnowUpdateMap.erase(removedKnown);
+
+		lastKnowUpdateMap.insert(std::make_pair(knowId, time(NULL)));
 	}
 	#else
 	checkCreatureAsKnown(creature->getID(), known, removedKnown);
