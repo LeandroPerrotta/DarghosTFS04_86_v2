@@ -71,7 +71,7 @@ Bg_Teams_t Battleground::sortTeam()
 		return BATTLEGROUND_TEAM_ONE;
 	else if(teamsMap[BATTLEGROUND_TEAM_TWO].players.size() < teamsMap[BATTLEGROUND_TEAM_ONE].players.size())
 		return BATTLEGROUND_TEAM_TWO;
-	else if(teamsMap[BATTLEGROUND_TEAM_TWO].players.size() == teamsMap[BATTLEGROUND_TEAM_ONE].players.size())
+	else
 		return (Bg_Teams_t)random_range((uint32_t)BATTLEGROUND_TEAM_ONE, (uint32_t)BATTLEGROUND_TEAM_TWO);
 }
 
