@@ -65,6 +65,16 @@ void Battleground::onInit()
     open = true;
 }
 
+Bg_Teams_t Battleground::sortTeam()
+{
+	if(teamsMap[BATTLEGROUND_TEAM_ONE].players.size() <  teamsMap[BATTLEGROUND_TEAM_TWO].players.size())
+		return BATTLEGROUND_TEAM_ONE;
+	else if(teamsMap[BATTLEGROUND_TEAM_TWO].players.size() < teamsMap[BATTLEGROUND_TEAM_ONE].players.size())
+		return BATTLEGROUND_TEAM_ONE;
+	else if(teamsMap[BATTLEGROUND_TEAM_TWO].players.size() == teamsMap[BATTLEGROUND_TEAM_ONE].players.size())
+		return (Bg_Teams_t)random_range((uint32_t)BATTLEGROUND_TEAM_ONE, (uint32_t)BATTLEGROUND_TEAM_ONE);
+}
+
 BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
 {
     if(!isOpen())
@@ -77,7 +87,8 @@ BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
 	if(lastLeave + LIMIT_TARGET_FRAGS_INTERVAL > time(NULL))
 		return BATTLEGROUND_CAN_NOT_LEAVE_OR_JOIN;
 
-	Bg_Teams_t team_id = (teamsMap[BATTLEGROUND_TEAM_ONE].players.size() > teamsMap[BATTLEGROUND_TEAM_TWO].players.size()) ? BATTLEGROUND_TEAM_TWO : BATTLEGROUND_TEAM_ONE;
+
+	Bg_Teams_t team_id = sortTeam();
 	Bg_Team_t* team = &teamsMap[team_id];
 
 	player->setBattlegroundTeam(team_id);

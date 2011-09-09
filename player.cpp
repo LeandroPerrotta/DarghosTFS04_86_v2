@@ -3640,7 +3640,11 @@ void Player::onAttackedCreature(Creature* target)
 		return;
 	}
 
+#ifdef __DARGHOS_CUSTOM__
+	if(isPartner(targetPlayer) ||
+#else
 	if(Combat::isInPvpZone(this, targetPlayer) || isPartner(targetPlayer) ||
+#endif
 #ifdef __WAR_SYSTEM__
 		isAlly(targetPlayer) ||
 #endif

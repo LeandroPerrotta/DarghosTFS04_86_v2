@@ -67,6 +67,8 @@ class Battleground
         bool isOpen(){ return open; }	
 		void onClose();
 
+		Bg_Teams_t sortTeam();
+
         BattlegrondRetValue onPlayerJoin(Player* player);
 		BattlegrondRetValue playerKick(Player* player, bool force = false);
 		void onPlayerDeath(Player* killer, DeathList deathList);

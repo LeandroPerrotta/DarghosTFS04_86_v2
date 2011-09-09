@@ -3153,3 +3153,27 @@ void ProtocolGame::AddShopItem(NetworkMessage_ptr msg, const ShopInfo& item)
 	msg->put<uint32_t>(item.buyPrice);
 	msg->put<uint32_t>(item.sellPrice);
 }
+
+bool ProtocolGame::checkPlayerNeedUpdate(uint32_t id, time_t lastUpdate)
+{
+	LastKnowUpdateMap::iterator it = lastKnowUpdateMap.find(id);
+	if(it == lastKnowUpdateMap.end())
+	{
+		lastKnowUpdateMap.insert(std::make_pair(id, time(NULL)));
+		return true;
+	}
+
+	if(lastUpdate > it->second)
+	{
+		it->second = time(NULL);
+		return true;
+	}
+
+	if(player && player->lastKnowUpdate > it->second)
+	{
+		it->second = time(NULL);
+		return true;
+	}
+
+	return false;
+}
