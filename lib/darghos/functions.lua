@@ -399,10 +399,8 @@ end
 
 function playerAutoEat(cid)
 	if(not darghos_need_eat and isPlayer(cid)) then
-		if(getPlayerFood(cid) == 0) then
-			doPlayerFeed(cid, 1200)
-			setPlayerStorageValue(cid, sid.EVENT_AUTO_EAT, addEvent(playerAutoEat, 1000 * (60 * 20) + 1, cid))
-		end
+		doPlayerFeed(cid, 1200)
+		setPlayerStorageValue(cid, sid.EVENT_AUTO_EAT, addEvent(playerAutoEat, 1000 * ((60 * 20) + 1), cid))
 	end	
 end
 

@@ -13,6 +13,7 @@ function onStartup()
 	
 	if(sendPlayerToTemple == 1) then
 		db.executeQuery("UPDATE `players` SET `posx` = '0', `posy` = '0', `posz` = '0';")
+		db.executeQuery("UPDATE `player_storage` SET `value` = -1 WHERE `key` = " .. sid.IS_ON_TRAINING_ISLAND .. ";")
 		setGlobalStorageValue(gid.SEND_PLAYERS_TO_TEMPLE, 0)
 		print("[onStartup] Sending players to temple.")
 	end	
