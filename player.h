@@ -761,7 +761,7 @@ class Player : public Creature, public Cylinder
 		Bg_Teams_t getBattlegroundTeam() const { return team_id; }
 		void setBattlegroundTeam(Bg_Teams_t tid) { 
 			team_id = tid; onBattleground = (tid == BATTLEGROUND_TEAM_NONE) ? false : true; 
-			if(!isInBattleground() && client) client->knowBgPlayersList.clear(); 
+			if(client) client->mustBeUpdateCreatureList.clear(); client->mustBeUpdateCreatureList = client->knownCreatureList;
 		}
 		#endif
 

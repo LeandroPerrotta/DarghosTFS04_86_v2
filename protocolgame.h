@@ -76,10 +76,9 @@ class ProtocolGame : public Protocol
 		void checkCreatureAsKnown(uint32_t id, bool& known, uint32_t& removedKnown);
 
 		#ifdef __DARGHOS_PVP_SYSTEM__
-		typedef std::list<uint32_t> KnowBgPlayersList; 
-		KnowBgPlayersList knowBgPlayersList;
-		bool alreadyKnowBgPlayer(uint32_t player_id) {
-			for(KnowBgPlayersList::iterator it = knowBgPlayersList.begin(); it != knowBgPlayersList.end(); it++) 
+		std::list<uint32_t> mustBeUpdateCreatureList;
+		bool checkCreatureNeedUpdate(uint32_t player_id) {
+			for(std::list<uint32_t>::iterator it = mustBeUpdateCreatureList.begin(); it != mustBeUpdateCreatureList.end(); it++) 
 				if((*it) == player_id) 
 					return true; 
 			

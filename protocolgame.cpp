@@ -868,21 +868,15 @@ void ProtocolGame::GetTileDescription(const Tile* tile, NetworkMessage_ptr msg)
 
 			#ifdef __DARGHOS_PVP_SYSTEM__
 			checkCreatureAsKnown((*cit)->getID(), known, removedKnown);
-			if(known && (*cit)->getPlayer())
+			if(known && mustBeUpdateCreatureList.size() > 0 && checkCreatureNeedUpdate((*cit)->getID()))
 			{ 
-				bool knownBg = alreadyKnowBgPlayer((*cit)->getPlayer()->getGUID());
-				bool inBg = (*cit)->getPlayer()->isInBattleground();
+				known = false; removedKnown = (*cit)->getID();
+				mustBeUpdateCreatureList.remove((*cit)->getID());
+			}
 
-				if(inBg && !knownBg)
-				{
-					knowBgPlayersList.push_back((*cit)->getPlayer()->getGUID());
-					known = false; removedKnown = (*cit)->getID();
-				}
-				else if(!inBg && knownBg)
-				{
-					knowBgPlayersList.remove((*cit)->getPlayer()->getGUID());
-					known = false; removedKnown = (*cit)->getID();
-				}
+			if(!known && removedKnown && checkCreatureNeedUpdate(removedKnown))
+			{
+				mustBeUpdateCreatureList.remove((*cit)->getID());
 			}
 			#else
 			checkCreatureAsKnown(creature->getID(), known, removedKnown);
@@ -2953,20 +2947,15 @@ void ProtocolGame::AddTileCreature(NetworkMessage_ptr msg, const Position& pos, 
 
 	#ifdef __DARGHOS_PVP_SYSTEM__
 	checkCreatureAsKnown(creature->getID(), known, removedKnown);
-	if(known && creature->getPlayer())
+	if(known && mustBeUpdateCreatureList.size() > 0 && checkCreatureNeedUpdate(creature->getID()))
 	{ 
-		bool knownBg = alreadyKnowBgPlayer(creature->getPlayer()->getGUID());
-		bool inBg = creature->getPlayer()->isInBattleground();
-		if(inBg && !knownBg)
-		{
-			knowBgPlayersList.push_back(creature->getPlayer()->getGUID());
-			known = false; removedKnown = creature->getID();
-		}
-		else if(!inBg && knownBg)
-		{
-			knowBgPlayersList.remove(creature->getPlayer()->getGUID());
-			known = false; removedKnown = creature->getID();
-		}
+		known = false; removedKnown = creature->getID();
+		mustBeUpdateCreatureList.remove(creature->getID());
+	}
+
+	if(!known && removedKnown && checkCreatureNeedUpdate(removedKnown))
+	{
+		mustBeUpdateCreatureList.remove(creature->getID());
 	}
 	#else
 	checkCreatureAsKnown(creature->getID(), known, removedKnown);
