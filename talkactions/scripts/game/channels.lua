@@ -1,4 +1,9 @@
 function onSay(cid, words, param, channel)
+
+	if(wordsIsSpell(words)) then
+		return true
+	end
+
 	if(channel == CHANNEL_HELP) then
 		return help.onSay(cid, words, param, channel)
 	elseif(channel == CUSTOM_CHANNEL_PVP) then
