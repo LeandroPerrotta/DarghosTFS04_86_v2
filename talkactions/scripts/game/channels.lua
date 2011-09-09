@@ -1,7 +1,7 @@
 function onSay(cid, words, param, channel)
 
 	if(wordsIsSpell(words)) then
-		return true
+		return false
 	end
 
 	if(channel == CHANNEL_HELP) then
