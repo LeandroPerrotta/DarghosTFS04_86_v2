@@ -2468,7 +2468,7 @@ void LuaInterface::registerFunctions()
 	lua_register(m_luaState, "doSayInPosition", LuaInterface::luaDoSayInPosition);
 
 	//wordsIsSpell(words)
-	lua_register(m_luaState, "doSayInPosition", LuaInterface::luaWordsIsSpell);	
+	lua_register(m_luaState, "wordsIsSpell", LuaInterface::luaWordsIsSpell);	
 	#endif
 
 	#ifdef __DARGHOS_PVP_SYSTEM__
