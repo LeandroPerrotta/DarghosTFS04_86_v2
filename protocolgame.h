@@ -93,6 +93,12 @@ class ProtocolGame : public Protocol
 				return true;
 			}
 
+			if(this->player->getLastKnowUpdate() > it->second)
+			{
+				it->second = time(NULL);
+				return true;
+			}
+
 			return false;
 		}
 		#endif
