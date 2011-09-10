@@ -1,10 +1,10 @@
-local statues = { 2, 2 }
-local statuesId = { 3697, 3698 }
-local ITEM_STAIR = 4835
-local ITEM_GROUND = 407
-local ITEM_KOSHEI_AMULET = 8266
-local event = nil
-local kosheiSummoned = false
+statues = { 2, 2 }
+statuesId = { 3697, 3698 }
+ITEM_STAIR = 4835
+ITEM_GROUND = 407
+ITEM_KOSHEI_AMULET = 8266
+event = nil
+kosheiSummoned = false
 
 function onUse(cid, item, fromPosition, itemEx, toPosition)
 	
