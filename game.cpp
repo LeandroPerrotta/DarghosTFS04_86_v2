@@ -1453,8 +1453,16 @@ bool Game::playerMoveItem(uint32_t playerId, const Position& fromPos,
 	}
 
 	ReturnValue ret = internalMoveItem(player, fromCylinder, toCylinder, toIndex, item, count, NULL);
+#ifdef __TFS_NEWEST_REVS_FIXIES__
+	if(ret == RET_NOERROR)
+	{
+		player->setNextAction(OTSYS_TIME() + g_config.getNumber(ConfigManager::ACTIONS_DELAY_INTERVAL) - 10);
+		return true;
+	}
+#else
 	if(ret == RET_NOERROR)
 		return true;
+#endif
 
 	player->sendCancelMessage(ret);
 	return false;
