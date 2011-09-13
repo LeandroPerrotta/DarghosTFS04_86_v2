@@ -50,6 +50,10 @@ function onLogin(cid)
 		end
 	end
 	
+	if(not hasValidEmail(cid)) then	
+		notifyValidateEmail(cid)
+	end	
+	
 	if(isInArray({temp_towns.BATTLEGROUND_TEAM_1, temp_towns.BATTLEGROUND_TEAM_2}, getPlayerTown(cid))) then
 		local town_id = getPlayerStorageValue(cid, sid.TEMPLE_ID)
 			
