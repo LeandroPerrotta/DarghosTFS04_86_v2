@@ -2218,7 +2218,7 @@ bool Player::onDeath()
 	if(skillLoss)
 	{
 #ifdef __DARGHOS_CUSTOM__
-		int32_t extraReduction = (getLevel() > pvpLevelSum) ? 0 : std::max((int32_t)std::ceil((double)(pvpLevelSum / getLevel()) * 12.5), 25);
+		int32_t extraReduction = (getLevel() > pvpLevelSum) ? 0 : std::min((int32_t)std::ceil((double)(pvpLevelSum / getLevel()) * 12.5), 25);
 		uint64_t lossExperience = getLostExperience(extraReduction);
 #else
 		uint64_t lossExperience = getLostExperience();

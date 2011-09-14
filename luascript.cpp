@@ -8560,7 +8560,7 @@ int32_t LuaInterface::luaGetCreatureCondition(lua_State* L)
 
 int32_t LuaInterface::luaGetPlayerBlessing(lua_State* L)
 {
-	//getPlayerBlessings(cid, blessing)
+	//getPlayerBlessing(cid, blessing)
 	int16_t blessing = popNumber(L) - 1;
 
 	ScriptEnviroment* env = getEnv();
