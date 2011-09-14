@@ -5,8 +5,9 @@ local config = {
 
 function onThink(cid, interval)
 	if(getTileInfo(getCreaturePosition(cid)).nologout or getCreatureNoMove(cid) or
-		getPlayerCustomFlagValue(cid, PLAYERCUSTOMFLAG_ALLOWIDLE) or
-		doPlayerGetAfkState(cid)) then
+		getPlayerCustomFlagValue(cid, PLAYERCUSTOMFLAG_ALLOWIDLE) 
+		) then
+		--or doPlayerGetAfkState(cid)) then
 		return true
 	end
 

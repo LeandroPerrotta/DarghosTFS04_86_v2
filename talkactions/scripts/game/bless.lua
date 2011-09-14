@@ -1,4 +1,4 @@
-local usePvPBless = false
+local usePvPBless = true
 
 function onSay(cid, words, param)	
 	local blesses = {

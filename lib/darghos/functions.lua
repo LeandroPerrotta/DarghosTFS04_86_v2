@@ -1,3 +1,13 @@
+function getPlayerPVPBlessing(cid)
+	local pvpBless = getConfigValue('useBlessingAsPvp')
+	return getPlayerBlessings(cid, pvpBless)
+end
+
+function setPlayerPVPBlessing(cid)
+	local pvpBless = getConfigValue('useBlessingAsPvp')
+	return doPlayerAddBlessing(cid, pvpBless)
+end
+
 function doPlayerIsInBattleground(cid) return doPlayerGetBattlegroundTeam(cid) > 0 end
 
 function broadcastChannel(channelId, message, talktype)
