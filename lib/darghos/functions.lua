@@ -1,6 +1,6 @@
 function getPlayerPVPBlessing(cid)
 	local pvpBless = getConfigValue('useBlessingAsPvp')
-	return getPlayerBlessings(cid, pvpBless) or false
+	return getPlayerBlessing(cid, pvpBless) or false
 end
 
 function setPlayerPVPBlessing(cid)
