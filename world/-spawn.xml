@@ -9945,6 +9945,9 @@
     <monster name="Tortoise" x="15" y="25" z="7" spawntime="60"/>
     <monster name="Toad" x="17" y="25" z="7" spawntime="60"/>
   </spawn>
+  <spawn centerx="2190" centery="2687" centerz="7" radius="1">
+    <npc name="salazart.temple" x="0" y="0" z="7" spawntime="60"/>
+  </spawn>
   <spawn centerx="2201" centery="2688" centerz="7" radius="1">
     <npc name="salazart.food" x="0" y="0" z="7" spawntime="60"/>
   </spawn>
