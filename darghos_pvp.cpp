@@ -1,3 +1,5 @@
+#ifdef __DARGHOS_PVP_SYSTEM__
+
 #include "otpch.h"
 #include "darghos_pvp.h"
 #include "luascript.h"
@@ -355,3 +357,5 @@ PlayersMap Battleground::listPlayersOfTeam(Bg_Teams_t team)
 	playersMap = it->second.players;
 	return playersMap;
 }
+
+#endif

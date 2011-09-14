@@ -107,7 +107,7 @@ class IOLoginData
 		bool updateOnlineStatus(uint32_t guid, bool login);
 		bool resetGuildInformation(uint32_t guid);
 
-		#ifdef __REMOVE_AFK_FROM_STATUS__
+		#ifdef __DARGHOS_IGNORE_AFK__
 		bool updateAfkStatus(uint32_t guid, bool afk);
 		#endif
 

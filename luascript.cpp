@@ -2446,7 +2446,7 @@ void LuaInterface::registerFunctions()
 	//std table
 	luaL_register(m_luaState, "std", LuaInterface::luaStdTable);
 
-	#ifdef __REMOVE_AFK_FROM_STATUS__
+	#ifdef __DARGHOS_IGNORE_AFK__
 	//doPlayerSetAfkState(cid)
 	lua_register(m_luaState, "doPlayerSetAfkState", LuaInterface::luaDoPlayerSetAfkState);
 
@@ -10307,7 +10307,7 @@ int32_t LuaInterface::luaGetConfigFile(lua_State* L)
 	return 1;
 }
 
-#ifdef __REMOVE_AFK_FROM_STATUS__
+#ifdef __DARGHOS_IGNORE_AFK__
 int32_t LuaInterface::luaDoPlayerSetAfkState(lua_State* L)
 {
 	//doPlayerSetAfkState(cid)

@@ -1735,7 +1735,7 @@ bool IOLoginData::resetGuildInformation(uint32_t guid)
 	return db->query(query.str());
 }
 
-#ifdef __REMOVE_AFK_FROM_STATUS__
+#ifdef __DARGHOS_IGNORE_AFK__
 bool IOLoginData::updateAfkStatus(uint32_t guid, bool afk)
 {
 	Database* db = Database::getInstance();

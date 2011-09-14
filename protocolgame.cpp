@@ -882,7 +882,7 @@ void ProtocolGame::GetTileDescription(const Tile* tile, NetworkMessage_ptr msg)
 				lastKnowUpdateMap.insert(std::make_pair(knowId, time(NULL)));
 			}
 			#else
-			checkCreatureAsKnown(creature->getID(), known, removedKnown);
+			checkCreatureAsKnown((*cit)->getID(), known, removedKnown);
 			#endif
 
 			AddCreature(msg, (*cit), known, removedKnown);
@@ -3154,6 +3154,7 @@ void ProtocolGame::AddShopItem(NetworkMessage_ptr msg, const ShopInfo& item)
 	msg->put<uint32_t>(item.sellPrice);
 }
 
+#ifdef __DARGHOS_CUSTOM__
 bool ProtocolGame::checkPlayerNeedUpdate(uint32_t id, time_t lastUpdate)
 {
 	LastKnowUpdateMap::iterator it = lastKnowUpdateMap.find(id);
@@ -3177,3 +3178,4 @@ bool ProtocolGame::checkPlayerNeedUpdate(uint32_t id, time_t lastUpdate)
 
 	return false;
 }
+#endif

@@ -49,7 +49,7 @@ uint32_t Player::playerCount = 0;
 #endif
 MuteCountMap Player::muteCountMap;
 
-#ifdef __REMOVE_AFK_FROM_STATUS__
+#ifdef __DARGHOS_IGNORE_AFK__
 uint32_t Player::afkCount = 0;
 #endif
 
@@ -62,7 +62,7 @@ Player::Player(const std::string& _name, ProtocolGame* p):
 	pzLocked = isConnecting = addAttackSkillPoint = requestedOutfit = false;
 	saving = true;
 
-    #ifdef __REMOVE_AFK_FROM_STATUS__
+    #ifdef __DARGHOS_IGNORE_AFK__
     isAfk = false;
     #endif
 
@@ -2405,7 +2405,7 @@ void Player::removeList()
 		}
 	}
 
-    #ifdef __REMOVE_AFK_FROM_STATUS__
+    #ifdef __DARGHOS_IGNORE_AFK__
     removeAfkState();
     #endif
 }
@@ -5162,7 +5162,7 @@ void Player::sendCritical() const
 		g_game.addAnimatedText(getPosition(), COLOR_DARKRED, "CRITICAL!");
 }
 
-#ifdef __REMOVE_AFK_FROM_STATUS__
+#ifdef __DARGHOS_IGNORE_AFK__
 void Player::addAfkState()
 {
     isAfk = true;

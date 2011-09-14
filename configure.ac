@@ -7,7 +7,7 @@ AM_CONFIG_HEADER([config.h])
 AC_PROG_CXX
 AC_LANG(C++)
 # add own flags in here
-OPTIONAL_FLAGS="-D__DARGHOS_PVP_SYSTEM__ -D__WAR_SYSTEM__"
+OPTIONAL_FLAGS="-D__WAR_SYSTEM__ -D__TFS_NEWEST_REVS_FIXIES__ -D__DARGHOS_PVP_SYSTEM__ -D__DARGHOS_CUSTOM__ -D__DARGHOS_SPOOF__"
 
 # check if we want server diag enabled
 serverDiag=no

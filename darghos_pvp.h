@@ -1,3 +1,4 @@
+#ifdef __DARGHOS_PVP_SYSTEM__
 #ifndef __DARGHOS_PVP__
 #define __DARGHOS_PVP__
 
@@ -98,4 +99,5 @@ class Battleground
 		static bool order(Bg_Statistic_t first, Bg_Statistic_t second);
 };
 
+#endif
 #endif

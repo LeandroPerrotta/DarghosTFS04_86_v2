@@ -1,3 +1,4 @@
+#ifdef __DARGHOS_PVP_SYSTEM__
 #ifndef __DARGHOS_CONST__
 #define __DARGHOS_CONST__
 
@@ -37,4 +38,5 @@ enum DarghosPvpTypes
 	PVP_ARENA_1X1
 };
 
+#endif
 #endif

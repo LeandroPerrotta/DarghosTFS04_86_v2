@@ -169,7 +169,7 @@ class Player : public Creature, public Cylinder
 		void setGUID(uint32_t _guid) {guid = _guid;}
 		uint32_t getGUID() const {return guid;}
 
-        #ifdef __REMOVE_AFK_FROM_STATUS__
+        #ifdef __DARGHOS_IGNORE_AFK__
         static uint32_t afkCount;
         #endif
 
@@ -740,7 +740,7 @@ class Player : public Creature, public Cylinder
 		double rates[SKILL__LAST + 1];
 		Container transferContainer;
 
-		#ifdef __REMOVE_AFK_FROM_STATUS__
+		#ifdef __DARGHOS_IGNORE_AFK__
 		void addAfkState();
 		void removeAfkState();
 		bool getAfkState();
@@ -856,7 +856,7 @@ class Player : public Creature, public Cylinder
 		bool outfitAttributes;
 		bool addAttackSkillPoint;
 
-        #ifdef __REMOVE_AFK_FROM_STATUS__
+        #ifdef __DARGHOS_IGNORE_AFK__
         bool isAfk;
         #endif
 

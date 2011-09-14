@@ -718,7 +718,7 @@ class LuaInterface
 		static int32_t luaStdSHA512(lua_State* L);
 		static int32_t luaStdVAHash(lua_State* L);
 
-		#ifdef __REMOVE_AFK_FROM_STATUS__
+		#ifdef __DARGHOS_IGNORE_AFK__
 		static int32_t luaDoPlayerSetAfkState(lua_State* L);
 		static int32_t luaDoPlayerRemoveAfkState(lua_State* L);
 		static int32_t luaDoPlayerGetAfkState(lua_State* L);

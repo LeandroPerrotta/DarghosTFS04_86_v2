@@ -55,8 +55,8 @@ am__theforgottenserver_SOURCES_DIST = account.h actions.cpp actions.h \
 	configmanager.h connection.cpp connection.h const.h \
 	container.cpp container.h creature.cpp creature.h \
 	creatureevent.cpp creatureevent.h cylinder.cpp cylinder.h \
-	darghos_const.h darghos_pvp.cpp darghos_pvp.h \
-	database.cpp database.h databasemanager.cpp databasemanager.h \
+	darghos_pvp.cpp darghos_pvp.h darghos_const.h database.cpp \
+	database.h databasemanager.cpp databasemanager.h \
 	databasemysql.cpp databasemysql.h databasesqlite.cpp \
 	databasesqlite.h databasepgsql.cpp databasepgsql.h depot.cpp \
 	depot.h dispatcher.cpp dispatcher.h exception.cpp exception.h \
@@ -93,7 +93,7 @@ am_theforgottenserver_OBJECTS = actions.$(OBJEXT) $(am__objects_1) \
 	chat.$(OBJEXT) combat.$(OBJEXT) condition.$(OBJEXT) \
 	configmanager.$(OBJEXT) connection.$(OBJEXT) \
 	container.$(OBJEXT) creature.$(OBJEXT) creatureevent.$(OBJEXT) \
-	cylinder.$(OBJEXT) database.$(OBJEXT) darghos_pvp.$(OBJEXT) \
+	cylinder.$(OBJEXT) darghos_pvp.$(OBJEXT) database.$(OBJEXT) \
 	databasemanager.$(OBJEXT) $(am__objects_2) $(am__objects_3) \
 	$(am__objects_4) depot.$(OBJEXT) dispatcher.$(OBJEXT) \
 	exception.$(OBJEXT) fileloader.$(OBJEXT) game.$(OBJEXT) \
@@ -146,11 +146,11 @@ DIST_ARCHIVES = $(distdir).tar.gz
 GZIP_ENV = --best
 distuninstallcheck_listfiles = find . -type f -print
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /mnt/hgfs/tfs-2/trunk.r3777/missing --run aclocal-1.11
-AMTAR = ${SHELL} /mnt/hgfs/tfs-2/trunk.r3777/missing --run tar
-AUTOCONF = ${SHELL} /mnt/hgfs/tfs-2/trunk.r3777/missing --run autoconf
-AUTOHEADER = ${SHELL} /mnt/hgfs/tfs-2/trunk.r3777/missing --run autoheader
-AUTOMAKE = ${SHELL} /mnt/hgfs/tfs-2/trunk.r3777/missing --run automake-1.11
+ACLOCAL = ${SHELL} /mnt/hgfs/tfs-2/8.6/missing --run aclocal-1.11
+AMTAR = ${SHELL} /mnt/hgfs/tfs-2/8.6/missing --run tar
+AUTOCONF = ${SHELL} /mnt/hgfs/tfs-2/8.6/missing --run autoconf
+AUTOHEADER = ${SHELL} /mnt/hgfs/tfs-2/8.6/missing --run autoheader
+AUTOMAKE = ${SHELL} /mnt/hgfs/tfs-2/8.6/missing --run automake-1.11
 AWK = mawk
 CPPFLAGS = 
 CXX = g++
@@ -178,12 +178,12 @@ LIBS = -lmysqlclient -lcryptopp -lboost_filesystem-mt -lboost_date_time-mt -lboo
 LTLIBOBJS = 
 LUA_CFLAGS = -I/usr/include/lua5.1  
 LUA_LIBS = -llua5.1  
-MAKEINFO = ${SHELL} /mnt/hgfs/tfs-2/trunk.r3777/missing --run makeinfo
+MAKEINFO = ${SHELL} /mnt/hgfs/tfs-2/8.6/missing --run makeinfo
 MKDIR_P = /bin/mkdir -p
 MYSQL_FLAGS = -D__USE_MYSQL__
 MYSQL_LIBS = -lmysqlclient
 OBJEXT = o
-OPTIONAL_FLAGS =  -D__ENABLE_SERVER_DIAGNOSTIC__
+OPTIONAL_FLAGS = -D__WAR_SYSTEM__ -D__TFS_NEWEST_REVS_FIXIES__ -D__ENABLE_SERVER_DIAGNOSTIC__
 PACKAGE = theforgottenserver
 PACKAGE_BUGREPORT = 
 PACKAGE_NAME = TheForgottenServer
@@ -207,10 +207,10 @@ VERSION = 0.4
 XML2_CONFIG = /usr/bin/xml2-config
 XML_CPPFLAGS = -I/usr/include/libxml2
 XML_LIBS = -lxml2
-abs_builddir = /mnt/hgfs/tfs-2/trunk.r3777
-abs_srcdir = /mnt/hgfs/tfs-2/trunk.r3777
-abs_top_builddir = /mnt/hgfs/tfs-2/trunk.r3777
-abs_top_srcdir = /mnt/hgfs/tfs-2/trunk.r3777
+abs_builddir = /mnt/hgfs/tfs-2/8.6
+abs_srcdir = /mnt/hgfs/tfs-2/8.6
+abs_top_builddir = /mnt/hgfs/tfs-2/8.6
+abs_top_srcdir = /mnt/hgfs/tfs-2/8.6
 ac_ct_CXX = g++
 am__include = include
 am__leading_dot = .
@@ -229,7 +229,7 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /mnt/hgfs/tfs-2/trunk.r3777/install-sh
+install_sh = ${SHELL} /mnt/hgfs/tfs-2/8.6/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -251,7 +251,7 @@ top_builddir = .
 top_srcdir = .
 AM_CXXFLAGS = $(XML_CPPFLAGS) $(OTSERV_FLAGS) $(LUA_CFLAGS) $(DEBUG_FLAGS)\
 $(MYSQL_FLAGS) $(SQLITE_FLAGS) $(PGSQL_FLAGS) $(PROFILER_FLAGS)\
-$(OPTIONAL_FLAGS) -D_THREAD_SAFE -D_REENTRANT -Wall -Wextra -Werror -Wno-strict-aliasing
+$(OPTIONAL_FLAGS) -D_THREAD_SAFE -D_REENTRANT -Wall -Wextra -Wno-strict-aliasing
 
 theforgottenserver_LDADD = $(LUA_LIBS)
 MAYBE_MYSQL = databasemysql.cpp databasemysql.h
@@ -265,7 +265,7 @@ theforgottenserver_SOURCES = account.h actions.cpp actions.h $(MAYBE_OTADMIN) \
 	config.h configmanager.cpp configmanager.h connection.cpp connection.h \
 	const.h container.cpp container.h creature.cpp creature.h \
 	creatureevent.cpp creatureevent.h cylinder.cpp cylinder.h \
-	darghos_const.h darghos_pvp.cpp darghos_pvp.h database.cpp \
+	darghos_pvp.cpp darghos_pvp.h darghos_const.h database.cpp \
 	database.h databasemanager.cpp databasemanager.h $(MAYBE_MYSQL) \
 	$(MAYBE_SQLITE) $(MAYBE_PGSQL) depot.cpp depot.h dispatcher.cpp \
 	dispatcher.h exception.cpp exception.h fileloader.cpp fileloader.h \

@@ -55,8 +55,8 @@ am__theforgottenserver_SOURCES_DIST = account.h actions.cpp actions.h \
 	configmanager.h connection.cpp connection.h const.h \
 	container.cpp container.h creature.cpp creature.h \
 	creatureevent.cpp creatureevent.h cylinder.cpp cylinder.h \
-	darghos_pvp.cpp darghos_pvp.h darghos_const.h \
-	database.cpp database.h databasemanager.cpp databasemanager.h \
+	darghos_pvp.cpp darghos_pvp.h darghos_const.h database.cpp \
+	database.h databasemanager.cpp databasemanager.h \
 	databasemysql.cpp databasemysql.h databasesqlite.cpp \
 	databasesqlite.h databasepgsql.cpp databasepgsql.h depot.cpp \
 	depot.h dispatcher.cpp dispatcher.h exception.cpp exception.h \
@@ -251,7 +251,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CXXFLAGS = $(XML_CPPFLAGS) $(OTSERV_FLAGS) $(LUA_CFLAGS) $(DEBUG_FLAGS)\
 $(MYSQL_FLAGS) $(SQLITE_FLAGS) $(PGSQL_FLAGS) $(PROFILER_FLAGS)\
-$(OPTIONAL_FLAGS) -D_THREAD_SAFE -D_REENTRANT -Wall -Wextra -Werror -Wno-strict-aliasing
+$(OPTIONAL_FLAGS) -D_THREAD_SAFE -D_REENTRANT -Wall -Wextra -Wno-strict-aliasing
 
 theforgottenserver_LDADD = $(LUA_LIBS)
 @USE_MYSQL_TRUE@MAYBE_MYSQL = databasemysql.cpp databasemysql.h
