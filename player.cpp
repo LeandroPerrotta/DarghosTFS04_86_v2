@@ -5248,4 +5248,8 @@ bool Player::isDoubleDamage()
 {
     return doubleDamage;
 }
+
+bool Player::hasPvpBlessing() const{ return hasBlessing(g_config.getNumber(ConfigManager::USE_BLESSING_AS_PVP) - 1); }
+void Player::removePvpBlessing() { removeBlessing(g_config.getNumber(ConfigManager::USE_BLESSING_AS_PVP) - 1); }
+void Player::removeBlessing(int16_t value) { if(hasBlessing(value)) blessings -= (int16_t)1 << value;  }
 #endif

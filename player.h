@@ -233,9 +233,9 @@ class Player : public Creature, public Cylinder
 		void addBlessing(int16_t blessing) {blessings += blessing;}
 		bool hasBlessing(int16_t value) const {return (blessings & ((int16_t)1 << value));}
 		#ifdef __DARGHOS_CUSTOM__
-		bool hasPvpBlessing() const { return hasBlessing(g_config.getNumber(ConfigManager::USE_BLESSING_AS_PVP) - 1); }
-		void removePvpBlessing() { removeBlessing(g_config.getNumber(ConfigManager::USE_BLESSING_AS_PVP) - 1); }
-		void removeBlessing(int16_t value) { if(hasBlessing(value)) blessings -= (int16_t)1 << value;  }
+		bool hasPvpBlessing() const;
+		void removePvpBlessing();
+		void removeBlessing(int16_t value);
 		#endif
 		uint16_t getBlessings() const;
 
