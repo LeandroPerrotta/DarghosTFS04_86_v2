@@ -264,6 +264,7 @@ bool ConfigManager::load()
 	m_confNumber[DEATH_ASSISTS] = getGlobalNumber("deathAssistCount", 1);
 	#ifdef __DARGHOS_CUSTOM__
 	m_confNumber[DEATH_FRAGGERS] = getGlobalNumber("deathFraggersCount", 1);
+	m_confNumber[USE_BLESSING_AS_PVP] = getGlobalNumber("useBlessingAsPvp", 6);
 	#endif
 	m_confNumber[RED_DAILY_LIMIT] = getGlobalNumber("dailyFragsToRedSkull", 3);
 	m_confNumber[RED_WEEKLY_LIMIT] = getGlobalNumber("weeklyFragsToRedSkull", 5);

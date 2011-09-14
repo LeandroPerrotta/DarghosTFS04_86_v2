@@ -232,6 +232,11 @@ class Player : public Creature, public Cylinder
 
 		void addBlessing(int16_t blessing) {blessings += blessing;}
 		bool hasBlessing(int16_t value) const {return (blessings & ((int16_t)1 << value));}
+		#ifdef __DARGHOS_CUSTOM__
+		bool hasPvpBlessing() const { return hasBlessing(g_config.getNumber(ConfigManager::USE_BLESSING_AS_PVP) - 1); }
+		void removePvpBlessing() { removeBlessing(g_config.getNumber(ConfigManager::USE_BLESSING_AS_PVP) - 1); }
+		void removeBlessing(int16_t value) { if(hasBlessing(value)) blessings -= (int16_t)1 << value;  }
+		#endif
 		uint16_t getBlessings() const;
 
 		OperatingSystem_t getOperatingSystem() const {return operatingSystem;}
@@ -838,7 +843,11 @@ class Player : public Creature, public Cylinder
 		virtual uint32_t getConditionSuppressions() const {return conditionSuppressions;}
 
 		virtual uint16_t getLookCorpse() const;
+#ifdef __DARGHOS_CUSTOM__
+		virtual uint64_t getLostExperience(int32_t extraReduction) const;
+#else
 		virtual uint64_t getLostExperience() const;
+#endif
 
 		virtual void getPathSearchParams(const Creature* creature, FindPathParams& fpp) const;
 		static uint32_t getPercentLevel(uint64_t count, uint64_t nextLevelCount);

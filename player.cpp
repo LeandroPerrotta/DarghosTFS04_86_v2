@@ -2171,6 +2171,32 @@ bool Player::onDeath()
 		return false;
 	}
 
+	#ifdef __DARGHOS_CUSTOM__
+	uint32_t totalDamage = 0, pvpDamage = 0, pvpLevelSum = 0;
+	for(CountMap::iterator it = damageMap.begin(); it != damageMap.end(); ++it)
+	{
+		totalDamage += it->second.total;
+		// its enough when we use IDs range comparison here instead of overheating autoList
+		if(((OTSYS_TIME() - it->second.ticks) / 1000) > 60)
+			continue;
+
+		Creature* creature = g_game.getCreatureByID(it->first);
+		if(creature && (creature->getPlayer() || creature->isPlayerSummon()))
+		{
+			pvpLevelSum += (creature->isPlayerSummon()) ? creature->getMaster()->getPlayer()->getLevel() : creature->getPlayer()->getLevel();
+			pvpDamage += it->second.total;
+		}
+	}
+
+	bool usePVPBlessing = false;
+	uint8_t pvpPercent = (uint8_t)std::ceil((double)pvpDamage * 100. / std::max(1U, totalDamage));
+	if(hasPvpBlessing() && getBlessings() > 1 && pvpPercent >= 40)
+	{
+		usePVPBlessing = true;
+		removePvpBlessing();
+	}
+	#endif
+
 	if(preventLoss)
 	{
 		setLossSkill(false);
@@ -2191,7 +2217,12 @@ bool Player::onDeath()
 	removeConditions(CONDITIONEND_DEATH);
 	if(skillLoss)
 	{
+#ifdef __DARGHOS_CUSTOM__
+		int32_t extraReduction = (getLevel() < pvpLevelSum) ? 0 : std::ceil((double)pvpLevelSum / getLevel());
+		uint64_t lossExperience = getLostExperience(extraReduction);
+#else
 		uint64_t lossExperience = getLostExperience();
+#endif
 		removeExperience(lossExperience, false);
 		double percent = 1. - ((double)(experience - lossExperience) / experience);
 
@@ -2244,6 +2275,9 @@ bool Player::onDeath()
 			skills[i][SKILL_TRIES] = std::max((int32_t)0, (int32_t)(skills[i][SKILL_TRIES] - lostSkillTries));
 		}
 
+		#ifdef __DARGHOS_CUSTOM__
+		if(!usePVPBlessing)
+		#endif
 		blessings = 0;
 		loginPosition = masterPosition;
 		if(!inventory[SLOT_BACKPACK])
@@ -4287,6 +4321,11 @@ uint16_t Player::getBlessings() const
 	uint16_t count = 0;
 	for(int16_t i = 0; i < 16; ++i)
 	{
+#ifdef __DARGHOS_CUSTOM__
+		if(i == g_config.getNumber(ConfigManager::USE_BLESSING_AS_PVP))
+			continue;
+#endif
+
 		if(hasBlessing(i))
 			count++;
 	}
@@ -4294,12 +4333,16 @@ uint16_t Player::getBlessings() const
 	return count;
 }
 
+#ifdef __DARGHOS_CUSTOM__
+uint64_t Player::getLostExperience(int32_t extraReduction) const
+#else
 uint64_t Player::getLostExperience() const
+#endif
 {
 	if(!skillLoss)
 		return 0;
 
-	double percent = (double)(lossPercent[LOSS_EXPERIENCE] - vocation->getLessLoss() - (getBlessings() * g_config.getNumber(
+	double percent = (double)(lossPercent[LOSS_EXPERIENCE] - extraReduction - vocation->getLessLoss() - (getBlessings() * g_config.getNumber(
 		ConfigManager::BLESS_REDUCTION))) / 100.;
 	if(level <= 25)
 		return (uint64_t)std::floor((double)(experience * percent) / 10.);

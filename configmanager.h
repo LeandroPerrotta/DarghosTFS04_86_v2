@@ -148,6 +148,7 @@ class ConfigManager
 			DEATH_ASSISTS,
 			#ifdef __DARGHOS_CUSTOM__
 			DEATH_FRAGGERS,
+			USE_BLESSING_AS_PVP,
 			#endif
 			RED_DAILY_LIMIT,
 			RED_WEEKLY_LIMIT,
