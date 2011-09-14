@@ -186,11 +186,11 @@ function D_CustomNpcModules.pvpBless(cid, message, keywords, parameters, node)
 	end
 
 	if(getPlayerPVPBlessing(cid)) then
-		npcHandler:say("Gods have already blessed you with this blessing!", cid)
+		npcHandler:say("De novo? Os deuses já lhe abençoaram!", cid)
 	elseif(not doPlayerRemoveMoney(cid, price)) then
-		npcHandler:say("You don't have enough money for blessing.", cid)
+		npcHandler:say("Você não tem moedas sulficientes para a benção...", cid)
 	else
-		npcHandler:say("You have been protected your regular blessings with the twist of fate!", cid)
+		npcHandler:say("Agora suas benções normais estão protegidas contra mortes para outros jogadores! Boa sorte!", cid)
 		doPlayerSetPVPBlessing(cid)
 	end
 
