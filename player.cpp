@@ -2183,7 +2183,7 @@ bool Player::onDeath()
 		Creature* creature = g_game.getCreatureByID(it->first);
 		if(creature && (creature->getPlayer() || creature->isPlayerSummon()))
 		{
-			pvpLevelSum += (creature->isPlayerSummon()) ? creature->getMaster()->getPlayer()->getLevel() : creature->getPlayer()->getLevel();
+			pvpLevelSum += (creature->isPlayerSummon()) ? 0 : creature->getPlayer()->getLevel();
 			pvpDamage += it->second.total;
 		}
 	}
@@ -2218,7 +2218,8 @@ bool Player::onDeath()
 	if(skillLoss)
 	{
 #ifdef __DARGHOS_CUSTOM__
-		int32_t extraReduction = (getLevel() > pvpLevelSum) ? 0 : std::min((int32_t)std::ceil((double)(pvpLevelSum / getLevel()) * 12.5), 25);
+		int32_t extraReduction = (getLevel() > pvpLevelSum) ? 0 : std::min((int32_t)std::ceil((pvpLevelSum / getLevel()) * 12.5), 25);
+		extraReduction = std::max(0, extraReduction); //TODO: fix temporareo para problema com resultado negativo inexperado...
 		uint64_t lossExperience = getLostExperience(extraReduction);
 #else
 		uint64_t lossExperience = getLostExperience();
