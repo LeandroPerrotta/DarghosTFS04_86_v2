@@ -9,7 +9,7 @@ function onBattlegroundFrag(cid, target)
 	local dailyActive = (getPlayerStorageValue(cid, sid.DAILY_BATTLEGROUND_ACTIVE) == 1) and true or false	
 	if(dailyActive) then
 		local level, target_level = getPlayerLevel(cid), getPlayerLevel(target)
-		local target_min_level = math.floor(level * (0.15))
+		local target_min_level = level - math.floor(level * (0.15))
 		
 		if(target_level >= target_min_level) then
 			local points = math.max(getPlayerStorageValue(cid, sid.DAILY_BATTLEGROUND_POINTS), 0)
