@@ -844,7 +844,7 @@ class Player : public Creature, public Cylinder
 
 		virtual uint16_t getLookCorpse() const;
 #ifdef __DARGHOS_CUSTOM__
-		virtual uint64_t getLostExperience(int32_t extraReduction) const;
+		virtual uint64_t getLostExperience(uint32_t extraReduction) const;
 #else
 		virtual uint64_t getLostExperience() const;
 #endif

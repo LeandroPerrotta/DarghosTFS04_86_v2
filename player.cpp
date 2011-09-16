@@ -2218,8 +2218,8 @@ bool Player::onDeath()
 	if(skillLoss)
 	{
 #ifdef __DARGHOS_CUSTOM__
-		int32_t extraReduction = (getLevel() > pvpLevelSum) ? 0 : std::min((int32_t)std::ceil((pvpLevelSum / getLevel()) * 12.5), 25);
-		extraReduction = std::max(0, extraReduction); //TODO: fix temporareo para problema com resultado negativo inexperado...
+		uint32_t extraReduction = (getLevel() > pvpLevelSum) ? 0 : std::min(std::ceil((double)(pvpLevelSum / getLevel()) * 12.5), 25.);
+		//extraReduction = std::max(0, extraReduction); //TODO: fix temporareo para problema com resultado negativo inexperado...
 		uint64_t lossExperience = getLostExperience(extraReduction);
 #else
 		uint64_t lossExperience = getLostExperience();
@@ -4335,7 +4335,7 @@ uint16_t Player::getBlessings() const
 }
 
 #ifdef __DARGHOS_CUSTOM__
-uint64_t Player::getLostExperience(int32_t extraReduction) const
+uint64_t Player::getLostExperience(uint32_t extraReduction) const
 #else
 uint64_t Player::getLostExperience() const
 #endif
@@ -4343,8 +4343,17 @@ uint64_t Player::getLostExperience() const
 	if(!skillLoss)
 		return 0;
 
+#ifdef __DARGHOS_CUSTOM__
 	double percent = (double)(lossPercent[LOSS_EXPERIENCE] - extraReduction - vocation->getLessLoss() - (getBlessings() * g_config.getNumber(
 		ConfigManager::BLESS_REDUCTION))) / 100.;
+
+	if(percent < 0)
+		percent = 0;
+#else
+	double percent = (double)(lossPercent[LOSS_EXPERIENCE] - vocation->getLessLoss() - (getBlessings() * g_config.getNumber(
+		ConfigManager::BLESS_REDUCTION))) / 100.;
+#endif
+
 	if(level <= 25)
 		return (uint64_t)std::floor((double)(experience * percent) / 10.);
 
