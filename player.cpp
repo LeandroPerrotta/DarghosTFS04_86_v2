@@ -2190,7 +2190,7 @@ bool Player::onDeath()
 
 	bool usePVPBlessing = false;
 	uint8_t pvpPercent = (uint8_t)std::ceil((double)pvpDamage * 100. / std::max(1U, totalDamage));
-	if(hasPvpBlessing() && getBlessings() > 1 && pvpPercent >= 40)
+	if(hasPvpBlessing() && getBlessings() >= 1 && pvpPercent >= 40)
 	{
 		usePVPBlessing = true;
 		removePvpBlessing();
@@ -4323,7 +4323,7 @@ uint16_t Player::getBlessings() const
 	for(int16_t i = 0; i < 16; ++i)
 	{
 #ifdef __DARGHOS_CUSTOM__
-		if(i == g_config.getNumber(ConfigManager::USE_BLESSING_AS_PVP))
+		if(i == g_config.getNumber(ConfigManager::USE_BLESSING_AS_PVP) - 1)
 			continue;
 #endif
 
@@ -4344,10 +4344,9 @@ uint64_t Player::getLostExperience() const
 		return 0;
 
 #ifdef __DARGHOS_CUSTOM__
-	double percent = (double)(lossPercent[LOSS_EXPERIENCE] - extraReduction - vocation->getLessLoss() - (getBlessings() * g_config.getNumber(
-		ConfigManager::BLESS_REDUCTION))) / 100.;
+	double percent = (double)(lossPercent[LOSS_EXPERIENCE] - extraReduction - vocation->getLessLoss() - (getBlessings() * g_config.getNumber(ConfigManager::BLESS_REDUCTION))) / 100.;
 
-	if(percent < 0)
+	if(percent <= -0.)
 		percent = 0;
 #else
 	double percent = (double)(lossPercent[LOSS_EXPERIENCE] - vocation->getLessLoss() - (getBlessings() * g_config.getNumber(
