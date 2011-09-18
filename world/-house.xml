@@ -313,4 +313,5 @@
   <house name="West V" houseid="679" entryx="3333" entryy="2008" entryz="6" rent="7500" townid="10" size="14"/>
   <house name="West VI" houseid="680" entryx="3333" entryy="2013" entryz="6" rent="7500" townid="10" size="14"/>
   <house name="West VII" houseid="681" entryx="3333" entryy="2018" entryz="6" rent="7500" townid="10" size="14"/>
+  <house name="Test" houseid="682" entryx="3337" entryy="1991" entryz="7" rent="1000" townid="10" size="8"/>
 </houses>
