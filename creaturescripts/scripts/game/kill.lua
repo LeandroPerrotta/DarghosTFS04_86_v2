@@ -48,9 +48,10 @@ function killMissions(cid, target)
 			local task_status = getPlayerStorageValue(cid, v.task_storage)
 			if(task_status == 0) then
 				local slains = (getPlayerStorageValue(cid, v.task_kills) ~= -1) and getPlayerStorageValue(cid, v.task_kills) or 0
+				slains = tonumber(slains)
 				slains = slains + 1
 				
-				setPlayerStorageValue(cid, v.task_kills, slains)
+				setPlayerStorageValue(cid, v.task_kills, tostring(slains))
 				if(slains == v.task_need_kills) then
 					doPlayerSendTextMessage(cid, MESSAGE_EVENT_DEFAULT, "Você concluiu sua tarefa de derrotar " .. task_need_kills .. " " .. target_name .. ".")
 				elseif(slains < v.task_need_kills) then
