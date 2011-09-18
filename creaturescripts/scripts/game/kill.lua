@@ -47,7 +47,7 @@ function killMissions(cid, target)
 		
 			local task_status = getPlayerStorageValue(cid, v.task_storage)
 			if(task_status == 0) then
-				local slains = getPlayerStorageValue(cid, v.task_kills) or 0
+				local slains = (getPlayerStorageValue(cid, v.task_kills) ~= -1) and getPlayerStorageValue(cid, v.task_kills) or 0
 				slains = slains + 1
 				
 				setPlayerStorageValue(cid, v.task_kills, slains)
