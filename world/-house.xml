@@ -10,6 +10,12 @@
   <house name="North VIII" houseid="53" entryx="3336" entryy="1993" entryz="6" rent="18000" townid="10" size="40"/>
   <house name="North IX" houseid="54" entryx="3339" entryy="1993" entryz="6" rent="18000" townid="10" size="40"/>
   <house name="West I" houseid="55" entryx="3337" entryy="2003" entryz="7" rent="14000" townid="10" size="40"/>
+  <house name="West II" houseid="56" entryx="3333" entryy="2008" entryz="7" rent="7500" townid="10" size="14"/>
+  <house name="West III" houseid="57" entryx="3333" entryy="2013" entryz="7" rent="7500" townid="10" size="14"/>
+  <house name="West IV" houseid="58" entryx="3333" entryy="2018" entryz="7" rent="7500" townid="10" size="14"/>
+  <house name="West V" houseid="59" entryx="3333" entryy="2008" entryz="6" rent="7500" townid="10" size="14"/>
+  <house name="West VI" houseid="60" entryx="3333" entryy="2013" entryz="6" rent="7500" townid="10" size="14"/>
+  <house name="West VII" houseid="61" entryx="3333" entryy="2018" entryz="6" rent="7500" townid="10" size="14"/>
   <house name="South I" houseid="62" entryx="3341" entryy="2017" entryz="7" rent="9500" townid="10" size="28"/>
   <house name="South II" houseid="63" entryx="3357" entryy="2017" entryz="7" rent="9500" townid="10" size="28"/>
   <house name="West VIII" houseid="79" entryx="3318" entryy="2003" entryz="7" rent="9000" townid="10" size="13"/>
@@ -307,11 +313,4 @@
   <house name="Central House 3" houseid="673" entryx="2182" entryy="2683" entryz="7" rent="21000" townid="5" size="37"/>
   <house name="Central Guildhall 2" houseid="674" entryx="2183" entryy="2680" entryz="7" rent="30000" townid="5" size="65"/>
   <house name="Central House 4" houseid="675" entryx="2195" entryy="2677" entryz="7" rent="24000" townid="5" size="72"/>
-  <house name="West V" houseid="676" entryx="3333" entryy="2008" entryz="6" rent="7500" townid="10" size="14"/>
-  <house name="West II" houseid="677" entryx="3333" entryy="2008" entryz="7" rent="7500" townid="10" size="14"/>
-  <house name="West III" houseid="678" entryx="3333" entryy="2013" entryz="7" rent="7500" townid="10" size="14"/>
-  <house name="West IV" houseid="679" entryx="3333" entryy="2018" entryz="7" rent="7500" townid="10" size="14"/>
-  <house name="West VI" houseid="680" entryx="3333" entryy="2013" entryz="6" rent="7500" townid="10" size="14"/>
-  <house name="West VII" houseid="681" entryx="3333" entryy="2018" entryz="6" rent="7500" townid="10" size="14"/>
-  <house name="West XX" houseid="682" entryx="3320" entryy="1994" entryz="7" rent="7500" townid="10" size="4"/>
 </houses>
