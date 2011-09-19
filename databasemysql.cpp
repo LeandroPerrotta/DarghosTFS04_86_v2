@@ -191,7 +191,7 @@ DBResult* DatabaseMySQL::storeQuery(const std::string &query)
 
 std::string DatabaseMySQL::escapeBlob(const char* s, uint32_t length)
 {
-	if(!s || !strlen(s))
+	if(!s /*|| !strlen(s)*/)
 		return "''";
 
 	char* output = new char[length * 2 + 1];
