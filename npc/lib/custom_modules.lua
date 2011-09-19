@@ -266,13 +266,15 @@ function D_CustomNpcModules.offerBlessing(cid, message, keywords, parameters, no
 	
 	local blessParams = {baseCost = parameters.baseCost, levelCost = parameters.levelCost, startLevel = parameters.startLevel, endLevel = parameters.endLevel}
 	
-	local func = StdModule.bless
-	npcHandler:say('Ao obter uma benção as penalidades na proxima vez que você morrer serão reduzidas, você gostaria de obter uma benção? Para o seu level isto lhe custará ' .. D_CustomNpcModules.getBlessPrice(cid, blessParams) .. ' moedas de ouro.', cid)
+	local func = nil
 	
 	local pvpbless = parameters.ispvp or false
 	if(pvpbless) then
 		func = D_CustomNpcModules.pvpBless
 		npcHandler:say('Saiba que a benção do PvP (twist of fate) não irá reduzir a penalidade quando você morre como as benções normais, mas ao invez disto, irá previnir que você perca as proprias benções normais quando você for derrotado por outro jogador (apénas jogadores!). Para o seu level isso custará ' .. D_CustomNpcModules.getBlessPrice(cid, blessParams) .. ' moedas de ouro? Quer fazer este sacrificio em troca dessa proteção?', cid)
+	else
+		func = StdModule.bless
+		npcHandler:say('Ao obter uma benção as penalidades na proxima vez que você morrer serão reduzidas, você gostaria de obter uma benção? Para o seu level isto lhe custará ' .. D_CustomNpcModules.getBlessPrice(cid, blessParams) .. ' moedas de ouro.', cid)	
 	end
 
 	node:addChildKeyword({'yes', 'sim'}, func, parameters)
