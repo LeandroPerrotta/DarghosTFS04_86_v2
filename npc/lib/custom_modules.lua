@@ -247,6 +247,38 @@ function D_CustomNpcModules.inquisitionBless(cid, message, keywords, parameters,
 	return true
 end
 
+function D_CustomNpcModules.getBlessPrice(cid, params)
+	local levels = math.max(params.startLevel, math.min(params.endLevel, getPlayerLevel(cid)))
+	return params.baseCost + (levels * params.levelCost)
+end
+
+function D_CustomNpcModules.offerBlessing(cid, message, keywords, parameters, node)
+
+	local npcHandler = parameters.npcHandler
+	if(npcHandler == nil) then
+		print('[Warning - ' .. getCreatureName(getNpcId()) .. '] NpcSystem:', 'StdModule.bless - Call without any npcHandler instance.')
+		return false
+	end
+
+	if(not npcHandler:isFocused(cid)) then
+		return false
+	end
+	
+	local blessParams = {baseCost = parameters.baseCost, levelCost = parameters.levelCost, startLevel = parameters.startLevel, endLevel = parameters.endLevel}
+	
+	local func = StdModule.bless
+	npcHandler:say('Ao obter uma benção as penalidades na proxima vez que você morrer serão reduzidas, você gostaria de obter uma benção? Para o seu level isto lhe custará ' .. D_CustomNpcModules.getBlessPrice(cid, blessParams) .. ' moedas de ouro.', cid)
+	
+	local pvpbless = parameters.ispvp or false
+	if(pvpbless) then
+		func = D_CustomNpcModules.pvpBless
+		npcHandler:say('Saiba que a benção do PvP (twist of fate) não irá reduzir a penalidade quando você morre como as benções normais, mas ao invez disto, irá previnir que você perca as proprias benções normais quando você for derrotado por outro jogador (apénas jogadores!). Para o seu level isso custará ' .. D_CustomNpcModules.getBlessPrice(cid, blessParams) .. ' moedas de ouro? Quer fazer este sacrificio em troca dessa proteção?', cid)
+	end
+
+	node:addChildKeyword({'yes', 'sim'}, func, parameters)
+	node:addChildKeyword({'no', 'não', 'nao'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, reset = true, text = 'Volte quando for necessário!'})	
+end
+
 function D_CustomNpcModules.addTradeList(shopModule, tradelist_name)
 
 	local list = trade_lists[tradelist_name]
