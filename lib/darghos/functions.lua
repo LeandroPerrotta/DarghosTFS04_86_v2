@@ -1251,7 +1251,16 @@ function hasValidEmail(cid)
 end
 
 function notifyValidateEmail(cid)
-	local message = "Caro " .. getCreatureName(cid) ..",\n\nVocê ainda não registrou um e-mail valido em sua conta. Lembre-se que por isso sua conta não está segura e você não conseguirá recuperar-la caso perda seus dados de acesso!\nOs seguintes recursos também estarão disponiveis para sua conta após o registro do e-mail:\n\n - Obter uma conta Premium.\n - Receber a Premium Test ao atingir level 100.\n - Gerar uma chave de recuperação.\n\nAcesse o website o mais breve possivel e registre o e-mail de sua conta!\nwww.darghos.com.br\n\n Tenha um bom jogo!"	
+	local message = "Caro " .. getCreatureName(cid) ..",\n\n"
+	message = message .. "Você ainda não registrou um e-mail valido em sua conta. Lembre-se que por isso\n"
+	message = message .. "sua conta não está segura e você não conseguirá recuperar-la caso perda seus dados de acesso!\n\n"
+	message = message .. "Os seguintes recursos também estarão disponiveis para sua conta após o registro do e-mail:\n\n"
+	message = message .. " - Obter uma conta Premium.\n"
+	message = message .. " - Receber a Premium Test ao atingir level 100.\n"
+	message = message .. " - Gerar uma chave de recuperação.\n\n"
+	message = message .. "Acesse o website o mais breve possivel e registre o e-mail de sua conta!\n"
+	message = message .. "www.darghos.com.br\n\n"
+	message = message .. "Tenha um bom jogo!"	
 	doPlayerPopupFYI(cid, message)	
 end
 
