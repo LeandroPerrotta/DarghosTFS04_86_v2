@@ -1235,7 +1235,7 @@ function hasValidEmail(cid)
 
 	local account = getPlayerAccountId(cid)
 	
-	local result = db.getResult("SELECT `email` FROM `accounts` WHERE `id` = '" .. account .. "';")
+	local result = db.getResult("SELECT `email` FROM `accounts` WHERE `id` = '" .. account .. "' AND `email` != '';")
 	if(result:getID() == -1) then
 		return false
 	end
@@ -1265,7 +1265,7 @@ function hasPollToNotify(cid)
 		return false
 	end
 
-	local result = db.getResult("SELECT `id`, CAST(`text` as CHAR CHARACTER SET `latin1`) as `text` FROM `wb_forum_polls` WHERE `end_date` > UNIX_TIMESTAMP();")
+	local result = db.getResult("SELECT `id`, `text` FROM `wb_forum_polls` WHERE `end_date` > UNIX_TIMESTAMP();")
 	if(result:getID() == -1) then
 		return false
 	end
