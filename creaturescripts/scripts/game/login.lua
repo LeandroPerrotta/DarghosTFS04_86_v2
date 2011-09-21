@@ -57,12 +57,13 @@ function onLogin(cid)
 	local notifyPoll = hasPollToNotify(cid)
 	if(notifyPoll) then
 		local message = "Caro " .. getCreatureName(cid) ..",\n\n"
-		message = message .. "Uma nova e importante enquete está disponivel para votação em nosso website"
+		message = message .. "Uma nova e importante enquete está disponivel para votação em nosso website\n"
 		--message = message .. notifyPoll.text .. "\n\n"
-		message = message .. " reparamos que você ainda não votou nesta enquete. \nNo Darghos nos fazemos enquetes periodicamente"
+		message = message .. "e reparamos que você ainda não votou nesta enquete. No Darghos nos fazemos enquetes periodicamente\n"
 		message = message .. " e elas são uma forma dos jogadores participarem do desenvolvimento e melhorias do servidor\n\n"
 		message = message .. "Não deixe de participar! A sua opinião é muito importante para nós e para o Darghos!\n"
-		message = message .. "Para votar basta acessar acessar nosso website informado abaixo, e ir na categoria 'Comunidade' -> 'Enquetes' (requer login na conta)\n"
+		message = message .. "Para votar basta acessar acessar nosso website informado abaixo, e ir na categoria \n
+		message = message .. "'Comunidade' -> 'Enquetes' (requer login na conta)\n"
 		message = message .. "www.darghos.com.br\n\n"
 		message = message .. "Obrigado e tenha um bom jogo!"
 		doPlayerPopupFYI(cid, message)		
