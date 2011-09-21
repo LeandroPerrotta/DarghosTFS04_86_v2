@@ -62,7 +62,7 @@ function onLogin(cid)
 		message = message .. "e reparamos que você ainda não votou nesta enquete. No Darghos nos fazemos enquetes periodicamente\n"
 		message = message .. " e elas são uma forma dos jogadores participarem do desenvolvimento e melhorias do servidor\n\n"
 		message = message .. "Não deixe de participar! A sua opinião é muito importante para nós e para o Darghos!\n"
-		message = message .. "Para votar basta acessar acessar nosso website informado abaixo, e ir na categoria \n
+		message = message .. "Para votar basta acessar acessar nosso website informado abaixo, e ir na categoria \n"
 		message = message .. "'Comunidade' -> 'Enquetes' (requer login na conta)\n"
 		message = message .. "www.darghos.com.br\n\n"
 		message = message .. "Obrigado e tenha um bom jogo!"
