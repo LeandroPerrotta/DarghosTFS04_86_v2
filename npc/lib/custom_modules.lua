@@ -248,7 +248,7 @@ function D_CustomNpcModules.inquisitionBless(cid, message, keywords, parameters,
 end
 
 function D_CustomNpcModules.getBlessPrice(cid, params)
-	local levels = math.max(params.startLevel, math.min(params.endLevel, getPlayerLevel(cid)))
+	local levels = math.max(params.startLevel, math.min(params.endLevel, getPlayerLevel(cid))) - params.startLevel
 	return params.baseCost + (levels * params.levelCost)
 end
 
@@ -277,8 +277,8 @@ function D_CustomNpcModules.offerBlessing(cid, message, keywords, parameters, no
 		npcHandler:say('Ao obter uma benção as penalidades na proxima vez que você morrer serão reduzidas, você gostaria de obter uma benção? Para o seu level isto lhe custará o sacrificio de ' .. D_CustomNpcModules.getBlessPrice(cid, blessParams) .. ' moedas de ouro.', cid)	
 	end
 
-	node:addChildKeyword({'yes', 'sim'}, func, parameters)
-	node:addChildKeyword({'no', 'não', 'nao'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, reset = true, text = 'Volte quando for necessário!'})	
+	node:getParent():addChildKeyword({'yes', 'sim'}, func, parameters)
+	node:getParent():addChildKeyword({'no', 'não', 'nao'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, reset = true, text = 'Volte quando for necessário!'})	
 end
 
 function D_CustomNpcModules.addTradeList(shopModule, tradelist_name)
