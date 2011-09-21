@@ -57,11 +57,11 @@ function onLogin(cid)
 	local notifyPoll = hasPollToNotify(cid)
 	if(notifyPoll) then
 		local message = "Caro " .. getCreatureName(cid) ..",\n\n"
-		message = message .. "Uma nova e importante enquete está disponivel para votação em nosso website, sobre o seguinte assunto:\n\n"
+		message = message .. "Uma nova e importante enquete estÃ¡ disponivel para votaÃ§Ã£o em nosso website, sobre o seguinte assunto:\n\n"
 		message = message .. notifyPoll.text .. "\n\n"
-		message = message .. "Reparamos que você ainda não votou nesta enquete. No Darghos nos fazemos enquetes periodicamente"
-		message = message .. " e elas são uma forma dos jogadores participarem do desenvolvimento e melhorias do servidor\n\n"
-		message = message .. "Não deixe de participar! A sua opinião é muito importante para nós e para o Darghos!\n"
+		message = message .. "Reparamos que vocÃª ainda nÃ£o votou nesta enquete. No Darghos nos fazemos enquetes periodicamente"
+		message = message .. " e elas sÃ£o uma forma dos jogadores participarem do desenvolvimento e melhorias do servidor\n\n"
+		message = message .. "NÃ£o deixe de participar! A sua opiniÃ£o Ã© muito importante para nÃ³s e para o Darghos!\n"
 		message = message .. "Para votar basta acessar acessar nosso website informado abaixo, e ir na categoria 'Comunidade' -> 'Enquetes' (requer login na conta)\n"
 		message = message .. "www.darghos.com.br\n\n"
 		message = message .. "Obrigado e tenha um bom jogo!"
@@ -125,17 +125,17 @@ function onLoginNotify(cid)
 		if(isInArray({EVENT_STATE_NONE, EVENT_STATE_INIT}, eventState)) then
 		
 			msg = (eventState == EVENT_STATE_INIT) and "Evento do dia (ABERTO!!):\n\n" or "Evento do dia:\n\n"			
-			msg = msg .. "Não se esqueça que hoje é dia do evento semanal Warmaster a partir das 15:00 PM! \n\n"
-			msg = msg .. "O Warmaster é um evento de PvP que acontece as terças e domingos e premia o vencedor com um ticket para o Warmaster Outfit. \n"
+			msg = msg .. "NÃ£o se esqueÃ§a que hoje Ã© dia do evento semanal Warmaster a partir das 15:00 PM! \n\n"
+			msg = msg .. "O Warmaster Ã© um evento de PvP que acontece as terÃ§as e domingos e premia o vencedor com um ticket para o Warmaster Outfit. \n"
 			msg = msg .. "A entrada do evento fica no deserto ao oeste de Quendor, em estrutura com teleports.\n"
-			msg = msg .. "Dentro do evento tudo é Hardcore PvP e se você morrer você não perderá nada. O objetivo é simplesmente destruir os obstaculos e se manter vivo!\n"
-			msg = msg .. "Na ultima sala existirá o boss que ao ser derrotado dropará o premio!\n"
+			msg = msg .. "Dentro do evento tudo Ã© Hardcore PvP e se vocÃª morrer vocÃª nÃ£o perderÃ¡ nada. O objetivo Ã© simplesmente destruir os obstaculos e se manter vivo!\n"
+			msg = msg .. "Na ultima sala existirÃ¡ o boss que ao ser derrotado droparÃ¡ o premio!\n"
 		end
 	elseif(today == WEEKDAY.MONDAY and getPlayerLevel(cid) >= 80) then
 	
 		msg = "Lembrete do dia:\n\n"
-		msg = msg .. "Hoje é segunda-feira e o barco que faz viagens Quendor (PvP) <-> Island of Peace (Optional PvP) está disponivel caso você deseje transferir seu personagem! \n"
-		msg = msg .. "Pense bem e lembre-se que só é permitida UMA unica viagem e que caso seja feita você terá de permanecer no destino escolhido ao menos até a proxima segunda-feira!\n"
+		msg = msg .. "Hoje Ã© segunda-feira e o barco que faz viagens Quendor (PvP) <-> Island of Peace (Optional PvP) estÃ¡ disponivel caso vocÃª deseje transferir seu personagem! \n"
+		msg = msg .. "Pense bem e lembre-se que sÃ³ Ã© permitida UMA unica viagem e que caso seja feita vocÃª terÃ¡ de permanecer no destino escolhido ao menos atÃ© a proxima segunda-feira!\n"
 	end
 	
 	if(msg ~= nil) then
