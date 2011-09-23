@@ -76,6 +76,7 @@
 	PlayerCustomFlag_CanWearAllAddons,			//2^23 = 8388608
 	PlayerCustomFlag_IsWalkable,				//2^24 = 16777216
 	PlayerCustomFlag_CanWalkthrough,			//2^25 = 33554432
+	PlayerCustomFlag_ContinueOnlineWhenExit,	//2^26 = 67108864
  -->
 
 <groups>
@@ -86,4 +87,5 @@
 	<group id="5" name="Gamemaster" flags="3808558964575" customFlags="257215" access="2" violationReasons="19" nameViolationFlags="10" statementViolationFlags="69" depotLimit="3000" maxVips="300" outfit="75"/>
 	<group id="6" name="Community Manager" flags="3840774348794" customFlags="781823" access="4" violationReasons="23" nameViolationFlags="42" statementViolationFlags="213" depotLimit="4000" maxVips="400" outfit="266"/>
 	<group id="7" name="God" flags="3845069447162" customFlags="50331647" access="5" violationReasons="23" nameViolationFlags="426" statementViolationFlags="469" depotLimit="5000" maxVips="500" outfit="302"/>
+	<group id="8" name="Player" customFlags="67111936"/>
 </groups>
