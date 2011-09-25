@@ -46,7 +46,18 @@ local raids = {
 		
 		monsters = {
 			{name="Tiquandas Revenge", quanty=1}
-		}	
+		}
+	},
+	
+	["necropharus"] = {
+		respawns = {
+			{centerx=2247, centery=2818, centerz=9, radius=3},
+			{centerx=2463, centery=1783, centerz=10, radius=3},
+		},	
+		
+		monsters = {
+			{name="Necropharus", quanty=1}
+		}		
 	}
 }
 

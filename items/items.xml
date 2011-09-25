@@ -8412,7 +8412,7 @@
 		<attribute key="fluidSource" value="blood" />
 	</item>
 	<item id="5527" article="a" name="demon dust">
-		<attribute key="containerSize" value="10" />
+		<attribute key="containerSize" value="36" />
 		<attribute key="decayTo" value="5528" />
 		<attribute key="duration" value="900" />
 		<attribute key="corpseType" value="blood" />
@@ -9895,7 +9895,7 @@
 		<attribute key="fluidSource" value="blood" />
 	</item>
 	<item id="6068" article="a" name="demon dust">
-		<attribute key="containerSize" value="10" />
+		<attribute key="containerSize" value="32" />
 		<attribute key="decayTo" value="5527" />
 		<attribute key="duration" value="10" />
 		<attribute key="corpseType" value="blood" />

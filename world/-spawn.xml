@@ -30190,13 +30190,11 @@
     <monster name="Grim Reaper" x="3" y="0" z="15" spawntime="60"/>
   </spawn>
   <spawn centerx="1980" centery="1265" centerz="15" radius="30">
-    <monster name="Anamelech" x="15" y="-3" z="15" spawntime="60"/>
-    <monster name="Bayemon" x="-12" y="-1" z="15" spawntime="60"/>
-    <monster name="Tezrian" x="3" y="-1" z="15" spawntime="60"/>
-    <monster name="Azathoth" x="-6" y="3" z="15" spawntime="60"/>
-    <monster name="Nergal" x="12" y="3" z="15" spawntime="60"/>
-    <monster name="Ukobach" x="2" y="5" z="15" spawntime="60"/>
-    <monster name="Zepar" x="3" y="13" z="15" spawntime="60"/>
+    <monster name="Nightmare" x="6" y="-10" z="15" spawntime="60"/>
+    <monster name="Nightmare" x="-2" y="-9" z="15" spawntime="60"/>
+    <monster name="Deathslicer" x="2" y="-9" z="15" spawntime="60"/>
+    <monster name="Juggernaut" x="8" y="-8" z="15" spawntime="60"/>
+    <monster name="Juggernaut" x="-4" y="-7" z="15" spawntime="60"/>
   </spawn>
   <spawn centerx="2886" centery="1287" centerz="15" radius="1">
     <monster name="Grim Reaper" x="-1" y="-1" z="15" spawntime="60"/>
