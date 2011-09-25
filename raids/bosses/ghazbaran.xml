@@ -5,7 +5,7 @@
 	]]>
 	</script>
 
-	<announce delay="0" type="event" message="O mal ancião está dispertando no fundo das minas de Northrend..."/>
+	<announce delay="0" type="event" message="O mal ancião está despertando no fundo das minas de Northrend..."/>
 	<announce delay="600000" type="event" message="Entidades demoniacas estão proximas de nosso mundo, nas minas de Northrend..."/>
 	<announce delay="1200000" type="event" message="O demônio supremo re-surgiu no fundo das minas de Northrend!"/>
 
