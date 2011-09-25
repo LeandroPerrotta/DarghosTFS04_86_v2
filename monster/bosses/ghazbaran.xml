@@ -18,7 +18,7 @@
     <flag runonhealth="3500"/>
   </flags>
   <attacks>
-    <attack name="melee" interval="2000" skill="400" attack="350"/>
+    <attack name="melee" interval="2000" skill="400" attack="150"/>
     <attack name="melee" interval="3000" chance="16" range="7" target="1" min="-400" max="-2200">
       <attribute key="shootEffect" value="whirlwindsword"/>
     </attack>
@@ -26,15 +26,15 @@
       <attribute key="areaEffect" value="blackspark"/>
     </attack>
     <attack name="ice" interval="3000" chance="20" range="14" radius="5" target="0" min="-200" max="-480">
-      <attribute key="areaEffect" value="poff"/>
+      <attribute key="areaEffect" value="teleport"/>
     </attack>
-    <attack name="ice" interval="3000" chance="30" range="14" radius="13" target="0" min="-500" max="-1200">
+    <attack name="ice" interval="3000" chance="30" range="14" radius="12" target="0" min="-500" max="-1200">
       <attribute key="areaEffect" value="bigplants"/>
     </attack> 
-    <attack name="death" interval="4000" chance="12" length="6" spread="1" target="0" min="-200" max="-400">
+    <attack name="death" interval="4000" chance="12" length="6" spread="0" target="0" min="-200" max="-400">
       <attribute key="areaEffect" value="mortarea"/>
     </attack> 
-    <attack name="drowncondition" interval="7000" chance="15" range="7" radius="13" target="0" min="-100" max="-12000" start="-100" tick="1000" >
+    <attack name="drowncondition" interval="7000" chance="15" range="7" radius="12" target="0" min="-100" max="-12000" start="-100" tick="1000" >
       <attribute key="areaEffect" value="yellowspark"/>
     </attack>
     <attack name="manadrain" interval="4000" chance="33" radius="14" target="0" min="-200" max="-1000">
@@ -69,7 +69,7 @@
 		<element holyPercent="-10" />
 	</elements> 
   <summons maxSummons="4">
-    <summon name="deathslicer" interval="4000" chance="20"/>
+    <summon name="deathslicer" interval="2000" chance="25" max="4"/>
   </summons>
   <voices interval="5000" chance="30">
     <voice sentence="VENHA PARA A MORTE!"/>

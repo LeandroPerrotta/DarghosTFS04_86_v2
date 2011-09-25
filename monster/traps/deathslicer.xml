@@ -37,5 +37,6 @@
     <immunity drunk="1"/>
     <immunity outfit="1"/>
     <immunity invisible="1"/>
+    <immunity drown="1"/>
   </immunities>
 </monster>
