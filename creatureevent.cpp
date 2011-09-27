@@ -124,7 +124,7 @@ bool CreatureEvents::playerLogout(Player* player, bool forceLogout)
 	// em teoria um player nunca conseguiria deslogar dentro de uma battleground, mas.. vai saber se por acidente alguem dá um /closeserver nao é verdade?
 	if(player->isInBattleground())
 	{
-		g_battleground.playerKick(player, true);
+		g_battleground.kickPlayer(player, true);
 	}
 	#endif
 

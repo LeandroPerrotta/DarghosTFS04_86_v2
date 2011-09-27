@@ -541,6 +541,9 @@ enum PlayerCustomFlags
 	PlayerCustomFlag_CanWearAllAddons,			//2^23 = 8388608
 	PlayerCustomFlag_IsWalkable,				//2^24 = 16777216
 	PlayerCustomFlag_CanWalkthrough,			//2^25 = 33554432
+#ifdef __DARGHOS_CUSTOM__
+	PlayerCustomFlag_ContinueOnlineWhenExit,	//2^26 = 67108864
+#endif
 
 	PlayerCustomFlag_LastFlag
 };

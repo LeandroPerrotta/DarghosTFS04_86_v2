@@ -10447,7 +10447,7 @@ int32_t LuaInterface::luaDoPlayerLeaveBattleground(lua_State* L)
 	ScriptEnviroment* env = getEnv();
 	if(Player* player = env->getPlayerByUID(popNumber(L)))
 	{		
-		lua_pushnumber(L, g_battleground.playerKick(player));
+		lua_pushnumber(L, g_battleground.kickPlayer(player));
 	}
 	else
 	{

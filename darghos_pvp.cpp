@@ -5,8 +5,10 @@
 #include "luascript.h"
 #include "game.h"
 #include "creature.h"
+#include "globalevent.h"
 
 extern Game g_game;
+extern GlobalEvents* g_globalEvents;
 
 Battleground::Battleground()
 {
@@ -25,7 +27,7 @@ void Battleground::onClose()
 	{
 		for(PlayersMap::iterator it_players = it_teams->second.players.begin(); it_players != it_teams->second.players.end(); it_players++)
 		{
-			playerKick(it_players->second.player, true);
+			kickPlayer(it_players->second.player, true);
 		}
 	}
 
@@ -34,10 +36,6 @@ void Battleground::onClose()
 
 void Battleground::onInit()
 {
-	Thing* thing = ScriptEnviroment::getUniqueThing((uint32_t)BATTLEGROUND_LEAVE_POINT);
-	if(thing)
-		leave_pos = thing->getPosition();
-
     Bg_Team_t team_one;
 
     team_one.look.head = 82;
@@ -45,7 +43,7 @@ void Battleground::onInit()
     team_one.look.legs = 114;
     team_one.look.feet = 91;
 
-	thing = ScriptEnviroment::getUniqueThing((uint32_t)BATTLEGROUND_TEAM_1_SPAWN);
+	Thing* thing = ScriptEnviroment::getUniqueThing((uint32_t)BATTLEGROUND_TEAM_1_SPAWN);
 	if(thing)
 		team_one.spawn_pos = thing->getPosition();
 
@@ -65,6 +63,68 @@ void Battleground::onInit()
 	teamsMap.insert(std::make_pair(BATTLEGROUND_TEAM_TWO, team_two));
 
     open = true;
+	status = BUILDING_TEAMS;
+}
+
+Bg_PlayerInfo_t* Battleground::findPlayerInfo(Player* player)
+{
+	for(BgTeamsMap::iterator it = teamsMap.begin(); it != teamsMap.end(); it++)
+	{
+		PlayersMap::iterator pit = it->second.players.find(player->getGUID());
+		if(pit != it->second.players.end())
+			return &pit->second;
+	}
+}
+
+Bg_Teams_t Battleground::findPlayerTeam(Player* player)
+{
+	for(BgTeamsMap::iterator it = teamsMap.begin(); it != teamsMap.end(); it++)
+	{
+		PlayersMap::iterator pit = it->second.players.find(player->getGUID());
+		if(pit != it->second.players.end())
+			return it->first;
+	}
+}
+
+bool Battleground::buildTeams()
+{
+	if(waitlist.size() < MIN_BATTLEGROUND_TEAM_SIZE * 2)
+		return false;
+
+	waitlist.sort(Battleground::orderWaitlistByLevel);
+
+	Bg_Teams_t team;
+
+	uint16_t i = 1;
+	for(Bg_Waitlist_t::iterator it = waitlist.begin(); it != waitlist.end(); it++, i++)
+	{
+		team = (i & 1 == 1) ? BATTLEGROUND_TEAM_ONE : BATTLEGROUND_TEAM_TWO;
+		putInTeam((*it), team);
+		(*it)->sendPvpChannelMessage("A battleground está pronta para iniciar! Você tem 2 minutos para digitar o comando \"!bg entrar\" para ser enviado a batalha! Boa sorte bravo guerreiro!");
+	}
+
+	Scheduler::getInstance().addEvent(createSchedulerTask(1000 * 60 * 2,
+		boost::bind(&Battleground::start, this)));
+
+	status = BattlegroundStatus::STARTED;
+	return true;
+}
+
+void Battleground::start()
+{
+	for(BgTeamsMap::iterator it = teamsMap.begin(); it != teamsMap.end(); it++)
+	{		
+		for(PlayersMap::iterator it_players = it->second.players.begin(); it_players != it->second.players.end(); it_players++)
+		{
+			if(!it_players->second.areInside)
+			{
+				it_players->second.player->sendPvpChannelMessage("Você não apareceu na battleground no tempo esperado... Você ainda pode participar da batalha digitando \"!bg entrar\" novamente.");
+				it->second.players.erase(it_players->first);
+			}
+		}
+	}
+
+	g_globalEvents->execute(GlobalEvent_t::GLOBALEVENT_BATTLEGROUND_START);
 }
 
 Bg_Teams_t Battleground::sortTeam()
@@ -77,29 +137,34 @@ Bg_Teams_t Battleground::sortTeam()
 		return (Bg_Teams_t)random_range((uint32_t)BATTLEGROUND_TEAM_ONE, (uint32_t)BATTLEGROUND_TEAM_TWO);
 }
 
-BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
+void Battleground::putInTeam(Player* player, Bg_Teams_t team_id)
 {
-    if(!isOpen())
-        return BATTLEGROUND_CLOSED;
-
-	time_t lastLeave;
-	std::string tmpStr;
-	if(player->getStorage(DARGHOS_STORAGE_LAST_BATTLEGROUND_LEAVE, tmpStr)) lastLeave = atoi(tmpStr.c_str());
-
-	if(lastLeave + LIMIT_TARGET_FRAGS_INTERVAL > time(NULL))
-		return BATTLEGROUND_CAN_NOT_LEAVE_OR_JOIN;
-
-
-	Bg_Teams_t team_id = sortTeam();
 	Bg_Team_t* team = &teamsMap[team_id];
-
-	player->setBattlegroundTeam(team_id);
 
 	Bg_PlayerInfo_t playerInfo;
 	playerInfo.player = player;
+	playerInfo.areInside = false;
+
+	team->players.insert(std::make_pair(player->getGUID(), playerInfo));
+}
+
+void Battleground::putInside(Player* player)
+{
+	Bg_Teams_t team_id = findPlayerTeam(player);
+
+	if(!team_id)
+		return;
+
+	Bg_PlayerInfo_t* playerInfo = findPlayerInfo(player);
+
+	if(!playerInfo)
+		return;
+
+	Bg_Team_t* team = &teamsMap[team_id];
+	player->setBattlegroundTeam(team_id);
 
 	Outfit_t player_outfit = player->getCreature()->getCurrentOutfit();
-	playerInfo.default_outfit = player_outfit;
+	playerInfo->default_outfit = player_outfit;
 
 	player_outfit.lookHead = team->look.head;
 	player_outfit.lookBody = team->look.body;
@@ -109,24 +174,65 @@ BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
 	player->changeOutfit(player_outfit, false);
 	g_game.internalCreatureChangeOutfit(player->getCreature(), player_outfit);
 
-	playerInfo.masterPosition = player->getMasterPosition();
+	playerInfo->masterPosition = player->getMasterPosition();
 	player->setMasterPosition(team->spawn_pos);
 
 	const Position& oldPos = player->getPosition();
+	playerInfo->oldPosition = oldPos;
 
 	g_game.internalTeleport(player, team->spawn_pos, true);
 	g_game.addMagicEffect(oldPos, MAGIC_EFFECT_TELEPORT);
 
-	std::stringstream ss;
-	ss << time(NULL);
-	player->setStorage(DARGHOS_STORAGE_LAST_BATTLEGROUND_JOIN, ss.str());
-	player->eraseStorage(DARGHOS_STORAGE_LAST_BATTLEGROUND_LEAVE);
+	playerInfo->areInside = true;
+}
 
-	team->players.insert(std::make_pair(player->getGUID(), playerInfo));
+BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
+{
+    if(!isOpen())
+        return BATTLEGROUND_CLOSED;
+
+	if(player->isBattlegroundDeserter())
+		return BATTLEGROUND_CAN_NOT_JOIN;
+
+	if(status == BattlegroundStatus::BUILDING_TEAMS)
+	{
+		waitlist.push_back(player);	
+		buildTeams();
+
+		return BATTLEGROUND_PUT_IN_WAITLIST;
+	}
+	else if(status == BattlegroundStatus::STARTED)
+	{
+		if(!player->isInBattleground())
+		{
+			Bg_Teams_t team_id = findPlayerTeam(player);
+
+			//o jogador não estava na fila, portanto sera enviado para a battleground imediatamente no time com menos gente 
+			if(!team_id)
+			{
+				team_id = sortTeam();
+
+				putInTeam(player, team_id);
+				putInside(player);			
+			}
+			//o jogador estava na fila, portanto já esta em um time, somente necessario o teleportar para dentro...
+			else
+			{
+				putInside(player);
+			}
+
+			return BATTLEGROUND_PUT_INSIDE;
+		}
+		else
+		{
+			player->sendPvpChannelMessage("Você já está dentro da battleground!");
+		}
+	}
+
     return BATTLEGROUND_NO_ERROR;
 }
 
-BattlegrondRetValue Battleground::playerKick(Player* player, bool force)
+BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 {
 
 	Bg_Teams_t team_id = player->getBattlegroundTeam();
@@ -134,12 +240,12 @@ BattlegrondRetValue Battleground::playerKick(Player* player, bool force)
 	PlayersMap::iterator it = team->players.find(player->getGUID());
 	Bg_PlayerInfo_t playerInfo = it->second;
 
-	time_t lastJoin;
-	std::string tmpStr;
-	if(player->getStorage(DARGHOS_STORAGE_LAST_BATTLEGROUND_JOIN, tmpStr)) lastJoin = atoi(tmpStr.c_str());
-
-	if(!force && lastJoin + LIMIT_TARGET_FRAGS_INTERVAL > time(NULL))
-		return BATTLEGROUND_CAN_NOT_LEAVE_OR_JOIN;
+	if(!force)
+	{
+		std::stringstream ss;
+		ss << (time(NULL) + 60 * 10);
+		player->setStorage(DarghosPlayerStorageIds::DARGHOS_STORAGE_BATTLEGROUND_DESERTER_UNTIL, ss.str());
+	}
 
 	player->setBattlegroundTeam(BATTLEGROUND_TEAM_NONE);
 
@@ -149,14 +255,8 @@ BattlegrondRetValue Battleground::playerKick(Player* player, bool force)
 
 	player->setMasterPosition(playerInfo.masterPosition);
 
-	const Position& oldPos = player->getPosition();
-	g_game.internalTeleport(player, leave_pos, true);
-	g_game.addMagicEffect(oldPos, MAGIC_EFFECT_TELEPORT);
-
-	std::stringstream ss;
-	ss << time(NULL);
-	player->setStorage(DARGHOS_STORAGE_LAST_BATTLEGROUND_LEAVE, ss.str());
-	player->eraseStorage(DARGHOS_STORAGE_LAST_BATTLEGROUND_JOIN);
+	g_game.internalTeleport(player, playerInfo.oldPosition, true);
+	g_game.addMagicEffect(playerInfo.oldPosition, MAGIC_EFFECT_TELEPORT);
 
 	team->players.erase(player->getGUID());
 	deathsMap.erase(player->getGUID());
@@ -334,15 +434,9 @@ bool Battleground::storePlayerDeath(uint32_t player_id)
 	return true;
 }
 
-bool Battleground::order(Bg_Statistic_t first, Bg_Statistic_t second)
-{
-	if(first.kills == second.kills) return (first.deaths < second.deaths) ? true : false;
-	else return (first.kills > second.kills) ? true : false;
-}
-
 StatisticsList Battleground::getStatistics()
 {
-	statisticsList.sort(Battleground::order);
+	statisticsList.sort(Battleground::orderStatisticsListByPerformance);
 	return statisticsList;
 }
 

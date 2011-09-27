@@ -1731,7 +1731,11 @@ void Player::onThink(uint32_t interval)
 {
 	Creature::onThink(interval);
 	int64_t timeNow = OTSYS_TIME();
+#ifdef __DARGHOS_CUSTOM__
+	if(timeNow - lastPing >= 5000 && !hasCustomFlag(PlayerCustomFlag_ContinueOnlineWhenExit))
+#else
 	if(timeNow - lastPing >= 5000)
+#endif
 	{
 		lastPing = timeNow;
 		if(client)
@@ -1740,8 +1744,14 @@ void Player::onThink(uint32_t interval)
 			setAttackedCreature(NULL);
 	}
 
+#ifdef __DARGHOS_CUSTOM__
+	if((timeNow - lastPong) >= 60000 && !getTile()->hasFlag(TILESTATE_NOLOGOUT)
+		&& !isConnecting && !pzLocked && !hasCondition(CONDITION_INFIGHT)
+		&& !hasCustomFlag(PlayerCustomFlag_ContinueOnlineWhenExit))
+#else
 	if((timeNow - lastPong) >= 60000 && !getTile()->hasFlag(TILESTATE_NOLOGOUT)
 		&& !isConnecting && !pzLocked && !hasCondition(CONDITION_INFIGHT))
+#endif
 	{
 		if(client)
 			client->logout(true, true);
@@ -5261,4 +5271,25 @@ bool Player::isDoubleDamage()
 bool Player::hasPvpBlessing() const{ return hasBlessing(g_config.getNumber(ConfigManager::USE_BLESSING_AS_PVP) - 1); }
 void Player::removePvpBlessing() { removeBlessing(g_config.getNumber(ConfigManager::USE_BLESSING_AS_PVP) - 1); }
 void Player::removeBlessing(int16_t value) { if(hasBlessing(value)) blessings -= (int16_t)1 << value;  }
+#endif
+
+#ifdef __DARGHOS_PVP_SYSTEM__
+void Player::sendPvpChannelMessage(std::string text, SpeakClasses speakClass = SpeakClasses::SPEAK_CHANNEL_W)
+{
+	sendChannelMessage("", text, speakClass, PVP_CHANNEL_ID);
+}
+
+bool Player::isBattlegroundDeserter()
+{
+	std::string value;
+	if(getStorage(DarghosPlayerStorageIds::DARGHOS_STORAGE_BATTLEGROUND_DESERTER_UNTIL, value))
+	{
+		if(time(NULL) <= std::atoi(value.c_str()))
+		{
+			return true;
+		}
+	}	
+
+	return false;
+}
 #endif
