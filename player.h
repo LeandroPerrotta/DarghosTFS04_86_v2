@@ -769,7 +769,7 @@ class Player : public Creature, public Cylinder
 			team_id = tid; onBattleground = (tid == BATTLEGROUND_TEAM_NONE) ? false : true; 
 			lastKnowUpdate = time(NULL);
 		}
-		void sendPvpChannelMessage(std::string text, SpeakClasses speakClass = SpeakClasses::SPEAK_CHANNEL_W);
+		void sendPvpChannelMessage(const std::string& text, SpeakClasses speakClass = SPEAK_CHANNEL_W) const;
 		bool isBattlegroundDeserter();
 		#endif
 

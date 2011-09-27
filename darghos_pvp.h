@@ -7,7 +7,6 @@
 
 #define LIMIT_TARGET_FRAGS_INTERVAL 60
 #define LIMIT_TARGET_FRAGS_PER_INTERVAL 1
-#define MIN_BATTLEGROUND_TEAM_SIZE 5
 #define PVP_CHANNEL_ID 10
 
 typedef std::list<Player*> Bg_Waitlist_t;
@@ -86,9 +85,17 @@ class Battleground
 		void putInTeam(Player* player, Bg_Teams_t team_id);
 		void putInside(Player* player);
 		void start();
+		bool playerIsInWaitlist(Player* player);
        
 		StatisticsList getStatistics();
 		void clearStatistics(){ statisticsList.clear(); }
+		
+		static bool orderStatisticsListByPerformance(Bg_Statistic_t first, Bg_Statistic_t second) {
+			if(first.kills == second.kills) return (first.deaths < second.deaths) ? true : false;
+			else return (first.kills > second.kills) ? true : false;		
+		}
+
+		static bool orderWaitlistByLevel(Player* first, Player* second);		
 
     private:
         bool open;
@@ -100,6 +107,8 @@ class Battleground
 		Position leave_pos;
 		Bg_Waitlist_t waitlist;
 
+		void callPlayer(Player* player);
+
 		void addDeathEntry(uint32_t player_id, Bg_DeathEntry_t deathEntry);
 		bool isValidKiller(uint32_t killer_id, uint32_t target);
 
@@ -109,15 +118,6 @@ class Battleground
 
 		bool storePlayerKill(uint32_t player_id, bool lasthit);
 		bool storePlayerDeath(uint32_t player_id);
-
-		static bool orderStatisticsListByPerformance(Bg_Statistic_t first, Bg_Statistic_t second) {
-			if(first.kills == second.kills) return (first.deaths < second.deaths) ? true : false;
-			else return (first.kills > second.kills) ? true : false;		
-		}
-
-		static bool orderWaitlistByLevel(Player* first, Player* second) {
-			return (first->getLevel() > second->getLevel()) ? true : false;		
-		}
 };
 
 #endif

@@ -5274,15 +5274,15 @@ void Player::removeBlessing(int16_t value) { if(hasBlessing(value)) blessings -=
 #endif
 
 #ifdef __DARGHOS_PVP_SYSTEM__
-void Player::sendPvpChannelMessage(std::string text, SpeakClasses speakClass = SpeakClasses::SPEAK_CHANNEL_W)
+void Player::sendPvpChannelMessage(const std::string& text, SpeakClasses speakClass) const
 {
-	sendChannelMessage("", text, speakClass, PVP_CHANNEL_ID);
+	if(client) client->sendChannelMessage("", text, speakClass, PVP_CHANNEL_ID);
 }
 
 bool Player::isBattlegroundDeserter()
 {
 	std::string value;
-	if(getStorage(DarghosPlayerStorageIds::DARGHOS_STORAGE_BATTLEGROUND_DESERTER_UNTIL, value))
+	if(getStorage(DARGHOS_STORAGE_BATTLEGROUND_DESERTER_UNTIL, value))
 	{
 		if(time(NULL) <= std::atoi(value.c_str()))
 		{

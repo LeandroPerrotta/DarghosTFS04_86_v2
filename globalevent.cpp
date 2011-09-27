@@ -159,6 +159,7 @@ GlobalEventMap GlobalEvents::getEventMap(GlobalEvent_t type)
 		case GLOBALEVENT_GLOBALSAVE:
 		case GLOBALEVENT_RECORD:
 #ifdef __DARGHOS_PVP_SYSTEM__
+		case GLOBALEVENT_BATTLEGROUND_PREPARE:
 		case GLOBALEVENT_BATTLEGROUND_START:
 		case GLOBALEVENT_BATTLEGROUND_END:
 #endif
@@ -210,6 +211,8 @@ bool GlobalEvent::configureEvent(xmlNodePtr p)
 		else if(tmpStrValue == "record" || tmpStrValue == "playersrecord")
 			m_eventType = GLOBALEVENT_RECORD;
 #ifdef __DARGHOS_PVP_SYSTEM__
+		else if(tmpStrValue == "bgprepare")
+			m_eventType = GLOBALEVENT_BATTLEGROUND_PREPARE;
 		else if(tmpStrValue == "bgstart")
 			m_eventType = GLOBALEVENT_BATTLEGROUND_START;
 		else if(tmpStrValue == "bgend")
@@ -284,6 +287,8 @@ std::string GlobalEvent::getScriptEventName() const
 		case GLOBALEVENT_TIMER:
 			return "onTime";
 #ifdef __DARGHOS_PVP_SYSTEM__
+		case GLOBALEVENT_BATTLEGROUND_PREPARE:
+			return "onBattlegroundPrepare";
 		case GLOBALEVENT_BATTLEGROUND_START:
 			return "onBattlegroundStart";
 		case GLOBALEVENT_BATTLEGROUND_END:

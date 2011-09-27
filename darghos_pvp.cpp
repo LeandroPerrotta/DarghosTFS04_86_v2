@@ -7,6 +7,8 @@
 #include "creature.h"
 #include "globalevent.h"
 
+#define MIN_BATTLEGROUND_TEAM_SIZE 5
+
 extern Game g_game;
 extern GlobalEvents* g_globalEvents;
 
@@ -66,6 +68,19 @@ void Battleground::onInit()
 	status = BUILDING_TEAMS;
 }
 
+bool Battleground::playerIsInWaitlist(Player* player)
+{
+	for(Bg_Waitlist_t::iterator it = waitlist.begin(); it != waitlist.end(); it++)
+	{
+		if((*it) == player)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 Bg_PlayerInfo_t* Battleground::findPlayerInfo(Player* player)
 {
 	for(BgTeamsMap::iterator it = teamsMap.begin(); it != teamsMap.end(); it++)
@@ -74,6 +89,8 @@ Bg_PlayerInfo_t* Battleground::findPlayerInfo(Player* player)
 		if(pit != it->second.players.end())
 			return &pit->second;
 	}
+
+	return NULL;
 }
 
 Bg_Teams_t Battleground::findPlayerTeam(Player* player)
@@ -84,6 +101,8 @@ Bg_Teams_t Battleground::findPlayerTeam(Player* player)
 		if(pit != it->second.players.end())
 			return it->first;
 	}
+
+	return BATTLEGROUND_TEAM_NONE;
 }
 
 bool Battleground::buildTeams()
@@ -98,16 +117,24 @@ bool Battleground::buildTeams()
 	uint16_t i = 1;
 	for(Bg_Waitlist_t::iterator it = waitlist.begin(); it != waitlist.end(); it++, i++)
 	{
-		team = (i & 1 == 1) ? BATTLEGROUND_TEAM_ONE : BATTLEGROUND_TEAM_TWO;
+		team = ((i & 1) == 1) ? BATTLEGROUND_TEAM_ONE : BATTLEGROUND_TEAM_TWO;
 		putInTeam((*it), team);
-		(*it)->sendPvpChannelMessage("A battleground está pronta para iniciar! Você tem 2 minutos para digitar o comando \"!bg entrar\" para ser enviado a batalha! Boa sorte bravo guerreiro!");
+		Scheduler::getInstance().addEvent(createSchedulerTask(1000 * 4,
+			boost::bind(&Battleground::callPlayer, (*it), this)));
 	}
 
 	Scheduler::getInstance().addEvent(createSchedulerTask(1000 * 60 * 2,
 		boost::bind(&Battleground::start, this)));
 
-	status = BattlegroundStatus::STARTED;
+	status = STARTED;
+	g_globalEvents->execute(GLOBALEVENT_BATTLEGROUND_PREPARE);
+
 	return true;
+}
+
+void Battleground::callPlayer(Player* player)
+{
+	player->sendPvpChannelMessage("A battleground está pronta para iniciar! Você tem 2 minutos para digitar o comando \"!bg entrar\" para ser enviado a batalha! Boa sorte bravo guerreiro!");
 }
 
 void Battleground::start()
@@ -124,7 +151,7 @@ void Battleground::start()
 		}
 	}
 
-	g_globalEvents->execute(GlobalEvent_t::GLOBALEVENT_BATTLEGROUND_START);
+	g_globalEvents->execute(GLOBALEVENT_BATTLEGROUND_START);
 }
 
 Bg_Teams_t Battleground::sortTeam()
@@ -194,17 +221,25 @@ BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
 	if(player->isBattlegroundDeserter())
 		return BATTLEGROUND_CAN_NOT_JOIN;
 
-	if(status == BattlegroundStatus::BUILDING_TEAMS)
+	if(status == BUILDING_TEAMS)
 	{
+		if(playerIsInWaitlist(player))
+			return BATTLEGROUND_ALREADY_IN_WAITLIST;
+
 		waitlist.push_back(player);	
 		buildTeams();
 
 		return BATTLEGROUND_PUT_IN_WAITLIST;
 	}
-	else if(status == BattlegroundStatus::STARTED)
+	else if(status == STARTED)
 	{
 		if(!player->isInBattleground())
 		{
+			if(player->hasCondition(CONDITION_INFIGHT))
+			{
+				return BATTLEGROUND_INFIGHT;
+			}
+
 			Bg_Teams_t team_id = findPlayerTeam(player);
 
 			//o jogador não estava na fila, portanto sera enviado para a battleground imediatamente no time com menos gente 
@@ -244,7 +279,7 @@ BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 	{
 		std::stringstream ss;
 		ss << (time(NULL) + 60 * 10);
-		player->setStorage(DarghosPlayerStorageIds::DARGHOS_STORAGE_BATTLEGROUND_DESERTER_UNTIL, ss.str());
+		player->setStorage(DARGHOS_STORAGE_BATTLEGROUND_DESERTER_UNTIL, ss.str());
 	}
 
 	player->setBattlegroundTeam(BATTLEGROUND_TEAM_NONE);
@@ -450,6 +485,11 @@ PlayersMap Battleground::listPlayersOfTeam(Bg_Teams_t team)
 
 	playersMap = it->second.players;
 	return playersMap;
+}
+
+bool Battleground::orderWaitlistByLevel(Player* first, Player* second)
+{
+	return first->getLevel() > second->getLevel();
 }
 
 #endif
