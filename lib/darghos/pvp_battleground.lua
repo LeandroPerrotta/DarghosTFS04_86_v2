@@ -5,7 +5,8 @@ BG_RET_CLOSED = 1
 BG_RET_CAN_NOT_JOIN = 2
 BG_RET_PUT_IN_WAITLIST = 3
 BG_RET_PUT_INSIDE = 4
-BG_RET_INFIGHT = 5
+BG_RET_ALREADY_IN_WAITLIST = 5
+BG_RET_INFIGHT = 6
 
 pvpBattleground = {
 
@@ -148,6 +149,11 @@ function pvpBattleground.onEnter(cid)
 		doPlayerSendCancel(cid, "Você abandonou uma battleground e foi marcado como desertor, e não poderá entrar em outra durante 10 minutos.")
 		return false
 	end	
+	
+	if(ret == BG_RET_ALREADY_IN_WAITLIST) then
+		doPlayerSendCancel(cid, "Você já se encontra na fila para a battleground!")
+		return false	
+	end
 	
 	if(ret == BG_RET_INFIGHT) then
 		doPlayerSendCancel(cid, "Você está em condição de batalha, aguarde sair a condição e tente novamente.")
