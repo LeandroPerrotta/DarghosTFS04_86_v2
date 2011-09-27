@@ -14,6 +14,7 @@ function onSay(cid, words, param)
 			msg = msg .. "!bg stats -> Exibe as estatisticas (para você).\n"
 			msg = msg .. "!bg statsall -> Exibe as estatisticas (para todos no canal).\n"
 		else
+			msg = msg .. "!bg entrar, !bg join, !bg enter -> Entra em uma battleground (se disponivel) ou coloca na fila de espera.\n"
 			msg = msg .. "!bg team -> Exibe os membros de seu time (requer estar dentro da Battleground).\n"
 		end
 	
@@ -31,6 +32,9 @@ function onSay(cid, words, param)
 	if(isInArray({"info", "sobre", "help"}, option)) then	
 		msg = msg .. "Informações sobre o sistema de Battlegrounds:\n"
 		msg = msg .. pvpBattleground.getInformations()
+	elseif(isInArray({"entrar", "join", "enter"}, option)) then		
+		pvpBattleground.onEnter(cid)
+		return true
 	elseif(option == "team") then
 	
 		local team = nil 
@@ -63,6 +67,16 @@ function onSay(cid, words, param)
 		pvpBattleground.broadcastStatistics(false, cid)
 		return true
 	elseif(option == "statsall" and _access >= access.COMMUNITY_MANAGER) then	
+		pvpBattleground.broadcastStatistics(false)
+		return true		
+	elseif(option == "kick" and _access >= access.COMMUNITY_MANAGER) then	
+		local pid = getPlayerByNameWildcard(param)
+		
+		if(pid == nil or not doPlayerIsInBattleground(pid)) then
+			msg = msg .. "Jogador inexistente ou não se encontra na battleground."
+			error = true		
+		end
+		
 		pvpBattleground.broadcastStatistics(false)
 		return true		
 	end
