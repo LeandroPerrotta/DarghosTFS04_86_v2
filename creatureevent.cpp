@@ -221,6 +221,10 @@ bool CreatureEvent::configureEvent(xmlNodePtr p)
 	#ifdef __DARGHOS_PVP_SYSTEM__
 	else if(tmpStr == "bgfrag")
 		m_type = CREATURE_EVENT_BG_FRAG;
+	else if(tmpStr == "bgend")
+		m_type = CREATURE_EVENT_BG_END;
+	else if(tmpStr == "bgleave")
+		m_type = CREATURE_EVENT_BG_LEAVE;
 	#endif
 	else
 	{
@@ -291,6 +295,10 @@ std::string CreatureEvent::getScriptEventName() const
 		#ifdef __DARGHOS_PVP_SYSTEM__
 		case CREATURE_EVENT_BG_FRAG:
 			return "onBattlegroundFrag";
+		case CREATURE_EVENT_BG_END:
+			return "onBattlegroundEnd";			
+		case CREATURE_EVENT_BG_LEAVE:
+			return "onBattlegroundLeave";	
 		#endif
 		case CREATURE_EVENT_NONE:
 		default:
@@ -305,6 +313,9 @@ std::string CreatureEvent::getScriptEventParams() const
 	switch(m_type)
 	{
 		case CREATURE_EVENT_LOGIN:
+		#ifdef __DARGHOS_PVP_SYSTEM__
+		case CREATURE_EVENT_BG_LEAVE:
+		#endif
 			return "cid";
 		case CREATURE_EVENT_LOGOUT:
 			return "cid, forceLogout";
@@ -355,6 +366,10 @@ std::string CreatureEvent::getScriptEventParams() const
 			return "cid, corpse, deathList";
 		case CREATURE_EVENT_PREPAREDEATH:
 			return "cid, deathList";
+		#ifdef __DARGHOS_PVP_SYSTEM__
+		case CREATURE_EVENT_BG_END:
+			return "cid, winner";
+		#endif
 		case CREATURE_EVENT_NONE:
 		default:
 			break;
@@ -1964,6 +1979,112 @@ uint32_t CreatureEvent::executeBgFrag(Player* killer, Player* target)
 
 			lua_pushnumber(L, env->addThing(killer));
 			lua_pushnumber(L, env->addThing(target));
+
+			bool result = m_interface->callFunction(2);
+			m_interface->releaseEnv();
+			return result;
+		}
+	}
+	else
+	{
+		std::clog << "[Error - CreatureEvent::executeFollow] Call stack overflow." << std::endl;
+		return 0;
+	}
+}
+
+uint32_t CreatureEvent::executeBgEnd(Player* player, bool isWinner)
+{
+	//onBattlegroundEnd(cid, winner)
+	if(m_interface->reserveEnv())
+	{
+		ScriptEnviroment* env = m_interface->getEnv();
+		if(m_scripted == EVENT_SCRIPT_BUFFER)
+		{
+			env->setRealPos(player->getPosition());
+			std::stringstream scriptstream;
+
+			scriptstream << "local cid = " << env->addThing(player) << std::endl;
+			scriptstream << "local winner = " << isWinner << std::endl;
+
+			scriptstream << m_scriptData;
+			bool result = true;
+			if(m_interface->loadBuffer(scriptstream.str()))
+			{
+				lua_State* L = m_interface->getState();
+				result = m_interface->getGlobalBool(L, "_result", true);
+			}
+
+			m_interface->releaseEnv();
+			return result;
+		}
+		else
+		{
+			#ifdef __DEBUG_LUASCRIPTS__
+			std::stringstream desc;
+			desc << creature->getName();
+			env->setEvent(desc.str());
+			#endif
+
+			env->setScriptId(m_scriptId, m_interface);
+			env->setRealPos(player->getPosition());
+
+			lua_State* L = m_interface->getState();
+			m_interface->pushFunction(m_scriptId);
+
+			lua_pushnumber(L, env->addThing(player));
+			lua_pushboolean(L, isWinner);
+
+			bool result = m_interface->callFunction(2);
+			m_interface->releaseEnv();
+			return result;
+		}
+	}
+	else
+	{
+		std::clog << "[Error - CreatureEvent::executeFollow] Call stack overflow." << std::endl;
+		return 0;
+	}
+}
+
+uint32_t CreatureEvent::executeBgLeave(Player* player)
+{
+	//onBattlegroundLeave(cid)
+	if(m_interface->reserveEnv())
+	{
+		ScriptEnviroment* env = m_interface->getEnv();
+		if(m_scripted == EVENT_SCRIPT_BUFFER)
+		{
+			env->setRealPos(player->getPosition());
+			std::stringstream scriptstream;
+
+			scriptstream << "local cid = " << env->addThing(player) << std::endl;
+
+			scriptstream << m_scriptData;
+			bool result = true;
+			if(m_interface->loadBuffer(scriptstream.str()))
+			{
+				lua_State* L = m_interface->getState();
+				result = m_interface->getGlobalBool(L, "_result", true);
+			}
+
+			m_interface->releaseEnv();
+			return result;
+		}
+		else
+		{
+			#ifdef __DEBUG_LUASCRIPTS__
+			std::stringstream desc;
+			desc << creature->getName();
+			env->setEvent(desc.str());
+			#endif
+
+			env->setScriptId(m_scriptId, m_interface);
+			env->setRealPos(player->getPosition());
+
+			lua_State* L = m_interface->getState();
+			m_interface->pushFunction(m_scriptId);
+
+			lua_pushnumber(L, env->addThing(player));
 
 			bool result = m_interface->callFunction(2);
 			m_interface->releaseEnv();

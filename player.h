@@ -756,6 +756,8 @@ class Player : public Creature, public Cylinder
 		void removeDoubleDamage();
 		bool isDoubleDamage();
 		time_t getLastKnowUpdate() const { return lastKnowUpdate; }
+		void setPause(bool isPause) { pause = isPause; }
+		bool isPause() { return pause; }
 		#endif
 
 		#ifdef __DARGHOS_PVP_SYSTEM__
@@ -874,6 +876,7 @@ class Player : public Creature, public Cylinder
         #ifdef __DARGHOS_CUSTOM__
         bool doubleDamage;
 		time_t lastKnowUpdate;
+		bool pause;
         #endif
 
         #ifdef __DARGHOS_PVP_SYSTEM__

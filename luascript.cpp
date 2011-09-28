@@ -2495,6 +2495,9 @@ void LuaInterface::registerFunctions()
 
 	//getBattlegroundPlayersByTeam()
 	lua_register(m_luaState, "getBattlegroundPlayersByTeam", LuaInterface::luaGetBattlegroundPlayersByTeam);
+
+	//getBattlegroundTeamsPoints()
+	lua_register(m_luaState, "getBattlegroundTeamsPoints", LuaInterface::luaGetBattlegroundTeamsPoints);
 	#endif
 }
 
@@ -10552,6 +10555,23 @@ int32_t LuaInterface::luaGetBattlegroundPlayersByTeam(lua_State* L)
 	{
 		lua_pushnumber(L, i);
 		lua_pushnumber(L, it->second.player->getGUID());
+		pushTable(L);
+	}
+
+	return 1;
+}
+
+int32_t LuaInterface::luaGetBattlegroundTeamsPoints(lua_State* L)
+{
+	//getBattlegroundTeamsPoints()
+	BgTeamsMap teams = g_battleground.getTeams();
+
+	uint32_t i = 1;
+	lua_newtable(L);
+	for(BgTeamsMap::iterator it = teams.begin(); it != teams.end(); it++, i++)
+	{
+		lua_pushnumber(L, i);
+		lua_pushnumber(L, it->second.points);
 		pushTable(L);
 	}
 

@@ -54,6 +54,7 @@ struct Bg_Team_t {
     PlayersMap players;
     Bg_TeamLook_t look;
     Position spawn_pos;
+	uint32_t points;
 };
 
 typedef std::map<Bg_Teams_t, Bg_Team_t> BgTeamsMap;
@@ -76,12 +77,17 @@ class Battleground
 		bool buildTeams();
 		Bg_Teams_t sortTeam();
 
+		BgTeamsMap getTeams(){ return teamsMap; }
+		void finish(Bg_Teams_t teamWinner);
+		void finish();
+
         BattlegrondRetValue onPlayerJoin(Player* player);
 		BattlegrondRetValue kickPlayer(Player* player, bool force = false);
 		void onPlayerDeath(Player* killer, DeathList deathList);
 		PlayersMap listPlayersOfTeam(Bg_Teams_t team);
 		Bg_PlayerInfo_t* findPlayerInfo(Player* player);
-		Bg_Teams_t findPlayerTeam(Player* player);
+		Bg_Teams_t findTeamIdByPlayer(Player* player);
+		Bg_Team_t findPlayerTeam(Player* player);
 		void putInTeam(Player* player, Bg_Teams_t team_id);
 		void putInside(Player* player);
 		void start();
@@ -106,6 +112,8 @@ class Battleground
 		StatisticsList statisticsList;
 		Position leave_pos;
 		Bg_Waitlist_t waitlist;
+
+		uint32_t endEvent;
 
 		void callPlayer(Player* player);
 

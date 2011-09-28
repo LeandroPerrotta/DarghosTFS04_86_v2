@@ -7,7 +7,9 @@
 #include "creature.h"
 #include "globalevent.h"
 
-#define MIN_BATTLEGROUND_TEAM_SIZE 5
+#define MIN_BATTLEGROUND_TEAM_SIZE 2
+#define BATTLEGROUND_WIN_POINTS 50
+#define BATTLEGROUND_END 1000 * 60 * 15
 
 extern Game g_game;
 extern GlobalEvents* g_globalEvents;
@@ -93,7 +95,7 @@ Bg_PlayerInfo_t* Battleground::findPlayerInfo(Player* player)
 	return NULL;
 }
 
-Bg_Teams_t Battleground::findPlayerTeam(Player* player)
+Bg_Teams_t Battleground::findTeamIdByPlayer(Player* player)
 {
 	for(BgTeamsMap::iterator it = teamsMap.begin(); it != teamsMap.end(); it++)
 	{
@@ -103,6 +105,64 @@ Bg_Teams_t Battleground::findPlayerTeam(Player* player)
 	}
 
 	return BATTLEGROUND_TEAM_NONE;
+}
+
+Bg_Team_t Battleground::findPlayerTeam(Player* player)
+{
+	for(BgTeamsMap::iterator it = teamsMap.begin(); it != teamsMap.end(); it++)
+	{
+		if(it->first == player->getBattlegroundTeam())
+			return it->second;
+	}
+}
+
+void Battleground::finish()
+{
+	if(teamsMap[BATTLEGROUND_TEAM_ONE].points > teamsMap[BATTLEGROUND_TEAM_TWO].points)
+		finish(BATTLEGROUND_TEAM_ONE);
+	else if(teamsMap[BATTLEGROUND_TEAM_ONE].points < teamsMap[BATTLEGROUND_TEAM_TWO].points)
+		finish(BATTLEGROUND_TEAM_TWO);
+	else
+		finish(BATTLEGROUND_TEAM_NONE); //empate? raro...
+}
+
+void Battleground::finish(Bg_Teams_t teamWinner)
+{
+	for(BgTeamsMap::iterator it = teamsMap.begin(); it != teamsMap.end(); it++)
+	{		
+		for(PlayersMap::iterator it_players = it->second.players.begin(); it_players != it->second.players.end(); it_players++)
+		{
+			bool isWinner = false;
+
+			Player* player = it_players->second.player;
+
+			if(player->getBattlegroundTeam() == teamWinner)
+				isWinner  = true;
+
+			player->setPause(true);
+			player->sendPvpChannelMessage("Você será levado ao lugar em que estava em 5 segundos...");
+
+			Scheduler::getInstance().addEvent(createSchedulerTask(1000 * 5,
+				boost::bind(&Battleground::kickPlayer, this, player, true)));
+
+			CreatureEventList bgFragEvents = player->getCreatureEvents(CREATURE_EVENT_BG_END);
+			for(CreatureEventList::iterator it = bgFragEvents.begin(); it != bgFragEvents.end(); ++it)
+			{
+				(*it)->executeBgEnd(player, isWinner);
+			}
+		}
+
+		//it->second.players.clear();
+	}
+
+	Scheduler::getInstance().stopEvent(endEvent);
+	g_globalEvents->execute(GLOBALEVENT_BATTLEGROUND_END);
+
+	clearStatistics();
+	teamsMap[BATTLEGROUND_TEAM_ONE].points = 0;
+	teamsMap[BATTLEGROUND_TEAM_ONE].points = 0;
+
+	status = BUILDING_TEAMS;
 }
 
 bool Battleground::buildTeams()
@@ -120,7 +180,7 @@ bool Battleground::buildTeams()
 		team = ((i & 1) == 1) ? BATTLEGROUND_TEAM_ONE : BATTLEGROUND_TEAM_TWO;
 		putInTeam((*it), team);
 		Scheduler::getInstance().addEvent(createSchedulerTask(1000 * 4,
-			boost::bind(&Battleground::callPlayer, (*it), this)));
+			boost::bind(&Battleground::callPlayer, this, (*it))));
 	}
 
 	Scheduler::getInstance().addEvent(createSchedulerTask(1000 * 60 * 2,
@@ -128,6 +188,8 @@ bool Battleground::buildTeams()
 
 	status = STARTED;
 	g_globalEvents->execute(GLOBALEVENT_BATTLEGROUND_PREPARE);
+
+	waitlist.clear();
 
 	return true;
 }
@@ -152,6 +214,9 @@ void Battleground::start()
 	}
 
 	g_globalEvents->execute(GLOBALEVENT_BATTLEGROUND_START);
+
+	endEvent = Scheduler::getInstance().addEvent(createSchedulerTask(BATTLEGROUND_END,
+		boost::bind(&Battleground::finish, this)));
 }
 
 Bg_Teams_t Battleground::sortTeam()
@@ -177,9 +242,9 @@ void Battleground::putInTeam(Player* player, Bg_Teams_t team_id)
 
 void Battleground::putInside(Player* player)
 {
-	Bg_Teams_t team_id = findPlayerTeam(player);
+	Bg_Teams_t team_id = findTeamIdByPlayer(player);
 
-	if(!team_id)
+	if(!team_id || team_id == BATTLEGROUND_TEAM_NONE)
 		return;
 
 	Bg_PlayerInfo_t* playerInfo = findPlayerInfo(player);
@@ -240,7 +305,7 @@ BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
 				return BATTLEGROUND_INFIGHT;
 			}
 
-			Bg_Teams_t team_id = findPlayerTeam(player);
+			Bg_Teams_t team_id = findTeamIdByPlayer(player);
 
 			//o jogador não estava na fila, portanto sera enviado para a battleground imediatamente no time com menos gente 
 			if(!team_id)
@@ -269,7 +334,6 @@ BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
 
 BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 {
-
 	Bg_Teams_t team_id = player->getBattlegroundTeam();
 	Bg_Team_t* team = &teamsMap[team_id];
 	PlayersMap::iterator it = team->players.find(player->getGUID());
@@ -295,6 +359,16 @@ BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 
 	team->players.erase(player->getGUID());
 	deathsMap.erase(player->getGUID());
+
+	if(player->isPause())
+		player->setPause(false);
+
+	CreatureEventList bgFragEvents = player->getCreatureEvents(CREATURE_EVENT_BG_LEAVE);
+	for(CreatureEventList::iterator it = bgFragEvents.begin(); it != bgFragEvents.end(); ++it)
+	{
+		(*it)->executeBgLeave(player);
+	}
+
 	return BATTLEGROUND_NO_ERROR;
 }
 
@@ -328,6 +402,11 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 			incrementPlayerKill(tmp->getGUID());
 			incrementPlayerAssists(tmp->getGUID());
 			storePlayerKill(tmp->getGUID(), true);
+			Bg_Team_t team = findPlayerTeam(tmp);
+			team.points++;
+
+			if(team.points == BATTLEGROUND_WIN_POINTS)
+				finish(team_id);
 		}
 		else
 		{
@@ -340,15 +419,11 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 	incrementPlayerDeaths(player->getGUID());
 	addDeathEntry(player->getGUID(), deahsEntry);
 
-	bool deny = false;
 	CreatureEventList bgFragEvents = killer->getCreatureEvents(CREATURE_EVENT_BG_FRAG);
 	for(CreatureEventList::iterator it = bgFragEvents.begin(); it != bgFragEvents.end(); ++it)
 	{
-		if(!(*it)->executeBgFrag(killer, player))
-			deny = true;
+		(*it)->executeBgFrag(killer, player);
 	}
-
-	//if(deny)
 }
 
 bool Battleground::isValidKiller(uint32_t killer_id, uint32_t target)

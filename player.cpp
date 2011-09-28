@@ -68,6 +68,7 @@ Player::Player(const std::string& _name, ProtocolGame* p):
 
     #ifdef __DARGHOS_CUSTOM__
     doubleDamage = false;
+	pause = false;
 	lastKnowUpdate = time(NULL);
     #endif
 
