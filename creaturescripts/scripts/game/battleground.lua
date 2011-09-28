@@ -1,11 +1,33 @@
-DAILY_REQUIRED_POINTS = 20
+--DAILY_REQUIRED_POINTS = 20
+
+function onBattlegroundLeave(cid)
+	unlockTeleportScroll(cid)
+	unregisterCreatureEvent(cid, "onBattlegroundFrag")
+	unregisterCreatureEvent(cid, "OnChangeOutfit")
+end
+
+function onBattlegroundEnd(cid, winner)
+
+	local points = getBattlegroundTeamsPoints()
+
+	local winnerTeam = BATTLEGROUND_TEAM_NONE
+
+	if(points[BATTLEGROUND_TEAM_ONE] ~= points[BATTLEGROUND_TEAM_TWO]) then
+		winnerTeam = (points[BATTLEGROUND_TEAM_ONE] > points[BATTLEGROUND_TEAM_TWO]) and BATTLEGROUND_TEAM_ONE or BATTLEGROUND_TEAM_TWO
+	end
+
+	pvpBattleground.showResult(cid, winnerTeam)
+end
 
 function onBattlegroundFrag(cid, target)
 	doSendAnimatedText(getPlayerPosition(cid), "FRAG!", TEXTCOLOR_DARKRED)
 	
-	local teams = { [1] = "Time A", [2] = "Time B" }
-	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") matou " .. getPlayerName(target) .. " (" .. getPlayerLevel(target) .. ") pelo " .. teams[doPlayerGetBattlegroundTeam(cid)] .. "!")
+	local teams = { "Time A", "Time B" }	
+	local points = getBattlegroundTeamsPoints()
+	
+	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground | (" .. teams[BATTLEGROUND_TEAM_ONE] .. ") " .. points[BATTLEGROUND_TEAM_ONE] .. " X " .. points[BATTLEGROUND_TEAM_TWO] .. " (" .. teams[BATTLEGROUND_TEAM_TWO] .. ")] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") matou " .. getPlayerName(target) .. " (" .. getPlayerLevel(target) .. ") pelo " .. teams[doPlayerGetBattlegroundTeam(cid)] .. "!")
 
+	--[[
 	local dailyActive = (getPlayerStorageValue(cid, sid.DAILY_BATTLEGROUND_ACTIVE) == 1) and true or false	
 	if(dailyActive) then
 		local level, target_level = getPlayerLevel(cid), getPlayerLevel(target)
@@ -35,4 +57,5 @@ function onBattlegroundFrag(cid, target)
 			setPlayerStorageValue(target, sid.DAILY_BATTLEGROUND_POINTS, points)
 		end
 	end
+	--]]
 end

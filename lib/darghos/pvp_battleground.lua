@@ -8,6 +8,10 @@ BG_RET_PUT_INSIDE = 4
 BG_RET_ALREADY_IN_WAITLIST = 5
 BG_RET_INFIGHT = 6
 
+BATTLEGROUND_TEAM_NONE = 0
+BATTLEGROUND_TEAM_ONE = 1
+BATTLEGROUND_TEAM_TWO = 2
+
 pvpBattleground = {
 
 }
@@ -16,48 +20,31 @@ function pvpBattleground.onInit()
 	addEvent(pvpBattleground.broadcastStatistics, 1000 * 60 * BROADCAST_STATISTICS_INTERVAL)
 end
 
--- para evitar problemas precisamos fazer alguns procedimentos ao fechar o battleground
-function pvpBattleground.prepareClose()
-
-	for i = 1, 2 do
-		local players = getBattlegroundPlayersByTeam(i)
-		
-		if(players ~= nil and #players > 0) then
-			for k,v in pairs(players) do
-				unlockTeleportScroll(v)
-				unlockChangeOutfit(v)
-				unregisterCreatureEvent(v, "onBattlegroundFrag")			
-			end
-		end
-	end
-end
-
 function pvpBattleground.close()
-	pvpBattleground.prepareClose()
 	battlegroundClose()
 	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] Battleground temporareamente fechada. Voltará em alguns instantes.", TALKTYPE_TYPES["channel-red"])
 end
 
-function pvpBattleground.broadcastStatistics(event, target)
+function pvpBattleground.showResult(cid, winnner)
 
-	event = event or true
+	clear = clear or true
 
-	local msg = "Estatisticas Battleground (ultimos " .. BROADCAST_STATISTICS_INTERVAL .. " minutos):\n\n";
+	local teams = { "Time A", "Time B" }
+	
+	local msg = "Vencedor: EMPATE!\n\n";
+	
+	if(winnner ~= BATTLEGROUND_TEAM_NONE) then
+		msg = "Vencedor: " .. teams[winnner] .. "\n\n";
+	end
 	
 	local data = getBattlegroundStatistics()
-	
-	if(not data and event) then
-		addEvent(pvpBattleground.broadcastStatistics, 1000 * 60 * BROADCAST_STATISTICS_INTERVAL)
-		return
-	end
 	
 	local i = 1
 	for k,v in pairs(data) do
 		
 		local cid = getPlayerByGUID(v.player_id)
 		if(cid ~= nil) then
-		
-			local teams = { [1] = "Time A", [2] = "Time B" }
+			
 			local team = teams[doPlayerGetBattlegroundTeam(cid)]
 			
 			if(team == nil) then
@@ -74,16 +61,7 @@ function pvpBattleground.broadcastStatistics(event, target)
 		end
 	end
 	
-	if(target == nil) then
-		broadcastChannel(CUSTOM_CHANNEL_PVP, msg, TALKTYPE_TYPES["channel-orange"])
-	else
-		pvpBattleground.sendPlayerChannelMessage(target, msg, TALKTYPE_TYPES["channel-orange"])
-	end
-	
-	if(event) then
-		clearBattlegroundStatistics()
-		addEvent(pvpBattleground.broadcastStatistics, 1000 * 60 * BROADCAST_STATISTICS_INTERVAL)
-	end
+	doPlayerPopupFYI(cid, msg)
 end
 
 function pvpBattleground.getInformations()
@@ -198,11 +176,7 @@ function pvpBattleground.onExit(cid)
 	local ret = doPlayerLeaveBattleground(cid)
 
 	if(ret == BG_RET_NO_ERROR) then
-		broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") saiu da batalha.")
-		unlockTeleportScroll(cid)
-		unregisterCreatureEvent(cid, "onBattlegroundFrag")
-		unregisterCreatureEvent(cid, "OnChangeOutfit")
-		
+		broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") abandonou a batalha.")		
 		return true
 	end
 	

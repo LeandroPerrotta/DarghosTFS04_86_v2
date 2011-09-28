@@ -64,11 +64,12 @@ function onSay(cid, words, param)
 		msg = msg .. "Battleground aberta."
 		battlegroundOpen()	
 	elseif(option == "stats" and _access >= access.COMMUNITY_MANAGER) then
-		pvpBattleground.broadcastStatistics(false, cid)
+		pvpBattleground.showResult(cid, BATTLEGROUND_TEAM_NONE)
 		return true
-	elseif(option == "statsall" and _access >= access.COMMUNITY_MANAGER) then	
-		pvpBattleground.broadcastStatistics(false)
-		return true		
+	--elseif(option == "statsall" and _access >= access.COMMUNITY_MANAGER) then	
+		--pvpBattleground.broadcastStatistics(false)
+		--return true		
+	--[[
 	elseif(option == "kick" and _access >= access.COMMUNITY_MANAGER) then	
 		local pid = getPlayerByNameWildcard(param)
 		
@@ -79,6 +80,7 @@ function onSay(cid, words, param)
 		
 		pvpBattleground.broadcastStatistics(false)
 		return true		
+	--]]
 	end
 	
 	pvpBattleground.sendPlayerChannelMessage(cid, msg)
