@@ -100,7 +100,7 @@ local message = 0
 
 function onBattlegroundPrepare()
 
-	addEvent(showMessage, 1000)
+	addEvent(showMessage, 5000)
 	return true
 end
 
@@ -113,7 +113,7 @@ function showMessage()
 
 	if(message == 0)  then
 		broadcastChannel(CUSTOM_CHANNEL_PVP, "A partida iniciará em 2 minutos.", TALKTYPE_TYPES["channel-orange"])
-		addEvent(showMessage, 1000 * 29)
+		addEvent(showMessage, 1000 * 30)
 	else
 		broadcastChannel(CUSTOM_CHANNEL_PVP, messages[message].text, TALKTYPE_TYPES["channel-orange"])
 		if(not reset) then
