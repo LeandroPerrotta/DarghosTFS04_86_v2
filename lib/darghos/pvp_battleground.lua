@@ -149,6 +149,8 @@ function pvpBattleground.onEnter(cid)
 		local team = teams[doPlayerGetBattlegroundTeam(cid)]
 		
 		registerCreatureEvent(cid, "onBattlegroundFrag")
+		registerCreatureEvent(cid, "onBattlegroundEnd")
+		registerCreatureEvent(cid, "onBattlegroundLeave")
 		
 		local msg = "Bem vindo ao sistema de Battleground do Darghos!\n"
 		

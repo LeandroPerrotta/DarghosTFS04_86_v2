@@ -3,6 +3,8 @@
 function onBattlegroundLeave(cid)
 	unlockTeleportScroll(cid)
 	unregisterCreatureEvent(cid, "onBattlegroundFrag")
+	unregisterCreatureEvent(cid, "onBattlegroundEnd")
+	unregisterCreatureEvent(cid, "onBattlegroundLeave")
 	unregisterCreatureEvent(cid, "OnChangeOutfit")
 end
 
