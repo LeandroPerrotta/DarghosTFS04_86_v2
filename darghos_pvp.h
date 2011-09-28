@@ -87,7 +87,7 @@ class Battleground
 		PlayersMap listPlayersOfTeam(Bg_Teams_t team);
 		Bg_PlayerInfo_t* findPlayerInfo(Player* player);
 		Bg_Teams_t findTeamIdByPlayer(Player* player);
-		Bg_Team_t findPlayerTeam(Player* player);
+		Bg_Team_t* findPlayerTeam(Player* player);
 		void putInTeam(Player* player, Bg_Teams_t team_id);
 		void putInside(Player* player);
 		void start();

@@ -42,6 +42,8 @@ void Battleground::onInit()
 {
     Bg_Team_t team_one;
 
+	team_one.points = 0;
+
     team_one.look.head = 82;
     team_one.look.body = 114;
     team_one.look.legs = 114;
@@ -54,6 +56,8 @@ void Battleground::onInit()
 	teamsMap.insert(std::make_pair(BATTLEGROUND_TEAM_ONE, team_one));
 
     Bg_Team_t team_two;
+
+	team_two.points = 0;
 
     team_two.look.head = 77;
     team_two.look.body = 94;
@@ -107,12 +111,12 @@ Bg_Teams_t Battleground::findTeamIdByPlayer(Player* player)
 	return BATTLEGROUND_TEAM_NONE;
 }
 
-Bg_Team_t Battleground::findPlayerTeam(Player* player)
+Bg_Team_t* Battleground::findPlayerTeam(Player* player)
 {
 	for(BgTeamsMap::iterator it = teamsMap.begin(); it != teamsMap.end(); it++)
 	{
 		if(it->first == player->getBattlegroundTeam())
-			return it->second;
+			return &it->second;
 	}
 }
 
@@ -170,6 +174,9 @@ bool Battleground::buildTeams()
 	if(waitlist.size() < MIN_BATTLEGROUND_TEAM_SIZE * 2)
 		return false;
 
+	status = STARTED;
+	g_globalEvents->execute(GLOBALEVENT_BATTLEGROUND_PREPARE);
+
 	waitlist.sort(Battleground::orderWaitlistByLevel);
 
 	Bg_Teams_t team;
@@ -183,11 +190,8 @@ bool Battleground::buildTeams()
 			boost::bind(&Battleground::callPlayer, this, (*it))));
 	}
 
-	Scheduler::getInstance().addEvent(createSchedulerTask(1000 * 60 * 2,
+	Scheduler::getInstance().addEvent(createSchedulerTask((1000 * 60 * 2) + (1000 * 5),
 		boost::bind(&Battleground::start, this)));
-
-	status = STARTED;
-	g_globalEvents->execute(GLOBALEVENT_BATTLEGROUND_PREPARE);
 
 	waitlist.clear();
 
@@ -402,8 +406,8 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 			incrementPlayerKill(tmp->getGUID());
 			incrementPlayerAssists(tmp->getGUID());
 			storePlayerKill(tmp->getGUID(), true);
-			Bg_Team_t team = findPlayerTeam(tmp);
-			team.points++;
+			Bg_Team_t* team = findPlayerTeam(tmp);
+			team->points++;
 
 			if(team.points == BATTLEGROUND_WIN_POINTS)
 				finish(team_id);
