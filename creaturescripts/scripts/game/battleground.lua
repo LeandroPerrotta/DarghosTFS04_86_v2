@@ -18,6 +18,44 @@ function onBattlegroundEnd(cid, winner)
 		winnerTeam = (points[BATTLEGROUND_TEAM_ONE] > points[BATTLEGROUND_TEAM_TWO]) and BATTLEGROUND_TEAM_ONE or BATTLEGROUND_TEAM_TWO
 	end
 
+	if(winner) then
+		local canGain = true
+		local leftGainsMsg = ""
+		
+		if(not isPremium(cid)) then
+			local gains = getPlayerStorageValue(cid, sid.BATTLEGROUND_FREE_EXP_GAINS)
+			gains = (gains ~= -1) and gains or 0
+			gains = gains + 1
+			
+			local leftGains = FREE_EXP_GAINS_DAY_LIMIT		
+			leftGains = leftGains - gains		
+			
+			if(leftGains == 0) then
+				canGain = false
+			else
+				leftGainsMsg = " Você receberá este beneficio por mais ".. leftGains .. " vezes hoje."
+				
+				if(leftGains == 1) then
+					leftGainsMsg = " Você receberá este beneficio por mais uma vez hoje."
+				end		
+				
+				setPlayerStorageValue(cid, sid.BATTLEGROUND_FREE_EXP_GAINS, gains)	
+			end
+		end
+		
+		if(canGain) then
+			local expGain = pvpBattleground.getExperienceGain(cid)
+			local msg = "Você adquiriu " .. expGain .. " pontos de experiencia pela vitoria na Battleground!"
+			
+			if(not isPremium(cid)) then
+				msg = msg .. leftGainsMsg
+			end
+			
+			doPlayerAddExp(cid, expGain)
+			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, msg)
+		end		
+	end
+
 	pvpBattleground.showResult(cid, winnerTeam)
 end
 

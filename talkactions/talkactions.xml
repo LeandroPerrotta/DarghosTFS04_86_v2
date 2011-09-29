@@ -92,7 +92,7 @@
 	<talkaction words="!q" event="script" value="money.lua"/>
 	<talkaction words="!serverinfo;/serverinfo" event="script" value="serverinfo.lua"/>
 	<talkaction words="!commands;/commands" event="script" value="commands.lua"/>
-	<talkaction words="!software;/software" event="function" value="software"/>
+	<!-- <talkaction words="!software;/software" event="function" value="software"/> -->
 
 	<!-- Houses -->
 	<talkaction words="alevo grav;!buyhouse" filter="word-spaced" event="function" value="houseBuy"/>
