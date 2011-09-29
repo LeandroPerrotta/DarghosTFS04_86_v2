@@ -1,4 +1,5 @@
 BROADCAST_STATISTICS_INTERVAL = 20
+FREE_EXP_GAINS_DAY_LIMIT = 4
 
 BG_RET_NO_ERROR = 0
 BG_RET_CLOSED = 1
@@ -103,6 +104,10 @@ function pvpBattleground.sendPlayerChannelMessage(cid, msg, type)
 
 	type = (type ~= nil) and type or TALKTYPE_TYPES["channel-white"]
 	doPlayerSendChannelMessage(cid, "", msg, type, CUSTOM_CHANNEL_PVP)
+end
+
+function pvpBattleground.getExperienceGain(cid)
+	return math.floor(getPlayerExperience(cid) * 0.0005 * getPlayerMultiple(cid, STAGES_EXPERIENCE))
 end
 
 function pvpBattleground.onEnter(cid)

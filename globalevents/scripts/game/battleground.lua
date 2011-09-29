@@ -13,8 +13,7 @@ local timeLeftMessages = {
 	{ interval = 1, text = "Restam 4 segundos para o fim da partida."},
 	{ interval = 1, text = "Restam 3 segundos para o fim da partida."},
 	{ interval = 1, text = "Restam 2 segundos para o fim da partida."},
-	{ interval = 1, text = "Restam 1 segundos para o fim da partida."},
-	{ text = "A partida está encerrada!"}
+	{ text = "Restam 1 segundo para o fim da partida."},
 }
 
 function onBattlegroundStart()
@@ -27,7 +26,7 @@ function onBattlegroundStart()
 		doRemoveItem(thing.uid)
 	end
 	
-	addEvent(messageTimeLeft, 1000)
+	addEvent(messageTimeLeft, 100)
 	
 	return true
 end
@@ -40,11 +39,11 @@ function messageTimeLeft()
 
 	if(timeLeftMessage == 0)  then
 		broadcastChannel(CUSTOM_CHANNEL_PVP, "Restam 15 minutos para o fim da partida.", TALKTYPE_TYPES["channel-orange"])
-		lastEvent = addEvent(showMessage, 1000 * 29)
+		lastEvent = addEvent(messageTimeLeft, 1000 * 60 * 5)
 	else
-		broadcastChannel(CUSTOM_CHANNEL_PVP, timeLeftMessage[timeLeftMessage].text, TALKTYPE_TYPES["channel-orange"])
+		broadcastChannel(CUSTOM_CHANNEL_PVP, timeLeftMessages[timeLeftMessage].text, TALKTYPE_TYPES["channel-orange"])
 		if(not reset) then
-			lastEvent = addEvent(showMessage, 1000 * timeLeftMessage[timeLeftMessage].interval)
+			lastEvent = addEvent(messageTimeLeft, 1000 * timeLeftMessages[timeLeftMessage].interval)
 		end
 	end
 	
@@ -65,6 +64,27 @@ function onBattlegroundEnd()
 		timeLeftMessage = 0
 		lastEvent = nil
 	end
+	
+	local points = getBattlegroundTeamsPoints()
+
+	local teams = { "Time A", "Time B" }
+	local msg = nil;
+	
+	if(points[BATTLEGROUND_TEAM_ONE] ~= points[BATTLEGROUND_TEAM_TWO]) then
+		local winnerTeam = BATTLEGROUND_TEAM_NONE
+		winnerTeam = (points[BATTLEGROUND_TEAM_ONE] > points[BATTLEGROUND_TEAM_TWO]) and BATTLEGROUND_TEAM_ONE or BATTLEGROUND_TEAM_TWO
+		msg = "" .. teams[winnerTeam] .. " é o VENCEDOR por ";
+		
+		if(points[winnerTeam] == 50) then
+			msg = msg .. "pontos necessário para vitoria!"
+		else
+			msg = msg .. "mais pontos ao fim da partida!"
+		end
+	else
+		msg = "Não há vencedor! EMPATE por igualdade de pontos ao fim da partida!"
+	end	
+	
+	broadcastChannel(CUSTOM_CHANNEL_PVP, "Partida encerrada. " .. msg, TALKTYPE_TYPES["channel-orange"])
 	
 	return true
 end

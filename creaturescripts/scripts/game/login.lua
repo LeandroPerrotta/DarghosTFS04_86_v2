@@ -21,10 +21,10 @@ function onLogin(cid)
 	registerCreatureEvent(cid, "GainStamina")
 	registerCreatureEvent(cid, "onLeaveChannel")
 	
+	setStagesOnLogin(cid)
+	
 	playerRecord()
 	runPremiumSystem(cid)
-	setRateStage(cid, getPlayerLevel(cid))
-	setLoginSkillsRateStage(cid)
 	OnKillCreatureMission(cid)
 	Dungeons.onLogin(cid)
 	--defineFirstItems(cid)
