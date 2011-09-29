@@ -164,7 +164,7 @@ void Battleground::finish(Bg_Teams_t teamWinner)
 
 	clearStatistics();
 	teamsMap[BATTLEGROUND_TEAM_ONE].points = 0;
-	teamsMap[BATTLEGROUND_TEAM_ONE].points = 0;
+	teamsMap[BATTLEGROUND_TEAM_TWO].points = 0;
 
 	status = BUILDING_TEAMS;
 }
@@ -184,6 +184,12 @@ bool Battleground::buildTeams()
 	uint16_t i = 1;
 	for(Bg_Waitlist_t::iterator it = waitlist.begin(); it != waitlist.end(); it++, i++)
 	{
+		if(!(*it))
+		{
+			waitlist.erase(it);
+			return false;
+		}
+
 		team = ((i & 1) == 1) ? BATTLEGROUND_TEAM_ONE : BATTLEGROUND_TEAM_TWO;
 		putInTeam((*it), team);
 		Scheduler::getInstance().addEvent(createSchedulerTask(1000 * 4,
@@ -200,6 +206,9 @@ bool Battleground::buildTeams()
 
 void Battleground::callPlayer(Player* player)
 {
+	if(!player)
+		return;
+
 	player->sendPvpChannelMessage("A battleground está pronta para iniciar! Você tem 2 minutos para digitar o comando \"!bg entrar\" para ser enviado a batalha! Boa sorte bravo guerreiro!");
 }
 
@@ -210,8 +219,11 @@ void Battleground::start()
 		for(PlayersMap::iterator it_players = it->second.players.begin(); it_players != it->second.players.end(); it_players++)
 		{
 			if(!it_players->second.areInside)
-			{
-				it_players->second.player->sendPvpChannelMessage("Você não apareceu na battleground no tempo esperado... Você ainda pode participar da batalha digitando \"!bg entrar\" novamente.");
+			
+				Player* player = it_players->second.player;
+				if(player)
+					player->sendPvpChannelMessage("Você não apareceu na battleground no tempo esperado... Você ainda pode participar da batalha digitando \"!bg entrar\" novamente.");
+				
 				it->second.players.erase(it_players->first);
 			}
 		}
@@ -409,7 +421,7 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 			Bg_Team_t* team = findPlayerTeam(tmp);
 			team->points++;
 
-			if(team.points == BATTLEGROUND_WIN_POINTS)
+			if(team->points == BATTLEGROUND_WIN_POINTS)
 				finish(team_id);
 		}
 		else

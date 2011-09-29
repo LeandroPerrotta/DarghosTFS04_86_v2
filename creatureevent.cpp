@@ -2086,7 +2086,7 @@ uint32_t CreatureEvent::executeBgLeave(Player* player)
 
 			lua_pushnumber(L, env->addThing(player));
 
-			bool result = m_interface->callFunction(2);
+			bool result = m_interface->callFunction(1);
 			m_interface->releaseEnv();
 			return result;
 		}
