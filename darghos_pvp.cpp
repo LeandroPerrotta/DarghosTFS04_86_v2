@@ -219,9 +219,10 @@ void Battleground::start()
 		for(PlayersMap::iterator it_players = it->second.players.begin(); it_players != it->second.players.end(); it_players++)
 		{
 			if(!it_players->second.areInside)
+			{
 			
 				Player* player = it_players->second.player;
-				if(player)
+				if(!player)
 					player->sendPvpChannelMessage("Você não apareceu na battleground no tempo esperado... Você ainda pode participar da batalha digitando \"!bg entrar\" novamente.");
 				
 				it->second.players.erase(it_players->first);
