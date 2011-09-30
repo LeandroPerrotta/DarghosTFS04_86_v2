@@ -67,14 +67,12 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 		if(canGain) then
 			local expGain = pvpBattleground.getExperienceGain(cid)
 			
-			local maxBattlegroundDuration = 60 * 15
-			
 			expGain = math.floor(expGain * (timeIn / bgDuration)) -- calculamo a exp obtida com base no tempo de participação do jogador
-			expGain = math.floor(expGain * (bgDuration / maxBattlegroundDuration)) -- calculamo a exp obtida com base na duração da battleground
+			expGain = math.floor(expGain * (bgDuration / BG_CONFIG_DURATION)) -- calculamo a exp obtida com base na duração da battleground
 			
 			-- iremos reduzir o ganho de exp conforme o player se afasta da média de kills definida para o grupo até um limite de 50% de redução
 			local playerInfo = getPlayerBattlegroundInfo(cid)
-			local killsAvg = math.floor(points[winnerTeam] / 6)
+			local killsAvg = math.floor(points[winnerTeam] / BG_CONFIG_TEAMSIZE)
 			local killsRate = math.min(playerInfo.kills, killsAvg) / killsAvg
 			expGain = math.floor(expGain * (math.max(0.5, killsRate)))
 		
@@ -90,13 +88,13 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 				
 				changeRating = math.floor(changeRating / 2)
 				ratingMessage = "Você melhorou a sua classificação (rating) em " .. changeRating .. " pontos por seu empate na Battleground."
-				pvpBattleground.setPlayerRating(cid, currentRating + changeRating)
 			end		
 			
 			if(not isPremium(cid)) then
 				msg = msg .. leftGainsMsg
 			end
 			
+			pvpBattleground.setPlayerRating(cid, currentRating + changeRating)
 			doPlayerAddMoney(cid, gold)
 			doPlayerAddExp(cid, expGain)
 			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, msg)
@@ -104,8 +102,6 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 		end		
 	end
 	
-	
-
 	pvpBattleground.showResult(cid, winnerTeam)
 end
 

@@ -1,6 +1,10 @@
 BROADCAST_STATISTICS_INTERVAL = 20
 FREE_EXP_GAINS_DAY_LIMIT = 4
 
+BG_CONFIG_TEAMSIZE = 6
+BG_CONFIG_WINPOINTS = 50
+BG_CONFIG_DURATION = 60 * 15
+
 BG_RET_NO_ERROR = 0
 BG_RET_CLOSED = 1
 BG_RET_CAN_NOT_JOIN = 2
@@ -68,7 +72,13 @@ function pvpBattleground.setPlayerRating(cid, rating)
 end
 
 function pvpBattleground.onInit()
-	addEvent(pvpBattleground.broadcastStatistics, 1000 * 60 * BROADCAST_STATISTICS_INTERVAL)
+	local configs = {
+		teamSize = BG_CONFIG_TEAMSIZE,
+		winPoints = BG_CONFIG_WINPOINTS,
+		duration = BG_CONFIG_DURATION,
+	}
+	
+	setBattlegroundConfigs(configs)
 end
 
 function pvpBattleground.close()
