@@ -1,11 +1,8 @@
 local lastEvent = nil
 
-local timeLeftMessage = 0
-local timeLeftMessages = {
-	{ interval = 60*5, text = "Restam 10 minuto para o fim da partida."},
-	{ interval = 60*3, text = "Restam 5 minutos para o fim da partida."},
-	{ interval = 60, text = "Restam 2 minutos para o fim da partida."},
-	{ interval = 30, text = "Restam 1 minuto para o fim da partida."},
+local minutesLeftMessage = BG_CONFIG_DURATION / 60
+local secondsLeftMessage = 1
+local secondsLeftMessages = {
 	{ interval = 10, text = "Restam 30 segundos para o fim da partida."},
 	{ interval = 10, text = "Restam 20 segundos para o fim da partida."},
 	{ interval = 5, text = "Restam 10 segundos para o fim da partida."},
@@ -32,26 +29,38 @@ function onBattlegroundStart()
 end
 
 function messageTimeLeft()
-	local reset = false
-	if(timeLeftMessage == #timeLeftMessages) then
-		reset = true
-	end
 
-	if(timeLeftMessage == 0)  then
-		broadcastChannel(CUSTOM_CHANNEL_PVP, "Restam 15 minutos para o fim da partida.", TALKTYPE_TYPES["channel-orange"])
-		lastEvent = addEvent(messageTimeLeft, 1000 * 60 * 5)
+	if(minutesLeftMessage >= 1)  then
+	
+		local minutesStr = "minutos"
+		if(minutesLeftMessage == 1)then
+			minutesStr = "minuto"
+		end
+	
+		broadcastChannel(CUSTOM_CHANNEL_PVP, "Restam " .. minutesLeftMessage .. " " .. minutesStr .. " para o fim da partida.", TALKTYPE_TYPES["channel-orange"])
+		minutesLeftMessage = minutesLeftMessage - 1
+		
+		if(minutesLeftMessage > 0) then
+			lastEvent = addEvent(messageTimeLeft, 1000 * 60)
+		else
+			lastEvent = addEvent(messageTimeLeft, 1000 * 30)
+		end
 	else
-		broadcastChannel(CUSTOM_CHANNEL_PVP, timeLeftMessages[timeLeftMessage].text, TALKTYPE_TYPES["channel-orange"])
+		local reset = false
+		if(secondsLeftMessage == #secondsLeftMessages) then
+			reset = true
+		end	
+	
+		broadcastChannel(CUSTOM_CHANNEL_PVP, secondsLeftMessages[secondsLeftMessage].text, TALKTYPE_TYPES["channel-orange"])
+		
 		if(not reset) then
 			lastEvent = addEvent(messageTimeLeft, 1000 * timeLeftMessages[timeLeftMessage].interval)
-		end
-	end
-	
-	if(not reset) then
-		timeLeftMessage = timeLeftMessage + 1	
-	else
-		timeLeftMessage = 0
-		lastEvent = nil
+			secondsLeftMessage = secondsLeftMessage + 1	
+		else
+			minutesLeftMessage = BG_CONFIG_DURATION / 60
+			secondsLeftMessage = 0
+			lastEvent = nil
+		end		
 	end
 end
 
@@ -75,7 +84,7 @@ function onBattlegroundEnd()
 		winnerTeam = (points[BATTLEGROUND_TEAM_ONE] > points[BATTLEGROUND_TEAM_TWO]) and BATTLEGROUND_TEAM_ONE or BATTLEGROUND_TEAM_TWO
 		msg = "" .. teams[winnerTeam] .. " é o VENCEDOR por ";
 		
-		if(points[winnerTeam] == 50) then
+		if(points[winnerTeam] == BG_CONFIG_WINPOINTS) then
 			msg = msg .. "pontos necessário para vitoria!"
 		else
 			msg = msg .. "mais pontos ao fim da partida!"
