@@ -335,36 +335,39 @@ BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
 	{
 		if(!player->isInBattleground())
 		{
-			if(teamsMap[BATTLEGROUND_TEAM_ONE].players.size() == MIN_BATTLEGROUND_TEAM_SIZE || teamsMap[BATTLEGROUND_TEAM_TWO].players.size() == MIN_BATTLEGROUND_TEAM_SIZE)
-			{
-				if(playerIsInWaitlist(player))
-					return BATTLEGROUND_ALREADY_IN_WAITLIST;
-
-				waitlist.push_back(player);	
-				return BATTLEGROUND_PUT_IN_WAITLIST;
-			}
-
-			if(player->hasCondition(CONDITION_INFIGHT))
-			{
-				return BATTLEGROUND_INFIGHT;
-			}
-
 			Bg_Teams_t team_id = findTeamIdByPlayer(player);
 
-			//o jogador não estava na fila, portanto sera enviado para a battleground imediatamente no time com menos gente 
 			if(!team_id)
 			{
-				if(teamsMap[BATTLEGROUND_TEAM_ONE].players.size() < MIN_BATTLEGROUND_TEAM_SIZE || teamsMap[BATTLEGROUND_TEAM_TWO].players.size())
+				//se a bg já estiver  cheia ele é colocado na fila para a proxima bg
+				if(teamsMap[BATTLEGROUND_TEAM_ONE].players.size() == MIN_BATTLEGROUND_TEAM_SIZE || teamsMap[BATTLEGROUND_TEAM_TWO].players.size() == MIN_BATTLEGROUND_TEAM_SIZE)
 				{
-					team_id = sortTeam();
+					if(playerIsInWaitlist(player))
+						return BATTLEGROUND_ALREADY_IN_WAITLIST;
 
-					putInTeam(player, team_id);
-					putInside(player);
+					waitlist.push_back(player);	
+					return BATTLEGROUND_PUT_IN_WAITLIST;
 				}
+
+				//senão, (alguem saiu) ele é colocado na bg
+				if(player->hasCondition(CONDITION_INFIGHT))
+				{
+					return BATTLEGROUND_INFIGHT;
+				}
+
+				team_id = sortTeam();
+
+				putInTeam(player, team_id);
+				putInside(player);
 			}
 			//o jogador estava na fila, portanto já esta em um time, somente necessario o teleportar para dentro...
 			else
 			{
+				if(player->hasCondition(CONDITION_INFIGHT))
+				{
+					return BATTLEGROUND_INFIGHT;
+				}
+
 				putInside(player);
 			}
 
