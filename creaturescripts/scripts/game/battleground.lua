@@ -8,7 +8,7 @@ function onBattlegroundLeave(cid)
 	unregisterCreatureEvent(cid, "OnChangeOutfit")
 end
 
-function onBattlegroundEnd(cid, winner)
+function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 
 	local points = getBattlegroundTeamsPoints()
 
@@ -31,6 +31,7 @@ function onBattlegroundEnd(cid, winner)
 			leftGains = leftGains - gains		
 			
 			if(leftGains == 0) then
+				doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Você ja atingiu o limite diario de 4 battleground recompensadas para jogadores sem uma Conta Premium. Adquirá já sua conta premium e continue recebendo a recompensa ilimitadamente e também contribua para o Darghos a seguir implementando sistemas inovadores como a Battleground!")
 				canGain = false
 			else
 				leftGainsMsg = " Você receberá este beneficio por mais ".. leftGains .. " vezes hoje."
@@ -45,12 +46,25 @@ function onBattlegroundEnd(cid, winner)
 		
 		if(canGain) then
 			local expGain = pvpBattleground.getExperienceGain(cid)
-			local msg = "Você adquiriu " .. expGain .. " pontos de experiencia pela vitoria na Battleground!"
+			
+			local maxBattlegroundDuration = 60 * 15
+			
+			expGain = math.floor(expGain * (timeIn / bgDuration)) -- calculamo a exp obtida com base no tempo de participação do jogador
+			expGain = math.floor(expGain * (bgDuration / maxBattlegroundDuration)) -- calculamo a exp obtida com base na duração da battleground
+			
+			-- iremos reduzir o ganho de exp conforme o player se afasta da média de kills definida para o grupo até um limite de 50% de redução
+			local playerInfo = getPlayerBattlegroundInfo(cid)
+			local killsAvg = math.floor(points[winnerTeam] / 6)
+			local killsRate = math.min(playerInfo.kills, killsAvg) / killsAvg
+			expGain = expGain * (math.max(0.5, killsRate))
+			
+			local msg = "Você adquiriu " .. expGain .. " pontos de experiencia e 2 crystal coins pela vitoria na Battleground!"
 			
 			if(not isPremium(cid)) then
 				msg = msg .. leftGainsMsg
-			end
+			end			
 			
+			doPlayerAddMoney(cid, 20000)
 			doPlayerAddExp(cid, expGain)
 			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, msg)
 		end		
