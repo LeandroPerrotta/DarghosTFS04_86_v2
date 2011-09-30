@@ -56,7 +56,7 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 			local playerInfo = getPlayerBattlegroundInfo(cid)
 			local killsAvg = math.floor(points[winnerTeam] / 6)
 			local killsRate = math.min(playerInfo.kills, killsAvg) / killsAvg
-			expGain = expGain * (math.max(0.5, killsRate))
+			expGain = math.floor(expGain * (math.max(0.5, killsRate)))
 			
 			local msg = "Você adquiriu " .. expGain .. " pontos de experiencia e 2 crystal coins pela vitoria na Battleground!"
 			
