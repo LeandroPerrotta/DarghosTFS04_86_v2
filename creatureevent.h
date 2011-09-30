@@ -143,7 +143,7 @@ class CreatureEvent : public Event
 
 		#ifdef __DARGHOS_PVP_SYSTEM__
 		uint32_t executeBgFrag(Player* killer, Player* target);
-		uint32_t executeBgEnd(Player* player, bool winner);
+		uint32_t executeBgEnd(Player* player, bool winner, uint32_t timeIn, uint32_t bgDuration);
 		uint32_t executeBgLeave(Player* player);
 		#endif
 		//

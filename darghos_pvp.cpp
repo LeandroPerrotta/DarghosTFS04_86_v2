@@ -149,10 +149,13 @@ void Battleground::finish(Bg_Teams_t teamWinner)
 			Scheduler::getInstance().addEvent(createSchedulerTask(1000 * 5,
 				boost::bind(&Battleground::kickPlayer, this, player, true)));
 
+			time_t timeInBg = time(NULL) - it_players->second.join_in;
+			time_t bgDuration = time(NULL) - lastInit;
+
 			CreatureEventList bgFragEvents = player->getCreatureEvents(CREATURE_EVENT_BG_END);
 			for(CreatureEventList::iterator it = bgFragEvents.begin(); it != bgFragEvents.end(); ++it)
 			{
-				(*it)->executeBgEnd(player, isWinner);
+				(*it)->executeBgEnd(player, isWinner, timeInBg, bgDuration);
 			}
 		}
 
@@ -231,6 +234,7 @@ void Battleground::start()
 	}
 
 	g_globalEvents->execute(GLOBALEVENT_BATTLEGROUND_START);
+	lastInit = time(NULL);
 
 	endEvent = Scheduler::getInstance().addEvent(createSchedulerTask(BATTLEGROUND_END,
 		boost::bind(&Battleground::finish, this)));
@@ -288,6 +292,7 @@ void Battleground::putInside(Player* player)
 
 	const Position& oldPos = player->getPosition();
 	playerInfo->oldPosition = oldPos;
+	playerInfo->join_in = time(NULL);
 
 	g_game.internalTeleport(player, team->spawn_pos, true);
 	g_game.addMagicEffect(oldPos, MAGIC_EFFECT_TELEPORT);

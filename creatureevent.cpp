@@ -368,7 +368,7 @@ std::string CreatureEvent::getScriptEventParams() const
 			return "cid, deathList";
 		#ifdef __DARGHOS_PVP_SYSTEM__
 		case CREATURE_EVENT_BG_END:
-			return "cid, winner";
+			return "cid, winner, timeIn, bgDuration";
 		#endif
 		case CREATURE_EVENT_NONE:
 		default:
@@ -1992,9 +1992,9 @@ uint32_t CreatureEvent::executeBgFrag(Player* killer, Player* target)
 	}
 }
 
-uint32_t CreatureEvent::executeBgEnd(Player* player, bool isWinner)
+uint32_t CreatureEvent::executeBgEnd(Player* player, bool isWinner, uint32_t timeIn, uint32_t bgDuration)
 {
-	//onBattlegroundEnd(cid, winner)
+	//onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 	if(m_interface->reserveEnv())
 	{
 		ScriptEnviroment* env = m_interface->getEnv();
@@ -2005,6 +2005,8 @@ uint32_t CreatureEvent::executeBgEnd(Player* player, bool isWinner)
 
 			scriptstream << "local cid = " << env->addThing(player) << std::endl;
 			scriptstream << "local winner = " << isWinner << std::endl;
+			scriptstream << "local timeIn = " << timeIn << std::endl;
+			scriptstream << "local bgDuration = " << bgDuration << std::endl;
 
 			scriptstream << m_scriptData;
 			bool result = true;
@@ -2033,8 +2035,10 @@ uint32_t CreatureEvent::executeBgEnd(Player* player, bool isWinner)
 
 			lua_pushnumber(L, env->addThing(player));
 			lua_pushboolean(L, isWinner);
+			lua_pushnumber(L, timeIn);
+			lua_pushnumber(L, bgDuration);
 
-			bool result = m_interface->callFunction(2);
+			bool result = m_interface->callFunction(4);
 			m_interface->releaseEnv();
 			return result;
 		}

@@ -36,6 +36,7 @@ typedef std::map<uint32_t, DeathsList> DeathsMap;
 struct Bg_PlayerInfo_t
 {
 	Player* player;
+	time_t join_in;
 	Outfit_t default_outfit;
 	Position masterPosition;
 	Position oldPosition;
@@ -111,6 +112,7 @@ class Battleground
 		DeathsMap deathsMap;
 		StatisticsList statisticsList;
 		Position leave_pos;
+		time_t lastInit;
 		Bg_Waitlist_t waitlist;
 
 		uint32_t endEvent;

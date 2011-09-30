@@ -2498,6 +2498,9 @@ void LuaInterface::registerFunctions()
 
 	//getBattlegroundTeamsPoints()
 	lua_register(m_luaState, "getBattlegroundTeamsPoints", LuaInterface::luaGetBattlegroundTeamsPoints);
+
+	//getPlayerBattlegroundInfo(cid)
+	lua_register(m_luaState, "getPlayerBattlegroundInfo", LuaInterface::luaGetPlayerBattlegroundInfo);
 	#endif
 }
 
@@ -10573,6 +10576,36 @@ int32_t LuaInterface::luaGetBattlegroundTeamsPoints(lua_State* L)
 		lua_pushnumber(L, i);
 		lua_pushnumber(L, it->second.points);
 		pushTable(L);
+	}
+
+	return 1;
+}
+
+int32_t LuaInterface::luaGetPlayerBattlegroundInfo(lua_State* L)
+{
+	//getPlayerBattlegroundInfo(cid)
+	ScriptEnviroment* env = getEnv();
+	if(Player* player = env->getPlayerByUID(popNumber(L)))
+	{		
+		Bg_PlayerInfo_t* infos = g_battleground.findPlayerInfo(player);
+
+		if(!infos)
+		{
+			lua_pushboolean(L, false);
+			return 1;
+		}
+
+		lua_newtable(L);
+
+		setField(L, "kills", infos->kills);
+		setField(L, "assists", infos->assists);
+		setField(L, "deaths", infos->deaths);
+		setField(L, "join_in", infos->join_in);
+	}
+	else
+	{
+		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushboolean(L, false);
 	}
 
 	return 1;
