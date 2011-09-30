@@ -74,6 +74,13 @@ void Battleground::onInit()
 	status = BUILDING_TEAMS;
 }
 
+void Battleground::removeWaitlistPlayer(Player* player)
+{
+	Bg_Waitlist_t::iterator it = std::find(waitlist.begin(), waitlist.end(), player);
+	if(it != waitlist.end())
+		waitlist.erase(it);
+}
+
 bool Battleground::playerIsInWaitlist(Player* player)
 {
 	for(Bg_Waitlist_t::iterator it = waitlist.begin(); it != waitlist.end(); it++)
@@ -187,7 +194,7 @@ bool Battleground::buildTeams()
 	uint16_t i = 1;
 	for(Bg_Waitlist_t::iterator it = waitlist.begin(); it != waitlist.end(); it++, i++)
 	{
-		if(!(*it))
+		if((*it) == NULL)
 		{
 			waitlist.erase(it);
 			return false;

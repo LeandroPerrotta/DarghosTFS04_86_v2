@@ -93,6 +93,7 @@ class Battleground
 		void putInside(Player* player);
 		void start();
 		bool playerIsInWaitlist(Player* player);
+		void removeWaitlistPlayer(Player* player);
        
 		StatisticsList getStatistics();
 		void clearStatistics(){ statisticsList.clear(); }

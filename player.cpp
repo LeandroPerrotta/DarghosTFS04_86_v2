@@ -43,6 +43,10 @@ extern MoveEvents* g_moveEvents;
 extern Weapons* g_weapons;
 extern CreatureEvents* g_creatureEvents;
 
+#ifdef __DARGHOS_PVP_SYSTEM__
+extern Battleground g_battleground;
+#endif
+
 AutoList<Player> Player::autoList;
 #ifdef __ENABLE_SERVER_DIAGNOSTIC__
 uint32_t Player::playerCount = 0;
@@ -1454,6 +1458,11 @@ void Player::onCreatureDisappear(const Creature* creature, bool isLogout)
 
 	if(eventWalk)
 		setFollowCreature(NULL);
+
+#ifdef __DARGHOS_PVP_SYSTEM__
+	if(g_battleground.playerIsInWaitlist(this))
+		g_battleground.removeWaitlistPlayer(this);
+#endif
 
 	closeShopWindow();
 	if(tradePartner)
