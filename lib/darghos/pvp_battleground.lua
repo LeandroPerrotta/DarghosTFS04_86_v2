@@ -17,6 +17,56 @@ pvpBattleground = {
 
 }
 
+BATTLEGROUND_RATING = 3
+BATTLEGROND_HIGH_RATE = 1601
+
+battlegrondRatingTable = {
+
+	{to = 400, multipler = 35},
+	{from = 401, to = 800, multipler = 25},
+	{from = 801, to = 1000, multipler = 10},
+	{from = 1001, to = 1200, multipler = 8},
+	{from = 1201, to = 1400, multipler = 6},
+	{from = 1401, to = 1600, multipler = 5},
+	{from = 1601, to = 2000, multipler = 4},
+	{from = 2001, to = 2400, multipler = 3},
+	{from = 2401, to = 2800, multipler = 2},
+	{from = 2801, multipler = 1}
+}
+
+function pvpBattleground.getRatingMultipler(cid, rating)
+
+	for k,v in pairs(battlegrondRatingTable) do
+		local from = v.from or 0	
+		local isLast = (v.to == nil) and true or false
+		
+		if(not isLast) then
+			if(rating >= from and rating <= v.to) then
+				return v.multipler
+			end
+		else
+			return v.multipler
+		end
+	end
+	
+	return nil
+end
+
+function pvpBattleground.getPlayerRating(cid)
+	local result = db.getResult("SELECT `battleground_rating` FROM `players` WHERE `id` = " .. getPlayerGUID(cid) .. ";")
+	
+	if(result:getID() ~= -1) then
+		local rating = result:getDataInt("battleground_rating")
+		result:free()
+		
+		return rating
+	end	
+end
+
+function pvpBattleground.setPlayerRating(cid, rating)
+	db.executeQuery("UPDATE `players` SET `battleground_rating` = " .. rating .. " WHERE `id` = " .. getPlayerGUID(cid) .. ";")
+end
+
 function pvpBattleground.onInit()
 	addEvent(pvpBattleground.broadcastStatistics, 1000 * 60 * BROADCAST_STATISTICS_INTERVAL)
 end
@@ -32,33 +82,35 @@ function pvpBattleground.showResult(cid, winnner)
 
 	local teams = { "Time A", "Time B" }
 	
-	local msg = "Vencedor: EMPATE!\n\n";
+	local msg = "Não houve vencedor, declarado EMPATE!\n\n";
 	
 	if(winnner ~= BATTLEGROUND_TEAM_NONE) then
-		msg = "Vencedor: " .. teams[winnner] .. "\n\n";
+		msg = "O time " .. teams[winnner] .. " é o VENCEDOR!\n\n";
 	end
 	
 	local data = getBattlegroundStatistics()
 	
-	local i = 1
-	for k,v in pairs(data) do
-		
-		local cid = getPlayerByGUID(v.player_id)
-		if(cid ~= nil) then
+	if(#data > 0) then
+		local i = 1
+		for k,v in pairs(data) do
 			
-			local team = teams[doPlayerGetBattlegroundTeam(cid)]
-			
-			if(team == nil) then
-				team = "Fora"
+			local cid = getPlayerByGUID(v.player_id)
+			if(cid ~= nil) then
+				
+				local team = teams[doPlayerGetBattlegroundTeam(cid)]
+				
+				if(team == nil) then
+					team = "Fora"
+				end
+				
+				local spaces_c = 40 - string.len(getPlayerName(cid)) - string.len(team)
+				
+				local spaces = ""	
+				for i=1, spaces_c do spaces = spaces .. " " end
+						
+				msg = msg .. i .. "# " .. getPlayerName(cid) .. " (" .. team .. ")".. spaces .. "" .. v.kills .. " / " .. v.deaths .. "  [" .. v.assists .. "] \n"	
+				i = i + 1
 			end
-			
-			local spaces_c = 40 - string.len(getPlayerName(cid)) - string.len(team)
-			
-			local spaces = ""	
-			for i=1, spaces_c do spaces = spaces .. " " end
-					
-			msg = msg .. i .. "# " .. getPlayerName(cid) .. " (" .. team .. ")".. spaces .. "" .. v.kills .. " / " .. v.deaths .. "  [" .. v.assists .. "] \n"	
-			i = i + 1
 		end
 	end
 	
@@ -67,9 +119,11 @@ end
 
 function pvpBattleground.getInformations()
 	local msg = ""
-	msg = msg .. "Este é um sistema de Hardcore PvP do Darghos, e o objetivo é matar o maximo e morrer o minimo!\n"
+	msg = msg .. "Este é um sistema de PvP do Darghos, e o objetivo é seu time atingir 50 pontos, obtidos ao derrotar um oponente. A partida tem duração de até 15 minuto\n"
+	msg = msg .. "se ao final do tempo nenhum time tiver atingido os 50 pontos a vitoria é concedida ao com maior numero de pontos, e empate no caso de igualdade de pontos\n"
+	msg = msg .. "Aos participantes do time vencedor é concedido uma quantidade de pontos de experiencia e algum dinheiro!\n"
 	msg = msg .. "Ao morrer você não perderá nada e nascera na base de seu time. Dentro da Battleground os danos são mais efetivos contra inimigos (100%) e diminuidos em aliados (25%)!\n"
-	msg = msg .. "De 20 em 20 minutos é exibido um relatorio para todos os jogadores online mostrando os jogadores com melhor desempenho na Battleground. Prepare-se e seja o melhor!\n"
+	msg = msg .. "Use o PvP Channel para se comunicar com seus companheiros, somente eles poderão ler suas mensagens. Boa sorte!\n"
 
 	return msg
 end
