@@ -165,8 +165,6 @@ void Battleground::finish(Bg_Teams_t teamWinner)
 				(*it)->executeBgEnd(player, isWinner, timeInBg, bgDuration);
 			}
 		}
-
-		//it->second.players.clear();
 	}
 
 	Scheduler::getInstance().stopEvent(endEvent);
@@ -177,6 +175,7 @@ void Battleground::finish(Bg_Teams_t teamWinner)
 	teamsMap[BATTLEGROUND_TEAM_TWO].points = 0;
 
 	status = BUILDING_TEAMS;
+	buildTeams();
 }
 
 bool Battleground::buildTeams()
@@ -184,33 +183,40 @@ bool Battleground::buildTeams()
 	if(waitlist.size() < MIN_BATTLEGROUND_TEAM_SIZE * 2)
 		return false;
 
-	status = STARTED;
-	g_globalEvents->execute(GLOBALEVENT_BATTLEGROUND_PREPARE);
-
 	waitlist.sort(Battleground::orderWaitlistByLevel);
 
 	Bg_Teams_t team;
+	Bg_Waitlist_t _tempList;
 
 	uint16_t i = 1;
 	for(Bg_Waitlist_t::iterator it = waitlist.begin(); it != waitlist.end(); it++, i++)
 	{
-		if((*it) == NULL)
-		{
-			waitlist.erase(it);
-			return false;
-		}
+		_tempList.push_back((*it));
 
+		if(i == MIN_BATTLEGROUND_TEAM_SIZE * 2)
+			break;
+	}
+
+	if(_tempList.size() < MIN_BATTLEGROUND_TEAM_SIZE * 2)
+		return false;
+
+	i = 1;
+	for(Bg_Waitlist_t::iterator it = _tempList.begin(); it != _tempList.end(); it++, i++)
+	{
 		team = ((i & 1) == 1) ? BATTLEGROUND_TEAM_ONE : BATTLEGROUND_TEAM_TWO;
+
 		putInTeam((*it), team);
 		Scheduler::getInstance().addEvent(createSchedulerTask(1000 * 4,
 			boost::bind(&Battleground::callPlayer, this, (*it))));
+
+		removeWaitlistPlayer((*it));
 	}
+
+	status = STARTED;
+	g_globalEvents->execute(GLOBALEVENT_BATTLEGROUND_PREPARE);
 
 	Scheduler::getInstance().addEvent(createSchedulerTask((1000 * 60 * 2) + (1000 * 5),
 		boost::bind(&Battleground::start, this)));
-
-	waitlist.clear();
-
 	return true;
 }
 
@@ -219,7 +225,7 @@ void Battleground::callPlayer(Player* player)
 	if(!player)
 		return;
 
-	player->sendPvpChannelMessage("A battleground está pronta para iniciar! Você tem 2 minutos para digitar o comando \"!bg entrar\" para ser enviado a batalha! Boa sorte bravo guerreiro!");
+	player->sendPvpChannelMessage("A battleground está pronta para iniciar! Você tem 2 minutos para digitar o comando \"!bg entrar\" para ser enviado a batalha! Boa sorte bravo guerreiro!", SPEAK_CHANNEL_O);
 }
 
 void Battleground::start()
@@ -232,7 +238,7 @@ void Battleground::start()
 			{
 			
 				Player* player = it_players->second.player;
-				if(!player)
+				if(player != NULL)		
 					player->sendPvpChannelMessage("Você não apareceu na battleground no tempo esperado... Você ainda pode participar da batalha digitando \"!bg entrar\" novamente.");
 				
 				it->second.players.erase(it_players->first);
@@ -329,6 +335,15 @@ BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
 	{
 		if(!player->isInBattleground())
 		{
+			if(teamsMap[BATTLEGROUND_TEAM_ONE].players.size() == MIN_BATTLEGROUND_TEAM_SIZE || teamsMap[BATTLEGROUND_TEAM_TWO].players.size() == MIN_BATTLEGROUND_TEAM_SIZE)
+			{
+				if(playerIsInWaitlist(player))
+					return BATTLEGROUND_ALREADY_IN_WAITLIST;
+
+				waitlist.push_back(player);	
+				return BATTLEGROUND_PUT_IN_WAITLIST;
+			}
+
 			if(player->hasCondition(CONDITION_INFIGHT))
 			{
 				return BATTLEGROUND_INFIGHT;
@@ -339,10 +354,13 @@ BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
 			//o jogador não estava na fila, portanto sera enviado para a battleground imediatamente no time com menos gente 
 			if(!team_id)
 			{
-				team_id = sortTeam();
+				if(teamsMap[BATTLEGROUND_TEAM_ONE].players.size() < MIN_BATTLEGROUND_TEAM_SIZE || teamsMap[BATTLEGROUND_TEAM_TWO].players.size())
+				{
+					team_id = sortTeam();
 
-				putInTeam(player, team_id);
-				putInside(player);			
+					putInTeam(player, team_id);
+					putInside(player);
+				}
 			}
 			//o jogador estava na fila, portanto já esta em um time, somente necessario o teleportar para dentro...
 			else
