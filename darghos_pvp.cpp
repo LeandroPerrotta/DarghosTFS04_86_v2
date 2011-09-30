@@ -7,7 +7,7 @@
 #include "creature.h"
 #include "globalevent.h"
 
-#define MIN_BATTLEGROUND_TEAM_SIZE 2
+#define MIN_BATTLEGROUND_TEAM_SIZE 6
 #define BATTLEGROUND_WIN_POINTS 50
 #define BATTLEGROUND_END 1000 * 60 * 15
 
@@ -40,6 +40,10 @@ void Battleground::onClose()
 
 void Battleground::onInit()
 {
+	teamSize = MIN_BATTLEGROUND_TEAM_SIZE;
+	winPoints = BATTLEGROUND_WIN_POINTS;
+	duration = BATTLEGROUND_END;
+
     Bg_Team_t team_one;
 
 	team_one.points = 0;
@@ -180,7 +184,7 @@ void Battleground::finish(Bg_Teams_t teamWinner)
 
 bool Battleground::buildTeams()
 {
-	if(waitlist.size() < MIN_BATTLEGROUND_TEAM_SIZE * 2)
+	if(waitlist.size() < teamSize * 2)
 		return false;
 
 	waitlist.sort(Battleground::orderWaitlistByLevel);
@@ -193,11 +197,11 @@ bool Battleground::buildTeams()
 	{
 		_tempList.push_back((*it));
 
-		if(i == MIN_BATTLEGROUND_TEAM_SIZE * 2)
+		if(i == teamSize * 2)
 			break;
 	}
 
-	if(_tempList.size() < MIN_BATTLEGROUND_TEAM_SIZE * 2)
+	if(_tempList.size() < teamSize * 2)
 		return false;
 
 	i = 1;
@@ -249,7 +253,7 @@ void Battleground::start()
 	g_globalEvents->execute(GLOBALEVENT_BATTLEGROUND_START);
 	lastInit = time(NULL);
 
-	endEvent = Scheduler::getInstance().addEvent(createSchedulerTask(BATTLEGROUND_END,
+	endEvent = Scheduler::getInstance().addEvent(createSchedulerTask(duration,
 		boost::bind(&Battleground::finish, this)));
 }
 
@@ -340,7 +344,7 @@ BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
 			if(!team_id)
 			{
 				//se a bg já estiver  cheia ele é colocado na fila para a proxima bg
-				if(teamsMap[BATTLEGROUND_TEAM_ONE].players.size() == MIN_BATTLEGROUND_TEAM_SIZE || teamsMap[BATTLEGROUND_TEAM_TWO].players.size() == MIN_BATTLEGROUND_TEAM_SIZE)
+				if(teamsMap[BATTLEGROUND_TEAM_ONE].players.size() == teamSize && teamsMap[BATTLEGROUND_TEAM_TWO].players.size() == teamSize)
 				{
 					if(playerIsInWaitlist(player))
 						return BATTLEGROUND_ALREADY_IN_WAITLIST;
@@ -455,7 +459,7 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 			Bg_Team_t* team = findPlayerTeam(tmp);
 			team->points++;
 
-			if(team->points == BATTLEGROUND_WIN_POINTS)
+			if(team->points == winPoints)
 				finish(team_id);
 		}
 		else

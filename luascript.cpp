@@ -2501,6 +2501,9 @@ void LuaInterface::registerFunctions()
 
 	//getPlayerBattlegroundInfo(cid)
 	lua_register(m_luaState, "getPlayerBattlegroundInfo", LuaInterface::luaGetPlayerBattlegroundInfo);
+
+	//setBattlegroundConfigs(configs)
+	lua_register(m_luaState, "setBattlegroundConfigs", LuaInterface::luaSetBattlegroundConfigs);
 	#endif
 }
 
@@ -10608,6 +10611,17 @@ int32_t LuaInterface::luaGetPlayerBattlegroundInfo(lua_State* L)
 		lua_pushboolean(L, false);
 	}
 
+	return 1;
+}
+
+int32_t LuaInterface::luaSetBattlegroundConfigs(lua_State* L)
+{
+	//setBattlegroundConfigs(configs)
+	g_battleground.setTeamSize(getField(L, "teamSize"));
+	g_battleground.setWinPoints(getField(L, "winPoints"));
+	g_battleground.setDuration(getField(L, "duration"));
+
+	lua_pop(L, 1); //table
 	return 1;
 }
 #endif
