@@ -96,7 +96,7 @@ class Battleground
 		void removeWaitlistPlayer(Player* player);
 		void setTeamSize(uint32_t size){ teamSize = size; }
 		void setWinPoints(uint32_t points){ winPoints = points; }
-		void setDuration(time_t seconds){ duration = seconds; }
+		void setDuration(uint32_t seconds){ duration = (seconds * 1000); }
        
 		StatisticsList getStatistics();
 		void clearStatistics(){ statisticsList.clear(); }
@@ -119,7 +119,7 @@ class Battleground
 		Bg_Waitlist_t waitlist;
 		uint32_t teamSize;
 		uint32_t winPoints;
-		time_t duration;
+		uint32_t duration;
 
 		uint32_t endEvent;
 
