@@ -199,12 +199,13 @@ void Game::setGameState(GameState_t newState)
 				Raids::getInstance()->startup();
 				Quests::getInstance()->loadFromXml();
 
-				loadGameState();
-				g_globalEvents->startup();
-
 				#ifdef __DARGHOS_PVP_SYSTEM__
 				g_battleground.onInit();
 				#endif
+
+				loadGameState();
+				g_globalEvents->startup();
+
 
 				IOBan::getInstance()->clearTemporials();
 				if(g_config.getBool(ConfigManager::INIT_PREMIUM_UPDATE))
