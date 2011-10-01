@@ -18,7 +18,7 @@ BATTLEGROUND_TEAM_ONE = 1
 BATTLEGROUND_TEAM_TWO = 2
 
 BATTLEGROUND_MIN_LEVEL = 100
-BATTLEGROUND_CAN_NON_PVP = false
+BATTLEGROUND_CAN_NON_PVP = true
 
 BG_GAIN_EVERYHOUR_DAYS = { WEEKDAY.SATURDAY, WEEKDAY.SUNDAY }
 BG_GAIN_START_HOUR = 12
@@ -213,11 +213,12 @@ function pvpBattleground.onEnter(cid)
 		return false	
 	end
 	
-	if(not BATTLEGROUND_CAN_NON_PVP and getPlayerTown(cid) == towns.ISLAND_OF_PEACE) then
+	local onIslandOfPeace = getPlayerTown(cid) == towns.ISLAND_OF_PEACE
+	if(not BATTLEGROUND_CAN_NON_PVP and onIslandOfPeace) then
 		doPlayerSendCancel(cid, "So é permitido jogadores em areas Open PvP a participarem de Battlegrounds.")
 		return false	
 	end	
-
+	
 	local ret = doPlayerJoinBattleground(cid)
 
 	if(ret == BG_RET_CLOSED) then
@@ -248,13 +249,13 @@ function pvpBattleground.onEnter(cid)
 		
 			local playersLeft = (BG_CONFIG_TEAMSIZE * 2) - getBattlegroundWaitlistSize()
 			
-			leftStr = "Restam "
+			leftStr = " Restam "
 			
 			if(playersLeft <= 2) then
 				leftStr = leftStr .. "apénas "
 			end
 			
-			leftStr = leftStr .. "mais " .. (BG_CONFIG_TEAMSIZE * 2) - getBattlegroundWaitlistSize() .. " jogadores para completar o proximo time! Quer participar também? Digite '!bg entrar'" 
+			leftStr = leftStr .. "mais " .. (BG_CONFIG_TEAMSIZE * 2) - getBattlegroundWaitlistSize() .. " jogadores para iniciar a proxima partida! Quer participar também? Digite '!bg entrar'" 
 		end
 	
 		broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") aguarda por uma battleground." .. leftStr)	
@@ -265,6 +266,11 @@ function pvpBattleground.onEnter(cid)
 		
 		-- teleportando direto da ilha de treinamento...
 		if(isInTrainingIsland(cid)) then
+			doUpdateCreatureImpassable(cid)
+		end
+		
+		-- islando of peace
+		if(BATTLEGROUND_CAN_NON_PVP and onIslandOfPeace) then
 			doUpdateCreatureImpassable(cid)
 		end
 	
