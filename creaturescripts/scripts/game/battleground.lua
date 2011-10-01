@@ -10,6 +10,12 @@ function onBattlegroundLeave(cid)
 	if(isInTrainingIsland(cid)) then
 		doUpdateCreaturePassable(cid)
 	end	
+	
+	-- islando of peace
+	local onIslandOfPeace = getPlayerTown(cid) == towns.ISLAND_OF_PEACE
+	if(onIslandOfPeace) then
+		doUpdateCreaturePassable(cid)
+	end	
 end
 
 function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
