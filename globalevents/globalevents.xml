@@ -8,6 +8,7 @@
 	<globalevent name="bgstart" type="bgstart" event="script" value="game/battleground.lua"/>
 	<globalevent name="bgprepare" type="bgprepare" event="script" value="game/battleground.lua"/>
 	<globalevent name="bgend" type="bgend" event="script" value="game/battleground.lua"/>
+	<globalevent name="announcements" interval="3600000" event="script" value="game/announcements.lua"/>
 
 	<globalevent name="save" interval="3600000" event="script" value="save.lua"/>
 	<globalevent name="clean" interval="43200000" event="script" value="clean.lua"/>
