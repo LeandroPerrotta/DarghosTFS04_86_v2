@@ -247,6 +247,8 @@ void Battleground::start()
 				
 				it->second.players.erase(it_players->first);
 			}
+
+			it_players->second.join_in = time(NULL);
 		}
 	}
 
@@ -436,6 +438,7 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 
 	Player* killer = NULL;
 	Player* tmp = NULL;
+
 	for(DeathList::iterator it = deathList.begin(); it != deathList.end(); ++it)
 	{
 		if(it->getKillerCreature()->getPlayer())
@@ -456,11 +459,6 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 			incrementPlayerKill(tmp->getGUID());
 			incrementPlayerAssists(tmp->getGUID());
 			storePlayerKill(tmp->getGUID(), true);
-			Bg_Team_t* team = findPlayerTeam(tmp);
-			team->points++;
-
-			if(team->points == winPoints)
-				finish(team_id);
 		}
 		else
 		{
@@ -470,6 +468,13 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 		}
 	}
 
+	Bg_Team_t* team = findPlayerTeam(killer);
+	team->points++;
+
+	if(team->points >= winPoints)
+		Scheduler::getInstance().addEvent(createSchedulerTask(1000,
+			boost::bind(&Battleground::finish, this, killer->getBattlegroundTeam())));
+
 	incrementPlayerDeaths(player->getGUID());
 	addDeathEntry(player->getGUID(), deahsEntry);
 
@@ -478,6 +483,8 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 	{
 		(*it)->executeBgFrag(killer, player);
 	}
+
+
 }
 
 bool Battleground::isValidKiller(uint32_t killer_id, uint32_t target)
