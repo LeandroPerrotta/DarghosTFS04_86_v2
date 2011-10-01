@@ -17,6 +17,9 @@ BATTLEGROUND_TEAM_NONE = 0
 BATTLEGROUND_TEAM_ONE = 1
 BATTLEGROUND_TEAM_TWO = 2
 
+BATTLEGROUND_MIN_LEVEL = 100
+BATTLEGROUND_CAN_NON_PVP = false
+
 BG_GAIN_EVERYHOUR_DAYS = { WEEKDAY.SATURDAY, WEEKDAY.SUNDAY }
 BG_GAIN_START_HOUR = 12
 BG_GAIN_END_HOUR = 2
@@ -204,6 +207,16 @@ function pvpBattleground.onEnter(cid)
 		doPlayerSendCancel(cid, "Você não pode entrar na battleground enquanto estiver sob certos efeitos magicos.")
 		return false
 	end
+	
+	if(getPlayerLevel(cid) < BATTLEGROUND_MIN_LEVEL) then
+		doPlayerSendCancel(cid, "So é permitido jogadores com level " .. BATTLEGROUND_MIN_LEVEL .. " ou superior a participarem de uma battleground.")
+		return false	
+	end
+	
+	if(not BATTLEGROUND_CAN_NON_PVP and getPlayerTown(cid) == towns.ISLAND_OF_PEACE) then
+		doPlayerSendCancel(cid, "So é permitido jogadores em areas Open PvP a participarem de Battlegrounds.")
+		return false	
+	end	
 
 	local ret = doPlayerJoinBattleground(cid)
 
