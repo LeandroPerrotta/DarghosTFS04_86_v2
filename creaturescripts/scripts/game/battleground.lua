@@ -6,6 +6,10 @@ function onBattlegroundLeave(cid)
 	unregisterCreatureEvent(cid, "onBattlegroundEnd")
 	unregisterCreatureEvent(cid, "onBattlegroundLeave")
 	unregisterCreatureEvent(cid, "OnChangeOutfit")
+	
+	if(isInTrainingIsland(cid)) then
+		doUpdateCreaturePassable(cid)
+	end	
 end
 
 function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
