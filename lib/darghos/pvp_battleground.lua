@@ -241,7 +241,23 @@ function pvpBattleground.onEnter(cid)
 	end
 		
 	if(ret == BG_RET_PUT_IN_WAITLIST) then
-		broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") aguarda por uma battleground. Quer participar? Digite '!bg entrar'.")	
+		
+		local leftStr = ""
+		
+		if(getBattlegroundWaitlistSize() < BG_CONFIG_TEAMSIZE * 2) then
+		
+			local playersLeft = (BG_CONFIG_TEAMSIZE * 2) - getBattlegroundWaitlistSize()
+			
+			leftStr = "Restam "
+			
+			if(playersLeft <= 2) then
+				leftStr = leftStr .. "apénas "
+			end
+			
+			leftStr = "mais " .. (BG_CONFIG_TEAMSIZE * 2) - getBattlegroundWaitlistSize() .. " jogadores para completar o proximo time! Quer participar também? Digite '!bg entrar'" 
+		end
+	
+		broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") aguarda por uma battleground." .. leftStr)	
 		return true
 	elseif(ret == BG_RET_PUT_INSIDE) then
 		lockTeleportScroll(cid)
