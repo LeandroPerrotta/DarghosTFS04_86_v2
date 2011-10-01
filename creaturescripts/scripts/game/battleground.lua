@@ -17,89 +17,99 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 	if(points[BATTLEGROUND_TEAM_ONE] ~= points[BATTLEGROUND_TEAM_TWO]) then
 		winnerTeam = (points[BATTLEGROUND_TEAM_ONE] > points[BATTLEGROUND_TEAM_TWO]) and BATTLEGROUND_TEAM_ONE or BATTLEGROUND_TEAM_TWO
 	end
-
-	local currentRating = pvpBattleground.getPlayerRating(cid)
-	local ratingMultipler = pvpBattleground.getRatingMultipler(cid, currentRating)
-	local changeRating = ratingMultipler * BATTLEGROUND_RATING
 	
-	changeRating = math.floor(changeRating * (timeIn / bgDuration))
+	local date = os.date("*t")
+	if((date.hour >= BG_GAIN_START_HOUR and date.hour < BG_GAIN_END_HOUR)
+		or isInArray(BG_GAIN_EVERYHOUR_DAYS, date.wday)) then	
 	
-	if(not winner and winnerTeam ~= BATTLEGROUND_TEAM_NONE) then
-		if(currentRating >= BATTLEGROND_HIGH_RATE) then
-			changeRating = math.floor(changeRating * 1.25)
-		else
-			changeRating = math.floor(changeRating * 0.75)
-		end
+		local currentRating = pvpBattleground.getPlayerRating(cid)
+		local ratingMultipler = pvpBattleground.getRatingMultipler(cid, currentRating)
+		local changeRating = ratingMultipler * BATTLEGROUND_RATING
 		
-		if(currentRating - changeRating > 0) then
-			local ratingMessage = "Você piorou a sua classificação (rating) em " .. changeRating .. " pontos por sua derrota na Battleground."
-			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, ratingMessage)		
-			pvpBattleground.setPlayerRating(cid, currentRating - changeRating)
-		end
-	end
-
-	if(winner or winnerTeam == BATTLEGROUND_TEAM_NONE) then
-		local canGain = true
-		local leftGainsMsg = ""
-		
-		if(not isPremium(cid)) then
-			local gains = getPlayerStorageValue(cid, sid.BATTLEGROUND_FREE_EXP_GAINS)
-			gains = (gains ~= -1) and gains or 0
-			gains = gains + 1
-			
-			local leftGains = FREE_EXP_GAINS_DAY_LIMIT		
-			leftGains = leftGains - gains		
-			
-			if(leftGains == 0) then
-				doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Você ja atingiu o limite diario de 4 battleground recompensadas para jogadores sem uma Conta Premium. Adquirá já sua conta premium e continue recebendo a recompensa ilimitadamente, além disso contribua para o Darghos seguir implementando sistemas inovadores como a Battleground!")
-				canGain = false
+		changeRating = math.floor(changeRating * (timeIn / bgDuration))
+	
+		if(not winner and winnerTeam ~= BATTLEGROUND_TEAM_NONE) then
+			if(currentRating >= BATTLEGROND_HIGH_RATE) then
+				changeRating = math.floor(changeRating * 1.25)
 			else
-				leftGainsMsg = " Você receberá este beneficio por mais ".. leftGains .. " vezes hoje."
-				
-				if(leftGains == 1) then
-					leftGainsMsg = " Você receberá este beneficio por mais uma vez hoje."
-				end		
-				
-				setPlayerStorageValue(cid, sid.BATTLEGROUND_FREE_EXP_GAINS, gains)	
+				changeRating = math.floor(changeRating * 0.75)
+			end
+			
+			if(currentRating - changeRating > 0) then
+				local ratingMessage = "Você piorou a sua classificação (rating) em " .. changeRating .. " pontos por sua derrota na Battleground."
+				doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, ratingMessage)		
+				pvpBattleground.setPlayerRating(cid, currentRating - changeRating)
 			end
 		end
-		
-		if(canGain) then
-			local expGain = pvpBattleground.getExperienceGain(cid)
-			
-			expGain = math.floor(expGain * (timeIn / bgDuration)) -- calculamo a exp obtida com base no tempo de participação do jogador
-			expGain = math.floor(expGain * (bgDuration / BG_CONFIG_DURATION)) -- calculamo a exp obtida com base na duração da battleground
-			
-			-- iremos reduzir o ganho de exp conforme o player se afasta da média de kills definida para o grupo até um limite de 50% de redução
-			local playerInfo = getPlayerBattlegroundInfo(cid)
-			local killsAvg = math.floor(points[winnerTeam] / BG_CONFIG_TEAMSIZE)
-			local killsRate = math.min(playerInfo.kills, killsAvg) / killsAvg
-			expGain = math.floor(expGain * (math.max(0.5, killsRate)))
-		
-			local msg = "Você adquiriu " .. expGain .. " pontos de experiencia e 2 crystal coins pela vitoria na Battleground!"
-			local gold = 20000
-			
-			local ratingMessage = "Você melhorou a sua classificação (rating) em " .. changeRating .. " pontos pela vitoria na Battleground."
-		
-			if(winnerTeam == BATTLEGROUND_TEAM_NONE) then
-				expGain = math.floor(expGain / 2)
-				gold = 10000
-				msg = "Você adquiriu " .. expGain .. " pontos de experiencia e 1 crystal coins pelo empate na Battleground!"
-				
-				changeRating = math.floor(changeRating / 2)
-				ratingMessage = "Você melhorou a sua classificação (rating) em " .. changeRating .. " pontos por seu empate na Battleground."
-			end		
+	
+		if(winner or winnerTeam == BATTLEGROUND_TEAM_NONE) then
+			local canGain = true
+			local leftGainsMsg = ""
 			
 			if(not isPremium(cid)) then
-				msg = msg .. leftGainsMsg
+				local gains = getPlayerStorageValue(cid, sid.BATTLEGROUND_FREE_EXP_GAINS)
+				gains = (gains ~= -1) and gains or 0
+				gains = gains + 1
+				
+				local leftGains = FREE_EXP_GAINS_DAY_LIMIT		
+				leftGains = leftGains - gains		
+				
+				if(leftGains == 0) then
+					leftGainsMsg = " Está é ultima vez que você recebera esta recompensa hoje. Adquirá já sua conta premium e continue recebendo a recompensa ilimitadamente, além disso contribua para o Darghos seguir implementando sistemas inovadores como a Battleground!"
+					setPlayerStorageValue(cid, sid.BATTLEGROUND_FREE_EXP_GAINS, gains)
+				elseif(leftGains == -1) then
+					doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Você ja atingiu o limite diario de 4 battleground recompensadas para jogadores sem uma Conta Premium. Adquirá já sua conta premium e continue recebendo a recompensa ilimitadamente, além disso contribua para o Darghos seguir implementando sistemas inovadores como a Battleground!")
+					canGain = false
+				else
+					leftGainsMsg = " Você receberá esta recompensa por mais ".. leftGains .. " vezes hoje."
+					
+					if(leftGains == 1) then
+						leftGainsMsg = " Você receberá esta recompensa por mais uma vez hoje."
+					end		
+					
+					setPlayerStorageValue(cid, sid.BATTLEGROUND_FREE_EXP_GAINS, gains)	
+				end
 			end
 			
-			pvpBattleground.setPlayerRating(cid, currentRating + changeRating)
-			doPlayerAddMoney(cid, gold)
-			doPlayerAddExp(cid, expGain)
-			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, msg)
-			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, ratingMessage)
-		end		
+			if(canGain) then
+				local expGain = pvpBattleground.getExperienceGain(cid)
+				
+				expGain = math.floor(expGain * (timeIn / bgDuration)) -- calculamo a exp obtida com base no tempo de participação do jogador
+				expGain = math.floor(expGain * (bgDuration / BG_CONFIG_DURATION)) -- calculamo a exp obtida com base na duração da battleground
+				
+				-- iremos reduzir o ganho de exp conforme o player se afasta da média de kills definida para o grupo até um limite de 50% de redução
+				local playerInfo = getPlayerBattlegroundInfo(cid)
+				local killsAvg = math.floor(points[doPlayerGetBattlegroundTeam(cid)] / BG_CONFIG_TEAMSIZE)
+				local killsRate = math.min(playerInfo.kills, killsAvg) / killsAvg
+				expGain = math.floor(expGain * (math.max(0.5, killsRate)))
+			
+				local msg = "Você adquiriu " .. expGain .. " pontos de experiencia e 2 crystal coins pela vitoria na Battleground!"
+				local gold = 20000
+				
+				local ratingMessage = "Você melhorou a sua classificação (rating) em " .. changeRating .. " pontos pela vitoria na Battleground."
+			
+				if(winnerTeam == BATTLEGROUND_TEAM_NONE) then
+					expGain = math.floor(expGain / 2)
+					gold = 10000
+					msg = "Você adquiriu " .. expGain .. " pontos de experiencia e 1 crystal coins pelo empate na Battleground!"
+					
+					changeRating = math.floor(changeRating / 2)
+					ratingMessage = "Você melhorou a sua classificação (rating) em " .. changeRating .. " pontos por seu empate na Battleground."
+				end		
+				
+				if(not isPremium(cid)) then
+					msg = msg .. leftGainsMsg
+				end
+				
+				pvpBattleground.setPlayerRating(cid, currentRating + changeRating)
+				doPlayerAddMoney(cid, gold)
+				doPlayerAddExp(cid, expGain)
+				doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, msg)
+				doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, ratingMessage)
+			end		
+		end
+	else
+		doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Recompensa de experiencia, dinheiro e rating não concedida. Recompensas só são concedidas entre as AM 11:00 (onze da manha) e as AM 01:00 (uma da manha), expeto aos sabados e domingos.")
 	end
 	
 	pvpBattleground.showResult(cid, winnerTeam)

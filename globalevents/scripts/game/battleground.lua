@@ -54,11 +54,11 @@ function messageTimeLeft()
 		broadcastChannel(CUSTOM_CHANNEL_PVP, secondsLeftMessages[secondsLeftMessage].text, TALKTYPE_TYPES["channel-orange"])
 		
 		if(not reset) then
-			lastEvent = addEvent(messageTimeLeft, 1000 * timeLeftMessages[timeLeftMessage].interval)
+			lastEvent = addEvent(messageTimeLeft, 1000 * secondsLeftMessages[secondsLeftMessage].interval)
 			secondsLeftMessage = secondsLeftMessage + 1	
 		else
 			minutesLeftMessage = BG_CONFIG_DURATION / 60
-			secondsLeftMessage = 0
+			secondsLeftMessage = 1
 			lastEvent = nil
 		end		
 	end
@@ -94,6 +94,10 @@ function onBattlegroundEnd()
 	end	
 	
 	broadcastChannel(CUSTOM_CHANNEL_PVP, "Partida encerrada. " .. msg, TALKTYPE_TYPES["channel-orange"])
+
+	minutesLeftMessage = BG_CONFIG_DURATION / 60
+	secondsLeftMessage = 1
+	lastEvent = nil	
 	
 	return true
 end
