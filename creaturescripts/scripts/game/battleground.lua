@@ -13,9 +13,11 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 	local points = getBattlegroundTeamsPoints()
 
 	local winnerTeam = BATTLEGROUND_TEAM_NONE
+	local loserTeam = nil
 
 	if(points[BATTLEGROUND_TEAM_ONE] ~= points[BATTLEGROUND_TEAM_TWO]) then
 		winnerTeam = (points[BATTLEGROUND_TEAM_ONE] > points[BATTLEGROUND_TEAM_TWO]) and BATTLEGROUND_TEAM_ONE or BATTLEGROUND_TEAM_TWO
+		loserTeam = (winnerTeam == BATTLEGROUND_TEAM_ONE) and BATTLEGROUND_TEAM_TWO or BATTLEGROUND_TEAM_ONE
 	end
 	
 	local date = os.date("*t")
@@ -44,6 +46,11 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 		end
 	
 		if(winner or winnerTeam == BATTLEGROUND_TEAM_NONE) then
+		
+			if(winner and points[winnerTeam] == BG_CONFIG_WINPOINTS	and points[loserTeam] == 0 and not playerHistory.hasAchievBattlegroundPerfect(cid)) then
+				playerHistory.achievBattlegroundPerfect(cid)
+			end		
+		
 			local canGain = true
 			local leftGainsMsg = ""
 			
@@ -139,6 +146,15 @@ function onBattlegroundFrag(cid, target)
 	
 	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground | (" .. teams[BATTLEGROUND_TEAM_ONE] .. ") " .. points[BATTLEGROUND_TEAM_ONE] .. " X " .. points[BATTLEGROUND_TEAM_TWO] .. " (" .. teams[BATTLEGROUND_TEAM_TWO] .. ")] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") matou " .. getPlayerName(target) .. " (" .. getPlayerLevel(target) .. ") pelo " .. teams[doPlayerGetBattlegroundTeam(cid)] .. "!")
 
+	if((date.hour >= BG_GAIN_START_HOUR and date.hour < BG_GAIN_END_HOUR)
+		or isInArray(BG_GAIN_EVERYHOUR_DAYS, date.wday)) then
+		
+		local playerInfo = getPlayerBattlegroundInfo(cid)
+		if(not playerHistory.hasAchievBattlegroundInsaneKiller(cid)
+			and playerInfo.kills >= 25 and playerInfo.deaths == 0) then
+			playerHistory.achievBattlegroundInsaneKiller(cid)
+		end
+	end
 	--[[
 	local dailyActive = (getPlayerStorageValue(cid, sid.DAILY_BATTLEGROUND_ACTIVE) == 1) and true or false	
 	if(dailyActive) then
