@@ -17,6 +17,10 @@ BATTLEGROUND_TEAM_NONE = 0
 BATTLEGROUND_TEAM_ONE = 1
 BATTLEGROUND_TEAM_TWO = 2
 
+BG_GAIN_EVERYHOUR_DAYS = { WEEKDAY.SATURDAY, WEEKDAY.SUNDAY }
+BG_GAIN_START_HOUR = 12
+BG_GAIN_END_HOUR = 2
+
 pvpBattleground = {
 
 }
@@ -100,7 +104,7 @@ function pvpBattleground.showResult(cid, winnner)
 	
 	local data = getBattlegroundStatistics()
 	
-	if(#data > 0) then
+	if(data and #data > 0) then
 		local i = 1
 		for k,v in pairs(data) do
 			
@@ -172,6 +176,23 @@ end
 
 function pvpBattleground.getExperienceGain(cid)
 	return math.floor(getPlayerExperience(cid) * 0.0005 * getPlayerMultiple(cid, STAGES_EXPERIENCE))
+end
+
+function pvpBattleground.playerSpeakTeam(cid, message)
+	
+	local team_id = doPlayerGetBattlegroundTeam(cid)
+	
+	if(team_id == BATTLEGROUND_TEAM_NONE) then
+		return false
+	end
+	
+	local playersTeam = getBattlegroundPlayersByTeam(team_id)
+	for k,v in pairs(playersTeam) do
+		local target = getPlayerByGUID(v)
+		doPlayerSendChannelMessage(target, cid, msg, TALKTYPE_TYPES["channel-yellow"], CUSTOM_CHANNEL_PVP)		
+	end
+	
+	return true
 end
 
 function pvpBattleground.onEnter(cid)

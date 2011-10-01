@@ -13,25 +13,17 @@ end
 
 pvp = {}
 
-local OUT_BATTLEGROUND_INTERVAL = 60 * 2 -- segundos
-local IN_BATTLEGROUND_INTERVAL = 15
-
 function pvp.onSay(cid, words, param, channel)
 	
-	local lastMessage = getPlayerStorageValue(cid, sid.LAST_PVP_CHANNEL_MESSAGE)
-	local isInBattleground = doPlayerIsInBattleground(cid)
-	
-	if(getPlayerAccess(cid) == ACCESS_PLAYER and lastMessage ~= STORAGE_NULL) then
-		if(isInBattleground and lastMessage + IN_BATTLEGROUND_INTERVAL >= os.time()) then
-			doPlayerSendCancel(cid, "So é permitido enviar uma mensagem neste canal a cada 15 segundos.")
+	if(getPlayerAccess(cid) == ACCESS_PLAYER) then
+		if(pvpBattleground.playerSpeakTeam(cid, words)) then
 			return true			
-		elseif(not isInBattleground and lastMessage + OUT_BATTLEGROUND_INTERVAL >= os.time()) then
-			doPlayerSendCancel(cid, "So é permitido enviar uma mensagem neste canal a cada 2 minutos para jogadores fora da battleground.")
-			return true						
+		else
+			doPlayerSendCancel(cid, "Não é permitido a jogadores fora da battleground enviarem mensagens por este canal.")
+			return true
 		end	
 	end
-	
-	setPlayerStorageValue(cid, sid.LAST_PVP_CHANNEL_MESSAGE, os.time())
+
 	return false
 end
 
