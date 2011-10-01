@@ -743,6 +743,7 @@ class LuaInterface
 		static int32_t luaGetBattlegroundTeamsPoints(lua_State* L);
 		static int32_t luaGetPlayerBattlegroundInfo(lua_State* L);
 		static int32_t luaSetBattlegroundConfigs(lua_State* L);
+		static int32_t luaGetBattlegroundWaitlistSize(lua_State* L);
 		#endif
 
 		lua_State* m_luaState;

@@ -2504,6 +2504,9 @@ void LuaInterface::registerFunctions()
 
 	//setBattlegroundConfigs(configs)
 	lua_register(m_luaState, "setBattlegroundConfigs", LuaInterface::luaSetBattlegroundConfigs);
+
+	//getBattlegroundWaitlistSize()
+	lua_register(m_luaState, "getBattlegroundWaitlistSize", LuaInterface::luaGetBattlegroundWaitlistSize);
 	#endif
 }
 
@@ -10622,6 +10625,14 @@ int32_t LuaInterface::luaSetBattlegroundConfigs(lua_State* L)
 	g_battleground.setDuration(getField(L, "duration"));
 
 	lua_pop(L, 1); //table
+	return 1;
+}
+
+
+int32_t LuaInterface::luaGetBattlegroundWaitlistSize(lua_State* L)
+{
+	//getBattlegroundWaitlistSize()
+	lua_pushnumber(L, g_battleground.getWaitlistSize());
 	return 1;
 }
 #endif

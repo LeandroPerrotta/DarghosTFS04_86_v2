@@ -82,6 +82,8 @@ class Battleground
 		void finish(Bg_Teams_t teamWinner);
 		void finish();
 
+		uint32_t getWaitlistSize(){ return waitlist.size(); }
+
         BattlegrondRetValue onPlayerJoin(Player* player);
 		BattlegrondRetValue kickPlayer(Player* player, bool force = false);
 		void onPlayerDeath(Player* killer, DeathList deathList);
