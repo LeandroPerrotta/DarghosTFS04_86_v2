@@ -4,6 +4,8 @@ PH_LOG_BATTLEGROUND_DRAW = 3
 
 PH_ACH_BATTLEGROUND_GET_1500_RATING = 1
 PH_ACH_BATTLEGROUND_GET_2000_RATING = 2
+PH_ACH_BATTLEGROUND_INSANE_KILLER = 3
+PH_ACH_BATTLEGROUND_PERFECT = 4
 
 PH_TYPE_LOG = 1
 PH_TYPE_ACHIEVEMENT = 2
@@ -73,7 +75,7 @@ end
 ]]--
 
 function playerHistory.achievBattlegroundGet1500Rating(cid)
-	playerHistory.notifyAchievement(cid, "[Façanha alcançada!] Conquistar 1.500 pontos (rating) de classificação em Battlegrounds.")
+	playerHistory.notifyAchievement(cid, "[Façanha alcançada] Conquistar 1.500 pontos (rating) de classificação em Battlegrounds!")
 	playerHistory.addAchievement(cid, PH_ACH_BATTLEGROUND_GET_1500_RATING)
 end
 
@@ -82,10 +84,28 @@ function playerHistory.hasAchievBattlegroundGet1500Rating(cid)
 end
 
 function playerHistory.achievBattlegroundGet2000Rating(cid)
-	playerHistory.notifyAchievement(cid, "[Façanha alcançada!] Conquistar 2.000 pontos (rating) de classificação em Battlegrounds.")
+	playerHistory.notifyAchievement(cid, "[Façanha alcançada] Conquistar 2.000 pontos (rating) de classificação em Battlegrounds!")
 	playerHistory.addAchievement(cid, PH_ACH_BATTLEGROUND_GET_2000_RATING)
 end
 
 function playerHistory.hasAchievBattlegroundGet2000Rating(cid)
 	return playerHistory.hasAchievement(cid, PH_ACH_BATTLEGROUND_GET_2000_RATING)
+end
+
+function playerHistory.achievBattlegroundInsaneKiller(cid)
+	playerHistory.notifyAchievement(cid, "[Façanha alcançada] Matador insano! Derrotou 25 oponentes sem ser derrotado nenhuma vez em Battlegrounds!")
+	playerHistory.addAchievement(cid, PH_ACH_BATTLEGROUND_INSANE_KILLER)
+end
+
+function playerHistory.hasAchievBattlegroundInsaneKiller(cid)
+	return playerHistory.hasAchievement(cid, PH_ACH_BATTLEGROUND_INSANE_KILLER)
+end
+
+function playerHistory.achievBattlegroundPerfect(cid)
+	playerHistory.notifyAchievement(cid, "[Façanha alcançada] Efetuou a Battleground perfeita ao vencer pelo placar de 50 pontos a 0!")
+	playerHistory.addAchievement(cid, PH_ACH_BATTLEGROUND_PERFECT)
+end
+
+function playerHistory.hasAchievBattlegroundPerfect(cid)
+	return playerHistory.hasAchievement(cid, PH_ACH_BATTLEGROUND_PERFECT)
 end
