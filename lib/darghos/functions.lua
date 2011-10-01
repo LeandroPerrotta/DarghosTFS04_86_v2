@@ -19,6 +19,11 @@ function broadcastChannel(channelId, message, talktype)
 	end
 end
 
+function isInTrainingIsland(cid)
+
+	return getPlayerStorageValue(cid, sid.IS_ON_TRAINING_ISLAND) == 1
+end
+
 function customStaminaUpdate(cid)
 
 	if(not isPlayer(cid)) then
@@ -26,10 +31,9 @@ function customStaminaUpdate(cid)
 	end
 
 	local event = getPlayerStorageValue(cid, sid.EVENT_STAMINA)
-	local onIsland = (getPlayerStorageValue(cid, sid.IS_ON_TRAINING_ISLAND) == 1) and true or false
 	local staminaNextUpdate = getPlayerStorageValue(cid, sid.STAMINA_NEXT_UPDATE)
 	
-	if(not onIsland or os.time() < staminaNextUpdate) then
+	if(not isInTrainingIsland(cid) or os.time() < staminaNextUpdate) then
 		return
 	end		
 		

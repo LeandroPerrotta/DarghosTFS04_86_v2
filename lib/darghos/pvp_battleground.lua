@@ -246,6 +246,11 @@ function pvpBattleground.onEnter(cid)
 	elseif(ret == BG_RET_PUT_INSIDE) then
 		lockTeleportScroll(cid)
 		registerCreatureEvent(cid, "OnChangeOutfit")
+		
+		-- teleportando direto da ilha de treinamento...
+		if(isInTrainingIsland(cid)) then
+			doUpdateCreatureImpassable(cid)
+		end
 	
 		local teams = { [1] = "Time A", [2] = "Time B" }
 		local team = teams[doPlayerGetBattlegroundTeam(cid)]
