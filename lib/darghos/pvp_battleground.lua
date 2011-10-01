@@ -254,7 +254,7 @@ function pvpBattleground.onEnter(cid)
 				leftStr = leftStr .. "apénas "
 			end
 			
-			leftStr = "mais " .. (BG_CONFIG_TEAMSIZE * 2) - getBattlegroundWaitlistSize() .. " jogadores para completar o proximo time! Quer participar também? Digite '!bg entrar'" 
+			leftStr = leftStr .. "mais " .. (BG_CONFIG_TEAMSIZE * 2) - getBattlegroundWaitlistSize() .. " jogadores para completar o proximo time! Quer participar também? Digite '!bg entrar'" 
 		end
 	
 		broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") aguarda por uma battleground." .. leftStr)	
