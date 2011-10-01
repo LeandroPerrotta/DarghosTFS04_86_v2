@@ -12,3 +12,12 @@ CREATE TABLE `custom_pvp_kills` (
 ) ENGINE=InnoDB;
 
 ALTER TABLE `players` ADD COLUMN `battleground_rating` INTEGER UNSIGNED NOT NULL DEFAULT 0 AFTER `afk`;
+
+CREATE TABLE `player_history` (
+  `player_id` INTEGER UNSIGNED NOT NULL,
+  `history` INTEGER UNSIGNED NOT NULL,
+  `type` INTEGER UNSIGNED NOT NULL,
+  `date` INTEGER UNSIGNED NOT NULL,
+  `params` VARCHAR(1000) NOT NULL
+)
+ENGINE = InnoDB;

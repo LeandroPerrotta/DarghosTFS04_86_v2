@@ -99,7 +99,7 @@ function pvpBattleground.showResult(cid, winnner)
 	local msg = "Não houve vencedor, declarado EMPATE!\n\n";
 	
 	if(winnner ~= BATTLEGROUND_TEAM_NONE) then
-		msg = "O time " .. teams[winnner] .. " é o VENCEDOR!\n\n";
+		msg = "O " .. teams[winnner] .. " é o VENCEDOR!\n\n";
 	end
 	
 	local data = getBattlegroundStatistics()
@@ -187,9 +187,10 @@ function pvpBattleground.playerSpeakTeam(cid, message)
 	end
 	
 	local playersTeam = getBattlegroundPlayersByTeam(team_id)
+	
 	for k,v in pairs(playersTeam) do
 		local target = getPlayerByGUID(v)
-		doPlayerSendChannelMessage(target, cid, msg, TALKTYPE_TYPES["channel-yellow"], CUSTOM_CHANNEL_PVP)		
+		doPlayerSendChannelMessage(target, getPlayerName(cid) .. " [" .. getPlayerLevel(cid) .. " | " .. pvpBattleground.getPlayerRating(cid) .. "]", message, TALKTYPE_TYPES["channel-yellow"], CUSTOM_CHANNEL_PVP)		
 	end
 	
 	return true
