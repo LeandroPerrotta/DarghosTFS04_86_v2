@@ -1,6 +1,8 @@
 -- adiciona essa linha no movements.xml e esse UNIQUE ID no tile q deve receber o evento no map editor
 -- <movevent type="StepIn" uniqueid="5000" event="script" value="caminhoparaoarquivo.lua"/>
 --
+
+--[[
 local configs = {
 	storage = 5000 -- storage, precisa estar na porta o mesmo valor, configurado como ACTION ID
 }
@@ -17,6 +19,7 @@ function onStepIn(cid, item, position, fromPosition)
 		return true
 	end
 end
+]]--
 
 function onStepIn(cid, item, position, fromPosition)
 
