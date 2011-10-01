@@ -16,7 +16,7 @@ pvp = {}
 function pvp.onSay(cid, words, param, channel)
 	
 	if(getPlayerAccess(cid) == ACCESS_PLAYER) then
-		if(pvpBattleground.playerSpeakTeam(cid, words)) then
+		if(pvpBattleground.playerSpeakTeam(cid, words .. " " .. param)) then
 			return true			
 		else
 			doPlayerSendCancel(cid, "Não é permitido a jogadores fora da battleground enviarem mensagens por este canal.")

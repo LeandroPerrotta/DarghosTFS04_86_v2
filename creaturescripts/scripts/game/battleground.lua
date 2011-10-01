@@ -35,11 +35,12 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 				changeRating = math.floor(changeRating * 0.75)
 			end
 			
-			if(currentRating - changeRating > 0) then
-				local ratingMessage = "Você piorou a sua classificação (rating) em " .. changeRating .. " pontos por sua derrota na Battleground."
-				doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, ratingMessage)		
-				pvpBattleground.setPlayerRating(cid, currentRating - changeRating)
-			end
+			local newRating = math.max(currentRating - changeRating, 0)	
+			local ratingMessage = "Você piorou a sua classificação (rating) em " .. math.max(changeRating, currentRating) .. " pontos por sua derrota na Battleground."
+			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, ratingMessage)		
+			pvpBattleground.setPlayerRating(cid, newRating)
+			
+			playerHistory.logBattlegroundLost(cid, newRating)
 		end
 	
 		if(winner or winnerTeam == BATTLEGROUND_TEAM_NONE) then
@@ -95,11 +96,26 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 					
 					changeRating = math.floor(changeRating / 2)
 					ratingMessage = "Você melhorou a sua classificação (rating) em " .. changeRating .. " pontos por seu empate na Battleground."
+					playerHistory.logBattlegroundDraw(cid, currentRating + changeRating)
+				else
+					playerHistory.logBattlegroundWin(cid, currentRating + changeRating)
 				end		
 				
 				if(not isPremium(cid)) then
 					msg = msg .. leftGainsMsg
 				end
+				
+				if(not playerHistory.hasAchievBattlegroundGet1500Rating(cid)
+					and currentRating < 1500
+					and currentRating + changeRating >= 1500) then
+					playerHistory.achievBattlegroundGet1500Rating(cid)
+				end
+				
+				if(not playerHistory.hasAchievBattlegroundGet2000Rating(cid)
+					and currentRating < 2000
+					and currentRating + changeRating >= 2000) then
+					playerHistory.achievBattlegroundGet2000Rating(cid)
+				end				
 				
 				pvpBattleground.setPlayerRating(cid, currentRating + changeRating)
 				doPlayerAddMoney(cid, gold)

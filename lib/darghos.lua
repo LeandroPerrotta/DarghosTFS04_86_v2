@@ -18,6 +18,7 @@ dofile(getDataDir() .. "lib/darghos/luaGlobal.lua")
 dofile(getDataDir() .. "lib/darghos/lib_item_shop.lua")
 dofile(getDataDir() .. "lib/darghos/lib_movements.lua")
 dofile(getDataDir() .. "lib/darghos/lib_actions.lua")
+dofile(getDataDir() .. "lib/darghos/lib_playerhistory.lua")
 
 dofile(getDataDir() .. "lib/darghos/dungeons.lua")
 dofile(getDataDir() .. "lib/darghos/tasks.lua")
