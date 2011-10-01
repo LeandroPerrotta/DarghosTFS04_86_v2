@@ -1,6 +1,6 @@
 function onSay(cid, words, param, channel)
 
-	if(wordsIsSpell(words)) then
+	if(wordsIsSpell(words .. " " .. param)) then
 		return false
 	end
 
