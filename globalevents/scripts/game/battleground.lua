@@ -13,7 +13,7 @@ local secondsLeftMessages = {
 	{ text = "Restam 1 segundo para o fim da partida."},
 }
 
-function onBattlegroundStart()
+function onBattlegroundStart(notJoinPlayers)
 
 	local wallsUidStart, wallsUidEnd = 20502, 20509
 	local ITEM_GATE = 10652
@@ -21,6 +21,10 @@ function onBattlegroundStart()
 	for i = wallsUidStart, wallsUidEnd do
 		local thing = getTileItemById(getThingPos(i), ITEM_GATE)
 		doRemoveItem(thing.uid)
+	end
+	
+	if(notJoinPlayers > 0) then
+		broadcastChannel(CUSTOM_CHANNEL_PVP, notJoinPlayers " jogadores não compareceram ao inicio da partida e poderão ser substituidos! Se você deseja IMEDIATAMENTE substituir esses jogadores digite '!bg entrar'!", TALKTYPE_TYPES["channel-orange"])	
 	end
 	
 	addEvent(messageTimeLeft, 100)
