@@ -24,7 +24,7 @@ function onBattlegroundStart(notJoinPlayers)
 	end
 	
 	if(notJoinPlayers > 0) then
-		broadcastChannel(CUSTOM_CHANNEL_PVP, notJoinPlayers " jogadores não compareceram ao inicio da partida e poderão ser substituidos! Se você deseja IMEDIATAMENTE substituir esses jogadores digite '!bg entrar'!", TALKTYPE_TYPES["channel-orange"])	
+		broadcastChannel(CUSTOM_CHANNEL_PVP, notJoinPlayers .. " jogadores não compareceram ao inicio da partida e poderão ser substituidos! Se você deseja IMEDIATAMENTE substituir esses jogadores digite '!bg entrar'!", TALKTYPE_TYPES["channel-orange"])	
 	end
 	
 	addEvent(messageTimeLeft, 100)
