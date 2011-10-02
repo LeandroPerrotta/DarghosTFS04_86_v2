@@ -156,6 +156,7 @@ function onBattlegroundFrag(cid, target)
 	
 	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground | (" .. teams[BATTLEGROUND_TEAM_ONE] .. ") " .. points[BATTLEGROUND_TEAM_ONE] .. " X " .. points[BATTLEGROUND_TEAM_TWO] .. " (" .. teams[BATTLEGROUND_TEAM_TWO] .. ")] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") matou " .. getPlayerName(target) .. " (" .. getPlayerLevel(target) .. ") pelo " .. teams[doPlayerGetBattlegroundTeam(cid)] .. "!")
 
+	local date = os.date("*t")
 	if((date.hour >= BG_GAIN_START_HOUR and date.hour < BG_GAIN_END_HOUR)
 		or isInArray(BG_GAIN_EVERYHOUR_DAYS, date.wday)) then
 		
