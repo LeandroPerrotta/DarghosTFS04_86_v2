@@ -81,6 +81,9 @@ class GlobalEvent : public Event
 
 		int32_t executeRecord(uint32_t current, uint32_t old, Player* player);
 		int32_t executeEvent();
+#ifdef __DARGHOS_PVP_SYSTEM__
+		int32_t executeOnBattlegroundStart(uint32_t notJoinPlayers);
+#endif
 
 		GlobalEvent_t getEventType() const {return m_eventType;}
 		std::string getName() const {return m_name;}

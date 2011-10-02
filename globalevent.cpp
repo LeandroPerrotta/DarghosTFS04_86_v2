@@ -311,6 +311,10 @@ std::string GlobalEvent::getScriptEventParams() const
 			return "interval";
 		case GLOBALEVENT_TIMER:
 			return "time";
+#ifdef __DARGHOS_PVP_SYSTEM__
+		case GLOBALEVENT_BATTLEGROUND_START:
+			return "notJoinPlayers";
+#endif
 		default:
 			break;
 	}
@@ -418,3 +422,53 @@ int32_t GlobalEvent::executeEvent()
 		return 0;
 	}
 }
+
+#ifdef __DARGHOS_PVP_SYSTEM__
+int32_t GlobalEvent::executeOnBattlegroundStart(uint32_t notJoinPlayers)
+{
+	//onBattlegroundStart(notJoinPlayers)
+	if(m_interface->reserveEnv())
+	{
+		ScriptEnviroment* env = m_interface->getEnv();
+		if(m_scripted == EVENT_SCRIPT_BUFFER)
+		{
+			std::stringstream scriptstream;
+			scriptstream << "local notJoinPlayers = " << notJoinPlayers << std::endl;
+
+			scriptstream << m_scriptData;
+			bool result = true;
+			if(m_interface->loadBuffer(scriptstream.str()))
+			{
+				lua_State* L = m_interface->getState();
+				result = m_interface->getGlobalBool(L, "_result", true);
+			}
+
+			m_interface->releaseEnv();
+			return result;
+		}
+		else
+		{
+			#ifdef __DEBUG_LUASCRIPTS__
+			char desc[125];
+			sprintf(desc, "%s - %i to %i (%s)", getName().c_str(), old, current, player->getName().c_str());
+			env->setEvent(desc);
+			#endif
+
+			env->setScriptId(m_scriptId, m_interface);
+			lua_State* L = m_interface->getState();
+
+			m_interface->pushFunction(m_scriptId);
+			lua_pushnumber(L, notJoinPlayers);
+
+			bool result = m_interface->callFunction(1);
+			m_interface->releaseEnv();
+			return result;
+		}
+	}
+	else
+	{
+		std::clog << "[Error - GlobalEvent::executeRecord] Call stack overflow." << std::endl;
+		return 0;
+	}
+}
+#endif

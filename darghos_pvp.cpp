@@ -230,10 +230,13 @@ void Battleground::callPlayer(Player* player)
 		return;
 
 	player->sendPvpChannelMessage("A battleground está pronta para iniciar! Você tem 2 minutos para digitar o comando \"!bg entrar\" para ser enviado a batalha! Boa sorte bravo guerreiro!", SPEAK_CHANNEL_O);
+	player->sendFYIBox("A battleground está pronta para iniciar! Você tem 2 minutos para digitar o comando \"!bg entrar\" para ser enviado a batalha!\n\n Boa sorte bravo guerreiro!");
 }
 
 void Battleground::start()
 {
+	uint32_t notJoin = 0;
+
 	for(BgTeamsMap::iterator it = teamsMap.begin(); it != teamsMap.end(); it++)
 	{		
 		for(PlayersMap::iterator it_players = it->second.players.begin(); it_players != it->second.players.end(); it_players++)
@@ -246,13 +249,17 @@ void Battleground::start()
 					player->sendPvpChannelMessage("Você não apareceu na battleground no tempo esperado... Você ainda pode participar da batalha digitando \"!bg entrar\" novamente.");
 				
 				it->second.players.erase(it_players->first);
+				notJoin++;
 			}
 
 			it_players->second.join_in = time(NULL);
 		}
 	}
 
-	g_globalEvents->execute(GLOBALEVENT_BATTLEGROUND_START);
+	GlobalEventMap events = g_globalEvents->getEventMap(GLOBALEVENT_BATTLEGROUND_START);
+	for(GlobalEventMap::iterator it = events.begin(); it != events.end(); ++it)
+		it->second->executeOnBattlegroundStart(notJoin);
+
 	lastInit = time(NULL);
 
 	endEvent = Scheduler::getInstance().addEvent(createSchedulerTask(duration,
@@ -365,6 +372,7 @@ BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
 
 				putInTeam(player, team_id);
 				putInside(player);
+				return BATTLEGROUND_PUT_DIRECTLY;
 			}
 			//o jogador estava na fila, portanto já esta em um time, somente necessario o teleportar para dentro...
 			else
@@ -375,9 +383,8 @@ BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
 				}
 
 				putInside(player);
-			}
-
-			return BATTLEGROUND_PUT_INSIDE;
+				return BATTLEGROUND_PUT_INSIDE;
+			}			
 		}
 		else
 		{
