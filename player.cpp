@@ -1741,16 +1741,15 @@ void Player::onThink(uint32_t interval)
 {
 	Creature::onThink(interval);
 	int64_t timeNow = OTSYS_TIME();
-#ifdef __DARGHOS_CUSTOM__
-	if(timeNow - lastPing >= 5000 && !hasCustomFlag(PlayerCustomFlag_ContinueOnlineWhenExit))
-#else
+
 	if(timeNow - lastPing >= 5000)
-#endif
 	{
 		lastPing = timeNow;
 		if(client)
 			client->sendPing();
-		else if(g_config.getBool(ConfigManager::STOP_ATTACK_AT_EXIT))
+		#ifdef __DARGHOS_CUSTOM__
+		else if(g_config.getBool(ConfigManager::STOP_ATTACK_AT_EXIT) && !hasCustomFlag(PlayerCustomFlag_ContinueOnlineWhenExit))
+		#endif
 			setAttackedCreature(NULL);
 	}
 

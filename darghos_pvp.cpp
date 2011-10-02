@@ -468,23 +468,24 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 		}
 	}
 
-	Bg_Team_t* team = findPlayerTeam(killer);
-	team->points++;
-
-	if(team->points >= winPoints)
-		Scheduler::getInstance().addEvent(createSchedulerTask(1000,
-			boost::bind(&Battleground::finish, this, killer->getBattlegroundTeam())));
-
-	incrementPlayerDeaths(player->getGUID());
-	addDeathEntry(player->getGUID(), deahsEntry);
-
-	CreatureEventList bgFragEvents = killer->getCreatureEvents(CREATURE_EVENT_BG_FRAG);
-	for(CreatureEventList::iterator it = bgFragEvents.begin(); it != bgFragEvents.end(); ++it)
+	if(killer)
 	{
-		(*it)->executeBgFrag(killer, player);
+		Bg_Team_t* team = findPlayerTeam(killer);
+		team->points++;
+
+		if(team->points >= winPoints)
+			Scheduler::getInstance().addEvent(createSchedulerTask(1000,
+				boost::bind(&Battleground::finish, this, killer->getBattlegroundTeam())));
+
+		incrementPlayerDeaths(player->getGUID());
+		addDeathEntry(player->getGUID(), deahsEntry);
+
+		CreatureEventList bgFragEvents = killer->getCreatureEvents(CREATURE_EVENT_BG_FRAG);
+		for(CreatureEventList::iterator it = bgFragEvents.begin(); it != bgFragEvents.end(); ++it)
+		{
+			(*it)->executeBgFrag(killer, player);
+		}
 	}
-
-
 }
 
 bool Battleground::isValidKiller(uint32_t killer_id, uint32_t target)
