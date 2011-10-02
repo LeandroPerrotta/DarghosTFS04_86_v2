@@ -10,8 +10,9 @@ BG_RET_CLOSED = 1
 BG_RET_CAN_NOT_JOIN = 2
 BG_RET_PUT_IN_WAITLIST = 3
 BG_RET_PUT_INSIDE = 4
-BG_RET_ALREADY_IN_WAITLIST = 5
-BG_RET_INFIGHT = 6
+BG_RET_PUT_DIRECTLY = 5
+BG_RET_ALREADY_IN_WAITLIST = 6
+BG_RET_INFIGHT = 7
 
 BATTLEGROUND_TEAM_NONE = 0
 BATTLEGROUND_TEAM_ONE = 1
@@ -219,6 +220,7 @@ function pvpBattleground.onEnter(cid)
 		return false	
 	end	
 	
+	local closeTeam = getBattlegroundWaitlistSize() == (BG_CONFIG_TEAMSIZE * 2) - 1
 	local ret = doPlayerJoinBattleground(cid)
 
 	if(ret == BG_RET_CLOSED) then
@@ -258,9 +260,14 @@ function pvpBattleground.onEnter(cid)
 			leftStr = leftStr .. "mais " .. (BG_CONFIG_TEAMSIZE * 2) - getBattlegroundWaitlistSize() .. " jogadores para iniciar a proxima partida! Quer participar também? Digite '!bg entrar'" 
 		end
 	
-		broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") aguarda por uma battleground." .. leftStr)	
+		if(not closeTeam) then
+			broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") aguarda por uma battleground." .. leftStr)	
+		else
+			broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") fechou os times! A nova partida começará em intantes...")
+		end
+		
 		return true
-	elseif(ret == BG_RET_PUT_INSIDE) then
+	elseif(ret == BG_RET_PUT_INSIDE or ret == BG_RET_PUT_DIRECTLY) then
 		lockTeleportScroll(cid)
 		registerCreatureEvent(cid, "OnChangeOutfit")
 		
@@ -295,7 +302,11 @@ function pvpBattleground.onEnter(cid)
 		msg = msg .. "\nDivirta-se!"
 		
 		pvpBattleground.sendPlayerChannelMessage(cid, msg)
-		--broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") juntou-se a batalha pelo " .. team .. ".")	
+		
+		if(ret == BG_RET_PUT_DIRECTLY) then
+			broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") apresentou-se para recompor o " .. team .. ".")
+		end
+	
 		return true
 	end
 	
@@ -307,7 +318,7 @@ function pvpBattleground.onExit(cid)
 	local ret = doPlayerLeaveBattleground(cid)
 
 	if(ret == BG_RET_NO_ERROR) then
-		broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") abandonou a batalha.")		
+		broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") desertou a batalha! Você gostaria de substituir-lo imediatamente? Digite '!bg entrar'!")		
 		return true
 	end
 	
