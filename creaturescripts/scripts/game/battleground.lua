@@ -30,10 +30,7 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 		loserTeam = (winnerTeam == BATTLEGROUND_TEAM_ONE) and BATTLEGROUND_TEAM_TWO or BATTLEGROUND_TEAM_ONE
 	end
 	
-	local date = os.date("*t")
-	if((date.hour >= BG_GAIN_START_HOUR and date.hour <= 23)
-		or (date.hour >= 0 and date.hour < BG_GAIN_END_HOUR)
-		or isInArray(BG_GAIN_EVERYHOUR_DAYS, date.wday)) then
+	if(pvpBattleground.hasGain()) then
 	
 		local currentRating = pvpBattleground.getPlayerRating(cid)
 		local ratingMultipler = pvpBattleground.getRatingMultipler(cid, currentRating)
@@ -157,9 +154,7 @@ function onBattlegroundFrag(cid, target)
 	
 	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground | (" .. teams[BATTLEGROUND_TEAM_ONE] .. ") " .. points[BATTLEGROUND_TEAM_ONE] .. " X " .. points[BATTLEGROUND_TEAM_TWO] .. " (" .. teams[BATTLEGROUND_TEAM_TWO] .. ")] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") matou " .. getPlayerName(target) .. " (" .. getPlayerLevel(target) .. ") pelo " .. teams[doPlayerGetBattlegroundTeam(cid)] .. "!")
 
-	local date = os.date("*t")
-	if((date.hour >= BG_GAIN_START_HOUR and date.hour < BG_GAIN_END_HOUR)
-		or isInArray(BG_GAIN_EVERYHOUR_DAYS, date.wday)) then
+	if(pvpBattleground.hasGain()) then
 		
 		local playerInfo = getPlayerBattlegroundInfo(cid)
 		if(not playerHistory.hasAchievBattlegroundInsaneKiller(cid)
