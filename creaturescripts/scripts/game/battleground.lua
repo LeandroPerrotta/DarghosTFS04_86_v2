@@ -31,8 +31,9 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 	end
 	
 	local date = os.date("*t")
-	if((date.hour >= BG_GAIN_START_HOUR and date.hour < BG_GAIN_END_HOUR)
-		or isInArray(BG_GAIN_EVERYHOUR_DAYS, date.wday)) then	
+	if((date.hour >= BG_GAIN_START_HOUR and date.hour <= 23)
+		or (date.hour >= 0 and date.hour < BG_GAIN_END_HOUR)
+		or isInArray(BG_GAIN_EVERYHOUR_DAYS, date.wday)) then
 	
 		local currentRating = pvpBattleground.getPlayerRating(cid)
 		local ratingMultipler = pvpBattleground.getRatingMultipler(cid, currentRating)
