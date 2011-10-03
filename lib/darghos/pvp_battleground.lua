@@ -92,6 +92,13 @@ function pvpBattleground.close()
 	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] Battleground temporareamente fechada. Voltará em alguns instantes.", TALKTYPE_TYPES["channel-red"])
 end
 
+function pvpBattleground.hasGain()
+	local date = os.date("*t")
+	return ((date.hour >= BG_GAIN_START_HOUR and date.hour <= 23)
+		or (date.hour >= 0 and date.hour < BG_GAIN_END_HOUR)
+		or isInArray(BG_GAIN_EVERYHOUR_DAYS, date.wday))
+end
+
 function pvpBattleground.showResult(cid, winnner)
 
 	clear = clear or true
