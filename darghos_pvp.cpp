@@ -397,6 +397,11 @@ BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
 
 BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 {
+	if(!player)
+	{
+		return BATTLEGROUND_NO_ERROR;
+	}
+
 	Bg_Teams_t team_id = player->getBattlegroundTeam();
 	Bg_Team_t* team = &teamsMap[team_id];
 	PlayersMap::iterator it = team->players.find(player->getGUID());
