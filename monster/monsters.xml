@@ -550,6 +550,7 @@
 	<monster name="Cobra" file="reptiles/cobra.xml"/>
 	<monster name="Crocodile" file="reptiles/crocodile.xml"/>
 	<monster name="Sea Serpent" file="reptiles/sea serpent.xml"/>
+	<monster name="Young Sea Serpent" file="reptiles/young sea serpent.xml"/>
 	<monster name="Serpent Spawn" file="reptiles/serpent spawn.xml"/>
 	<monster name="Snake" file="reptiles/snake.xml"/>
 	<monster name="Wyvern" file="reptiles/wyvern.xml"/>

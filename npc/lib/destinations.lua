@@ -78,6 +78,15 @@ function boatDestiny.addTrainers(keywordHandler, npcHandler, module)
 	travelNode:addChildKeyword({'no'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, reset = true, text = 'Then stay here!'})
 end
 
+function boatDestiny.addSeaSerpentArea(keywordHandler, npcHandler, module)
+
+	module = (module == nil) and StdModule.travel or module
+
+	local travelNode = keywordHandler:addKeyword({'sea serpent', 'sea serpent area'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'Do you want to be taken to sea serpent area for 800 gold coins?'})
+	travelNode:addChildKeyword({'yes'}, module, {npcHandler = npcHandler, premium = true, cost = 800, destination = BOAT_DESTINY_SEA_SERPENT_AREA })
+	travelNode:addChildKeyword({'no'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, reset = true, text = 'Then stay here!'})
+end
+
 function boatDestiny.addIslandOfPeace(keywordHandler, npcHandler)
 
 	local function onAsk(cid, message, keywords, parameters, node)

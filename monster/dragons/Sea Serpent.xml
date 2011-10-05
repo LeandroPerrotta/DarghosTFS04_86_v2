@@ -19,18 +19,18 @@
 	</flags>
 	<attacks>
 		<attack name="melee" interval="2000" skill="75" attack="70"/>
-		<attack name="earth" interval="1000" chance="5" length="9" spread="3" min="-60" max="-305">
+		<attack name="earth" interval="2000" chance="20" length="9" spread="3" min="-60" max="-305">
 			<attribute key="areaEffect" value="bigplants"/>
 		</attack>
-		<attack name="ice" interval="1000" chance="7" length="9" spread="3" min="-120" max="-300">
+		<attack name="ice" interval="2000" chance="20" length="9" spread="3" min="-101" max="-300">
 			<attribute key="areaEffect" value="icearea"/>
 		</attack>
-		<attack name="drowncondition" interval="1000" chance="8" radius="4" target="1" max="-200">
+		<attack name="drowncondition" interval="1000" chance="8" radius="4" target="1" max="-120" min="-20" start="-20" tick="1000">
 			<attribute key="areaEffect" value="bluebubble"/>
 		</attack>
 	</attacks>
   <defenses armor="16" defense="20">
-    <defense name="healing" interval="1000" chance="25" min="50" max="150">
+    <defense name="healing" interval="1000" chance="25" min="70" max="273">
       <attribute key="areaEffect" value="blueshimmer"/>
 	</defense>
 	</defenses>
@@ -45,24 +45,33 @@
 	</voices>
 	<elements>
 		<element firePercent="30"/>
-		<element energyPercent="-10"/>
+		<element energyPercent="-5"/>
 		<element physicalPercent="-15"/>
 		<element deathPercent="-10"/>
 	</elements>
   <loot>
-    <item id="2148" countmax="71" chance="40000"/>	-- gold coin
-    <item id="2146" countmax="1" chance="10000"/>	-- small saphire
-    <item id="2666" countmax="4" chance="20000"/>	-- meat
-    <item id="2214" chance="10000"/>			-- ring of healing
-    <item id="7391" chance="1200"/>			-- Thaian Sword
-    <item id="1987" chance="100000">
-      <inside>
-        <item id="2672" countmax="3" chance="20000"/>	-- dragon ham
-		<item id="7888" chance="3100"/>	        -- Glacier amulet
-		<item id="8887" chance="1500"/>			-- Frozen Plate
-		<item id="7424" chance="2600"/>			-- Lunar Staff
-      </inside>
-    </item>
+    <item id="2148" countmax="100" chance="40000"/>	-- gold coin
+    <item id="2148" countmax="100" chance="40000"/>	-- gold coin
+    <item id="2148" countmax="42" chance="40000"/>	-- gold coin
+    
+    <item id="2672" countmax="3" chance="50000"/>	-- dragon ham
+    <item id="2146" countmax="3" chance="5000"/>	-- small saphire
+    <item id="10583" chance="10000"/>	-- sea serpent scale
+    <item id="2647" chance="7500"/>	-- plate legs
+    <item id="7588" chance="5000"/> -- strong health potion
+    <item id="2409" chance="5000"/> -- serpent sword
+    <item id="7589" chance="5000"/> -- strong mana potion
+    <item id="8870" chance="4000"/> -- spirit cloak
+    <item id="2214" chance="1400"/>	-- ring of healing
+    <item id="7590" chance="1400"/>	-- great mana potion
+    <item id="8911" chance="1000"/> -- northwind rod
+	<item id="7888" chance="1000"/>	-- Glacier amulet
+	<item id="2165" chance="500"/>	-- stealth ring
+	<item id="7896" chance="400"/>	-- glacier kilt
+	<item id="8871" chance="300"/>	-- focus cape
+	<item id="10220" chance="200"/>	-- leviathan's amulet
+	<item id="8878" chance="150"/>	-- cristaline armor
+	
   </loot>
 </monster>
 
