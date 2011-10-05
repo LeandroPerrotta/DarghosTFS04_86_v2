@@ -16,9 +16,8 @@ boatDestiny.addKashmir(keywordHandler, npcHandler)
 boatDestiny.addTrainers(keywordHandler, npcHandler, D_CustomNpcModules.travelTrainingIsland)
 boatDestiny.addSeaSerpentArea(keywordHandler, npcHandler)
         
-keywordHandler:addKeyword({'passage'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'I can take you to Aracura, Aaragon, Quendor, Kashmir, and Trainers also some {Hunting Places}.'})
+keywordHandler:addKeyword({'passage', 'travel'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'I can take you to Aracura, Aaragon, Quendor, Kashmir, and Trainers also some {Hunting Places}.'})
 keywordHandler:addKeyword({'job'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'I am the captain of this ship.'})
-keywordHandler:addKeyword({'travel'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'I can take you to Aracura, Aaragon, Quendor, and Kashmir also Trainers.'})
 keywordHandler:addKeyword({'hunting places', 'hunt'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'I can take you to the open sea, where you can found the {sea serpent} area.'})
 
 -- Makes sure the npc reacts when you say hi, bye etc.
