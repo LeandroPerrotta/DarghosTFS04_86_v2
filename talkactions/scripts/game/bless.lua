@@ -3,7 +3,7 @@ local usePvPBless = true
 function onSay(cid, words, param)	
 	local blesses = {
 		{name="First", location="Quendor"},
-		{name="Second", location="Quendor Palace"},
+		{name="Second", location="Aracura"},
 		{name="Third", location="Aaragon"},
 		{name="Fourth", location="Thaun"},
 		{name="Fifth", location="Salazart"}
