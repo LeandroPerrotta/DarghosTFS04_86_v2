@@ -1453,6 +1453,11 @@ bool Game::playerMoveItem(uint32_t playerId, const Position& fromPos,
 		return false;
 	}
 
+#ifdef __DARGHOS_CUSTOM__
+	if(!(bool)g_moveEvents->onPlayerMoveItem(player, item, toCylinder->getTile()))
+		return false;
+#endif
+
 	ReturnValue ret = internalMoveItem(player, fromCylinder, toCylinder, toIndex, item, count, NULL);
 #ifdef __TFS_NEWEST_REVS_FIXIES__
 	if(ret == RET_NOERROR)

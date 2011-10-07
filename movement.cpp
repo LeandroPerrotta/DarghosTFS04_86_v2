@@ -619,6 +619,52 @@ bool MoveEvents::onPlayerDeEquip(Player* player, Item* item, slots_t slot, bool 
 	return true;
 }
 
+#ifdef __DARGHOS_CUSTOM__
+uint32_t MoveEvents::onPlayerMoveItem(Player* actor, Item* item, Tile* tile)
+{
+	uint32_t ret = 1;
+	MoveEvent* moveEvent = NULL;
+
+	Item* tileItem = NULL;
+	if(m_lastCacheTile == tile)
+	{
+		if(m_lastCacheItemVector.empty())
+			return ret;
+
+		//We cannot use iterators here since the scripts can invalidate the iterator
+		for(uint32_t i = 0; i < m_lastCacheItemVector.size(); ++i)
+		{
+			if((tileItem = m_lastCacheItemVector[i]) && tileItem != item
+				&& (moveEvent = getEvent(tileItem, MOVE_EVENT_PLAYER_MOVE_ITEM)))
+				ret &= moveEvent->fireAddRemItem(actor, item, tileItem, tile->getPosition());
+		}
+
+		return ret;
+	}
+
+	m_lastCacheTile = tile;
+	m_lastCacheItemVector.clear();
+
+	//we cannot use iterators here since the scripts can invalidate the iterator
+	Thing* thing = NULL;
+	for(int32_t i = tile->__getFirstIndex(); i < tile->__getLastIndex(); ++i) //already checked the ground
+	{
+		if(!(thing = tile->__getThing(i)) || !(tileItem = thing->getItem()) || tileItem == item)
+			continue;
+
+		if((moveEvent = getEvent(tileItem, MOVE_EVENT_PLAYER_MOVE_ITEM)))
+		{
+			m_lastCacheItemVector.push_back(tileItem);
+			ret &= moveEvent->fireAddRemItem(actor, item, tileItem, tile->getPosition());
+		}
+		else if(hasTileEvent(tileItem))
+			m_lastCacheItemVector.push_back(tileItem);
+	}
+
+	return ret;
+}
+#endif
+
 uint32_t MoveEvents::onItemMove(Creature* actor, Item* item, Tile* tile, bool isAdd)
 {
 	MoveEvent_t eventType = MOVE_EVENT_REMOVE_ITEM, tileEventType = MOVE_EVENT_REMOVE_TILEITEM;
@@ -761,6 +807,11 @@ std::string MoveEvent::getScriptEventName() const
 		case MOVE_EVENT_REMOVE_ITEM:
 			return "onRemoveItem";
 
+#ifdef __DARGHOS_CUSTOM__
+		case MOVE_EVENT_PLAYER_MOVE_ITEM:
+			return "onPlayerMoveItem";
+#endif
+
 		default:
 			break;
 	}
@@ -781,6 +832,9 @@ std::string MoveEvent::getScriptEventParams() const
 		case MOVE_EVENT_DE_EQUIP:
 			return "cid, item, slot, boolean";
 
+#ifdef __DARGHOS_CUSTOM__
+		case MOVE_EVENT_PLAYER_MOVE_ITEM:
+#endif
 		case MOVE_EVENT_ADD_ITEM:
 		case MOVE_EVENT_REMOVE_ITEM:
 			return "moveItem, tileItem, position, cid";
@@ -812,6 +866,10 @@ bool MoveEvent::configureEvent(xmlNodePtr p)
 			m_eventType = MOVE_EVENT_ADD_ITEM;
 		else if(tmpStrValue == "removeitem")
 			m_eventType = MOVE_EVENT_REMOVE_ITEM;
+#ifdef __DARGHOS_CUSTOM__
+		else if(tmpStrValue == "playermoveitem")
+			m_eventType = MOVE_EVENT_PLAYER_MOVE_ITEM;
+#endif
 		else
 		{
 			std::clog << "[Error - MoveEvent::configureMoveEvent] Unknown event type \"" << strValue << "\"" << std::endl;
