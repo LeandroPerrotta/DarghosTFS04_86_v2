@@ -2157,7 +2157,6 @@ uint32_t CreatureEvent::executeMoveItem(Player* player, Item* item, const Positi
 			m_interface->pushFunction(m_scriptId);
 
 			lua_pushnumber(L, env->addThing(player));
-			lua_pushnumber(L, env->addThing(item));
 			LuaInterface::pushThing(L, item, env->addThing(item));
 			LuaInterface::pushPosition(L, position, 0);
 
