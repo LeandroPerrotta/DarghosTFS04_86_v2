@@ -24,6 +24,14 @@ function onSay(cid, words, param, channel)
 			"\nSkills:" ..
 			"\nFist - " .. getPlayerSkillLevel(pid, SKILL_FIST) .. ", Club - " .. getPlayerSkillLevel(pid, SKILL_CLUB) .. ", Sword - " .. getPlayerSkillLevel(pid, SKILL_SWORD) .. ", Axe - " .. getPlayerSkillLevel(pid, SKILL_AXE) ..
 			"\nDistance - " .. getPlayerSkillLevel(pid, SKILL_DISTANCE) .. ", Shielding - " .. getPlayerSkillLevel(pid, SKILL_SHIELD) .. ", Fishing - " .. getPlayerSkillLevel(pid, SKILL_FISHING) ..
+		"\nStages:" ..
+			"\nExp: " .. getPlayerMultiple(cid, STAGES_EXPERIENCE)
+			"\nMagic: " .. getPlayerMultiple(cid, STAGES_MAGIC)
+			"\nSkill Club: " .. getPlayerMultiple(cid, STAGES_SKILLS, SKILL_CLUB)
+			"\nSkill Sword: " .. getPlayerMultiple(cid, STAGES_SKILLS, SKILL_SWORD)
+			"\nSkill Axe: " .. getPlayerMultiple(cid, STAGES_SKILLS, SKILL_AXE)
+			"\nSkill Shield: " .. getPlayerMultiple(cid, STAGES_SKILLS, SKILL_DISTANCE)
+			"\nSkill Dist: " .. getPlayerMultiple(cid, STAGES_SKILLS, SKILL_SHIELD)
 		"\nCash:" ..
 			"\nCrystal - " .. getPlayerItemCount(pid, 2160) .. ", Platinum - " .. getPlayerItemCount(pid, 2152) .. ", Gold - " .. getPlayerItemCount(pid, 2148) ..
 			"\nBalance: " .. getPlayerBalance(pid) ..
