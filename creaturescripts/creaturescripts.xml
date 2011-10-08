@@ -42,4 +42,6 @@
 	<event type="bgfrag" name="onBattlegroundFrag" event="script" value="game/battleground.lua"/>
 	<event type="bgend" name="onBattlegroundEnd" event="script" value="game/battleground.lua"/>
 	<event type="bgleave" name="onBattlegroundLeave" event="script" value="game/battleground.lua"/>
+	
+	<event type="moveitem" name="onMoveItem" event="script" value="game/move_item.lua"/>
 </creaturescripts>

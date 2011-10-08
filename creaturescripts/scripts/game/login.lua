@@ -12,6 +12,7 @@ function onLogin(cid)
 	registerCreatureEvent(cid, "autolotgold")
 	registerCreatureEvent(cid, "tradeHandler")
 	registerCreatureEvent(cid, "lookItem")
+	registerCreatureEvent(cid, "onMoveItem")
 	
 	--if(tasks.hasStartedTask(cid)) then
 		registerCreatureEvent(cid, "CustomTasks")
