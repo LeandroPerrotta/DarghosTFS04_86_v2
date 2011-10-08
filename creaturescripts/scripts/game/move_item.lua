@@ -1,7 +1,5 @@
 function onMoveItem(cid, item, position)
 
-	print(table.show(position))
-
 	if(position.x == CONTAINER_POSITION) then
 	
 		if(getBooleanFromString(bit.uband(position.y, 64))) then
