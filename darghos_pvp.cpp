@@ -405,28 +405,40 @@ BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 	Bg_Teams_t team_id = player->getBattlegroundTeam();
 	Bg_Team_t* team = &teamsMap[team_id];
 	PlayersMap::iterator it = team->players.find(player->getGUID());
-	Bg_PlayerInfo_t playerInfo = it->second;
 
-	if(!force)
+	if(it != team->players.end())
 	{
-		std::stringstream ss;
-		ss << (time(NULL) + 60 * 10);
-		player->setStorage(DARGHOS_STORAGE_BATTLEGROUND_DESERTER_UNTIL, ss.str());
+		Bg_PlayerInfo_t playerInfo = it->second;
+
+		if(!force)
+		{
+			std::stringstream ss;
+			ss << (time(NULL) + 60 * 10);
+			player->setStorage(DARGHOS_STORAGE_BATTLEGROUND_DESERTER_UNTIL, ss.str());
+		}
+
+		player->setBattlegroundTeam(BATTLEGROUND_TEAM_NONE);
+
+		Outfit_t outfit_default = playerInfo.default_outfit;
+
+		player->changeOutfit(outfit_default, false);
+		g_game.internalCreatureChangeOutfit(player->getCreature(), outfit_default);
+
+		player->setMasterPosition(playerInfo.masterPosition);
+
+		g_game.internalTeleport(player, playerInfo.oldPosition, true);
+		g_game.addMagicEffect(playerInfo.oldPosition, MAGIC_EFFECT_TELEPORT);
+
+		team->players.erase(player->getGUID());
+		deathsMap.erase(player->getGUID());
 	}
+	else
+	{
+		g_game.internalTeleport(player, player->getMasterPosition(), true);
+		g_game.addMagicEffect(player->getMasterPosition(), MAGIC_EFFECT_TELEPORT);
 
-	player->setBattlegroundTeam(BATTLEGROUND_TEAM_NONE);
-
-	Outfit_t outfit_default = playerInfo.default_outfit;
-	player->changeOutfit(outfit_default, false);
-	g_game.internalCreatureChangeOutfit(player->getCreature(), outfit_default);
-
-	player->setMasterPosition(playerInfo.masterPosition);
-
-	g_game.internalTeleport(player, playerInfo.oldPosition, true);
-	g_game.addMagicEffect(playerInfo.oldPosition, MAGIC_EFFECT_TELEPORT);
-
-	team->players.erase(player->getGUID());
-	deathsMap.erase(player->getGUID());
+		std::clog << "[Possible Crash] Player " << player->getName() << " leaving from battleground that are not inside." << std::endl;
+	}
 
 	if(player->isPause())
 		player->setPause(false);
