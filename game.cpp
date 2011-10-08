@@ -1454,7 +1454,15 @@ bool Game::playerMoveItem(uint32_t playerId, const Position& fromPos,
 	}
 
 #ifdef __DARGHOS_CUSTOM__
-	if(!(bool)g_moveEvents->onPlayerMoveItem(player, item, toCylinder->getTile()))
+	bool deny = false;
+	CreatureEventList events = player->getCreatureEvents(CREATURE_EVENT_MOVE_ITEM);
+	for(CreatureEventList::iterator it = events.begin(); it != events.end(); ++it)
+	{
+		if(!(*it)->executeMoveItem(player, item, toCylinder->getTile()->getPosition()) && !deny)
+			deny = true;
+	}
+
+	if(deny)
 		return false;
 #endif
 

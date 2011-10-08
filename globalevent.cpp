@@ -450,7 +450,7 @@ int32_t GlobalEvent::executeOnBattlegroundStart(uint32_t notJoinPlayers)
 		{
 			#ifdef __DEBUG_LUASCRIPTS__
 			char desc[125];
-			sprintf(desc, "%s - %i to %i (%s)", getName().c_str(), old, current, player->getName().c_str());
+			sprintf(desc, "%i", notJoinPlayers);
 			env->setEvent(desc);
 			#endif
 

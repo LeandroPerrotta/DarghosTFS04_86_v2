@@ -226,6 +226,10 @@ bool CreatureEvent::configureEvent(xmlNodePtr p)
 	else if(tmpStr == "bgleave")
 		m_type = CREATURE_EVENT_BG_LEAVE;
 	#endif
+#ifdef __DARGHOS_CUSTOM__
+	else if(tmpStr == "moveitem")
+		m_type = CREATURE_EVENT_MOVE_ITEM;
+#endif
 	else
 	{
 		std::clog << "[Error - CreatureEvent::configureEvent] No valid type for creature event." << str << std::endl;
@@ -300,6 +304,10 @@ std::string CreatureEvent::getScriptEventName() const
 		case CREATURE_EVENT_BG_LEAVE:
 			return "onBattlegroundLeave";	
 		#endif
+#ifdef __DARGHOS_CUSTOM__
+		case CREATURE_EVENT_MOVE_ITEM:
+			return "onMoveItem";
+#endif
 		case CREATURE_EVENT_NONE:
 		default:
 			break;
@@ -370,6 +378,10 @@ std::string CreatureEvent::getScriptEventParams() const
 		case CREATURE_EVENT_BG_END:
 			return "cid, winner, timeIn, bgDuration";
 		#endif
+#ifdef __DARGHOS_CUSTOM__
+		case CREATURE_EVENT_MOVE_ITEM:
+			return "cid, item, position";
+#endif
 		case CREATURE_EVENT_NONE:
 		default:
 			break;
@@ -2023,7 +2035,7 @@ uint32_t CreatureEvent::executeBgEnd(Player* player, bool isWinner, uint32_t tim
 		{
 			#ifdef __DEBUG_LUASCRIPTS__
 			std::stringstream desc;
-			desc << creature->getName();
+			desc << player->getName();
 			env->setEvent(desc.str());
 			#endif
 
@@ -2098,6 +2110,65 @@ uint32_t CreatureEvent::executeBgLeave(Player* player)
 	else
 	{
 		std::clog << "[Error - CreatureEvent::executeFollow] Call stack overflow." << std::endl;
+		return 0;
+	}
+}
+#endif
+
+#ifdef __DARGHOS_CUSTOM__
+uint32_t CreatureEvent::executeMoveItem(Player* player, Item* item, const Position &position)
+{
+	//onMoveItem(cid, item, position)
+	if(m_interface->reserveEnv())
+	{
+		ScriptEnviroment* env = m_interface->getEnv();
+		if(m_scripted == EVENT_SCRIPT_BUFFER)
+		{
+			env->setRealPos(player->getPosition());
+			std::stringstream scriptstream;
+
+			scriptstream << "local cid = " << env->addThing(player) << std::endl;
+			env->streamThing(scriptstream, "item", item, env->addThing(item));
+			env->streamPosition(scriptstream, "position", position, 0);
+
+			scriptstream << m_scriptData;
+			bool result = true;
+			if(m_interface->loadBuffer(scriptstream.str()))
+			{
+				lua_State* L = m_interface->getState();
+				result = m_interface->getGlobalBool(L, "_result", true);
+			}
+
+			m_interface->releaseEnv();
+			return result;
+		}
+		else
+		{
+			#ifdef __DEBUG_LUASCRIPTS__
+			std::stringstream desc;
+			desc << player->getName();
+			env->setEvent(desc.str());
+			#endif
+
+			env->setScriptId(m_scriptId, m_interface);
+			env->setRealPos(player->getPosition());
+
+			lua_State* L = m_interface->getState();
+			m_interface->pushFunction(m_scriptId);
+
+			lua_pushnumber(L, env->addThing(player));
+			lua_pushnumber(L, env->addThing(item));
+			LuaInterface::pushThing(L, item, env->addThing(item));
+			LuaInterface::pushPosition(L, position, 0);
+
+			bool result = m_interface->callFunction(3);
+			m_interface->releaseEnv();
+			return result;
+		}
+	}
+	else
+	{
+		std::clog << "[Error - CreatureEvent::executePush] Call stack overflow." << std::endl;
 		return 0;
 	}
 }

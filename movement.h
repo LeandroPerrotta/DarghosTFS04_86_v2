@@ -47,12 +47,7 @@ enum MoveEvent_t
 	MOVE_EVENT_ADD_TILEITEM = 6,
 	MOVE_EVENT_REMOVE_TILEITEM = 7,
 	MOVE_EVENT_NONE = 8,
-#ifdef __DARGHOS_CUSTOM__
-	MOVE_EVENT_PLAYER_MOVE_ITEM = 9,
-	MOVE_EVENT_LAST = MOVE_EVENT_PLAYER_MOVE_ITEM
-#else
 	MOVE_EVENT_LAST = MOVE_EVENT_REMOVE_TILEITEM
-#endif	
 };
 
 typedef std::list<MoveEvent*> EventList;
@@ -66,9 +61,6 @@ class MoveEvents : public BaseEvents
 		bool onPlayerEquip(Player* player, Item* item, slots_t slot, bool isCheck);
 		bool onPlayerDeEquip(Player* player, Item* item, slots_t slot, bool isRemoval);
 		uint32_t onItemMove(Creature* actor, Item* item, Tile* tile, bool isAdd);
-#ifdef __DARGHOS_CUSTOM__
-		uint32_t onPlayerMoveItem(Player* actor, Item* item, Tile* tile);
-#endif
 
 		MoveEvent* getEvent(Item* item, MoveEvent_t eventType);
 		bool hasEquipEvent(Item* item);
