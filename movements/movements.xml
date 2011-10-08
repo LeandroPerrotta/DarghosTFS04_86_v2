@@ -15,7 +15,7 @@
 	<movevent type="StepIn" actionid="8304" event="script" value="game/field_damage.lua"/>	
 	<movevent type="StepIn" actionid="8305" event="script" value="game/field_damage.lua"/>
 	-->
-
+	
 	*DEMON OAK
 	<movevent type="StepIn" actionid="4066" event="script" value="game/demon_oak.lua"/>
 
