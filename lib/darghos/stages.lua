@@ -95,6 +95,8 @@ function getPlayerMultiple(cid, stagetype, skilltype)
 			end
 		end
 	end
+	
+	return 0
 end
 
 function isStagedSkill(skilltype, includeMagic)
