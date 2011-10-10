@@ -82,10 +82,10 @@ function getPlayerMultiple(cid, stagetype, skilltype)
 			attribute = getPlayerSkillLevel(cid, skilltype)
 		end
 	
-		local start_level = v.start_level or 1
+		local start_level = v.start_level or 0
 		local lastStage = (v.end_level == nil) and true or false
 		
-		if(lastStage and attribute > start_level) then
+		if(lastStage and attribute >= start_level) then
 			return v.multipler
 		end
 		
