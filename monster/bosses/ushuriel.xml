@@ -62,9 +62,6 @@
   </immunities>
   <voices interval="5000" chance="10"/>
   <loot>
-    <item id="6300" chance="7777">
-      <!--death ring-->
-    </item>
     <item id="2152" countmax="19" chance1="20000">
       <!--platinum coin-->
     </item>
@@ -128,12 +125,6 @@
     <item id="7385" chance="11000">
       <!--crimson sword-->
     </item>     
-    <item id="7385" chance="11000">
-      <!--crimson sword-->
-    </item>
-    <item id="7385" chance="11000">
-      <!--flask of warrior sweet-->
-    </item>  
     <item id="9808" chance="11000">
       <!--rusty armor-->
     </item>
