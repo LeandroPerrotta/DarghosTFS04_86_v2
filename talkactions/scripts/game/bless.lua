@@ -11,7 +11,7 @@ function onSay(cid, words, param)
 	
 	local totalBlesses = 0
 	
-	local message = "Confire se vocÃª possui todas as benÃ§Ãµes ou nÃ£o:\n\n"
+	local message = "Confire se você possui todas as benções ou não:\n\n"
 	
 	for k,v in pairs(blesses) do
 	
@@ -27,7 +27,7 @@ function onSay(cid, words, param)
 	
 	if(totalBlesses > 0) then
 		if (totalBlesses == #blesses) then
-			message = message .. "\nVocÃª estÃ¡ completamente abenÃ§oado pelos Deuses, os itens em seu inventÃ¡rio e mochila estÃ£o completamente seguros!"
+			message = message .. "\nVocê está completamente abençoado pelos Deuses, os itens em seu inventário e mochila estão completamente seguros!"
 		else
 			local lossBackpack = 100
 			local lossInventory = 100
@@ -46,19 +46,19 @@ function onSay(cid, words, param)
 				lossInventory = 1			
 			end
 			
-			message = message .. "\nVocÃª estÃ¡ abenÃ§oado por " .. totalBlesses .. " deuses. Com isso a chance de quando vocÃª morrer perder sua mochila Ã© de " .. lossBackpack .. "% e " .. lossInventory .. "% para outros itens em seu inventÃ¡rio."
+			message = message .. "\nVocê está abençoado por " .. totalBlesses .. " deuses. Com isso a chance de quando você morrer perder sua mochila é de " .. lossBackpack .. "% e " .. lossInventory .. "% para outros itens em seu inventário."
 		end
 	else
-		message = message .. "\nCuidado! VocÃª nÃ£o possui nenhuma benÃ§Ã£o! A chance de vocÃª perder itens ou sua mochila sÃ£o muito altas!"
+		message = message .. "\nCuidado! Você não possui nenhuma benção! A chance de você perder itens ou sua mochila são muito altas!"
 	end
 	
 	if(usePvPBless) then
-		message = message .. "\n\nBenÃ§Ã£o do PvP (twist of fate):"
+		message = message .. "\n\nBenção do PvP (twist of fate):"
 		
 		if(getPlayerPVPBlessing(cid)) then	
-			message = message .. "\nVocÃª possui benÃ§Ã£o do PvP. Assim suas benÃ§Ãµes normais estÃ£o protegidas quando vocÃª morre e 40% ou mais dos danos recebidos no ultimo minutos foram causados por outros jogadores (nÃ£o montros)!"
+			message = message .. "\nVocê possui benção do PvP. Assim suas benções normais estão protegidas quando você morre e 40% ou mais dos danos recebidos no ultimo minutos foram causados por outros jogadores (não montros)!"
 		else
-			message = message .. "\nVocÃª nÃ£o possui a benÃ§Ã£o do PvP! VocÃª irÃ¡ perder suas benÃ§Ãµes regulares caso morra mesmo para outros jogadores! Compre-a em qualquer NPC dentro dos templos!"
+			message = message .. "\nVocê não possui a benção do PvP! Você irá perder suas benções regulares caso morra mesmo para outros jogadores! Compre-a em qualquer NPC dentro dos templos!"
 		end
 	end	
 	

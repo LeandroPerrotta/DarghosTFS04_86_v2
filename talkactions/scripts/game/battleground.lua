@@ -30,7 +30,7 @@ function onSay(cid, words, param)
 	msg = ""
 	
 	if(isInArray({"info", "sobre", "help"}, option)) then	
-		msg = msg .. "Informa?es sobre o sistema de Battlegrounds:\n"
+		msg = msg .. "Informaçes sobre o sistema de Battlegrounds:\n"
 		msg = msg .. pvpBattleground.getInformations()
 	elseif(isInArray({"entrar", "join", "enter"}, option)) then		
 		pvpBattleground.onEnter(cid)
