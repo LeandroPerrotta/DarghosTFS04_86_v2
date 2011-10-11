@@ -11,35 +11,57 @@ function onSay(cid, words, param)
 	
 	local totalBlesses = 0
 	
-	local message = "Here you can see if you have completed the blesses, or no.\n\n"
+	local message = "Confire se você possui todas as benções ou não:\n\n"
 	
 	for k,v in pairs(blesses) do
 	
 		if(getPlayerBless(cid, k)) then
-			message = message .. v.name .. " (" .. v.location .. "): Completed\n"
+			message = message .. v.name .. " (" .. v.location .. "): Completa\n"
 			totalBlesses = totalBlesses + 1
 		else
 			message = message .. v.name .. " (" .. v.location .. "): n/a\n"
 		end
 	end
 	
+	message = message .. "\n\nChance de perder itens:"
+	
+	if(totalBlesses > 0) then
+		if (totalBlesses == #blesses) then
+			message = message .. "\nVocê está completamente abençoado pelos Deuses, os itens em seu inventário e mochila estão completamente seguros!"
+		else
+			local lossBackpack = 100
+			local lossInventory = 100
+		
+			if(totalBlesses == 1) then
+				lossBackpack = 70
+				lossInventory = 7
+			elseif(totalBlesses == 2) then
+				lossBackpack = 45
+				lossInventory = 4.5		
+			elseif(totalBlesses == 3) then
+				lossBackpack = 25
+				lossInventory = 2.5	
+			elseif(totalBlesses == 4) then
+				lossBackpack = 10
+				lossInventory = 1			
+			end
+			
+			message = message .. "\nVocê está abençoado por " .. totalBlesses .. " deuses. Com isso a chance de quando você morrer perder sua mochila é de " .. lossBackpack .. "% e " .. lossInventory .. "% para outros itens em seu inventário."
+		end
+	else
+		message = message .. "\nCuidado! Você não possui nenhuma benção! A chance de você perder itens ou sua mochila são muito altas!"
+	end
+	
 	if(usePvPBless) then
-		message = message .. "\nPvP Bless (twist of fate): "
+		message = message .. "\n\nBenção do PvP (twist of fate):"
 		
 		if(getPlayerPVPBlessing(cid)) then	
-			message = message .. "You have the PvP Bless. Your regular blessings are protected when you die in an duel and 40% or more of the total damage received are from another human player (not monsters)!"
+			message = message .. "\nVocê possui benção do PvP. Assim suas benções normais estão protegidas quando você morre e 40% ou mais dos danos recebidos no ultimo minutos foram causados por outros jogadores (não montros)!"
 		else
-			message = message .. "You do not have the PvP Bless, buy it to protect your regular blessings in any temple NPC!"
+			message = message .. "\nVocê não possui a benção do PvP! Você irá perder suas benções regulares caso morra mesmo para outros jogadores! Compre-a em qualquer NPC dentro dos templos!"
 		end
-	end
+	end	
 	
-	message = message .. "\nItems drop: "
-	
-	if (totalBlesses == #blesses) then
-		message = message .. "You have all blesses and your item/backpack loss is FULL SECURE!"
-	else	
-		message = message .. "You dont have all blesses and your item/back not is secure, and go drop when you die."
-	end
-	
-	doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, message)	
+	doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, message)
+	return true	
 end

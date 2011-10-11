@@ -80,7 +80,7 @@
     <item id="7591" chance="17000">
       <!--great health potion-->
     </item>  
-    <item id="2789" chance1="50000" chancemax="30">
+    <item id="2789" chance1="50000" countmax="30">
       <!--brown mushroom-->
     </item>     
     <item id="5880" chance="33333">
@@ -161,7 +161,7 @@
     <item id="2479" chance="4500">
       <!--strange helmet-->
     </item>
-    <item id="5954" chance1="2300" chancemax="2">
+    <item id="5954" chance1="2300" countmax="2">
       <!--demon horn-->
     </item> 
     <item id="6103" chance1="2300">
