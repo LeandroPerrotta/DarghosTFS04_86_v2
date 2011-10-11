@@ -50,6 +50,13 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, ratingMessage)		
 			pvpBattleground.setPlayerRating(cid, newRating)
 			
+			if(isPremium(cid)) then
+				local gold = 20000
+				local msg = "Não foi dessa vez... Por derrotas não são concedido premios de experience, mas você recebeu " .. gold .. " moedas de ouro para ajudar a repor os suprimentos gastos e se preparar para a proxima Battleground!"
+				doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, msg)	
+				doPlayerAddMoney(cid, gold)
+			end
+			
 			playerHistory.logBattlegroundLost(cid, newRating)
 		end
 	
@@ -95,19 +102,20 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 				
 				-- iremos reduzir o ganho de exp conforme o player se afasta da média de kills definida para o grupo até um limite de 50% de redução
 				local playerInfo = getPlayerBattlegroundInfo(cid)
-				local killsAvg = math.floor(points[doPlayerGetBattlegroundTeam(cid)] / BG_CONFIG_TEAMSIZE)
-				local killsRate = math.min(playerInfo.kills, killsAvg) / killsAvg
-				expGain = math.floor(expGain * (math.max(0.5, killsRate)))
+				local killsAvg = math.ceil(points[doPlayerGetBattlegroundTeam(cid)] / BG_CONFIG_TEAMSIZE)
+				local killsRate = math.random(math.min(killsAvg, playerInfo.kills) * 100, killsAvg * 100)
+				
+				expGain = math.ceil(expGain * (math.max(0.5, killsRate)))
 			
-				local msg = "Você adquiriu " .. expGain .. " pontos de experiencia e 2 crystal coins pela vitoria na Battleground!"
-				local gold = 20000
+				local gold = 60000
+				local msg = "Você adquiriu " .. expGain .. " pontos de experiência além de " .. gold .. " moedas de ouro para ajudar a você repor os suprimentos gastos pela vitoria na Battleground!"
 				
 				local ratingMessage = "Você melhorou a sua classificação (rating) em " .. changeRating .. " pontos pela vitoria na Battleground."
 			
 				if(winnerTeam == BATTLEGROUND_TEAM_NONE) then
 					expGain = math.floor(expGain / 2)
-					gold = 10000
-					msg = "Você adquiriu " .. expGain .. " pontos de experiencia e 1 crystal coins pelo empate na Battleground!"
+					gold = 30000
+					msg = "Você adquiriu " .. expGain .. " pontos de experiencia e " .. gold .. " moedas de ouro pelo empate na Battleground!"
 					
 					changeRating = math.floor(changeRating / 2)
 					ratingMessage = "Você melhorou a sua classificação (rating) em " .. changeRating .. " pontos por seu empate na Battleground."

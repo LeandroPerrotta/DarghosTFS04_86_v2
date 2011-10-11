@@ -18,7 +18,7 @@
     <flag runonhealth="0"/>
   </flags>
   <attacks>
-    <attack name="melee" interval="2000" skill="120" attack="110"/>
+    <attack name="melee" interval="2000" skill="120" attack="130"/>
     <attack name="fire" interval="3000" chance="20" target="1" radius="4" min="-250" max="-850">
       <attribute key="areaEffect" value="explosion"/>
     </attack>
@@ -33,7 +33,7 @@
     </attack>
   </attacks>
   <defenses armor="45" defense="55">
-    <defense name="healing" interval="2000" chance="15" min="400" max="900">
+    <defense name="healing" interval="2000" chance="15" min="400" max="650">
       <attribute key="areaEffect" value="greenshimmer"/>
     </defense>
     <defense name="invisible" interval="1000" chance="5" duration="6000">
@@ -41,10 +41,11 @@
     </defense>
   </defenses>
   <elements>
-    <element icePercent="-15"/>
-    <element energyPercent="-5"/>
-    <element earthPercent="-8"/>
-    <element firePercent="25"/>
+    <element icePercent="25"/>
+    <element energyPercent="20"/>
+    <element earthPercent="40"/>
+    <element firePercent="30"/>
+    <element holyPercent="30"/>
   </elements>
   <immunities>
     <immunity death="1"/>
@@ -57,55 +58,86 @@
     <voice sentence="I sense your strength fading!"/>
   </voices>
   <loot>
-    <item id="2148" countmax="100" chance1="100000" chancemax="0">
+    <item id="2148" countmax="100" chance1="100000">
       <!--gold coin-->
     </item>
-    <item id="2148" countmax="50" chance1="100000" chancemax="0">
+    <item id="2148" countmax="84" chance1="100000">
       <!--gold coin-->
     </item>
-    <item id="6300" chance="7777">
-      <!--death ring-->
+    <item id="2152" countmax="29" chance1="20000">
+      <!--platinum coin-->
+    </item>    
+    <item id="6500" countmax="1" chance1="100000">
+      <!--demonic essence-->
     </item>
-    <item id="2195" chance="4444">
+    <item id="9808" chance="42000">
+      <!--rusty armor-->
+    </item>       
+    <item id="9811" chance="60000">
+      <!--rusty legs-->
+    </item>      
+    <item id="8472" chance="25000">
+      <!--great spirit potion-->
+    </item>    
+    <item id="8473" chance="22000">
+      <!--ultimate health potion-->
+    </item>  
+    <item id="7591" chance="22000">
+      <!--great health potion-->
+    </item>    
+    <item id="7590" chance="22000">
+      <!--great mana potion-->
+    </item>    
+    <item id="5944" chance="25000">
+      <!--soul orb-->
+    </item>  
+    <item id="5944" chance="25000">
+      <!--soul orb-->
+    </item>          
+    <item id="2195" chance="5000">
       <!--boots of haste-->
     </item>
-    <item id="2393" chance="3000">
-      <!--giant sword-->
+    <item id="2151" countmax="29" chance1="24000">
+      <!--talon-->
+    </item>  
+    <item id="5911" chance="17000" countmax="10">
+      <!--red piece of cloth-->
     </item>
-    <item id="2432" chance="5555">
-      <!--fire axe-->
+    <item id="5909" chance="16000" countmax="10">
+      <!--white piece of cloth-->
     </item>
-    <item id="2402" chance="10000">
-      <!--silver dagger-->
+    <item id="5913" chance="15000" countmax="10">
+      <!--brown piece of cloth-->
     </item>
-    <item id="2477" chance="6666">
-      <!--knight legs-->
+    <item id="5912" chance="15000" countmax="10">
+      <!--blue piece of cloth-->
     </item>
-    <item id="1987" chance="100000">
-      <inside>
-        <item id="2151" countmax="11" chance1="6000" chancemax="0">
-          <!--talon-->
-        </item>
-        <item id="2462" chance="9700">
-          <!--devil helmet-->
-        </item>
-        <item id="2149" countmax="3" chance1="1428" chancemax="0">
-          <!--small emerald-->
-        </item>
-        <item id="2171" chance="2333">
-          <!--platinum amulet-->
-        </item>
-        <item id="2158" chance="4444">
-          <!--blue gem-->
-        </item>
-        <item id="2470" chance="6500">
-          <!--golden legs-->
-        </item>
-        <item id="2520" chance="9999">
-          <!--demon shield-->
-        </item>
-      </inside>
-      <!--bag-->
+    <item id="5910" chance="15000" countmax="10">
+      <!--green piece of cloth-->
     </item>
+    <item id="5914" chance="8000" countmax="10">
+      <!--yellow piece of cloth-->
+    </item>    
+    <item id="4845" chance="15000">
+      <!--silver brooch-->
+    </item>
+    <item id="7698" chance="14000">
+      <!--jewel case-->
+    </item>
+    <item id="2173" chance="9000">
+      <!--amulet of loss-->
+    </item>
+    <item id="2173" chance="9000">
+      <!--amulet of loss-->
+    </item> 
+    <item id="5954" chance1="7000" countmax="2">
+      <!--demon horn-->
+    </item>
+    <item id="2645" chance="6000">
+      <!--steel boots-->
+    </item>
+    <item id="2646" chance="1200">
+      <!--golden boots-->
+    </item>                                                  
   </loot>
 </monster>
