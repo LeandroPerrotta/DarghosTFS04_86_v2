@@ -5,13 +5,13 @@ function onSay(cid, words, param)
 	if(param == "") then
 	
 		local msg = "O uso deste comando requer um ou mais parametros. Exemplos:\n"
-		msg = msg .. "!bg sobre, !bg info, !bg help -> Exibe informações sobre o sistema de Battlegrounds.\n"
+		msg = msg .. "!bg sobre, !bg info, !bg help -> Exibe informa?es sobre o sistema de Battlegrounds.\n"
 	
 		if(_access >= access.COMMUNITY_MANAGER) then
-			msg = msg .. "!bg team team_id -> Exibe as informações de um time (1 ou 2).\n"
+			msg = msg .. "!bg team team_id -> Exibe as informa?es de um time (1 ou 2).\n"
 			msg = msg .. "!bg close -> Expulsa todos jogadores na battleground e a fecha.\n"
 			msg = msg .. "!bg open -> Permite que jogadores entrem na battleground.\n"
-			msg = msg .. "!bg stats -> Exibe as estatisticas (para você).\n"
+			msg = msg .. "!bg stats -> Exibe as estatisticas (para voc?).\n"
 			msg = msg .. "!bg statsall -> Exibe as estatisticas (para todos no canal).\n"
 		else
 			msg = msg .. "!bg entrar, !bg join, !bg enter -> Entra em uma battleground (se disponivel) ou coloca na fila de espera.\n"
@@ -30,7 +30,7 @@ function onSay(cid, words, param)
 	msg = ""
 	
 	if(isInArray({"info", "sobre", "help"}, option)) then	
-		msg = msg .. "Informações sobre o sistema de Battlegrounds:\n"
+		msg = msg .. "Informa?es sobre o sistema de Battlegrounds:\n"
 		msg = msg .. pvpBattleground.getInformations()
 	elseif(isInArray({"entrar", "join", "enter"}, option)) then		
 		pvpBattleground.onEnter(cid)
@@ -41,7 +41,7 @@ function onSay(cid, words, param)
 		local error = false
 		
 		if(not doPlayerIsInBattleground(cid) and _access < access.COMMUNITY_MANAGER) then
-			msg = msg .. "Para usar o comando \"!bg team\" é preciso estar dentro de uma Battleground."
+			msg = msg .. "Para usar o comando \"!bg team\" ? preciso estar dentro de uma Battleground."
 			error = true
 		end
 		
@@ -74,7 +74,7 @@ function onSay(cid, words, param)
 		local pid = getPlayerByNameWildcard(param)
 		
 		if(pid == nil or not doPlayerIsInBattleground(pid)) then
-			msg = msg .. "Jogador inexistente ou não se encontra na battleground."
+			msg = msg .. "Jogador inexistente ou n?o se encontra na battleground."
 			error = true		
 		end
 		
