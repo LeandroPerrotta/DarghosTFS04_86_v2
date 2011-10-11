@@ -55,8 +55,13 @@
     <immunity invisible="1"/>
   </immunities>
   <voices interval="5000" chance="0">
-    <voice sentence="??" yell="1"/>
-    <voice sentence="??" yell="1"/>
+    <voice sentence="I'll sacrifice yours souls to seven!" yell="1"/>
+    <voice sentence="I'm bad news for you mortals!" yell="1"/>
+    <voice sentence="No man can defeat me!" yell="1"/>
+    <voice sentence="No man can defeat me!" yell="1"/>
+    <voice sentence="Your puny skills are no match for me." yell="1"/>
+    <voice sentence="I smell your fear." yell="1"/>
+    <voice sentence="Delicious!" yell="1"/>
   </voices>
   <summons maxSummons="10">
     <summon name="Dreadbeast" interval="120" chance="40"/>
