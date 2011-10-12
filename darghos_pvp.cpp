@@ -31,7 +31,7 @@ void Battleground::onClose()
 	{
 		for(PlayersMap::iterator it_players = it_teams->second.players.begin(); it_players != it_teams->second.players.end(); it_players++)
 		{
-			kickPlayer(it_players->second.player, true);
+			kickPlayer(g_game.getPlayerByID(it_players->first), true);
 		}
 	}
 
@@ -149,7 +149,9 @@ void Battleground::finish(Bg_Teams_t teamWinner)
 		{
 			bool isWinner = false;
 
-			Player* player = it_players->second.player;
+			Player* player = g_game.getPlayerByID(it_players->first);
+			if(!player)
+				continue;
 
 			if(player->getBattlegroundTeam() == teamWinner)
 				isWinner  = true;
@@ -185,6 +187,9 @@ void Battleground::finish(Bg_Teams_t teamWinner)
 bool Battleground::buildTeams()
 {
 	if(waitlist.size() < teamSize * 2)
+		return false;
+
+	if(status == STARTED)
 		return false;
 
 	waitlist.sort(Battleground::orderWaitlistByLevel);
@@ -244,12 +249,13 @@ void Battleground::start()
 			if(!it_players->second.areInside)
 			{
 			
-				Player* player = it_players->second.player;
-				if(player != NULL)		
+				Player* player = g_game.getPlayerByID(it_players->first);
+				if(player)		
 					player->sendPvpChannelMessage("Você não apareceu na battleground no tempo esperado... Você ainda pode participar da batalha digitando \"!bg entrar\" novamente.");
 				
 				it->second.players.erase(it_players->first);
 				notJoin++;
+				continue;
 			}
 
 			it_players->second.join_in = time(NULL);
@@ -281,7 +287,6 @@ void Battleground::putInTeam(Player* player, Bg_Teams_t team_id)
 	Bg_Team_t* team = &teamsMap[team_id];
 
 	Bg_PlayerInfo_t playerInfo;
-	playerInfo.player = player;
 	playerInfo.areInside = false;
 
 	team->players.insert(std::make_pair(player->getGUID(), playerInfo));
@@ -320,6 +325,9 @@ void Battleground::putInside(Player* player)
 	playerInfo->oldPosition = oldPos;
 	playerInfo->join_in = time(NULL);
 
+	if(playerIsInWaitlist(player))
+		removeWaitlistPlayer(player);
+
 	g_game.internalTeleport(player, team->spawn_pos, true);
 	g_game.addMagicEffect(oldPos, MAGIC_EFFECT_TELEPORT);
 
@@ -352,7 +360,7 @@ BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
 
 			if(!team_id)
 			{
-				//se a bg já estiver  cheia ele é colocado na fila para a proxima bg
+				//se a bg já estiver cheia ele é colocado na fila para a proxima bg
 				if(teamsMap[BATTLEGROUND_TEAM_ONE].players.size() == teamSize && teamsMap[BATTLEGROUND_TEAM_TWO].players.size() == teamSize)
 				{
 					if(playerIsInWaitlist(player))

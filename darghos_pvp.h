@@ -35,7 +35,6 @@ typedef std::map<uint32_t, DeathsList> DeathsMap;
 
 struct Bg_PlayerInfo_t
 {
-	Player* player;
 	time_t join_in;
 	Outfit_t default_outfit;
 	Position masterPosition;

@@ -2193,11 +2193,12 @@ bool Player::onDeath()
 	#ifdef __DARGHOS_CUSTOM__
 	uint32_t totalDamage = 0, pvpDamage = 0, pvpLevelSum = 0;
 	for(CountMap::iterator it = damageMap.begin(); it != damageMap.end(); ++it)
-	{
-		totalDamage += it->second.total;
+	{	
 		// its enough when we use IDs range comparison here instead of overheating autoList
 		if(((OTSYS_TIME() - it->second.ticks) / 1000) > 60)
 			continue;
+
+		totalDamage += it->second.total;
 
 		Creature* creature = g_game.getCreatureByID(it->first);
 		if(creature && (creature->getPlayer() || creature->isPlayerSummon()))

@@ -10563,7 +10563,7 @@ int32_t LuaInterface::luaGetBattlegroundPlayersByTeam(lua_State* L)
 	for(PlayersMap::iterator it = players.begin(); it != players.end(); it++, i++)
 	{
 		lua_pushnumber(L, i);
-		lua_pushnumber(L, it->second.player->getGUID());
+		lua_pushnumber(L, it->first);
 		pushTable(L);
 	}
 
