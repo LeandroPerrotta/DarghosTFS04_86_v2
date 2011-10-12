@@ -102,7 +102,7 @@ Bg_PlayerInfo_t* Battleground::findPlayerInfo(Player* player)
 {
 	for(BgTeamsMap::iterator it = teamsMap.begin(); it != teamsMap.end(); it++)
 	{
-		PlayersMap::iterator pit = it->second.players.find(player->getGUID());
+		PlayersMap::iterator pit = it->second.players.find(player->getID());
 		if(pit != it->second.players.end())
 			return &pit->second;
 	}
@@ -114,7 +114,7 @@ Bg_Teams_t Battleground::findTeamIdByPlayer(Player* player)
 {
 	for(BgTeamsMap::iterator it = teamsMap.begin(); it != teamsMap.end(); it++)
 	{
-		PlayersMap::iterator pit = it->second.players.find(player->getGUID());
+		PlayersMap::iterator pit = it->second.players.find(player->getID());
 		if(pit != it->second.players.end())
 			return it->first;
 	}
@@ -289,7 +289,7 @@ void Battleground::putInTeam(Player* player, Bg_Teams_t team_id)
 	Bg_PlayerInfo_t playerInfo;
 	playerInfo.areInside = false;
 
-	team->players.insert(std::make_pair(player->getGUID(), playerInfo));
+	team->players.insert(std::make_pair(player->getID(), playerInfo));
 }
 
 void Battleground::putInside(Player* player)
@@ -412,7 +412,7 @@ BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 
 	Bg_Teams_t team_id = player->getBattlegroundTeam();
 	Bg_Team_t* team = &teamsMap[team_id];
-	PlayersMap::iterator it = team->players.find(player->getGUID());
+	PlayersMap::iterator it = team->players.find(player->getID());
 
 	if(it != team->players.end())
 	{
@@ -437,8 +437,8 @@ BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 		g_game.internalTeleport(player, playerInfo.oldPosition, true);
 		g_game.addMagicEffect(playerInfo.oldPosition, MAGIC_EFFECT_TELEPORT);
 
-		team->players.erase(player->getGUID());
-		deathsMap.erase(player->getGUID());
+		team->players.erase(player->getID());
+		deathsMap.erase(player->getID());
 	}
 	else
 	{
@@ -483,20 +483,20 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 			if(tmp->getBattlegroundTeam() == team_id)
 				return;
 
-			if(validate && !isValidKiller(tmp->getGUID(), player->getGUID()))
+			if(validate && !isValidKiller(tmp->getID(), player->getID()))
 				return;
 
-			deahsEntry.lasthit = tmp->getGUID();
+			deahsEntry.lasthit = tmp->getID();
 			killer = tmp;
-			incrementPlayerKill(tmp->getGUID());
-			incrementPlayerAssists(tmp->getGUID());
-			storePlayerKill(tmp->getGUID(), true);
+			incrementPlayerKill(tmp->getID());
+			incrementPlayerAssists(tmp->getID());
+			storePlayerKill(tmp->getID(), true);
 		}
 		else
 		{
-			incrementPlayerAssists(tmp->getGUID());
-			deahsEntry.assists.push_back(tmp->getGUID());
-			storePlayerKill(tmp->getGUID(), false);
+			incrementPlayerAssists(tmp->getID());
+			deahsEntry.assists.push_back(tmp->getID());
+			storePlayerKill(tmp->getID(), false);
 		}
 	}
 
@@ -509,8 +509,8 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 			Scheduler::getInstance().addEvent(createSchedulerTask(1000,
 				boost::bind(&Battleground::finish, this, killer->getBattlegroundTeam())));
 
-		incrementPlayerDeaths(player->getGUID());
-		addDeathEntry(player->getGUID(), deahsEntry);
+		incrementPlayerDeaths(player->getID());
+		addDeathEntry(player->getID(), deahsEntry);
 
 		CreatureEventList bgFragEvents = killer->getCreatureEvents(CREATURE_EVENT_BG_FRAG);
 		for(CreatureEventList::iterator it = bgFragEvents.begin(); it != bgFragEvents.end(); ++it)
@@ -619,7 +619,12 @@ bool Battleground::storePlayerKill(uint32_t player_id, bool lasthit)
 {
 	Database* db = Database::getInstance();
 	DBQuery query;
-	query << "INSERT INTO `custom_pvp_kills` (`player_id`, `is_frag`, `date`, `type`) VALUES (" << player_id << ", " << ((lasthit) ? 1 : 0) << ", " << time(NULL) << ", " << type << ")";
+
+	Player* player = g_game.getPlayerByID(player_id);
+	if(!player)
+		return false;
+
+	query << "INSERT INTO `custom_pvp_kills` (`player_id`, `is_frag`, `date`, `type`) VALUES (" << player->getGUID() << ", " << ((lasthit) ? 1 : 0) << ", " << time(NULL) << ", " << type << ")";
 	if(!db->query(query.str()))
 		return false;
 
@@ -631,7 +636,11 @@ bool Battleground::storePlayerDeath(uint32_t player_id)
 	Database* db = Database::getInstance();
 	DBQuery query;
 
-	query << "INSERT INTO `custom_pvp_deaths` (`player_id`, `date`, `type`) VALUES (" << player_id << ", " << time(NULL) << ", " << type << ")";
+	Player* player = g_game.getPlayerByID(player_id);
+	if(!player)
+		return false;
+
+	query << "INSERT INTO `custom_pvp_deaths` (`player_id`, `date`, `type`) VALUES (" << player->getGUID() << ", " << time(NULL) << ", " << type << ")";
 	if(!db->query(query.str()))
 		return false;
 
