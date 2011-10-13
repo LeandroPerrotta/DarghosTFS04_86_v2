@@ -192,7 +192,7 @@ bool Battleground::buildTeams()
 	if(waitlist.size() < teamSize * 2)
 		return false;
 
-	if(status == STARTED)
+	if(status == STARTED || status == PREPARING)
 		return false;
 
 	waitlist.sort(Battleground::orderWaitlistByLevel);
@@ -224,7 +224,7 @@ bool Battleground::buildTeams()
 		removeWaitlistPlayer((*it));
 	}
 
-	status = STARTED;
+	status = PREPARING;
 	g_globalEvents->execute(GLOBALEVENT_BATTLEGROUND_PREPARE);
 
 	Scheduler::getInstance().addEvent(createSchedulerTask((1000 * 60 * 2) + (1000 * 5),
@@ -252,9 +252,9 @@ void Battleground::start()
 	{		
 		for(PlayersMap::iterator it_players = it->second.players.begin(); it_players != it->second.players.end(); it_players++)
 		{
+			Player* player = g_game.getPlayerByID(it_players->first);
 			if(!it_players->second.areInside)
-			{				
-				Player* player = g_game.getPlayerByID(it_players->first);
+			{								
 				if(player)
 					player->sendPvpChannelMessage("Você não apareceu na battleground no tempo esperado... Você ainda pode participar da batalha digitando \"!bg entrar\" novamente.");
 				
@@ -263,10 +263,14 @@ void Battleground::start()
 				continue;
 			}
 
+			if(player)
+				storePlayerJoin(player->getGUID(), player->getBattlegroundTeam());
+
 			it_players->second.join_in = time(NULL);
 		}
 	}
 
+	status = STARTED;
 	GlobalEventMap events = g_globalEvents->getEventMap(GLOBALEVENT_BATTLEGROUND_START);
 	for(GlobalEventMap::iterator it = events.begin(); it != events.end(); ++it)
 		it->second->executeOnBattlegroundStart(notJoin);
@@ -334,7 +338,6 @@ void Battleground::putInside(Player* player)
 	g_game.internalTeleport(player, team->spawn_pos, true);
 	g_game.addMagicEffect(oldPos, MAGIC_EFFECT_TELEPORT);
 
-	storePlayerJoin(player->getID(), team_id);
 	playerInfo->areInside = true;
 }
 
@@ -356,7 +359,7 @@ BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
 
 		return BATTLEGROUND_PUT_IN_WAITLIST;
 	}
-	else if(status == STARTED)
+	else if(status == STARTED || status == PREPARING)
 	{
 		if(!player->isInBattleground())
 		{
@@ -422,7 +425,7 @@ BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 	{
 		Bg_PlayerInfo_t playerInfo = it->second;
 
-		if(!force)
+		if(!force || status != PREPARING)
 		{
 			std::stringstream ss;
 			ss << (time(NULL) + 60 * 10);
@@ -683,11 +686,7 @@ bool Battleground::storePlayerJoin(uint32_t player_id, Bg_Teams_t team_id)
 	Database* db = Database::getInstance();
 	DBQuery query;
 
-	Player* player = g_game.getPlayerByID(player_id);
-	if(!player)
-		return false;
-
-	query << "INSERT INTO `battleground_teamplayers` (`player_id`, `battleground_id`, `team_id`, `deserter`) VALUES (" << player->getGUID() << ", " << lastID << ", " << team_id << ", 0)";
+	query << "INSERT INTO `battleground_teamplayers` (`player_id`, `battleground_id`, `team_id`, `deserter`) VALUES (" << player_id << ", " << lastID << ", " << team_id << ", 0)";
 	if(!db->query(query.str()))
 		return false;
 
