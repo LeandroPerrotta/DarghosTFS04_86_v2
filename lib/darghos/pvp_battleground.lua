@@ -142,21 +142,21 @@ function pvpBattleground.showResult(cid, winnner)
 		local i = 1
 		for k,v in pairs(data) do
 			
-			local cid = getPlayerByGUID(v.player_id)
+			local _cid = v.player_id
 			if(cid ~= nil) then
 				
-				local team = teams[doPlayerGetBattlegroundTeam(cid)]
+				local team = teams[doPlayerGetBattlegroundTeam(_cid)]
 				
 				if(team == nil) then
 					team = "Fora"
 				end
 				
-				local spaces_c = 40 - string.len(getPlayerName(cid)) - string.len(team)
+				local spaces_c = 40 - string.len(getPlayerName(_cid)) - string.len(team)
 				
 				local spaces = ""	
 				for i=1, spaces_c do spaces = spaces .. " " end
 						
-				msg = msg .. i .. "# " .. getPlayerName(cid) .. " (" .. team .. ")".. spaces .. "" .. v.kills .. " / " .. v.deaths .. "  [" .. v.assists .. "] \n"	
+				msg = msg .. i .. "# " .. getPlayerName(_cid) .. " (" .. team .. ")".. spaces .. "" .. v.kills .. " / " .. v.deaths .. "  [" .. v.assists .. "] \n"	
 				i = i + 1
 			end
 		end
@@ -191,8 +191,7 @@ function pvpBattleground.getPlayersTeamString(team_id)
 			islast = true
 		end
 		
-		local player = getPlayerByGUID(v)
-		
+		local player = v
 		if(player) then
 			msg = msg .. getPlayerName(player) .. " (" .. getPlayerLevel(player) .. ")"
 			msg = msg .. ((islast) and ".\n" or ", ")
@@ -223,7 +222,7 @@ function pvpBattleground.playerSpeakTeam(cid, message)
 	local playersTeam = getBattlegroundPlayersByTeam(team_id)
 	
 	for k,v in pairs(playersTeam) do
-		local target = getPlayerByGUID(v)
+		local target = v
 		doPlayerSendChannelMessage(target, getPlayerName(cid) .. " [" .. getPlayerLevel(cid) .. " | " .. pvpBattleground.getPlayerRating(cid) .. "]", message, TALKTYPE_TYPES["channel-yellow"], CUSTOM_CHANNEL_PVP)		
 	end
 	
