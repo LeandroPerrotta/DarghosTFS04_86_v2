@@ -33,7 +33,6 @@ function onStartup()
 	db.executeQuery("UPDATE `player_storage` SET `value` = -1 WHERE `key` = '" .. sid.BATTLEGROUND_FREE_EXP_GAINS .. "'")
 	
 	luaGlobal.truncate()
-	pvpBattleground.onInit()
 	return true
 end
 
