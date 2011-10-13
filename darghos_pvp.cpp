@@ -339,6 +339,9 @@ void Battleground::putInside(Player* player)
 	g_game.addMagicEffect(oldPos, MAGIC_EFFECT_TELEPORT);
 
 	playerInfo->areInside = true;
+
+	if(status == STARTED)
+		storePlayerJoin(player->getGUID(), team_id);
 }
 
 BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
@@ -513,10 +516,6 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 		Bg_Team_t* team = findPlayerTeam(killer);
 		team->points++;
 
-		if(team->points >= winPoints)
-			Scheduler::getInstance().addEvent(createSchedulerTask(1000,
-				boost::bind(&Battleground::finish, this, killer->getBattlegroundTeam())));
-
 		incrementPlayerDeaths(player->getID());
 		addDeathEntry(player->getID(), deahsEntry);
 
@@ -525,6 +524,10 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 		{
 			(*it)->executeBgFrag(killer, player);
 		}
+
+		if(team->points >= winPoints)
+			Scheduler::getInstance().addEvent(createSchedulerTask(1000,
+				boost::bind(&Battleground::finish, this, killer->getBattlegroundTeam())));
 	}
 }
 
