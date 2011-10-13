@@ -425,7 +425,7 @@ BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 	{
 		Bg_PlayerInfo_t playerInfo = it->second;
 
-		if(!force || status != PREPARING)
+		if(status == STARTED && !force)
 		{
 			std::stringstream ss;
 			ss << (time(NULL) + 60 * 10);
