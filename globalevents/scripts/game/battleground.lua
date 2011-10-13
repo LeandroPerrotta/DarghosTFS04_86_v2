@@ -1,4 +1,5 @@
 local lastEvent = nil
+local bonusEvent = nil
 
 local minutesLeftMessage = BG_CONFIG_DURATION / 60
 local secondsLeftMessage = 1
@@ -28,6 +29,10 @@ function onBattlegroundStart(notJoinPlayers)
 	end
 	
 	addEvent(messageTimeLeft, 100)
+	
+	if(bonusEvent ~= nil) then
+		stopEvent(bonusEvent)
+	end
 	
 	return true
 end
@@ -103,6 +108,10 @@ function onBattlegroundEnd()
 	secondsLeftMessage = 1
 	lastEvent = nil	
 	
+	if(pvpBattleground.hasGain()) then
+		bonusEvent = addEvent("checkBonus", 1000 * BG_BONUS_INTERVAL)
+	end
+	
 	return true
 end
 
@@ -163,4 +172,49 @@ function showMessage()
 	else
 		message = 0
 	end
+end
+
+function checkBonus(onlyAlert)
+
+	onlyAlert = onlyAlert or false
+
+	if(not pvpBattleground.hasGain()) then
+		return
+	end
+
+	local bonus = pvpBattleground.getBonus()
+	bonus = bonus + 1
+	
+	local percent = bonus * BG_EACH_BONUS_PERCENT
+	
+	local hourStr = "na ultima hora"
+	if(bonus > 1) then
+		hourStr = "há " .. bonus .. " horas"
+	end
+	
+	doBroadcastMessage("Nenhuma Battleground foi iniciada " .. hourStr .. ", será concedido bonûs extra de " .. percent .. "% mais experience ao time vencedor da proxima Battleground! Garanta seu lugar na proxima e aproveite! -> !bg entrar",  MESSAGE_TYPES["green"])
+	bonusEvent = addEvent("checkBonus", 1000 * BG_BONUS_INTERVAL)
+	
+	if(not onlyAlert) then
+		pvpBattleground.setBonus(bonus)
+	end
+end
+
+function onTime(time)
+
+	local date = os.date("*t")	
+	
+	if(not isInArray(BG_GAIN_EVERYHOUR_DAYS, date.wday)) then
+		if(date.hour == BG_GAIN_START_HOUR) then
+			doBroadcastMessage("Este é um alerta para avisar que esta iniciado o periodo de recompensas em Battlegrounds de hoje! São mais de 12 horas de muito PvP para você aproveitar e conseguir experiencia, dinheiro, rating e façanhas no sistema! Tenha um bom dia!",  MESSAGE_TYPES["green"])
+		
+			if(pvpBattleground.getBonus() > 0) then
+				addEvent("checkBonus", 1000 * 10, true)
+			end
+		elseif(date.hour == BG_GAIN_END_HOUR) then
+			doBroadcastMessage("Este é um alerta para avisar que esta encerrado o periodo de recompensas em Battlegrounds por hoje! As Battlegrounds irão voltar a conceder recompensas a 11:00! Tenha uma boa noite!",  MESSAGE_TYPES["green"])
+		end
+	end
+	
+	return true
 end

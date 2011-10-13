@@ -1,6 +1,10 @@
 BROADCAST_STATISTICS_INTERVAL = 20
 FREE_EXP_GAINS_DAY_LIMIT = 4
 
+BG_EXP_RATE = 1
+BG_EACH_BONUS_PERCENT = 50
+BG_BONUS_INTERVAL = 60 * 60
+
 BG_CONFIG_TEAMSIZE = 6
 BG_CONFIG_WINPOINTS = 50
 BG_CONFIG_DURATION = 60 * 15
@@ -77,6 +81,26 @@ function pvpBattleground.setPlayerRating(cid, rating)
 	db.executeQuery("UPDATE `players` SET `battleground_rating` = " .. rating .. " WHERE `id` = " .. getPlayerGUID(cid) .. ";")
 end
 
+function pvpBattleground.getExpGainRate()
+
+	local rate = BG_EXP_RATE
+	local bonus = pvpBattleground.getBonus()
+	if(bonus > 0) then
+		rate = rate + (bonus * (BG_EACH_BONUS_PERCENT / 100))
+		pvpBattleground.setBonus(0)
+	end
+
+	return rate
+end
+
+function pvpBattleground.getBonus()
+	return math.max(0, getGlobalStorageValue(gid.BATTLEGROUND_BONUS))
+end
+
+function pvpBattleground.setBonus(bonus)
+	return setGlobalStorageValue(gid.BATTLEGROUND_BONUS, bonus)
+end
+
 function pvpBattleground.onInit()
 	local configs = {
 		teamSize = BG_CONFIG_TEAMSIZE,
@@ -85,6 +109,7 @@ function pvpBattleground.onInit()
 	}
 	
 	setBattlegroundConfigs(configs)
+	pvpBattleground.setBonus(0)
 end
 
 function pvpBattleground.close()
@@ -184,7 +209,7 @@ function pvpBattleground.sendPlayerChannelMessage(cid, msg, type)
 end
 
 function pvpBattleground.getExperienceGain(cid)
-	return math.floor(getPlayerExperience(cid) * 0.0005 * getPlayerMultiple(cid, STAGES_EXPERIENCE))
+	return math.floor(getPlayerExperience(cid) * 0.0005 * getPlayerMultiple(cid, STAGES_EXPERIENCE) * pvpBattleground.getExpGainRate())
 end
 
 function pvpBattleground.playerSpeakTeam(cid, message)
@@ -265,12 +290,15 @@ function pvpBattleground.onEnter(cid)
 			end
 			
 			leftStr = leftStr .. "mais " .. (BG_CONFIG_TEAMSIZE * 2) - getBattlegroundWaitlistSize() .. " jogadores para iniciar a proxima partida! Quer participar também? Digite '!bg entrar'" 
+		else
+			closeTeam = false
+			leftStr = leftStr .. " Quer participar também? Digite '!bg entrar'"
 		end
 	
 		if(not closeTeam) then
 			broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") aguarda por uma battleground." .. leftStr)	
 		else
-			broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") fechou os times! A nova partida começará em intantes...")
+			broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") fechou os times! A nova partida começará em instantes, assim que a Battleground estiver vazia...")
 		end
 		
 		return true
