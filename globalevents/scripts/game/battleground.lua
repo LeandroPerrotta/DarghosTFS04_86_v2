@@ -52,9 +52,9 @@ function messageTimeLeft()
 		minutesLeftMessage = minutesLeftMessage - 1
 		
 		if(minutesLeftMessage > 0) then
-			bgEvent.messages = addEvent(messageTimeLeft, 1000 * 60)
+			bgEvents.messages = addEvent(messageTimeLeft, 1000 * 60)
 		else
-			bgEvent.messages = addEvent(messageTimeLeft, 1000 * 30)
+			bgEvents.messages = addEvent(messageTimeLeft, 1000 * 30)
 		end
 	else
 		local reset = false
@@ -65,12 +65,12 @@ function messageTimeLeft()
 		broadcastChannel(CUSTOM_CHANNEL_PVP, secondsLeftMessages[secondsLeftMessage].text, TALKTYPE_TYPES["channel-orange"])
 		
 		if(not reset) then
-			bgEvent.messages = addEvent(messageTimeLeft, 1000 * secondsLeftMessages[secondsLeftMessage].interval)
+			bgEvents.messages = addEvent(messageTimeLeft, 1000 * secondsLeftMessages[secondsLeftMessage].interval)
 			secondsLeftMessage = secondsLeftMessage + 1	
 		else
 			minutesLeftMessage = BG_CONFIG_DURATION / 60
 			secondsLeftMessage = 1
-			bgEvent.messages = nil
+			bgEvents.messages = nil
 		end		
 	end
 end
@@ -79,10 +79,10 @@ function onBattlegroundEnd()
 
 	addEvent(addWalls, 1000 * 6)	
 	
-	if(bgEvent.messages ~= nil) then
-		stopEvent(bgEvent.messages)
+	if(bgEvents.messages ~= nil) then
+		stopEvent(bgEvents.messages)
 		timeLeftMessage = 0
-		bgEvent.messages = nil
+		bgEvents.messages = nil
 	end
 	
 	local points = getBattlegroundTeamsPoints()
@@ -108,7 +108,7 @@ function onBattlegroundEnd()
 
 	minutesLeftMessage = BG_CONFIG_DURATION / 60
 	secondsLeftMessage = 1
-	bgEvent.messages = nil	
+	bgEvents.messages = nil	
 	
 	if(pvpBattleground.hasGain()) then
 		bgEvents.bonus = addEvent(checkBonus, 1000 * BG_BONUS_INTERVAL)
