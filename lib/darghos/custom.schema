@@ -1,14 +1,16 @@
 CREATE TABLE  `custom_pvp_deaths` (
   `player_id` int(10) unsigned NOT NULL,
   `date` int(10) unsigned NOT NULL default '0',
-  `type` int(10) unsigned NOT NULL default '0'
+  `type` int(10) unsigned NOT NULL default '0',
+  `ref_id` int(10) unsigned NOT NULL default '0'
 ) ENGINE=InnoDB;
 
 CREATE TABLE `custom_pvp_kills` (
   `player_id` int(10) unsigned NOT NULL,
   `is_frag` tinyint(3) unsigned NOT NULL default '0',
   `date` int(10) unsigned NOT NULL default '0',
-  `type` int(10) unsigned NOT NULL default '0'
+  `type` int(10) unsigned NOT NULL default '0',
+  `ref_id` int(10) unsigned NOT NULL default '0'
 ) ENGINE=InnoDB;
 
 ALTER TABLE `players` ADD COLUMN `battleground_rating` INTEGER UNSIGNED NOT NULL DEFAULT 0 AFTER `afk`;
@@ -19,5 +21,24 @@ CREATE TABLE `player_history` (
   `type` INTEGER UNSIGNED NOT NULL,
   `date` INTEGER UNSIGNED NOT NULL,
   `params` VARCHAR(1000) NOT NULL
+)
+ENGINE = InnoDB;
+
+CREATE TABLE `battlegrounds` (
+  `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  `begin` INTEGER UNSIGNED NOT NULL,
+  `end` INTEGER UNSIGNED NOT NULL,
+  `finishBy` INTEGER UNSIGNED NOT NULL,
+  `team1_points` INTEGER UNSIGNED NOT NULL,
+  `team2_points` INTEGER UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`)
+)
+ENGINE = InnoDB;
+
+CREATE TABLE `battleground_teamplayers` (
+  `player_id` INTEGER UNSIGNED NOT NULL,
+  `battleground_id` INTEGER UNSIGNED NOT NULL,
+  `team_id` INTEGER UNSIGNED NOT NULL,
+  `deserter` INTEGER UNSIGNED NOT NULL
 )
 ENGINE = InnoDB;
