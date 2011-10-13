@@ -143,7 +143,7 @@ function pvpBattleground.showResult(cid, winnner)
 		for k,v in pairs(data) do
 			
 			local _cid = v.player_id
-			if(cid ~= nil) then
+			if(cid ~= nil and isPlayer(_cid)) then
 				
 				local team = teams[doPlayerGetBattlegroundTeam(_cid)]
 				
