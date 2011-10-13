@@ -12,6 +12,12 @@ enum BattlegroundStatus
 	STARTED
 };
 
+enum BattlegroundFinishBy
+{
+	BattlegroundFinishByTime = 0,
+	BattlegroundFinishByPoints
+};
+
 enum BattlegrondRetValue
 {
 	BATTLEGROUND_NO_ERROR = 0,

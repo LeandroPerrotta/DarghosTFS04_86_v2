@@ -176,6 +176,9 @@ void Battleground::finish(Bg_Teams_t teamWinner)
 	Scheduler::getInstance().stopEvent(endEvent);
 	g_globalEvents->execute(GLOBALEVENT_BATTLEGROUND_END);
 
+	BattlegroundFinishBy finishBy = (teamsMap[teamWinner].points == winPoints) ? BattlegroundFinishByPoints : BattlegroundFinishByTime;
+	storeFinish(time(NULL), finishBy, teamsMap[BATTLEGROUND_TEAM_ONE].points, teamsMap[BATTLEGROUND_TEAM_TWO].points);
+
 	clearStatistics();
 	teamsMap[BATTLEGROUND_TEAM_ONE].points = 0;
 	teamsMap[BATTLEGROUND_TEAM_TWO].points = 0;
@@ -242,15 +245,17 @@ void Battleground::start()
 {
 	uint32_t notJoin = 0;
 
+	lastInit = time(NULL);
+	storeNew();
+
 	for(BgTeamsMap::iterator it = teamsMap.begin(); it != teamsMap.end(); it++)
 	{		
 		for(PlayersMap::iterator it_players = it->second.players.begin(); it_players != it->second.players.end(); it_players++)
 		{
 			if(!it_players->second.areInside)
-			{
-			
+			{				
 				Player* player = g_game.getPlayerByID(it_players->first);
-				if(player)		
+				if(player)
 					player->sendPvpChannelMessage("Você não apareceu na battleground no tempo esperado... Você ainda pode participar da batalha digitando \"!bg entrar\" novamente.");
 				
 				it->second.players.erase(it_players->first);
@@ -265,8 +270,6 @@ void Battleground::start()
 	GlobalEventMap events = g_globalEvents->getEventMap(GLOBALEVENT_BATTLEGROUND_START);
 	for(GlobalEventMap::iterator it = events.begin(); it != events.end(); ++it)
 		it->second->executeOnBattlegroundStart(notJoin);
-
-	lastInit = time(NULL);
 
 	endEvent = Scheduler::getInstance().addEvent(createSchedulerTask(duration,
 		boost::bind(&Battleground::finish, this)));
@@ -331,6 +334,7 @@ void Battleground::putInside(Player* player)
 	g_game.internalTeleport(player, team->spawn_pos, true);
 	g_game.addMagicEffect(oldPos, MAGIC_EFFECT_TELEPORT);
 
+	storePlayerJoin(player->getID(), team_id);
 	playerInfo->areInside = true;
 }
 
@@ -423,6 +427,7 @@ BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 			std::stringstream ss;
 			ss << (time(NULL) + 60 * 10);
 			player->setStorage(DARGHOS_STORAGE_BATTLEGROUND_DESERTER_UNTIL, ss.str());
+			storePlayerDeserter(player->getID());
 		}
 
 		player->setBattlegroundTeam(BATTLEGROUND_TEAM_NONE);
@@ -624,7 +629,7 @@ bool Battleground::storePlayerKill(uint32_t player_id, bool lasthit)
 	if(!player)
 		return false;
 
-	query << "INSERT INTO `custom_pvp_kills` (`player_id`, `is_frag`, `date`, `type`) VALUES (" << player->getGUID() << ", " << ((lasthit) ? 1 : 0) << ", " << time(NULL) << ", " << type << ")";
+	query << "INSERT INTO `custom_pvp_kills` (`player_id`, `is_frag`, `date`, `type`, `ref_id`) VALUES (" << player->getGUID() << ", " << ((lasthit) ? 1 : 0) << ", " << time(NULL) << ", " << type << ", " << lastID << ")";
 	if(!db->query(query.str()))
 		return false;
 
@@ -640,7 +645,65 @@ bool Battleground::storePlayerDeath(uint32_t player_id)
 	if(!player)
 		return false;
 
-	query << "INSERT INTO `custom_pvp_deaths` (`player_id`, `date`, `type`) VALUES (" << player->getGUID() << ", " << time(NULL) << ", " << type << ")";
+	query << "INSERT INTO `custom_pvp_deaths` (`player_id`, `date`, `type`, `ref_id`) VALUES (" << player->getGUID() << ", " << time(NULL) << ", " << type << ", " << lastID << ")";
+	if(!db->query(query.str()))
+		return false;
+
+	return true;
+}
+
+bool Battleground::storeNew()
+{
+	Database* db = Database::getInstance();
+	DBQuery query;
+
+	query << "INSERT INTO `battlegrounds` (`begin`) VALUES (" << lastInit << ")";
+	if(!db->query(query.str()))
+		return false;
+
+	lastID = db->getLastInsertId();
+
+	return true;
+}
+
+bool Battleground::storeFinish(time_t end, uint32_t finishBy, uint32_t team1_points, uint32_t team2_points)
+{
+	Database* db = Database::getInstance();
+	DBQuery query;
+
+	query << "UPDATE `battlegrounds` SET `end` = " << end << ", `finishBy` = " << finishBy << ", `team1_points` = " << team1_points << ", team2_points = " << team2_points << " WHERE `id` = " << lastID;
+	if(!db->query(query.str()))
+		return false;
+
+	return true;
+}
+
+bool Battleground::storePlayerJoin(uint32_t player_id, Bg_Teams_t team_id)
+{
+	Database* db = Database::getInstance();
+	DBQuery query;
+
+	Player* player = g_game.getPlayerByID(player_id);
+	if(!player)
+		return false;
+
+	query << "INSERT INTO `battleground_teamplayers` (`player_id`, `battleground_id`, `team_id`, `deserter`) VALUES (" << player->getGUID() << ", " << lastID << ", " << team_id << ", 0)";
+	if(!db->query(query.str()))
+		return false;
+
+	return true;
+}
+
+bool Battleground::storePlayerDeserter(uint32_t player_id)
+{
+	Database* db = Database::getInstance();
+	DBQuery query;
+
+	Player* player = g_game.getPlayerByID(player_id);
+	if(!player)
+		return false;
+
+	query << "UPDATE `battleground_teamplayers` SET `deserter` = 1 WHERE `player_id` = " << player->getGUID() << " AND `battleground_id` = " << lastID;
 	if(!db->query(query.str()))
 		return false;
 

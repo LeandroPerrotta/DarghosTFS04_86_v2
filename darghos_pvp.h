@@ -118,6 +118,7 @@ class Battleground
 		StatisticsList statisticsList;
 		time_t lastInit;
 		Bg_Waitlist_t waitlist;
+		uint32_t lastID;
 		uint32_t teamSize;
 		uint32_t winPoints;
 		uint32_t duration;
@@ -132,6 +133,11 @@ class Battleground
 		void incrementPlayerKill(uint32_t player_id);
 		void incrementPlayerDeaths(uint32_t player_id);
 		void incrementPlayerAssists(uint32_t player_id);
+
+		bool storeNew();
+		bool storeFinish(time_t end, uint32_t finishBy, uint32_t team1_points, uint32_t team2_points);
+		bool storePlayerJoin(uint32_t player_id, Bg_Teams_t team_id);
+		bool storePlayerDeserter(uint32_t player_id);
 
 		bool storePlayerKill(uint32_t player_id, bool lasthit);
 		bool storePlayerDeath(uint32_t player_id);
