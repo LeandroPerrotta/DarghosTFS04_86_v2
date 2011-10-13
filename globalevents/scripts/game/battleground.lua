@@ -200,6 +200,11 @@ function checkBonus(onlyAlert)
 	end
 end
 
+function onStartup()
+	pvpBattleground.onInit()
+	bonusEvent = addEvent("checkBonus", 1000 * BG_BONUS_INTERVAL)
+end
+
 function onTime(time)
 
 	local date = os.date("*t")	
@@ -209,7 +214,7 @@ function onTime(time)
 			doBroadcastMessage("Este é um alerta para avisar que esta iniciado o periodo de recompensas em Battlegrounds de hoje! São mais de 12 horas de muito PvP para você aproveitar e conseguir experiencia, dinheiro, rating e façanhas no sistema! Tenha um bom dia!",  MESSAGE_TYPES["green"])
 		
 			if(pvpBattleground.getBonus() > 0) then
-				addEvent("checkBonus", 1000 * 10, true)
+				bonusEvent = addEvent("checkBonus", 1000 * 10, true)
 			end
 		elseif(date.hour == BG_GAIN_END_HOUR) then
 			doBroadcastMessage("Este é um alerta para avisar que esta encerrado o periodo de recompensas em Battlegrounds por hoje! As Battlegrounds irão voltar a conceder recompensas a 11:00! Tenha uma boa noite!",  MESSAGE_TYPES["green"])
