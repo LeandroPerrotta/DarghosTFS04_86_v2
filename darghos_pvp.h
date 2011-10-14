@@ -102,9 +102,9 @@ class Battleground
 		StatisticsList getStatistics();
 		void clearStatistics(){ statisticsList.clear(); }
 		
-		static bool orderStatisticsListByPerformance(Bg_Statistic_t first, Bg_Statistic_t second) {
-			if(first.kills == second.kills) return (first.deaths < second.deaths) ? true : false;
-			else return (first.kills > second.kills) ? true : false;		
+		static bool orderStatisticsListByPerformance(Bg_Statistic_t* first, Bg_Statistic_t* second) {
+			if(first->kills == second->kills) return (first->deaths < second->deaths) ? true : false;
+			else return (first->kills > second->kills) ? true : false;		
 		}
 
 		static bool orderWaitlistByLevel(Player* first, Player* second);		
