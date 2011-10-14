@@ -171,10 +171,23 @@ bool TalkActions::onPlayerSay(Creature* creature, uint16_t channelId, const std:
 	if(!talkAction && defaultTalkAction)
 		talkAction = defaultTalkAction;
 
+#ifndef __DARGHOS_CUSTOM__
 	if(!talkAction || (talkAction->getChannel() != -1 && talkAction->getChannel() != channelId))
 		return false;
 
 	Player* player = creature->getPlayer();
+#else
+	if(!talkAction)
+		return false;
+
+	Player* player = creature->getPlayer();
+	if(player && talkAction->getChannel() != -1 && talkAction->getChannel() != channelId)
+	{
+		player->sendCancel("Você não pode digitar este comando neste canal.");
+		return true;		
+	}
+#endif
+
 	StringVec exceptions = talkAction->getExceptions();
 	if(player && ((!ignoreAccess && std::find(exceptions.begin(), exceptions.end(), asLowerCaseString(
 		player->getName())) == exceptions.end() && talkAction->getAccess() > player->getAccess())
