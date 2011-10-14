@@ -221,3 +221,9 @@
 	CUSTOM_CHANNEL_PVP			= 10
 	
 	PLAYERCUSTOMFLAG_CONTINUEONLINEWHENEXIT = 26
+	
+	-- Constantes para o OpenTibia, nao envolvem coisas do Darghos mas nao existem no projeto original
+	HOUSE_ACCESS_NOT_INVITED = 0
+	HOUSE_ACCESS_GUEST = 1
+	HOUSE_ACCESS_SUBOWNER = 2
+	HOUSE_ACCESS_OWNER = 3

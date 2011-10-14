@@ -1,3 +1,7 @@
+function needCheckTradeItem(item_id)
+	return isInArray({CUSTOM_ITEMS.PREMIUM_SCROLL, CUSTOM_ITEMS.OUTFIT_TICKET}, item_id)
+end
+
 function searchItemInContainer(container, foundItems)    
     for k = (getContainerSize(container) - 1), 0, -1 do
         local tmp = getContainerItem(container, k)
@@ -10,15 +14,15 @@ function searchItemInContainer(container, foundItems)
     end
 end
 
-function canTradePremiumScroll(item)
+function canTradeItem(item)
 
 	local unusableCount = 0
 	
-	function searchAlreadyUsedPremiumScrolls(container)
+	function searchAlreadyUsedItems(container)
 	    for k = (getContainerSize(container) - 1), 0, -1 do
 	        local tmp = getContainerItem(container, k)
 	        
-	        if (tmp.itemid == CUSTOM_ITEMS.PREMIUM_SCROLL) then	
+	        if (needCheckTradeItem(tmp.itemid)) then	
 	        
 	        	local log_id = getItemAttribute(tmp.uid, "itemShopLogId")
 	        	
@@ -27,15 +31,15 @@ function canTradePremiumScroll(item)
 	        		unusableCount = unusableCount + 1
 	        	end
 	        elseif isContainer(tmp.uid) then
-	        	searchAlreadyUsedPremiumScrolls(tmp.uid)
+	        	searchAlreadyUsedItems(tmp.uid)
 	        end
 	    end
 	end	
 	
 	if(isContainer(item.uid)) then
-		searchAlreadyUsedPremiumScrolls(item.uid)	
+		searchAlreadyUsedItems(item.uid)	
 	else
-		if(item.itemid == CUSTOM_ITEMS.PREMIUM_SCROLL) then				
+		if(needCheckTradeItem(item.itemid)) then				
         	local log_id = getItemAttribute(item.uid, "itemShopLogId")
         	
         	if(not log_id or not canUseShopItem(log_id)) then
@@ -74,7 +78,7 @@ function onTradeAccept(cid, target, item, targetItem)
 	end	
 	]]--
 	
-	if(not canTradePremiumScroll(item) or not canTradePremiumScroll(targetItem)) then
+	if(not canTradeItem(item) or not canTradeItem(targetItem)) then
 		foundItems = 1
 	end
 	
