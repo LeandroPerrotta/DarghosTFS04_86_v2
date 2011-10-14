@@ -21,7 +21,7 @@ struct Bg_Statistic_t
 };
 
 typedef std::list<uint32_t> AssistsList;
-typedef std::list<Bg_Statistic_t> StatisticsList;
+typedef std::list<Bg_Statistic_t*> StatisticsList;
 
 struct Bg_DeathEntry_t
 {
@@ -40,7 +40,7 @@ struct Bg_PlayerInfo_t
 	Position masterPosition;
 	Position oldPosition;
 	bool areInside;
-	uint16_t kills, assists, deaths;
+	Bg_Statistic_t statistics;
 };
 
 struct Bg_TeamLook_t
@@ -130,9 +130,9 @@ class Battleground
 		void addDeathEntry(uint32_t player_id, Bg_DeathEntry_t deathEntry);
 		bool isValidKiller(uint32_t killer_id, uint32_t target);
 
-		void incrementPlayerKill(uint32_t player_id);
-		void incrementPlayerDeaths(uint32_t player_id);
-		void incrementPlayerAssists(uint32_t player_id);
+		void incrementPlayerKill(Bg_PlayerInfo_t* playerInfo);
+		void incrementPlayerDeaths(Bg_PlayerInfo_t* playerInfo);
+		void incrementPlayerAssists(Bg_PlayerInfo_t* playerInfo);
 
 		bool storeNew();
 		bool storeFinish(time_t end, uint32_t finishBy, uint32_t team1_points, uint32_t team2_points);

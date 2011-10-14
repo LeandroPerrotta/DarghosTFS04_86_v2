@@ -10518,10 +10518,10 @@ int32_t LuaInterface::luaGetBattlegroundStatistics(lua_State* L)
 	for(StatisticsList::iterator it = statisticsList.begin(); it != statisticsList.end(); it++, i++)
 	{
 		createTable(L, i);
-		setField(L, "player_id", it->player_id);
-		setField(L, "kills", it->kills);
-		setField(L, "deaths", it->deaths);
-		setField(L, "assists", it->assists);
+		setField(L, "player_id", (*it)->player_id);
+		setField(L, "kills", (*it)->kills);
+		setField(L, "deaths", (*it)->deaths);
+		setField(L, "assists", (*it)->assists);
 		pushTable(L);
 	}
 
@@ -10603,9 +10603,9 @@ int32_t LuaInterface::luaGetPlayerBattlegroundInfo(lua_State* L)
 
 		lua_newtable(L);
 
-		setField(L, "kills", infos->kills);
-		setField(L, "assists", infos->assists);
-		setField(L, "deaths", infos->deaths);
+		setField(L, "kills", infos->statistics.kills);
+		setField(L, "assists", infos->statistics.assists);
+		setField(L, "deaths", infos->statistics.deaths);
 		setField(L, "join_in", infos->join_in);
 	}
 	else

@@ -338,6 +338,11 @@ void Battleground::putInside(Player* player)
 	g_game.internalTeleport(player, team->spawn_pos, true);
 	g_game.addMagicEffect(oldPos, MAGIC_EFFECT_TELEPORT);
 
+	Bg_Statistic_t statistic;
+	statistic.player_id = player->getID();
+	playerInfo->statistics = statistic;
+	statisticsList.push_back(&statistic);
+
 	playerInfo->areInside = true;
 
 	if(status == STARTED)
@@ -448,6 +453,8 @@ BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 		g_game.internalTeleport(player, playerInfo.oldPosition, true);
 		g_game.addMagicEffect(playerInfo.oldPosition, MAGIC_EFFECT_TELEPORT);
 
+		statisticsList.remove(&playerInfo.statistics);
+
 		team->players.erase(player->getID());
 		deathsMap.erase(player->getID());
 	}
@@ -489,6 +496,8 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 		else if(it->getKillerCreature()->getPlayerMaster())
 			tmp = it->getKillerCreature()->getMaster()->getPlayer();
 
+		Bg_PlayerInfo_t* playerInfo = findPlayerInfo(tmp);
+
 		if(it == deathList.begin())
 		{
 			if(tmp->getBattlegroundTeam() == team_id)
@@ -499,13 +508,20 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 
 			deahsEntry.lasthit = tmp->getID();
 			killer = tmp;
-			incrementPlayerKill(tmp->getID());
-			incrementPlayerAssists(tmp->getID());
+
+			incrementPlayerKill(playerInfo);
+			incrementPlayerAssists(playerInfo);
 			storePlayerKill(tmp->getID(), true);
+
+			CreatureEventList bgFragEvents = killer->getCreatureEvents(CREATURE_EVENT_BG_FRAG);
+			for(CreatureEventList::iterator it = bgFragEvents.begin(); it != bgFragEvents.end(); ++it)
+			{
+				(*it)->executeBgFrag(killer, player);
+			}
 		}
 		else
 		{
-			incrementPlayerAssists(tmp->getID());
+			incrementPlayerAssists(playerInfo);
 			deahsEntry.assists.push_back(tmp->getID());
 			storePlayerKill(tmp->getID(), false);
 		}
@@ -516,14 +532,10 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 		Bg_Team_t* team = findPlayerTeam(killer);
 		team->points++;
 
-		incrementPlayerDeaths(player->getID());
-		addDeathEntry(player->getID(), deahsEntry);
+		Bg_PlayerInfo_t* playerInfo = findPlayerInfo(player);
 
-		CreatureEventList bgFragEvents = killer->getCreatureEvents(CREATURE_EVENT_BG_FRAG);
-		for(CreatureEventList::iterator it = bgFragEvents.begin(); it != bgFragEvents.end(); ++it)
-		{
-			(*it)->executeBgFrag(killer, player);
-		}
+		incrementPlayerDeaths(playerInfo);
+		addDeathEntry(player->getID(), deahsEntry);
 
 		if(team->points >= winPoints)
 			Scheduler::getInstance().addEvent(createSchedulerTask(1000,
@@ -572,58 +584,20 @@ void Battleground::addDeathEntry(uint32_t player_id, Bg_DeathEntry_t deathEntry)
 	}
 }
 
-void Battleground::incrementPlayerKill(uint32_t player_id)
+void Battleground::incrementPlayerKill(Bg_PlayerInfo_t* playerInfo)
 {
-	for(StatisticsList::iterator it = statisticsList.begin(); it != statisticsList.end(); it++)
-	{
-		Bg_Statistic_t playerStatistic = (*it);
-		if(it->player_id == player_id)
-		{
-			it->kills++;
-			return;
-		}
-	}
-
-	Bg_Statistic_t playerStatistic;
-	playerStatistic.player_id = player_id;
-	playerStatistic.kills++;
-	statisticsList.push_back(playerStatistic);
+	playerInfo->statistics.kills++;
 }
 
-void Battleground::incrementPlayerDeaths(uint32_t player_id)
+void Battleground::incrementPlayerDeaths(Bg_PlayerInfo_t* playerInfo)
 {
-	for(StatisticsList::iterator it = statisticsList.begin(); it != statisticsList.end(); it++)
-	{
-		if(it->player_id == player_id)
-		{
-			it->deaths++;
-			return;
-		}
-	}
-
-	Bg_Statistic_t playerStatistic;
-	playerStatistic.player_id = player_id;
-	playerStatistic.deaths++;
-	statisticsList.push_back(playerStatistic);
-
-	storePlayerDeath(player_id);
+	playerInfo->statistics.deaths++;
+	storePlayerDeath(playerInfo->statistics.player_id);
 }
 
-void Battleground::incrementPlayerAssists(uint32_t player_id)
+void Battleground::incrementPlayerAssists(Bg_PlayerInfo_t* playerInfo)
 {
-	for(StatisticsList::iterator it = statisticsList.begin(); it != statisticsList.end(); it++)
-	{
-		if(it->player_id == player_id)
-		{
-			it->assists++;
-			return;
-		}
-	}
-
-	Bg_Statistic_t playerStatistic;
-	playerStatistic.player_id = player_id;
-	playerStatistic.assists++;
-	statisticsList.push_back(playerStatistic);
+	playerInfo->statistics.assists++;
 }
 
 bool Battleground::storePlayerKill(uint32_t player_id, bool lasthit)
