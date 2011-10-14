@@ -512,12 +512,6 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 			incrementPlayerKill(playerInfo);
 			incrementPlayerAssists(playerInfo);
 			storePlayerKill(tmp->getID(), true);
-
-			CreatureEventList bgFragEvents = killer->getCreatureEvents(CREATURE_EVENT_BG_FRAG);
-			for(CreatureEventList::iterator it = bgFragEvents.begin(); it != bgFragEvents.end(); ++it)
-			{
-				(*it)->executeBgFrag(killer, player);
-			}
 		}
 		else
 		{
@@ -536,6 +530,12 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 
 		incrementPlayerDeaths(playerInfo);
 		addDeathEntry(player->getID(), deahsEntry);
+
+		CreatureEventList bgFragEvents = killer->getCreatureEvents(CREATURE_EVENT_BG_FRAG);
+		for(CreatureEventList::iterator it = bgFragEvents.begin(); it != bgFragEvents.end(); ++it)
+		{
+			(*it)->executeBgFrag(killer, player);
+		}
 
 		if(team->points >= winPoints)
 			Scheduler::getInstance().addEvent(createSchedulerTask(1000,
