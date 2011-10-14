@@ -341,7 +341,7 @@ void Battleground::putInside(Player* player)
 	Bg_Statistic_t statistic;
 	statistic.player_id = player->getID();
 	playerInfo->statistics = statistic;
-	statisticsList.push_back(&statistic);
+	statisticsList.push_back(&playerInfo->statistics);
 
 	playerInfo->areInside = true;
 
