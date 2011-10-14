@@ -498,13 +498,19 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 		else if(it->getKillerCreature()->getPlayerMaster())
 			tmp = it->getKillerCreature()->getMaster()->getPlayer();
 
+		if(tmp->getBattlegroundTeam() == team_id)
+			continue;
+
 		Bg_PlayerInfo_t* playerInfo = findPlayerInfo(tmp);
+
+		if(!playerInfo)
+		{
+			std::clog << "Player " << tmp->getName() << " killing other players in Battleground but are not in any team?" << std::endl;
+			continue;
+		}
 
 		if(it == deathList.begin())
 		{
-			if(tmp->getBattlegroundTeam() == team_id)
-				return;
-
 			if(validate && !isValidKiller(tmp->getID(), player->getID()))
 				return;
 
