@@ -103,7 +103,7 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 				-- iremos reduzir o ganho de exp conforme o player se afasta da média de kills definida para o grupo até um limite de 50% de redução
 				local playerInfo = getPlayerBattlegroundInfo(cid)
 				local killsAvg = math.ceil(points[doPlayerGetBattlegroundTeam(cid)] / BG_CONFIG_TEAMSIZE)
-				local killsRate = math.random(math.min(killsAvg, playerInfo.kills) * 100, killsAvg * 100) / killsAvg * 100
+				local killsRate = math.random(math.min(killsAvg, playerInfo.kills) * 100, killsAvg * 100) / (killsAvg * 100)
 				
 				expGain = math.ceil(expGain * (math.max(0.5, killsRate)))
 			
