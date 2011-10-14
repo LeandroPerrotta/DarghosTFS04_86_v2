@@ -129,6 +129,8 @@ Bg_Team_t* Battleground::findPlayerTeam(Player* player)
 		if(it->first == player->getBattlegroundTeam())
 			return &it->second;
 	}
+
+	return NULL;
 }
 
 void Battleground::finish()

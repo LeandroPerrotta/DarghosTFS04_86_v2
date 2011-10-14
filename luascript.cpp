@@ -10444,7 +10444,7 @@ int32_t LuaInterface::luaGetHouseAccessLevel(lua_State* L)
 	if(House* house = Houses::getInstance()->getHouse(popNumber(L)))
 	{
 		ScriptEnviroment* env = getEnv();
-		if(Player* player = env->getPlayerByUID(popNumber(L)))
+		if(Player* player = env->getPlayerByUID(cid))
 		{
 			lua_pushnumber(L, house->getHouseAccessLevel(player));
 		}
