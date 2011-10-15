@@ -756,7 +756,7 @@ class Player : public Creature, public Cylinder
 		void removeDoubleDamage();
 		bool isDoubleDamage();
 		time_t getLastKnowUpdate() const { return lastKnowUpdate; }
-		void setPause(bool isPause) { pause = isPause; }
+		void setPause(bool isPause) { pause = isPause; setAttackedCreature(NULL); }
 		bool isPause() { return pause; }
 		#endif
 

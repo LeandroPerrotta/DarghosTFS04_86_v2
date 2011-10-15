@@ -10604,14 +10604,15 @@ int32_t LuaInterface::luaGetBattlegroundTeamsPoints(lua_State* L)
 	//getBattlegroundTeamsPoints()
 	BgTeamsMap teams = g_battleground.getTeams();
 
-	uint32_t i = 1;
 	lua_newtable(L);
-	for(BgTeamsMap::iterator it = teams.begin(); it != teams.end(); it++, i++)
-	{
-		lua_pushnumber(L, i);
-		lua_pushnumber(L, it->second.points);
-		pushTable(L);
-	}
+
+	lua_pushnumber(L, BATTLEGROUND_TEAM_ONE);
+	lua_pushnumber(L, teams[BATTLEGROUND_TEAM_ONE].points);
+	pushTable(L);
+
+	lua_pushnumber(L, BATTLEGROUND_TEAM_TWO);
+	lua_pushnumber(L, teams[BATTLEGROUND_TEAM_TWO].points);
+	pushTable(L);
 
 	return 1;
 }

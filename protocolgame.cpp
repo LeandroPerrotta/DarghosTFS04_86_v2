@@ -514,6 +514,11 @@ void ProtocolGame::parsePacket(NetworkMessage &msg)
 	if(player->isRemoved() && recvbyte != 0x14)
 		return;
 
+#ifdef __DARGHOS_CUSTOM__
+	if(player->isPause())
+		return;
+#endif
+
 	if(player->isAccountManager())
 	{
 		switch(recvbyte)

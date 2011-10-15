@@ -77,7 +77,7 @@ class Battleground
 		bool buildTeams();
 		Bg_Teams_t sortTeam();
 
-		BgTeamsMap getTeams(){ return teamsMap; }
+		BgTeamsMap getTeams(){ return teamsMap; } const
 		void finish(Bg_Teams_t teamWinner);
 		void finish();
 
