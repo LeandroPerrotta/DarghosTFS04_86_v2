@@ -452,7 +452,8 @@ BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 
 		player->setMasterPosition(playerInfo.masterPosition);
 
-		g_game.internalTeleport(player, playerInfo.oldPosition, true);
+		Position pos = g_game.getClosestFreeTile(player, playerInfo.oldPosition);
+		g_game.internalTeleport(player, pos, true);
 		g_game.addMagicEffect(playerInfo.oldPosition, MAGIC_EFFECT_TELEPORT);
 
 		statisticsList.remove(&playerInfo.statistics);
