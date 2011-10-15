@@ -16,6 +16,8 @@ function onBattlegroundLeave(cid)
 	if(onIslandOfPeace) then
 		doUpdateCreaturePassable(cid)
 	end	
+	
+	doRemoveCondition(cid, CONDITION_INFIGHT)
 end
 
 function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
