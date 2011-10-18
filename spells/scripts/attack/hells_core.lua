@@ -10,10 +10,9 @@ function onGetFormulaValues(cid, level, maglevel)
 	
 	if(doPlayerIsInBattleground(cid)) then
 		if(playerDebbufs[cid] == nil) then
-			playerDebbufs[cid]["percent"] = 70
-			playerDebbufs[cid]["end"] = os.time() + 3	
+			table.insert(playerDebbufs, cid, { percent = 70, expires = os.time() + 3})
 		else	
-			if(os.time() < playerDebbufs[cid]["end"]) then
+			if(os.time() < playerDebbufs[cid]["expires"]) then
 				min = min * (playerDebbufs[cid]["percent"] / 100)
 				max = max * (playerDebbufs[cid]["percent"] / 100)
 				
@@ -21,10 +20,10 @@ function onGetFormulaValues(cid, level, maglevel)
 					playerDebbufs[cid]["percent"] = 50
 				end
 				
-				playerDebbufs[cid]["end"] = os.time() + 3
+				playerDebbufs[cid]["expires"] = os.time() + 3
 			else
 				playerDebbufs[cid]["percent"] = 70
-				playerDebbufs[cid]["end"] = os.time() + 3	
+				playerDebbufs[cid]["expires"] = os.time() + 3	
 			end
 		end
 	end
