@@ -90,7 +90,8 @@ end
 
 function pvpBattleground.removePlayerRating(cid, timeIn, bgDuration)
 
-	local changeRating = getChangeRating(cid, timeIn, bgDuration)
+	local currentRating = pvpBattleground.getPlayerRating(cid)
+	local changeRating = pvpBattleground.getChangeRating(cid, timeIn, bgDuration)
 	
 	if(currentRating >= BATTLEGROUND_HIGH_RATE) then
 		changeRating = math.floor(changeRating * 1.25)

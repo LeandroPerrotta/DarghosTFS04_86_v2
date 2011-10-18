@@ -4,8 +4,8 @@ local config = {
 }
 
 local bgConfig = {
-	idleWarning = 45,
-	idleKick = 60
+	idleWarning = 45 * 1000,
+	idleKick = 60 * 1000
 }
 
 function onThink(cid, interval)
@@ -21,13 +21,18 @@ function onThink(cid, interval)
 	local idleTime = getPlayerIdleTime(cid) + interval
 	doPlayerSetIdleTime(cid, idleTime)
 	
-	if(doPlayerIsInBattleground(cid) and getBattlegroundStatus() == BATTLEGROUND_STATUS_STARTED) then
-		if(bgConfig.idleKick > 0 and idleTime > bgConfig.idleKick) then
-			pvpBattleground.onExit(cid, true)
-		elseif(bgConfig.idleWarning > 0 and idleTime == bgConfig.idleWarning) then
-			local message = "VocÃª esta inativo a " .. bgConfig.idleWarning .. " segundos. VocÃª serÃ¡ expulso da batalha e serÃ¡ marcado como desertor se continuar inativo por mais " .. (bgConfig.idleKick - bgConfig.idleWarning) .. " segundos"	
-			doPlayerSendTextMessage(cid, MESSAGE_STATUS_WARNING, message .. ".")
-		end		
+	if(doPlayerIsInBattleground(cid)) then
+	
+		if(getBattlegroundStatus() == BATTLEGROUND_STATUS_PREPARING) then
+			doPlayerSetIdleTime(cid, 0)
+		elseif(getBattlegroundStatus() == BATTLEGROUND_STATUS_STARTED) then
+			if(bgConfig.idleKick > 0 and idleTime > bgConfig.idleKick) then
+				pvpBattleground.onExit(cid, true)
+			elseif(bgConfig.idleWarning > 0 and idleTime == bgConfig.idleWarning) then
+				local message = "Você esta inativo a " .. bgConfig.idleWarning / 1000 .. " segundos. Você será expulso da batalha e marcado como desertor se continuar inativo por mais " .. (bgConfig.idleKick - bgConfig.idleWarning) / 1000 .. " segundos"	
+				doPlayerSendTextMessage(cid, MESSAGE_STATUS_WARNING, message .. ".")
+			end		
+		end
 	else
 		if(config.idleKick > 0 and idleTime > config.idleKick) then
 			doRemoveCreature(cid)

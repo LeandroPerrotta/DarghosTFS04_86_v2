@@ -41,7 +41,7 @@ function onSay(cid, words, param)
 		local error = false
 		
 		if(not doPlayerIsInBattleground(cid) and _access < access.COMMUNITY_MANAGER) then
-			msg = msg .. "Para usar o comando \"!bg team\" é preciso estar dentro de uma Battleground."
+			msg = msg .. "Para usar o comando \"!bg afk\" é preciso estar dentro de uma Battleground."
 			error = true
 		end		
 		
