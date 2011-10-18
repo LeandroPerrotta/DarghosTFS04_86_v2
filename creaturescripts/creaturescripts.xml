@@ -20,7 +20,7 @@
 	<event type="kill" name="pvpArena_onKill" event="script" value="game/pvp_arena.lua"/>
 	<!-- <event type="kill" name="pvpBattleground_onKill" event="script" value="game/pvp_battleground.lua"/>  -->
 	<event type="logout" name="pvpArena_onLogout" event="script" value="game/pvp_arena.lua"/>
-	<!-- <event type="combat" name="CustomPlayerCombat" event="script" value="game/combat.lua"/>  -->
+	<event type="combat" name="CustomPlayerCombat" event="script" value="game/combat.lua"/>
 	<event type="target" name="CustomPlayerTarget" event="script" value="game/target.lua"/>
 	<event type="death" name="CustomPlayerDeath" event="script" value="game/death.lua"/>
 	<event type="death" name="monsterDeath" event="script" value="game/death.lua"/>

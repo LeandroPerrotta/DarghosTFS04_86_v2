@@ -15,6 +15,7 @@ function onSay(cid, words, param)
 			msg = msg .. "!bg statsall -> Exibe as estatisticas (para todos no canal).\n"
 		else
 			msg = msg .. "!bg entrar, !bg join, !bg enter -> Entra em uma battleground (se disponivel) ou coloca na fila de espera.\n"
+			msg = msg .. "!bg afk [nick], -> Reporta um jogador de seu time afk (requer estar dentro da Battleground).\n"
 			msg = msg .. "!bg team -> Exibe os membros de seu time (requer estar dentro da Battleground).\n"
 		end
 	
@@ -35,6 +36,23 @@ function onSay(cid, words, param)
 	elseif(isInArray({"entrar", "join", "enter"}, option)) then		
 		pvpBattleground.onEnter(cid)
 		return true
+	elseif(option == "afk") then
+		local pid = getPlayerByNameWildcard(param)
+		local error = false
+		
+		if(not doPlayerIsInBattleground(cid) and _access < access.COMMUNITY_MANAGER) then
+			msg = msg .. "Para usar o comando \"!bg team\" é preciso estar dentro de uma Battleground."
+			error = true
+		end		
+		
+		if(not error and not pid) then
+			msg = msg .. "Nenhum jogador " .. param .. " encontrado."
+			error = true
+		end
+		
+		if(not error) then
+			pvpBattleground.onReportIdle(cid, pid)
+		end			
 	elseif(option == "team") then
 	
 		local team = nil 

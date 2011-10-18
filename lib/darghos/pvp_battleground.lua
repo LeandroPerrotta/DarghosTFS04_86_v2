@@ -9,6 +9,8 @@ BG_CONFIG_TEAMSIZE = 6
 BG_CONFIG_WINPOINTS = 50
 BG_CONFIG_DURATION = 60 * 15
 
+BG_AFK_TIME_LIMIT = 60
+
 BG_RET_NO_ERROR = 0
 BG_RET_CLOSED = 1
 BG_RET_CAN_NOT_JOIN = 2
@@ -22,6 +24,11 @@ BATTLEGROUND_TEAM_NONE = 0
 BATTLEGROUND_TEAM_ONE = 1
 BATTLEGROUND_TEAM_TWO = 2
 
+BATTLEGROUND_STATUS_BUILDING_TEAMS = 0
+BATTLEGROUND_STATUS_PREPARING = 1
+BATTLEGROUND_STATUS_STARTED = 2
+BATTLEGROUND_STATUS_FINISHED = 3
+
 BATTLEGROUND_MIN_LEVEL = 100
 BATTLEGROUND_CAN_NON_PVP = true
 
@@ -32,7 +39,7 @@ BG_GAIN_END_HOUR = 2
 pvpBattleground = {}
 
 BATTLEGROUND_RATING = 3
-BATTLEGROND_HIGH_RATE = 1601
+BATTLEGROUND_HIGH_RATE = 1601
 
 battlegrondRatingTable = {
 
@@ -79,6 +86,32 @@ end
 
 function pvpBattleground.setPlayerRating(cid, rating)
 	db.executeQuery("UPDATE `players` SET `battleground_rating` = " .. rating .. " WHERE `id` = " .. getPlayerGUID(cid) .. ";")
+end
+
+function pvpBattleground.removePlayerRating(cid, timeIn, bgDuration)
+
+	local changeRating = getChangeRating(cid, timeIn, bgDuration)
+	
+	if(currentRating >= BATTLEGROUND_HIGH_RATE) then
+		changeRating = math.floor(changeRating * 1.25)
+	else
+		changeRating = math.floor(changeRating * 0.75)
+	end
+	
+	local newRating = math.max(currentRating - changeRating, 0)		
+	
+	pvpBattleground.setPlayerRating(cid, newRating)
+	
+	return math.min(changeRating, currentRating)
+end
+
+function pvpBattleground.getChangeRating(cid, timeIn, bgDuration)
+
+	local currentRating = pvpBattleground.getPlayerRating(cid)
+	local ratingMultipler = pvpBattleground.getRatingMultipler(cid, currentRating)
+	local changeRating = ratingMultipler * BATTLEGROUND_RATING
+	
+	return math.floor(changeRating * (timeIn / bgDuration))	
 end
 
 function pvpBattleground.getExpGainRate()
@@ -347,14 +380,79 @@ function pvpBattleground.onEnter(cid)
 	return false
 end
 
-function pvpBattleground.onExit(cid)
+function pvpBattleground.onExit(cid, idle)
+
+	idle = idle or false
+
+	if(getBattlegroundStatus() ~= BATTLEGROUND_STATUS_STARTED) then
+		doPlayerSendCancel(cid, "Aguarde o inicio da Battleground para abandonar-la.")
+		return false
+	end
 
 	local ret = doPlayerLeaveBattleground(cid)
 
 	if(ret == BG_RET_NO_ERROR) then
-		broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") desertou a batalha! Você gostaria de substituir-lo imediatamente? Digite '!bg entrar'!")		
+		if(not idle) then
+			broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") desertou a batalha! Você gostaria de substituir-lo imediatamente? Digite '!bg entrar'!")		
+		else
+			broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") foi expulso por inatividade! Você gostaria de substituir-lo imediatamente? Digite '!bg entrar'!")
+		end
+		
+		local removedRating = pvpBattleground.removePlayerRating(cid, BG_CONFIG_DURATION, BG_CONFIG_DURATION)
+		doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Você piorou a sua classificação (rating) em " .. removedRating .. " pontos por seu abandono da Battleground.")
+		
 		return true
 	end
 	
 	return false	
+end
+
+function pvpBattleground.onReportIdle(cid, idle_player)
+
+	if(not doPlayerIsInBattleground(idle_player) or 
+		(doPlayerGetBattlegroundTeam(cid) ~= doPlayerGetBattlegroundTeam(idle_player))
+		) then
+		pvpBattleground.sendPlayerChannelMessage(cid, "Este jogador não pertence a seu time ou não está na Battleground.")
+		return
+	end
+	
+	if(getBattlegroundStatus() ~= BATTLEGROUND_STATUS_STARTED) then
+		pvpBattleground.sendPlayerChannelMessage(cid, "Somente é permitido fazer denúncias após a Battleground ter iniciado.")
+		return
+	end	
+	
+	local report_block = getPlayerStorageValue(cid, sid.BATTLEGROUND_INVALID_REPORT_BLOCK)
+	if(report_block ~= 0 and os.time() <= report_block) then
+		pvpBattleground.sendPlayerChannelMessage(cid, "Você está impossibilitado de efetuar denuncias de jogadores inativos momentaneamente por uma denuncia invalida recente.")
+		return
+	end
+	
+	setPlayerStorageValue(idle_player, sid.BATTLEGROUND_REPORTED_IDLE, 1)
+	
+	pvpBattleground.sendPlayerChannelMessage(cid, "Você denunciou o jogador " .. getPlayerName(idle_player) .. " como inativo com! Ele será expulso da Battleground se continuar inativo no proximo minuto.")
+	doPlayerPopupFYI(idle_player, "ATENÇÃO: \n\nVocê foi acusado de estar inativo dentro da Battleground, o que é proibido!\nVocê tem 1 minuto para entrar em combate com um oponente ou será expulso da batalha e marcado como desertor!")
+	addEvent(pvpBattleground.validateReport, 1000 * 60, cid, idle_player)
+end
+
+function pvpBattleground.validateReport(cid, idle_player)
+
+	if(getBattlegroundStatus() ~= BATTLEGROUND_STATUS_STARTED) then
+		return
+	end
+
+	if(not isPlayer(idle_player) or not isPlayer(cid)) then
+		return
+	end
+	
+	if(not doPlayerIsInBattleground(idle_player)) then
+		return
+	end
+
+	local isIdle = getPlayerStorageValue(idle_player, sid.BATTLEGROUND_REPORTED_IDLE) == 1
+	if(isIdle) then		
+		pvpBattleground.onExit(idle_player, true)
+	else
+		setPlayerStorageValue(cid, sid.BATTLEGROUND_INVALID_REPORT_BLOCK, os.time() + (60 * 3))
+		pvpBattleground.sendPlayerChannelMessage(cid, "Não foi constatado que o jogador que você reportou estava inativo. Pela denuncia invalida você nao poderá denunciar outros jogadores por 3 minutos.")
+	end
 end
