@@ -5,8 +5,7 @@
 #include "player.h"
 #include "darghos_const.h"
 
-#define LIMIT_TARGET_FRAGS_INTERVAL 60
-#define LIMIT_TARGET_FRAGS_PER_INTERVAL 1
+#define LIMIT_TARGET_FRAGS_INTERVAL 60 * 3
 #define PVP_CHANNEL_ID 10
 
 typedef std::list<Player*> Bg_Waitlist_t;

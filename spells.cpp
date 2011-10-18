@@ -584,6 +584,7 @@ bool Spell::checkSpell(Player* player) const
 		return false;
 
 	bool exhausted = false;
+
 	if(isAggressive)
 	{
 		if(!player->hasFlag(PlayerFlag_IgnoreProtectionZone) && player->getZone() == ZONE_PROTECTION)
@@ -594,6 +595,11 @@ bool Spell::checkSpell(Player* player) const
 
 		if(player->hasCondition(CONDITION_EXHAUST, EXHAUST_COMBAT))
 			exhausted = true;
+
+#ifdef __DARGHOS_CUSTOM__
+		if(this->range == -1 && player->hasCondition(CONDITION_EXHAUST, EXHAUST_COMBAT_AREA))
+			exhausted = true;
+#endif
 	}
 	else if(player->hasCondition(CONDITION_EXHAUST, EXHAUST_HEALING))
 		exhausted = true;

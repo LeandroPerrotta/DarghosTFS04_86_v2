@@ -123,6 +123,9 @@ enum Exhaust_t
 {
 	EXHAUST_COMBAT = 1,
 	EXHAUST_HEALING = 2
+#ifdef __DARGHOS_CUSTOM__
+	,EXHAUST_COMBAT_AREA = 3
+#endif
 };
 
 typedef std::set<uint32_t> VIPSet;

@@ -1579,13 +1579,24 @@ void Player::onCreatureMove(const Creature* creature, const Tile* newTile, const
 
 	if((teleport || oldPos.z != newPos.z) && !hasCustomFlag(PlayerCustomFlag_CanStairhop))
 	{
-		int32_t ticks = g_config.getNumber(ConfigManager::STAIRHOP_DELAY);
-		if(ticks > 0)
+#ifdef __DARGHOS_CUSTOM__
+		if(this->isInBattleground())
 		{
-			addExhaust(ticks, EXHAUST_COMBAT);
-			if(Condition* condition = Condition::createCondition(CONDITIONID_DEFAULT, CONDITION_PACIFIED, ticks))
-				addCondition(condition);
+			addExhaust(2000, EXHAUST_COMBAT_AREA);
 		}
+		else
+		{
+#endif
+			int32_t ticks = g_config.getNumber(ConfigManager::STAIRHOP_DELAY);
+			if(ticks > 0)
+			{
+				addExhaust(ticks, EXHAUST_COMBAT);
+				if(Condition* condition = Condition::createCondition(CONDITIONID_DEFAULT, CONDITION_PACIFIED, ticks))
+					addCondition(condition);
+			}
+#ifdef __DARGHOS_CUSTOM__
+		}
+#endif
 	}
 }
 
