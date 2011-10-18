@@ -33,24 +33,10 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 	end
 	
 	if(pvpBattleground.hasGain()) then
-	
-		local currentRating = pvpBattleground.getPlayerRating(cid)
-		local ratingMultipler = pvpBattleground.getRatingMultipler(cid, currentRating)
-		local changeRating = ratingMultipler * BATTLEGROUND_RATING
-		
-		changeRating = math.floor(changeRating * (timeIn / bgDuration))
-	
 		if(not winner and winnerTeam ~= BATTLEGROUND_TEAM_NONE) then
-			if(currentRating >= BATTLEGROND_HIGH_RATE) then
-				changeRating = math.floor(changeRating * 1.25)
-			else
-				changeRating = math.floor(changeRating * 0.75)
-			end
-			
-			local newRating = math.max(currentRating - changeRating, 0)	
-			local ratingMessage = "Você piorou a sua classificação (rating) em " .. math.max(changeRating, currentRating) .. " pontos por sua derrota na Battleground."
+			local removedRating = pvpBattleground.removePlayerRating(cid, timeIn, bgDuration)
+			local ratingMessage = "Você piorou a sua classificação (rating) em " .. removedRating .. " pontos por sua derrota na Battleground."
 			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, ratingMessage)		
-			pvpBattleground.setPlayerRating(cid, newRating)
 			
 			if(isPremium(cid)) then
 				local gold = 20000
@@ -110,8 +96,10 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 				expGain = math.ceil(expGain * (math.max(0.5, killsRate)))
 			
 				local gold = 60000
+				
 				local msg = "Você adquiriu " .. expGain .. " pontos de experiência além de " .. gold .. " moedas de ouro para ajudar a você repor os suprimentos gastos pela vitoria na Battleground!"
 				
+				local changeRating = pvpBattleground.getChangeRating(cid, timeIn, bgDuration)
 				local ratingMessage = "Você melhorou a sua classificação (rating) em " .. changeRating .. " pontos pela vitoria na Battleground."
 			
 				if(winnerTeam == BATTLEGROUND_TEAM_NONE) then

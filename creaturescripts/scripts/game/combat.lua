@@ -1,11 +1,15 @@
 function onCombat(cid, target)
 
-	if(isPlayer(cid) == TRUE and isMonster(target) and (getCreatureName(target) == "Marksman Target" or getCreatureName(target) == "Hitdoll")) then
-		startShieldTrain(cid, target)
+	if(isPlayer(cid) and doPlayerIsInBattleground(cid) and getPlayerStorageValue(idle_player, sid.BATTLEGROUND_REPORTED_IDLE) == 1) then
+		setPlayerStorageValue(idle_player, sid.BATTLEGROUND_REPORTED_IDLE, -1)
 	end
 
 	--checks attacker
 	if(server_distro == DISTROS_OPENTIBIA) then
+		if(isPlayer(cid) == TRUE and isMonster(target) and (getCreatureName(target) == "Marksman Target" or getCreatureName(target) == "Hitdoll")) then
+			startShieldTrain(cid, target)
+		end	
+	
 		local player_attacker = nil
 		if(isPlayer(cid) == TRUE) then
 			player_attacker = cid

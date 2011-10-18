@@ -3,34 +3,50 @@ local config = {
 	idleKick = getConfigValue('idleKickTime')
 }
 
+local bgConfig = {
+	idleWarning = 45,
+	idleKick = 60
+}
+
 function onThink(cid, interval)
-	if(getTileInfo(getCreaturePosition(cid)).nologout or getCreatureNoMove(cid) or
+	if((getTileInfo(getCreaturePosition(cid)).nologout or getCreatureNoMove(cid) or
 		getPlayerCustomFlagValue(cid, PLAYERCUSTOMFLAG_ALLOWIDLE) 
-		or getPlayerCustomFlagValue(cid, PLAYERCUSTOMFLAG_CONTINUEONLINEWHENEXIT) 
+		or getPlayerCustomFlagValue(cid, PLAYERCUSTOMFLAG_CONTINUEONLINEWHENEXIT))
+		and not doPlayerIsInBattleground(cid)
 		) then
 		--or doPlayerGetAfkState(cid)) then
 		return true
 	end
-
+	
 	local idleTime = getPlayerIdleTime(cid) + interval
 	doPlayerSetIdleTime(cid, idleTime)
-	if(config.idleKick > 0 and idleTime > config.idleKick) then
-		doRemoveCreature(cid)
-	elseif(config.idleWarning > 0 and idleTime == config.idleWarning) then
-		local message = "You have been idle for " .. math.ceil(config.idleWarning / 60000) .. " minutes"
-		if(config.idleKick > 0) then
-			message = message .. ", you will be disconnected in "
-			local diff = math.ceil((config.idleWarning - config.idleKick) / 60000)
-			if(diff > 1) then
-				message = message .. diff .. " minutes"
-			else
-				message = message .. "one minute"
+	
+	if(doPlayerIsInBattleground(cid) and getBattlegroundStatus() == BATTLEGROUND_STATUS_STARTED) then
+		if(bgConfig.idleKick > 0 and idleTime > bgConfig.idleKick) then
+			pvpBattleground.onExit(cid, true)
+		elseif(bgConfig.idleWarning > 0 and idleTime == bgConfig.idleWarning) then
+			local message = "Você esta inativo a " .. bgConfig.idleWarning .. " segundos. Você será expulso da batalha e será marcado como desertor se continuar inativo por mais " .. (bgConfig.idleKick - bgConfig.idleWarning) .. " segundos"	
+			doPlayerSendTextMessage(cid, MESSAGE_STATUS_WARNING, message .. ".")
+		end		
+	else
+		if(config.idleKick > 0 and idleTime > config.idleKick) then
+			doRemoveCreature(cid)
+		elseif(config.idleWarning > 0 and idleTime == config.idleWarning) then
+			local message = "You have been idle for " .. math.ceil(config.idleWarning / 60000) .. " minutes"
+			if(config.idleKick > 0) then
+				message = message .. ", you will be disconnected in "
+				local diff = math.ceil((config.idleWarning - config.idleKick) / 60000)
+				if(diff > 1) then
+					message = message .. diff .. " minutes"
+				else
+					message = message .. "one minute"
+				end
+	
+				message = message .. " if you are still idle"
 			end
-
-			message = message .. " if you are still idle"
+	
+			doPlayerSendTextMessage(cid, MESSAGE_STATUS_WARNING, message .. ".")
 		end
-
-		doPlayerSendTextMessage(cid, MESSAGE_STATUS_WARNING, message .. ".")
 	end
 
 	return true
