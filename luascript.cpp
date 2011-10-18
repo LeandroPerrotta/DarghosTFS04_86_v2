@@ -2496,6 +2496,9 @@ void LuaInterface::registerFunctions()
 	//battlegroundOpen()
 	lua_register(m_luaState, "battlegroundOpen", LuaInterface::luaBattlegroundOpen);
 
+	//getBattlegroundStatus()
+	lua_register(m_luaState, "getBattlegroundStatus", LuaInterface::luaGetBattlegroundStatus);
+
 	//getBattlegroundPlayersByTeam()
 	lua_register(m_luaState, "getBattlegroundPlayersByTeam", LuaInterface::luaGetBattlegroundPlayersByTeam);
 
@@ -10548,9 +10551,9 @@ int32_t LuaInterface::luaGetBattlegroundStatistics(lua_State* L)
 	{
 		createTable(L, i);
 		setField(L, "player_id", (*it)->player_id);
-		setField(L, "kills", (*it)->kills);
-		setField(L, "deaths", (*it)->deaths);
-		setField(L, "assists", (*it)->assists);
+		setField(L, "kills", (*it)->kills.size());
+		setField(L, "deaths", (*it)->deaths.size());
+		setField(L, "assists", (*it)->assists.size());
 		pushTable(L);
 	}
 
@@ -10572,6 +10575,13 @@ int32_t LuaInterface::luaBattlegroundOpen(lua_State* L)
 	g_battleground.setOpen();
 	lua_pushboolean(L, true);
 
+	return 1;
+}
+
+int32_t LuaInterface::luaGetBattlegroundStatus(lua_State* L)
+{
+	//getBattlegroundStatus()
+	lua_pushnumber(L, g_battleground.getStatus());
 	return 1;
 }
 
@@ -10633,9 +10643,9 @@ int32_t LuaInterface::luaGetPlayerBattlegroundInfo(lua_State* L)
 
 		lua_newtable(L);
 
-		setField(L, "kills", infos->statistics.kills);
-		setField(L, "assists", infos->statistics.assists);
-		setField(L, "deaths", infos->statistics.deaths);
+		setField(L, "kills", infos->statistics.kills.size());
+		setField(L, "assists", infos->statistics.assists.size());
+		setField(L, "deaths", infos->statistics.deaths.size());
 		setField(L, "join_in", infos->join_in);
 	}
 	else
@@ -10657,7 +10667,6 @@ int32_t LuaInterface::luaSetBattlegroundConfigs(lua_State* L)
 	lua_pop(L, 1); //table
 	return 1;
 }
-
 
 int32_t LuaInterface::luaGetBattlegroundWaitlistSize(lua_State* L)
 {

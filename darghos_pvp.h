@@ -10,18 +10,7 @@
 #define PVP_CHANNEL_ID 10
 
 typedef std::list<Player*> Bg_Waitlist_t;
-
-struct Bg_Statistic_t
-{
-	Bg_Statistic_t(){ 
-		player_id = kills = assists = deaths = 0; 
-	}
-
-	uint32_t player_id, kills, assists, deaths;
-};
-
 typedef std::list<uint32_t> AssistsList;
-typedef std::list<Bg_Statistic_t*> StatisticsList;
 
 struct Bg_DeathEntry_t
 {
@@ -30,8 +19,15 @@ struct Bg_DeathEntry_t
 	AssistsList assists;
 };
 
-typedef std::list<Bg_DeathEntry_t> DeathsList;
-typedef std::map<uint32_t, DeathsList> DeathsMap;
+typedef std::list<Bg_DeathEntry_t*> DeathsEntryList;
+
+struct Bg_Statistic_t
+{
+	uint32_t player_id;
+	DeathsEntryList kills, assists, deaths;
+};
+
+typedef std::list<Bg_Statistic_t*> StatisticsList;
 
 struct Bg_PlayerInfo_t
 {
@@ -82,6 +78,7 @@ class Battleground
 		void finish();
 
 		uint32_t getWaitlistSize(){ return waitlist.size(); }
+		BattlegroundStatus getStatus() { return status; }
 
         BattlegrondRetValue onPlayerJoin(Player* player);
 		BattlegrondRetValue kickPlayer(Player* player, bool force = false);
@@ -103,8 +100,12 @@ class Battleground
 		void clearStatistics(){ statisticsList.clear(); }
 		
 		static bool orderStatisticsListByPerformance(Bg_Statistic_t* first, Bg_Statistic_t* second) {
-			if(first->kills == second->kills) return (first->deaths < second->deaths) ? true : false;
-			else return (first->kills > second->kills) ? true : false;		
+			if(first->kills.size() == second->kills.size()) return (first->deaths.size() < second->deaths.size()) ? true : false;
+			else return (first->kills.size() > second->kills.size()) ? true : false;		
+		}
+
+		static bool orderDeathListByDate(Bg_DeathEntry_t* first, Bg_DeathEntry_t* second) {
+			return (first->date > second->date) ? true : false;		
 		}
 
 		static bool orderWaitlistByLevel(Player* first, Player* second);		
@@ -114,7 +115,7 @@ class Battleground
 		DarghosPvpTypes type;
 		BattlegroundStatus status;
         BgTeamsMap teamsMap;
-		DeathsMap deathsMap;
+		DeathsEntryList deathsList;
 		StatisticsList statisticsList;
 		time_t lastInit;
 		Bg_Waitlist_t waitlist;
@@ -127,12 +128,10 @@ class Battleground
 
 		void callPlayer(Player* player);
 
-		void addDeathEntry(uint32_t player_id, Bg_DeathEntry_t deathEntry);
-		bool isValidKiller(uint32_t killer_id, uint32_t target);
+		bool isValidFrag(Bg_PlayerInfo_t* killer_info, Bg_PlayerInfo_t* target_info);
 
-		void incrementPlayerKill(Bg_PlayerInfo_t* playerInfo);
-		void incrementPlayerDeaths(Bg_PlayerInfo_t* playerInfo);
-		void incrementPlayerAssists(Bg_PlayerInfo_t* playerInfo);
+		void incrementPlayerKill(Bg_PlayerInfo_t* playerInfo, Bg_DeathEntry_t* entry, bool lasthit = false);
+		void incrementPlayerDeaths(Bg_PlayerInfo_t* playerInfo, Bg_DeathEntry_t* entry);
 
 		bool storeNew();
 		bool storeFinish(time_t end, uint32_t finishBy, uint32_t team1_points, uint32_t team2_points);

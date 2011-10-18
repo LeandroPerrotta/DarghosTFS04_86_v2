@@ -9,7 +9,8 @@ enum BattlegroundStatus
 {
 	BUILDING_TEAMS = 0,
 	PREPARING,
-	STARTED
+	STARTED,
+	FINISHED
 };
 
 enum BattlegroundFinishBy

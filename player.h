@@ -773,6 +773,14 @@ class Player : public Creature, public Cylinder
 		}
 		void sendPvpChannelMessage(const std::string& text, SpeakClasses speakClass = SPEAK_CHANNEL_W) const;
 		bool isBattlegroundDeserter();
+
+		void updateBattlegroundSpeed(bool useBase = false)
+		{
+			if(!useBase)
+				baseSpeed = vocation->getBaseSpeed() + (2 * (120 - 1));
+			else
+				updateBaseSpeed();
+		}
 		#endif
 
 	protected:

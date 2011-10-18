@@ -345,6 +345,9 @@ void Battleground::putInside(Player* player)
 	playerInfo->statistics = statistic;
 	statisticsList.push_back(&playerInfo->statistics);
 
+	player->updateBattlegroundSpeed();
+	g_game.changeSpeed(player, 0);
+
 	playerInfo->areInside = true;
 
 	if(status == STARTED)
@@ -459,7 +462,6 @@ BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 		statisticsList.remove(&playerInfo.statistics);
 
 		team->players.erase(player->getID());
-		deathsMap.erase(player->getID());
 	}
 	else
 	{
@@ -471,6 +473,9 @@ BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 
 	if(player->isPause())
 		player->setPause(false);
+
+	player->updateBattlegroundSpeed(true);
+	g_game.changeSpeed(player, 0);
 
 	CreatureEventList bgFragEvents = player->getCreatureEvents(CREATURE_EVENT_BG_LEAVE);
 	for(CreatureEventList::iterator it = bgFragEvents.begin(); it != bgFragEvents.end(); ++it)
@@ -484,9 +489,13 @@ BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 {
 	Bg_Teams_t team_id = player->getBattlegroundTeam();
-	Bg_DeathEntry_t deahsEntry;
-	deahsEntry.date = time(NULL);
 
+	Bg_DeathEntry_t* deathEntry = new Bg_DeathEntry_t;
+	deathEntry->date = time(NULL);
+
+	deathsList.push_back(deathEntry);
+
+	bool success = true;
 	bool validate = (deathList.size() >= 3) ? false : true;
 
 	Player* killer = NULL;
@@ -512,22 +521,29 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 
 		if(it == deathList.begin())
 		{
-			if(validate && !isValidKiller(tmp->getID(), player->getID()))
-				return;
+			if(validate && !isValidFrag(playerInfo, findPlayerInfo(player)))
+			{
+				success = false;
+				break;
+			}
 
-			deahsEntry.lasthit = tmp->getID();
+			deathEntry->lasthit = tmp->getID();
 			killer = tmp;
 
-			incrementPlayerKill(playerInfo);
-			incrementPlayerAssists(playerInfo);
-			storePlayerKill(tmp->getID(), true);
+			incrementPlayerKill(playerInfo, deathEntry, true);
 		}
 		else
 		{
-			incrementPlayerAssists(playerInfo);
-			deahsEntry.assists.push_back(tmp->getID());
-			storePlayerKill(tmp->getID(), false);
+			incrementPlayerKill(playerInfo, deathEntry);
+			deathEntry->assists.push_back(tmp->getID());
 		}
+	}
+
+	if(!success)
+	{
+		deathsList.remove(deathEntry);
+		delete deathEntry;
+		return;
 	}
 
 	if(killer)
@@ -537,8 +553,7 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 
 		Bg_PlayerInfo_t* playerInfo = findPlayerInfo(player);
 
-		incrementPlayerDeaths(playerInfo);
-		addDeathEntry(player->getID(), deahsEntry);
+		incrementPlayerDeaths(playerInfo, deathEntry);
 
 		CreatureEventList bgFragEvents = killer->getCreatureEvents(CREATURE_EVENT_BG_FRAG);
 		for(CreatureEventList::iterator it = bgFragEvents.begin(); it != bgFragEvents.end(); ++it)
@@ -546,67 +561,113 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 			(*it)->executeBgFrag(killer, player);
 		}
 
-		if(team->points >= winPoints)
+		if(team->points >= winPoints && status == STARTED)
+		{
+			status = FINISHED;
+
 			Scheduler::getInstance().addEvent(createSchedulerTask(1000,
 				boost::bind(&Battleground::finish, this, killer->getBattlegroundTeam())));
+		}
 	}
 }
 
-bool Battleground::isValidKiller(uint32_t killer_id, uint32_t target)
+bool Battleground::isValidFrag(Bg_PlayerInfo_t* killer_info, Bg_PlayerInfo_t* target_info)
 {
 	time_t timeLimit = time(NULL) - LIMIT_TARGET_FRAGS_INTERVAL;
-	DeathsList deathsList = deathsMap[target];
+	DeathsEntryList list = target_info->statistics.deaths;
 
-	uint8_t found = 0;
+	DeathsEntryList temp_list;
 
-	for(DeathsList::const_iterator it = deathsList.begin(); it != deathsList.end(); it++)
+	/* vamos pegar as mortes recentes */
+	for(DeathsEntryList::const_iterator it = list.begin(); it != list.end(); it++)
 	{
-		Bg_DeathEntry_t deathEntry = (*it);
-		if(deathEntry.lasthit == killer_id && deathEntry.date > timeLimit)
-			found++;
+		Bg_DeathEntry_t* deathEntry = (*it);
+		if(deathEntry->date > timeLimit)
+		{
+			temp_list.push_back(deathEntry);
+		}
 	}
 
-	if(found >= LIMIT_TARGET_FRAGS_PER_INTERVAL)
-		return false;
+	/* se morreu pouco, entao nao há necessidade de prosseguir*/
+	if(temp_list.size() < 3)
+		return true;
 
-	if(found == 0 && deathsList.size() > 0)
+	/* vamos pegar as assists recentes*/
+	list = target_info->statistics.assists;
+	for(DeathsEntryList::const_iterator it = list.begin(); it != list.end(); it++)
 	{
-		deathsMap.erase(target);
+		Bg_DeathEntry_t* deathEntry = (*it);
+		if(deathEntry->date > timeLimit)
+		{
+			temp_list.push_back(deathEntry);
+		}
 	}
 
+	/* vamos pegar as kills recentes*/
+	list = target_info->statistics.kills;
+	for(DeathsEntryList::const_iterator it = list.begin(); it != list.end(); it++)
+	{
+		Bg_DeathEntry_t* deathEntry = (*it);
+		if(deathEntry->date > timeLimit)
+		{
+			temp_list.push_back(deathEntry);
+		}
+	}
+
+	list.sort(Battleground::orderDeathListByDate);
+
+	/* Finalmente vamos tentar descobrir se o jogador está dando 'free frag'... 
+		Se as 3 ultimas coisas que o jogador fez foi morrer então esta frag
+		será negada, caso exista algum assist ou kill, então é validado
+	*/
+
+	uint8_t i = 1;
+	for(DeathsEntryList::const_iterator it = temp_list.begin(); it != temp_list.end(); it++, i++)
+	{
+		Bg_DeathEntry_t* deathEntry = (*it);
+		if(deathEntry->lasthit == target_info->statistics.player_id)
+		{
+			/* Se o jogador matou alguem em suas ultimas 3 ações entao a frag é valida*/
+			return true;
+		}
+
+		for(AssistsList::iterator ait = deathEntry->assists.begin(); ait != deathEntry->assists.end(); ait++)
+		{
+			if((*ait) == target_info->statistics.player_id)
+			{
+				/* Se o jogador também causou uma assistencia, entao a frag é valida*/
+				return true;
+			}
+		}
+
+		if(i == 3)
+		{
+			/* Chegamo na 3a ação e não foi encontrado nada além de mortes, então paramos por aqui... a frag não é validada */
+			return false;
+		}
+	}
+
+	/* 
+	Haviam menos de 3 ações, provavelmente inicio de bg ou algo assim... então validaremos a frag mesmo sem kills/assists. 
+	hipoteticamente	este ponto do codigo nunca será acessado, mas vamos previnir ne... 
+	*/
 	return true;
 }
 
-void Battleground::addDeathEntry(uint32_t player_id, Bg_DeathEntry_t deathEntry)
+void Battleground::incrementPlayerKill(Bg_PlayerInfo_t* playerInfo, Bg_DeathEntry_t* entry, bool lasthit /* = false*/)
 {
-	DeathsMap::iterator it = deathsMap.find(player_id);
-	if(it == deathsMap.end())
-	{
-		DeathsList deathList;
-		deathList.push_back(deathEntry);
+	playerInfo->statistics.assists.push_back(entry);
 
-		deathsMap.insert(std::make_pair(player_id, deathList));
-	}
-	else
-	{
-		deathsMap[player_id].push_back(deathEntry);
-	}
+	if(lasthit)
+		playerInfo->statistics.kills.push_back(entry);
+
+	storePlayerKill(playerInfo->statistics.player_id, lasthit);
 }
 
-void Battleground::incrementPlayerKill(Bg_PlayerInfo_t* playerInfo)
+void Battleground::incrementPlayerDeaths(Bg_PlayerInfo_t* playerInfo, Bg_DeathEntry_t* entry)
 {
-	playerInfo->statistics.kills++;
-}
-
-void Battleground::incrementPlayerDeaths(Bg_PlayerInfo_t* playerInfo)
-{
-	playerInfo->statistics.deaths++;
+	playerInfo->statistics.deaths.push_back(entry);
 	storePlayerDeath(playerInfo->statistics.player_id);
-}
-
-void Battleground::incrementPlayerAssists(Bg_PlayerInfo_t* playerInfo)
-{
-	playerInfo->statistics.assists++;
 }
 
 bool Battleground::storePlayerKill(uint32_t player_id, bool lasthit)
