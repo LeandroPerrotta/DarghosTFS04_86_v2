@@ -575,7 +575,7 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 bool Battleground::isValidFrag(Bg_PlayerInfo_t* killer_info, Bg_PlayerInfo_t* target_info)
 {
 	time_t timeLimit = time(NULL) - LIMIT_TARGET_FRAGS_INTERVAL;
-	DeathsEntryList list = target_info->statistics.deaths;
+	DeathsEntryList list = target_info->statistics->deaths;
 
 	DeathsEntryList temp_list;
 
@@ -594,7 +594,7 @@ bool Battleground::isValidFrag(Bg_PlayerInfo_t* killer_info, Bg_PlayerInfo_t* ta
 		return true;
 
 	/* vamos pegar as assists recentes*/
-	list = target_info->statistics.assists;
+	list = target_info->statistics->assists;
 	for(DeathsEntryList::const_iterator it = list.begin(); it != list.end(); it++)
 	{
 		Bg_DeathEntry_t* deathEntry = (*it);
@@ -605,7 +605,7 @@ bool Battleground::isValidFrag(Bg_PlayerInfo_t* killer_info, Bg_PlayerInfo_t* ta
 	}
 
 	/* vamos pegar as kills recentes*/
-	list = target_info->statistics.kills;
+	list = target_info->statistics->kills;
 	for(DeathsEntryList::const_iterator it = list.begin(); it != list.end(); it++)
 	{
 		Bg_DeathEntry_t* deathEntry = (*it);
@@ -626,7 +626,7 @@ bool Battleground::isValidFrag(Bg_PlayerInfo_t* killer_info, Bg_PlayerInfo_t* ta
 	for(DeathsEntryList::const_iterator it = temp_list.begin(); it != temp_list.end(); it++, i++)
 	{
 		Bg_DeathEntry_t* deathEntry = (*it);
-		if(deathEntry->lasthit == target_info->statistics.player_id)
+		if(deathEntry->lasthit == target_info->statistics->player_id)
 		{
 			/* Se o jogador matou alguem em suas ultimas 3 ações entao a frag é valida*/
 			return true;
@@ -634,7 +634,7 @@ bool Battleground::isValidFrag(Bg_PlayerInfo_t* killer_info, Bg_PlayerInfo_t* ta
 
 		for(AssistsList::iterator ait = deathEntry->assists.begin(); ait != deathEntry->assists.end(); ait++)
 		{
-			if((*ait) == target_info->statistics.player_id)
+			if((*ait) == target_info->statistics->player_id)
 			{
 				/* Se o jogador também causou uma assistencia, entao a frag é valida*/
 				return true;
@@ -657,18 +657,18 @@ bool Battleground::isValidFrag(Bg_PlayerInfo_t* killer_info, Bg_PlayerInfo_t* ta
 
 void Battleground::incrementPlayerKill(Bg_PlayerInfo_t* playerInfo, Bg_DeathEntry_t* entry, bool lasthit /* = false*/)
 {
-	playerInfo->statistics.assists.push_back(entry);
+	playerInfo->statistics->assists.push_back(entry);
 
 	if(lasthit)
-		playerInfo->statistics.kills.push_back(entry);
+		playerInfo->statistics->kills.push_back(entry);
 
-	storePlayerKill(playerInfo->statistics.player_id, lasthit);
+	storePlayerKill(playerInfo->statistics->player_id, lasthit);
 }
 
 void Battleground::incrementPlayerDeaths(Bg_PlayerInfo_t* playerInfo, Bg_DeathEntry_t* entry)
 {
-	playerInfo->statistics.deaths.push_back(entry);
-	storePlayerDeath(playerInfo->statistics.player_id);
+	playerInfo->statistics->deaths.push_back(entry);
+	storePlayerDeath(playerInfo->statistics->player_id);
 }
 
 bool Battleground::storePlayerKill(uint32_t player_id, bool lasthit)
