@@ -99,6 +99,7 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 				
 				local msg = "Você adquiriu " .. expGain .. " pontos de experiência além de " .. gold .. " moedas de ouro para ajudar a você repor os suprimentos gastos pela vitoria na Battleground!"
 				
+				local currentRating = pvpBattleground.getPlayerRating(cid)
 				local changeRating = pvpBattleground.getChangeRating(cid, timeIn, bgDuration)
 				local ratingMessage = "Você melhorou a sua classificação (rating) em " .. changeRating .. " pontos pela vitoria na Battleground."
 			
