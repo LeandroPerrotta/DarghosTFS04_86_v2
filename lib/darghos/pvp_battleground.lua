@@ -158,8 +158,9 @@ function pvpBattleground.hasGain()
 		or isInArray(BG_GAIN_EVERYHOUR_DAYS, date.wday))
 end
 
-function pvpBattleground.drawRank(msg)
+function pvpBattleground.drawRank()
 
+	local msg = ""
 	local teams = { "Time A", "Time B" }
 	local data = getBattlegroundStatistics()
 	
@@ -186,6 +187,8 @@ function pvpBattleground.drawRank(msg)
 			end
 		end
 	end	
+	
+	return msg
 end
 
 function pvpBattleground.showStatistics(cid)
@@ -198,7 +201,7 @@ function pvpBattleground.showStatistics(cid)
 	
 	msg = msg .. "(" .. teams[BATTLEGROUND_TEAM_ONE] .. ") " .. points[BATTLEGROUND_TEAM_ONE] .. " X " .. points[BATTLEGROUND_TEAM_TWO] .. " (" .. teams[BATTLEGROUND_TEAM_TWO] .. ")\n\n"
 	
-	pvpBattleground.drawRank(msg)
+	msg = msg .. pvpBattleground.drawRank()
 	doPlayerPopupFYI(cid, msg)
 end
 
@@ -214,7 +217,7 @@ function pvpBattleground.showResult(cid, winnner)
 		msg = "O " .. teams[winnner] .. " é o VENCEDOR!\n\n"
 	end
 	
-	pvpBattleground.drawRank(msg)
+	msg = msg .. pvpBattleground.drawRank()
 	doPlayerPopupFYI(cid, msg)
 end
 
@@ -477,26 +480,24 @@ function pvpBattleground.validateReport(cid, idle_player)
 	end
 end
 
-function pvpBattleground.spamDebuffSpell(table)
-
-	local cid, playerDebbufs, min, max = table["cid"], table["playerDebbufs"], table["min"], table["max"]
+function pvpBattleground.spamDebuffSpell(_table)
 
 	if(doPlayerIsInBattleground(cid)) then
 		if(playerDebbufs[cid] == nil) then
-			table.insert(playerDebbufs, cid, { percent = 70, expires = os.time() + 3})
+			table.insert(_table.playerDebbufs, cid, { percent = 70, expires = os.time() + 3})
 		else	
-			if(os.time() <= playerDebbufs[cid]["expires"]) then
-				min = min * (playerDebbufs[cid]["percent"] / 100)
-				max = max * (playerDebbufs[cid]["percent"] / 100)
+			if(os.time() <= _table.playerDebbufs[cid]["expires"]) then
+				_table.min = _table.min * (_table.playerDebbufs[cid]["percent"] / 100)
+				_table.max = _table.max * (_table.playerDebbufs[cid]["percent"] / 100)
 				
-				if(playerDebbufs[cid]["percent"] == 70) then
-					playerDebbufs[cid]["percent"] = 50
+				if(_table.playerDebbufs[cid]["percent"] == 70) then
+					_table.playerDebbufs[cid]["percent"] = 50
 				end
 				
-				playerDebbufs[cid]["expires"] = os.time() + 3
+				_table.playerDebbufs[cid]["expires"] = os.time() + 3
 			else
-				playerDebbufs[cid]["percent"] = 70
-				playerDebbufs[cid]["expires"] = os.time() + 3	
+				_table.playerDebbufs[cid]["percent"] = 70
+				_table.playerDebbufs[cid]["expires"] = os.time() + 3	
 			end
 		end
 	end
