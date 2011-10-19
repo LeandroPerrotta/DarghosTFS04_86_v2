@@ -1,7 +1,7 @@
 function onCombat(cid, target)
 
 	if(isPlayer(cid) and doPlayerIsInBattleground(cid) and getPlayerStorageValue(cid, sid.BATTLEGROUND_REPORTED_IDLE) == 1) then
-		setPlayerStorageValue(idle_player, sid.BATTLEGROUND_REPORTED_IDLE, -1)
+		setPlayerStorageValue(cid, sid.BATTLEGROUND_REPORTED_IDLE, -1)
 	end
 
 	--checks attacker
