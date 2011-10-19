@@ -8,11 +8,7 @@ function onGetFormulaValues(cid, level, maglevel)
 	local min = ((level/5)+(maglevel*5))
 	local max = ((level/5)+(maglevel*12))
 	
-	local result = pvpBattleground.spamDebuffSpell(cid, min, max, playerDebbufs)
-	
-	min = result[1]
-	max = result[2]
-	playerDebbufs = result[3]
+	min, max, playerDebbufs = pvpBattleground.spamDebuffSpell(cid, min, max, playerDebbufs)	
 	
 	return -min, -max
 end
