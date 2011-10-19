@@ -169,7 +169,7 @@ function pvpBattleground.drawRank()
 		for k,v in pairs(data) do
 			
 			local _cid = v.player_id
-			if(cid ~= nil and isPlayer(_cid)) then
+			if(_cid ~= nil and isPlayer(_cid)) then
 				
 				local team = teams[doPlayerGetBattlegroundTeam(_cid)]
 				
