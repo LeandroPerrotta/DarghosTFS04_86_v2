@@ -614,7 +614,7 @@ bool Battleground::isValidFrag(Bg_PlayerInfo_t* killer_info, Bg_PlayerInfo_t* ta
 		}
 	}
 
-	list.sort(Battleground::orderDeathListByDate);
+	temp_list.sort(Battleground::orderDeathListByDate);
 
 	/* Finalmente vamos tentar descobrir se o jogador está dando 'free frag'... 
 		Se as 3 ultimas coisas que o jogador fez foi morrer então esta frag

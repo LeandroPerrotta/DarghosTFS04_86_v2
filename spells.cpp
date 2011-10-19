@@ -595,11 +595,6 @@ bool Spell::checkSpell(Player* player) const
 
 		if(player->hasCondition(CONDITION_EXHAUST, EXHAUST_COMBAT))
 			exhausted = true;
-
-#ifdef __DARGHOS_CUSTOM__
-		if(this->range == -1 && player->hasCondition(CONDITION_EXHAUST, EXHAUST_COMBAT_AREA))
-			exhausted = true;
-#endif
 	}
 	else if(player->hasCondition(CONDITION_EXHAUST, EXHAUST_HEALING))
 		exhausted = true;
@@ -834,6 +829,15 @@ bool Spell::checkInstantSpell(Player* player, const Position& toPos)
 		g_game.addMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);
 		return false;
 	}
+
+	#ifdef __DARGHOS_CUSTOM__
+	if(isAggressive && range == -1 && player->hasCondition(CONDITION_EXHAUST, EXHAUST_COMBAT_AREA))
+	{
+		player->sendCancelMessage(RET_YOUAREEXHAUSTED);
+		g_game.addMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);
+		return false;
+	}
+	#endif
 
 	return true;
 }
