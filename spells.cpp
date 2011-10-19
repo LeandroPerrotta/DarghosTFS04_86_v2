@@ -734,6 +734,15 @@ bool Spell::checkInstantSpell(Player* player, Creature* creature)
 
 	if(!needTarget)
 	{
+		#ifdef __DARGHOS_CUSTOM__
+		if(isAggressive && player->hasCondition(CONDITION_EXHAUST, EXHAUST_COMBAT_AREA))
+		{
+			player->sendCancelMessage(RET_YOUAREEXHAUSTED);
+			g_game.addMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);
+			return false;
+		}
+		#endif	
+	
 		if(!isAggressive || player->getSkull() != SKULL_BLACK)
 			return true;
 
@@ -905,6 +914,15 @@ bool Spell::checkRuneSpell(Player* player, const Position& toPos)
 
 	if(!needTarget)
 	{
+		#ifdef __DARGHOS_CUSTOM__
+		if(isAggressive && player->hasCondition(CONDITION_EXHAUST, EXHAUST_COMBAT_AREA))
+		{
+			player->sendCancelMessage(RET_YOUAREEXHAUSTED);
+			g_game.addMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);
+			return false;
+		}
+		#endif	
+	
 		if(!isAggressive || player->getSkull() != SKULL_BLACK)
 			return true;
 

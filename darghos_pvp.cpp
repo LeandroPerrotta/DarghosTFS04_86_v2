@@ -441,7 +441,7 @@ BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 		if(status == STARTED && !force)
 		{
 			std::stringstream ss;
-			ss << (time(NULL) + 60 * 10);
+			ss << (time(NULL) + 60 * 20);
 			player->setStorage(DARGHOS_STORAGE_BATTLEGROUND_DESERTER_UNTIL, ss.str());
 			storePlayerDeserter(player->getID());
 		}
