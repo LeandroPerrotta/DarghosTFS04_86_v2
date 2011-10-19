@@ -83,7 +83,18 @@ function onSay(cid, words, param)
 		msg = msg .. "Battleground aberta."
 		battlegroundOpen()	
 	elseif(option == "stats") then
-		pvpBattleground.showStatistics(cid)
+
+		local error = false
+		
+		if(not doPlayerIsInBattleground(cid) and _access < access.COMMUNITY_MANAGER) then
+			msg = msg .. "Para usar o comando \"!bg stats\" é preciso estar dentro de uma Battleground."
+			error = true
+		end		
+		
+		if(not error) then
+			pvpBattleground.showStatistics(cid)
+		end		
+
 		return true
 	--elseif(option == "statsall" and _access >= access.COMMUNITY_MANAGER) then	
 		--pvpBattleground.broadcastStatistics(false)
