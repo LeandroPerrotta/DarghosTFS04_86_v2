@@ -35,7 +35,7 @@ struct Bg_PlayerInfo_t
 	Position masterPosition;
 	Position oldPosition;
 	bool areInside;
-	Bg_Statistic_t statistics;
+	Bg_Statistic_t* statistics;
 };
 
 struct Bg_TeamLook_t
@@ -96,7 +96,16 @@ class Battleground
 		void setDuration(uint32_t seconds){ duration = (seconds * 1000); }
        
 		StatisticsList getStatistics();
-		void clearStatistics(){ statisticsList.clear(); }
+		void clearStatistics(){ 
+			statisticsList.clear(); 
+
+			for(DeathsEntryList::iterator it = deathsList.begin(); it != deathsList.end(); it++)
+			{
+				delete (*it);
+			}
+
+			deathsList.clear();
+		}
 		
 		static bool orderStatisticsListByPerformance(Bg_Statistic_t* first, Bg_Statistic_t* second) {
 			if(first->kills.size() == second->kills.size()) return (first->deaths.size() < second->deaths.size()) ? true : false;

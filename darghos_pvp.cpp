@@ -182,6 +182,7 @@ void Battleground::finish(Bg_Teams_t teamWinner)
 	storeFinish(time(NULL), finishBy, teamsMap[BATTLEGROUND_TEAM_ONE].points, teamsMap[BATTLEGROUND_TEAM_TWO].points);
 
 	clearStatistics();
+
 	teamsMap[BATTLEGROUND_TEAM_ONE].points = 0;
 	teamsMap[BATTLEGROUND_TEAM_TWO].points = 0;
 
@@ -340,10 +341,10 @@ void Battleground::putInside(Player* player)
 	g_game.internalTeleport(player, team->spawn_pos, true);
 	g_game.addMagicEffect(oldPos, MAGIC_EFFECT_TELEPORT);
 
-	Bg_Statistic_t statistic;
-	statistic.player_id = player->getID();
+	Bg_Statistic_t* statistic = new Bg_Statistic_t;
+	statistic->player_id = player->getID();
 	playerInfo->statistics = statistic;
-	statisticsList.push_back(&playerInfo->statistics);
+	statisticsList.push_back(playerInfo->statistics);
 
 	player->updateBattlegroundSpeed();
 	g_game.changeSpeed(player, 0);
@@ -459,7 +460,8 @@ BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 		g_game.internalTeleport(player, pos, true);
 		g_game.addMagicEffect(playerInfo.oldPosition, MAGIC_EFFECT_TELEPORT);
 
-		statisticsList.remove(&playerInfo.statistics);
+		statisticsList.remove(playerInfo.statistics);
+		delete playerInfo.statistics;
 
 		team->players.erase(player->getID());
 	}
@@ -496,7 +498,6 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 	deathsList.push_back(deathEntry);
 
 	bool success = true;
-	bool validate = (deathList.size() >= 3) ? false : true;
 
 	Player* killer = NULL;
 	Player* tmp = NULL;
@@ -521,7 +522,7 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 
 		if(it == deathList.begin())
 		{
-			if(validate && !isValidFrag(playerInfo, findPlayerInfo(player)))
+			if(!isValidFrag(playerInfo, findPlayerInfo(player)))
 			{
 				success = false;
 				break;
