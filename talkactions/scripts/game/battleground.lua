@@ -11,13 +11,14 @@ function onSay(cid, words, param)
 			msg = msg .. "!bg team team_id -> Exibe as informa?es de um time (1 ou 2).\n"
 			msg = msg .. "!bg close -> Expulsa todos jogadores na battleground e a fecha.\n"
 			msg = msg .. "!bg open -> Permite que jogadores entrem na battleground.\n"
-			msg = msg .. "!bg stats -> Exibe as estatisticas (para voc?).\n"
-			msg = msg .. "!bg statsall -> Exibe as estatisticas (para todos no canal).\n"
 		else
 			msg = msg .. "!bg entrar, !bg join, !bg enter -> Entra em uma battleground (se disponivel) ou coloca na fila de espera.\n"
-			msg = msg .. "!bg afk [nick], -> Reporta um jogador de seu time afk (requer estar dentro da Battleground).\n"
-			msg = msg .. "!bg team -> Exibe os membros de seu time (requer estar dentro da Battleground).\n"
+			msg = msg .. "!bg stats -> Exibe as estatisticas da partida.*\n"
+			msg = msg .. "!bg team -> Exibe os membros de seu time.*\n"
+			msg = msg .. "!bg afk [nick], -> Denúncia um jogador de seu time que esteja inativo.*\n"			
 		end
+	
+		msg = msg .. "\n * = Requer estar dentro de uma partida."	
 	
 		pvpBattleground.sendPlayerChannelMessage(cid, msg)
 		return TRUE
@@ -81,8 +82,8 @@ function onSay(cid, words, param)
 	elseif(option == "open" and _access >= access.COMMUNITY_MANAGER) then
 		msg = msg .. "Battleground aberta."
 		battlegroundOpen()	
-	elseif(option == "stats" and _access >= access.COMMUNITY_MANAGER) then
-		pvpBattleground.showResult(cid, BATTLEGROUND_TEAM_NONE)
+	elseif(option == "stats") then
+		pvpBattleground.showStatistics(cid)
 		return true
 	--elseif(option == "statsall" and _access >= access.COMMUNITY_MANAGER) then	
 		--pvpBattleground.broadcastStatistics(false)
@@ -101,6 +102,9 @@ function onSay(cid, words, param)
 	--]]
 	end
 	
-	pvpBattleground.sendPlayerChannelMessage(cid, msg)
+	if(msg ~= nil) then
+		pvpBattleground.sendPlayerChannelMessage(cid, msg)
+	end
+	
 	return true
 end

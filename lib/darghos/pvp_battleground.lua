@@ -158,18 +158,9 @@ function pvpBattleground.hasGain()
 		or isInArray(BG_GAIN_EVERYHOUR_DAYS, date.wday))
 end
 
-function pvpBattleground.showResult(cid, winnner)
-
-	clear = clear or true
+function pvpBattleground.drawRank(msg)
 
 	local teams = { "Time A", "Time B" }
-	
-	local msg = "Não houve vencedor, declarado EMPATE!\n\n";
-	
-	if(winnner ~= BATTLEGROUND_TEAM_NONE) then
-		msg = "O " .. teams[winnner] .. " é o VENCEDOR!\n\n";
-	end
-	
 	local data = getBattlegroundStatistics()
 	
 	if(data and #data > 0) then
@@ -194,8 +185,36 @@ function pvpBattleground.showResult(cid, winnner)
 				i = i + 1
 			end
 		end
+	end	
+end
+
+function pvpBattleground.showStatistics(cid)
+
+	local teams = { "Time A", "Time B" }
+	
+	local points = getBattlegroundTeamsPoints()	
+	
+	local msg = "Estatisticas da Partida:\n\n"
+	
+	msg = msg .. "(" .. teams[BATTLEGROUND_TEAM_ONE] .. ") " .. points[BATTLEGROUND_TEAM_ONE] .. " X " .. points[BATTLEGROUND_TEAM_TWO] .. " (" .. teams[BATTLEGROUND_TEAM_TWO] .. ")\n\n"
+	
+	pvpBattleground.drawRank(msg)
+	doPlayerPopupFYI(cid, msg)
+end
+
+function pvpBattleground.showResult(cid, winnner)
+
+	clear = clear or true
+
+	local teams = { "Time A", "Time B" }
+	
+	local msg = "Não houve vencedor, declarado EMPATE!\n\n"
+	
+	if(winnner ~= BATTLEGROUND_TEAM_NONE) then
+		msg = "O " .. teams[winnner] .. " é o VENCEDOR!\n\n"
 	end
 	
+	pvpBattleground.drawRank(msg)
 	doPlayerPopupFYI(cid, msg)
 end
 
@@ -455,5 +474,30 @@ function pvpBattleground.validateReport(cid, idle_player)
 	else
 		setPlayerStorageValue(cid, sid.BATTLEGROUND_INVALID_REPORT_BLOCK, os.time() + (60 * 3))
 		pvpBattleground.sendPlayerChannelMessage(cid, "Não foi constatado que o jogador que você reportou estava inativo. Pela denuncia invalida você nao poderá denunciar outros jogadores por 3 minutos.")
+	end
+end
+
+function pvpBattleground.spamDebuffSpell(table)
+
+	local cid, playerDebbufs, min, max = table["cid"], table["playerDebbufs"], table["min"], table["max"]
+
+	if(doPlayerIsInBattleground(cid)) then
+		if(playerDebbufs[cid] == nil) then
+			table.insert(playerDebbufs, cid, { percent = 70, expires = os.time() + 3})
+		else	
+			if(os.time() <= playerDebbufs[cid]["expires"]) then
+				min = min * (playerDebbufs[cid]["percent"] / 100)
+				max = max * (playerDebbufs[cid]["percent"] / 100)
+				
+				if(playerDebbufs[cid]["percent"] == 70) then
+					playerDebbufs[cid]["percent"] = 50
+				end
+				
+				playerDebbufs[cid]["expires"] = os.time() + 3
+			else
+				playerDebbufs[cid]["percent"] = 70
+				playerDebbufs[cid]["expires"] = os.time() + 3	
+			end
+		end
 	end
 end

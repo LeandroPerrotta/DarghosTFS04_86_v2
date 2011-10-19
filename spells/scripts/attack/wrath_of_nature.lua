@@ -2,9 +2,15 @@ local combat = createCombatObject()
 setCombatParam(combat, COMBAT_PARAM_TYPE, COMBAT_EARTHDAMAGE)
 setCombatParam(combat, COMBAT_PARAM_EFFECT, CONST_ME_SMALLPLANTS)
 
+local playerDebbufs = {}
+
 function onGetFormulaValues(cid, level, maglevel)
 	local min = ((level/5)+(maglevel*5))
 	local max = ((level/5)+(maglevel*10))
+	
+	local table = { ["cid"] = cid, ["playerDebbufs"] = playerDebbufs, ["min"] = min, ["max"] = max }
+	pvpBattleground.spamDebuffSpell(table)
+	
 	return -min, -max
 end
 
