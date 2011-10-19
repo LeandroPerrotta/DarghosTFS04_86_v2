@@ -86,7 +86,7 @@ function onSay(cid, words, param)
 
 		local error = false
 		
-		if(not doPlayerIsInBattleground(cid) and _access < access.COMMUNITY_MANAGER) then
+		if(not doPlayerIsInBattleground(cid)) then
 			msg = msg .. "Para usar o comando \"!bg stats\" é preciso estar dentro de uma Battleground."
 			error = true
 		end		
@@ -94,8 +94,7 @@ function onSay(cid, words, param)
 		if(not error) then
 			pvpBattleground.showStatistics(cid)
 		end		
-
-		return true
+		
 	--elseif(option == "statsall" and _access >= access.COMMUNITY_MANAGER) then	
 		--pvpBattleground.broadcastStatistics(false)
 		--return true		
@@ -113,7 +112,7 @@ function onSay(cid, words, param)
 	--]]
 	end
 	
-	if(msg ~= nil) then
+	if(msg ~= nil and msg ~= "") then
 		pvpBattleground.sendPlayerChannelMessage(cid, msg)
 	end
 	

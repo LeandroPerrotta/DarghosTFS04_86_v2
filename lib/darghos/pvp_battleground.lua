@@ -480,25 +480,27 @@ function pvpBattleground.validateReport(cid, idle_player)
 	end
 end
 
-function pvpBattleground.spamDebuffSpell(_table)
+function pvpBattleground.spamDebuffSpell(cid, min, max, playerDebbufs)
 
 	if(doPlayerIsInBattleground(cid)) then
 		if(playerDebbufs[cid] == nil) then
-			table.insert(_table.playerDebbufs, cid, { percent = 70, expires = os.time() + 3})
+			table.insert(playerDebbufs, cid, { percent = 70, expires = os.time() + 3})
 		else	
-			if(os.time() <= _table.playerDebbufs[cid]["expires"]) then
-				_table.min = _table.min * (_table.playerDebbufs[cid]["percent"] / 100)
-				_table.max = _table.max * (_table.playerDebbufs[cid]["percent"] / 100)
+			if(os.time() <= playerDebbufs[cid]["expires"]) then
+				min = min * (playerDebbufs[cid]["percent"] / 100)
+				max = max * (playerDebbufs[cid]["percent"] / 100)
 				
-				if(_table.playerDebbufs[cid]["percent"] == 70) then
-					_table.playerDebbufs[cid]["percent"] = 50
+				if(playerDebbufs[cid]["percent"] == 70) then
+					playerDebbufs[cid]["percent"] = 50
 				end
 				
-				_table.playerDebbufs[cid]["expires"] = os.time() + 3
+				playerDebbufs[cid]["expires"] = os.time() + 3
 			else
-				_table.playerDebbufs[cid]["percent"] = 70
-				_table.playerDebbufs[cid]["expires"] = os.time() + 3	
+				playerDebbufs[cid]["percent"] = 70
+				playerDebbufs[cid]["expires"] = os.time() + 3	
 			end
 		end
 	end
+	
+	return min, max, playerDebbufs
 end
