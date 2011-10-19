@@ -5,7 +5,7 @@ BG_EXP_RATE = 1
 BG_EACH_BONUS_PERCENT = 50
 BG_BONUS_INTERVAL = 60 * 60
 
-BG_CONFIG_TEAMSIZE = 6
+BG_CONFIG_TEAMSIZE = 8
 BG_CONFIG_WINPOINTS = 50
 BG_CONFIG_DURATION = 60 * 15
 
@@ -316,7 +316,7 @@ function pvpBattleground.onEnter(cid)
 	end
 
 	if(ret == BG_RET_CAN_NOT_JOIN) then
-		doPlayerSendCancel(cid, "Você abandonou uma battleground e foi marcado como desertor, e não poderá entrar em outra durante 10 minutos.")
+		doPlayerSendCancel(cid, "Você abandonou uma battleground e foi marcado como desertor, e não poderá entrar em outra durante 20 minutos.")
 		return false
 	end	
 	
