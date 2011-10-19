@@ -8,25 +8,8 @@ function onGetFormulaValues(cid, level, maglevel)
 	local min = ((level/5)+(maglevel*7))
 	local max = ((level/5)+(maglevel*14))
 	
-	if(doPlayerIsInBattleground(cid)) then
-		if(playerDebbufs[cid] == nil) then
-			table.insert(playerDebbufs, cid, { percent = 70, expires = os.time() + 3})
-		else	
-			if(os.time() < playerDebbufs[cid]["expires"]) then
-				min = min * (playerDebbufs[cid]["percent"] / 100)
-				max = max * (playerDebbufs[cid]["percent"] / 100)
-				
-				if(playerDebbufs[cid]["percent"] == 70) then
-					playerDebbufs[cid]["percent"] = 50
-				end
-				
-				playerDebbufs[cid]["expires"] = os.time() + 3
-			else
-				playerDebbufs[cid]["percent"] = 70
-				playerDebbufs[cid]["expires"] = os.time() + 3	
-			end
-		end
-	end
+	local table = { ["cid"] = cid, ["playerDebbufs"] = playerDebbufs, ["min"] = min, ["max"] = max }
+	pvpBattleground.spamDebuffSpell(table)
 	
 	return -min, -max
 end

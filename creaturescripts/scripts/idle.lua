@@ -4,8 +4,8 @@ local config = {
 }
 
 local bgConfig = {
-	idleWarning = 45 * 1000,
-	idleKick = 60 * 1000
+	idleWarning = (60 + 30) * 1000,
+	idleKick = 2 * 60 * 1000
 }
 
 function onThink(cid, interval)
@@ -29,7 +29,7 @@ function onThink(cid, interval)
 			if(bgConfig.idleKick > 0 and idleTime > bgConfig.idleKick) then
 				pvpBattleground.onExit(cid, true)
 			elseif(bgConfig.idleWarning > 0 and idleTime == bgConfig.idleWarning) then
-				local message = "Você esta inativo a " .. bgConfig.idleWarning / 1000 .. " segundos. Você será expulso da batalha e marcado como desertor se continuar inativo por mais " .. (bgConfig.idleKick - bgConfig.idleWarning) / 1000 .. " segundos"	
+				local message = "Você esta inativo a " .. bgConfig.idleWarning / 1000 .. " segundos. Você sera expulso da batalha e marcado como desertor se continuar inativo por mais " .. (bgConfig.idleKick - bgConfig.idleWarning) / 1000 .. " segundos"	
 				doPlayerSendTextMessage(cid, MESSAGE_STATUS_WARNING, message .. ".")
 			end		
 		end
