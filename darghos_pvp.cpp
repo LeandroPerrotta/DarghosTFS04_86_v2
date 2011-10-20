@@ -490,6 +490,9 @@ BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 
 void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 {
+	if(status != STARTED)
+		return;
+
 	Bg_Teams_t team_id = player->getBattlegroundTeam();
 
 	Bg_DeathEntry_t* deathEntry = new Bg_DeathEntry_t;
