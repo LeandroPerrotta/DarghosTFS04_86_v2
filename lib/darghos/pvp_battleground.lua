@@ -378,6 +378,8 @@ function pvpBattleground.onEnter(cid)
 		registerCreatureEvent(cid, "onBattlegroundEnd")
 		registerCreatureEvent(cid, "onBattlegroundLeave")
 		
+		doPlayerSetIdleTime(cid, 0)
+		
 		local msg = "Bem vindo ao sistema de Battleground do Darghos!\n"
 		
 		local isFirstBattleground = getPlayerStorageValue(cid, sid.FIRST_BATTLEGROUND)		
