@@ -887,15 +887,35 @@ bool Player::canWalkthrough(const Creature* creature) const
 	if(hasCustomFlag(PlayerCustomFlag_CanWalkthrough) || creature->isWalkable())
 		return true;
 
+#ifdef __DARGHOS_CUSTOM__
+	bool isSummon = false;
+	const Player* player = NULL;
+	if(!(player = creature->getPlayer())) 
+	{
+		if((player = creature->getPlayerMaster()))
+			isSummon = true;
+		else
+			return false;
+	}
+#else
 	const Player* player = creature->getPlayer();
-	if(!player)
+	if(!player
 		return false;
+#endif
+		
 
 	if((((g_game.getWorldType() == WORLDTYPE_OPTIONAL &&
 #ifdef __WAR_SYSTEM__
 		!player->isEnemy(this, true) &&
 #endif
+#ifdef __DARGHOS_CUSTOM__
+		player->getVocation()->isAttackable()) 
+		|| (!isSummon && (player->getZone() == ZONE_OPTIONAL || player->getZone() == ZONE_PROTECTION)) 
+		|| (isSummon && (creature->getZone() == ZONE_OPTIONAL || creature->getZone() == ZONE_PROTECTION)) 
+		|| (player->getVocation()->isAttackable() &&
+#else
 		player->getVocation()->isAttackable()) || (player->getVocation()->isAttackable() &&
+#endif
 		player->getLevel() < (uint32_t)g_config.getNumber(ConfigManager::PROTECTION_LEVEL))) && player->getTile()->ground &&
 		Item::items[player->getTile()->ground->getID()].walkStack) && (!player->hasCustomFlag(PlayerCustomFlag_GamemasterPrivileges)
 		|| player->getAccess() <= getAccess()))
