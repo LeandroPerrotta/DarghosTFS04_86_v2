@@ -899,7 +899,7 @@ bool Player::canWalkthrough(const Creature* creature) const
 	}
 #else
 	const Player* player = creature->getPlayer();
-	if(!player
+	if(!player)
 		return false;
 #endif
 		
@@ -910,7 +910,7 @@ bool Player::canWalkthrough(const Creature* creature) const
 #endif
 #ifdef __DARGHOS_CUSTOM__
 		player->getVocation()->isAttackable()) 
-		|| (!isSummon && (player->getZone() == ZONE_OPTIONAL || player->getZone() == ZONE_PROTECTION)) 
+		|| (!isSummon && (player->getTile()->getZone() == ZONE_OPTIONAL || player->getTile()->getZone() == ZONE_PROTECTION)) 
 		|| (isSummon && (creature->getZone() == ZONE_OPTIONAL || creature->getZone() == ZONE_PROTECTION)) 
 		|| (player->getVocation()->isAttackable() &&
 #else
@@ -1438,6 +1438,9 @@ void Player::onChangeZone(ZoneType_t zone)
 		onAttackedCreatureDisappear(false);
 	}
 	sendIcons();
+#ifdef __DARGHOS_CUSTOM__
+	g_game.updateCreatureImpassable(getCreature());
+#endif
 }
 
 void Player::onAttackedCreatureChangeZone(ZoneType_t zone)

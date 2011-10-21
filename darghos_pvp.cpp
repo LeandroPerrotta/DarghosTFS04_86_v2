@@ -31,11 +31,19 @@ void Battleground::onClose()
 	{
 		for(PlayersMap::iterator it_players = it_teams->second.players.begin(); it_players != it_teams->second.players.end(); it_players++)
 		{
-			kickPlayer(g_game.getPlayerByID(it_players->first), true);
+			Player* player = g_game.getPlayerByID(it_players->first);
+			if(!player)
+				continue;
+
+			kickPlayer(player, true);
 		}
 	}
 
+	teamsMap[BATTLEGROUND_TEAM_ONE].points = 0;
+	teamsMap[BATTLEGROUND_TEAM_TWO].points = 0;
+
 	clearStatistics();
+	status = BUILDING_TEAMS;
 }
 
 void Battleground::onInit()

@@ -550,7 +550,11 @@ void Creature::onCreatureMove(const Creature* creature, const Tile* newTile, con
 				g_game.removeCreature((*cit), true);
 		}
 
+#ifdef __DARGHOS_CUSTOM__
+		if(newTile->getZone() != oldTile->getZone() || (Item::items[oldTile->ground->getID()].walkStack && !Item::items[newTile->ground->getID()].walkStack))
+#else
 		if(newTile->getZone() != oldTile->getZone())
+#endif
 			onChangeZone(getZone());
 
 		//update map cache
