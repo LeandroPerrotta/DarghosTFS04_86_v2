@@ -628,7 +628,35 @@ bool Combat::CombatManaFunc(Creature* caster, Creature* target, const CombatPara
 			casterOnBattleground = true;
 
 			if(caster->getPlayer()->getBattlegroundTeam() == target->getPlayer()->getBattlegroundTeam())
-				change = change / 4;
+				change = 0;
+			else
+			{
+				BgTeamsMap teams = g_battleground.getTeams();
+
+				Bg_Team_t casterTeam = teams[caster->getPlayer()->getBattlegroundTeam()];
+				Bg_Team_t targetTeam = teams[target->getPlayer()->getBattlegroundTeam()];
+
+				uint8_t casterTeamSize = casterTeam.players.size();
+				uint8_t targetTeamSize = targetTeam.players.size();
+
+				if(casterTeamSize > targetTeamSize)
+				{
+					double basePercent = 100. / g_battleground.getTeamSize();
+					double diminushPercent = ((casterTeamSize - targetTeamSize) * basePercent) / 100;
+					change = std::ceil(change * diminushPercent);
+				}
+				else if(casterTeamSize == targetTeamSize && casterTeam.levelSum > targetTeam.levelSum)
+				{
+					uint16_t casterTeamAvgLvl = std::ceil((double)(casterTeam.levelSum / g_battleground.getTeamSize()));
+
+					if((targetTeam.levelSum + casterTeamAvgLvl) < casterTeam.levelSum)
+					{
+						double basePercent = 100. / g_battleground.getTeamSize();
+						double diminushPercent = (((casterTeam.levelSum - targetTeam.levelSum) / casterTeamAvgLvl) * basePercent) / 100;
+						change = std::ceil(change * diminushPercent);
+					}
+				}
+			}
 		}
 		#endif
 
