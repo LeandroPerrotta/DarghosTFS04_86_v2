@@ -572,7 +572,7 @@ bool Combat::CombatHealthFunc(Creature* caster, Creature* target, const CombatPa
 				{
 					double basePercent = 100. / g_battleground.getTeamSize();
 					double diminushPercent = ((casterTeamSize - targetTeamSize) * basePercent) / 100;
-					change = std::ceil(change * diminushPercent);
+					change = std::ceil(change * (1. - diminushPercent));
 				}
 				else if(casterTeamSize == targetTeamSize && casterTeam.levelSum > targetTeam.levelSum)
 				{
@@ -582,7 +582,7 @@ bool Combat::CombatHealthFunc(Creature* caster, Creature* target, const CombatPa
 					{
 						double basePercent = 100. / g_battleground.getTeamSize();
 						double diminushPercent = (((casterTeam.levelSum - targetTeam.levelSum) / casterTeamAvgLvl) * basePercent) / 100;
-						change = std::ceil(change * diminushPercent);
+						change = std::ceil(change * (1. - diminushPercent));
 					}
 				}
 			}
@@ -641,9 +641,12 @@ bool Combat::CombatManaFunc(Creature* caster, Creature* target, const CombatPara
 
 				if(casterTeamSize > targetTeamSize)
 				{
+					std::clog << "Caster: " << caster->getName() << ", Target: " << target->getName() << ", TeamSize: " << g_battleground.getTeamSize() << ", CasterTeamSize: " << casterTeamSize << ", TargetTeamSize: " << targetTeamSize << ", Change: " << change << std::endl;
 					double basePercent = 100. / g_battleground.getTeamSize();
 					double diminushPercent = ((casterTeamSize - targetTeamSize) * basePercent) / 100;
-					change = std::ceil(change * diminushPercent);
+
+					if(diminushPercent < 1.)
+						change = std::ceil(change * (1. - diminushPercent));
 				}
 				else if(casterTeamSize == targetTeamSize && casterTeam.levelSum > targetTeam.levelSum)
 				{
@@ -653,7 +656,9 @@ bool Combat::CombatManaFunc(Creature* caster, Creature* target, const CombatPara
 					{
 						double basePercent = 100. / g_battleground.getTeamSize();
 						double diminushPercent = (((casterTeam.levelSum - targetTeam.levelSum) / casterTeamAvgLvl) * basePercent) / 100;
-						change = std::ceil(change * diminushPercent);
+
+						if(diminushPercent < 1.)
+							change = std::ceil(change * (1. - diminushPercent));
 					}
 				}
 			}
