@@ -474,7 +474,7 @@ BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 		delete playerInfo.statistics;
 
 		team->players.erase(player->getID());
-		team->levelSum = std::max(team->levelSum - player->getLevel(), 0);
+		team->levelSum = std::max((int32_t)(team->levelSum - player->getLevel()), 0);
 	}
 	else 
 	{
