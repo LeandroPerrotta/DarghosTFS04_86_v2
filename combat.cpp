@@ -570,7 +570,8 @@ bool Combat::CombatHealthFunc(Creature* caster, Creature* target, const CombatPa
 
 				if(casterTeamSize > targetTeamSize)
 				{
-					double diminushPercent = ((100. / casterTeamSize) * (casterTeamSize - targetTeamSize)) / 100;
+					double basePercent = 100. / g_battleground.getTeamSize();
+					double diminushPercent = ((casterTeamSize - targetTeamSize) * basePercent) / 100;
 					change = std::ceil(change * diminushPercent);
 				}
 				else if(casterTeamSize == targetTeamSize && casterTeam.levelSum > targetTeam.levelSum)
