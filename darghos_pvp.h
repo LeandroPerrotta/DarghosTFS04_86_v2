@@ -50,6 +50,7 @@ struct Bg_Team_t {
     Bg_TeamLook_t look;
     Position spawn_pos;
 	uint32_t points;
+	uint32_t levelSum;
 };
 
 typedef std::map<Bg_Teams_t, Bg_Team_t> BgTeamsMap;
@@ -91,6 +92,7 @@ class Battleground
 		void start();
 		bool playerIsInWaitlist(Player* player);
 		void removeWaitlistPlayer(Player* player);
+		uint32_t getTeamSize() { return teamSize; }
 		void setTeamSize(uint32_t size){ teamSize = size; }
 		void setWinPoints(uint32_t points){ winPoints = points; }
 		void setDuration(uint32_t seconds){ duration = (seconds * 1000); }

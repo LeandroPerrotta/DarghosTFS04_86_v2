@@ -23,6 +23,11 @@
 #include "condition.h"
 #include "map.h"
 
+#ifdef __DARGHOS_PVP_SYSTEM__
+#include "darghos_pvp.h"
+#include "darghos_const.h"
+#endif
+
 class Condition;
 class Creature;
 class Position;

@@ -323,6 +323,8 @@ void Battleground::putInside(Player* player)
 		return;
 
 	Bg_Team_t* team = &teamsMap[team_id];
+	team->levelSum += player->getLevel();
+
 	player->setBattlegroundTeam(team_id);
 
 	Outfit_t player_outfit = player->getCreature()->getCurrentOutfit();
@@ -472,8 +474,9 @@ BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 		delete playerInfo.statistics;
 
 		team->players.erase(player->getID());
+		team->levelSum = std::max(team->levelSum - player->getLevel(), 0);
 	}
-	else
+	else 
 	{
 		g_game.internalTeleport(player, player->getMasterPosition(), true);
 		g_game.addMagicEffect(player->getMasterPosition(), MAGIC_EFFECT_TELEPORT);
