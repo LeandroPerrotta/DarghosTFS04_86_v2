@@ -13,11 +13,9 @@ boatDestiny.addAracura(keywordHandler, npcHandler)
 boatDestiny.addAaragon(keywordHandler, npcHandler)    
 boatDestiny.addQuendor(keywordHandler, npcHandler)    
 boatDestiny.addNorthrend(keywordHandler, npcHandler)    
-boatDestiny.addTrainers(keywordHandler, npcHandler, D_CustomNpcModules.travelTrainingIsland)
         
-keywordHandler:addKeyword({'passage'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'I can take you to Aracura, Quendor, Northrend and Aaragon also Trainers.'})
+keywordHandler:addKeyword({'passage', 'travel', 'passagem', 'viajar', 'cidades'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'I can take you to Aracura, Quendor and Northrend also Aaragon.'})
 keywordHandler:addKeyword({'job'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'I am the captain of this ship.'})
-keywordHandler:addKeyword({'travel'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'I can take you to Aracura, Quendor, Northrend and Aaragon also Trainers.'})
 
 -- Makes sure the npc reacts when you say hi, bye etc.
 npcHandler:addModule(FocusModule:new())
