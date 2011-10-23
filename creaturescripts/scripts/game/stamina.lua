@@ -12,7 +12,7 @@ function onThink(cid, interval)
 	--]]
 	
 	local target = getCreatureTarget(cid)
-	if(not target or not isInArray({"Marksman Target", "Hitdoll"}, getCreatureName(target))) then
+	if(not getBooleanFromString(target) or not isInArray({"Marksman Target", "Hitdoll"}, getCreatureName(target))) then
 		return
 	end
 	
