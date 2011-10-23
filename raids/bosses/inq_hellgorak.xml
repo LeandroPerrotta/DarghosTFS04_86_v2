@@ -1,0 +1,9 @@
+<raid>
+	<script delay="0">
+	<![CDATA[
+	raidLog("hellgorak (INQ)")
+	]]>
+	</script>
+
+	<singlespawn delay="1000" name="Hellgorak" x="2600" y="1063" z="11" />
+</raid>

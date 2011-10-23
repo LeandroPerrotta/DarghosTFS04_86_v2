@@ -13,10 +13,9 @@ boatDestiny.addAracura(keywordHandler, npcHandler)
 boatDestiny.addAaragon(keywordHandler, npcHandler)    
 boatDestiny.addQuendor(keywordHandler, npcHandler)      
 boatDestiny.addKashmir(keywordHandler, npcHandler)       
-boatDestiny.addTrainers(keywordHandler, npcHandler, D_CustomNpcModules.travelTrainingIsland)
 boatDestiny.addSeaSerpentArea(keywordHandler, npcHandler)
         
-keywordHandler:addKeyword({'passage', 'travel'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'I can take you to Aracura, Aaragon, Quendor, Kashmir, and Trainers also some {Hunting Places}.'})
+keywordHandler:addKeyword({'passage', 'travel', 'passagem', 'viajar', 'cidades'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'I can take you to Aracura, Aaragon, Quendor and Kashmir also some {Hunting Places}.'})
 keywordHandler:addKeyword({'job'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'I am the captain of this ship.'})
 keywordHandler:addKeyword({'hunting places', 'hunt'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'I can take you to the open sea, where you can found the {sea serpent} area.'})
 

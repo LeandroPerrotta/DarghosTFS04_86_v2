@@ -13,10 +13,9 @@ boatDestiny.addAracura(keywordHandler, npcHandler)
 boatDestiny.addAaragon(keywordHandler, npcHandler)
 boatDestiny.addNorthrend(keywordHandler, npcHandler)
 boatDestiny.addSalazart(keywordHandler, npcHandler)
-boatDestiny.addTrainers(keywordHandler, npcHandler, D_CustomNpcModules.travelTrainingIsland)
 boatDestiny.addIslandOfPeace(keywordHandler, npcHandler)
         
-local text = 'Meu navio pode levar-lo para {aracura}, {aaragon}, {northrend}, {salazart} e {trainers} além de ocasionamente também a {island of peace}.'      
+local text = 'Meu navio pode levar-lo para {aracura}, {aaragon}, {northrend} e {salazart} além de ocasionamente também a {island of peace}.'      
         
 keywordHandler:addKeyword({'passage', 'travel', 'passagem', 'viajar', 'cidades'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = text})
 keywordHandler:addKeyword({'job'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'Eu sou o Capitão deste navio.'})

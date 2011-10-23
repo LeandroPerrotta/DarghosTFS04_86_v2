@@ -1,5 +1,5 @@
 function onDeath(cid, corpse, deathList)
-	if isPlayer(cid) == TRUE then
+	if isPlayer(cid) then
 		--Fun??es que ser?o chamadas quando um jogador morrer...
 		
 		Dungeons.onPlayerDeath(cid)

@@ -72,4 +72,12 @@
 		<raid name="poi_the_handmaiden" file="bosses/poi_the_handmaiden.xml" interval2="8640" margin="0"/>	
 		<raid name="poi_the_imperor" file="bosses/poi_the_imperor.xml" interval2="8640" margin="0"/>	
 		<raid name="poi_the_plasmother" file="bosses/poi_the_plasmother.xml" interval2="8640" margin="0"/>		
+		
+		-- INQ BOSSES
+		<raid name="inq_ushuriel" file="bosses/inq_ushuriel.xml" interval2="1" margin="60" reftype="single" ref="yes"/>	
+		<raid name="inq_madareth" file="bosses/inq_madareth.xml" interval2="1" margin="60" reftype="single" ref="yes"/>	
+		<raid name="inq_zugurosh" file="bosses/inq_zugurosh.xml" interval2="1" margin="60" reftype="single" ref="yes"/>	
+		<raid name="inq_brothers" file="bosses/inq_brothers.xml" interval2="1" margin="60" reftype="single" ref="yes"/>	
+		<raid name="inq_annihilon" file="bosses/inq_annihilon.xml" interval2="1" margin="60" reftype="single" ref="yes"/>	
+		<raid name="inq_hellgorak" file="bosses/inq_hellgorak.xml" interval2="1" margin="60" reftype="single" ref="yes"/>	
 </raids>

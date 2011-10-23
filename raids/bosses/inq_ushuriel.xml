@@ -1,0 +1,9 @@
+<raid>
+	<script delay="0">
+	<![CDATA[
+	raidLog("ushuriel (INQ)")
+	]]>
+	</script>
+
+	<singlespawn delay="1000" name="Ushuriel" x="2514" y="1030" z="11" />
+</raid>
