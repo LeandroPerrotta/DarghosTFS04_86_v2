@@ -547,7 +547,11 @@ class Game
 			uint32_t minTargetDist, uint32_t maxTargetDist, bool fullPathSearch = true,
 			bool clearSight = true, int32_t maxSearchDist = -1);
 
+#ifdef __DARGHOS_CUSTOM__
+		Position getClosestFreeTile(Creature* creature, Position pos, bool extended = false, bool ignoreHouse = true, bool ignoreBlockItems = true);
+#else
 		Position getClosestFreeTile(Creature* creature, Position pos, bool extended = false, bool ignoreHouse = true);
+#endif
 		std::string getSearchString(const Position& fromPos, const Position& toPos, bool fromIsCreature = false, bool toIsCreature = false);
 
 		void changeLight(const Creature* creature);

@@ -5385,7 +5385,11 @@ bool Game::broadcastMessage(const std::string& text, MessageClasses type)
 	return true;
 }
 
+#ifdef __DARGHOS_CUSTOM__
+Position Game::getClosestFreeTile(Creature* creature, Position pos, bool extended/* = false*/, bool ignoreHouse/* = true*/, bool ignoreBlockItems/* = true*/)
+#else
 Position Game::getClosestFreeTile(Creature* creature, Position pos, bool extended/* = false*/, bool ignoreHouse/* = true*/)
+#endif
 {
 	PairVector relList;
 	relList.push_back(PositionPair(0, 0));
@@ -5406,6 +5410,13 @@ Position Game::getClosestFreeTile(Creature* creature, Position pos, bool extende
 		relList.push_back(PositionPair(2, 0));
 	}
 
+#ifdef __DARGHOS_CUSTOM__
+	uint32_t flags = 0;
+
+	if(ignoreBlockItems)
+		flags += FLAG_IGNOREBLOCKITEM;
+#endif
+
 	std::random_shuffle(relList.begin() + 1, relList.end());
 	if(Player* player = creature->getPlayer())
 	{
@@ -5415,7 +5426,11 @@ Position Game::getClosestFreeTile(Creature* creature, Position pos, bool extende
 			if(!tile || !tile->ground)
 				continue;
 
+#ifdef __DARGHOS_CUSTOM__
+			ReturnValue ret = tile->__queryAdd(0, player, 1, flags);
+#else
 			ReturnValue ret = tile->__queryAdd(0, player, 1, FLAG_IGNOREBLOCKITEM);
+#endif
 			if(ret == RET_NOTENOUGHROOM || (ret == RET_NOTPOSSIBLE && !player->hasCustomFlag(PlayerCustomFlag_CanMoveAnywhere))
 				|| (ret == RET_PLAYERISNOTINVITED && !ignoreHouse && !player->hasFlag(PlayerFlag_CanEditHouses)))
 				continue;
