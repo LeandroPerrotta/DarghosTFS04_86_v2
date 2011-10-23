@@ -5,6 +5,7 @@ function onStartup()
 	Dungeons.onServerStart()
 	summonLordVankyner()	
 	summonDemonOak()
+	summonInquisitionBoss()
 	
 	local sendPlayerToTemple = getGlobalStorageValue(gid.SEND_PLAYERS_TO_TEMPLE)
 	

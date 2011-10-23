@@ -1,9 +1,0 @@
-<raid>
-	<script delay="0">
-	<![CDATA[
-	raidLog("madareth (INQ)")
-	]]>
-	</script>
-
-	<singlespawn delay="1000" name="Madareth" x="2519" y="1065" z="11" />
-</raid>

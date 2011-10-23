@@ -759,6 +759,56 @@ function summonDemonOak()
 	setGlobalStorageValue(gid.THE_DEMON_OAK, temp_monster)
 end
 
+function summonInquisitionBoss(boss)
+
+	boss = boss or nil
+	
+	local pos = nil
+	local temp_monster = nil
+	
+	if(boss == nil or boss == "Ushuriel") then
+		pos = getThingPos(uid.INQ_USHURIEL_SPAWN)
+		temp_monster = doSummonCreature("Ushuriel", pos)
+		registerCreatureEvent(temp_monster, "monsterDeath")
+	end
+
+	if(boss == nil or boss == "Madareth") then
+		pos = getThingPos(uid.INQ_MADARETH_SPAWN)
+		temp_monster = doSummonCreature("Madareth", pos)	
+		registerCreatureEvent(temp_monster, "monsterDeath")
+	end
+	
+	if(boss == nil or boss == "Zugurosh") then
+		pos = getThingPos(uid.INQ_ZUGOROSH_SPAWN)
+		temp_monster = doSummonCreature("Zugurosh", pos)	
+		registerCreatureEvent(temp_monster, "monsterDeath")
+	end
+	
+	if(boss == nil or boss == "Latrivan") then
+		pos = getThingPos(uid.INQ_LATRIVAN_SPAWN)
+		temp_monster = doSummonCreature("Latrivan", pos)
+		registerCreatureEvent(temp_monster, "monsterDeath")
+	end	
+	
+	if(boss == nil or boss == "Golgordan") then
+		pos = getThingPos(uid.INQ_GOLGORDAN_SPAWN)
+		temp_monster = doSummonCreature("Golgordan", pos)	
+		registerCreatureEvent(temp_monster, "monsterDeath")
+	end
+	
+	if(boss == nil or boss == "Annihilon") then
+		pos = getThingPos(uid.INQ_ANNIHILON_SPAWN)
+		temp_monster = doSummonCreature("Annihilon", pos)
+		registerCreatureEvent(temp_monster, "monsterDeath")
+	end
+	
+	if(boss == nil or boss == "Hellgorak") then
+		pos = getThingPos(uid.INQ_HELLGORAK_SPAWN)
+		temp_monster = doSummonCreature("Hellgorak", pos)	
+		registerCreatureEvent(temp_monster, "monsterDeath")
+	end	
+end
+
 --[[
 	* ARIADNE QUEST
 ]]--

@@ -1,9 +1,0 @@
-<raid>
-	<script delay="0">
-	<![CDATA[
-	raidLog("annihilon (INQ)")
-	]]>
-	</script>
-
-	<singlespawn delay="1000" name="Annihilon" x="2596" y="1018" z="11" />
-</raid>
