@@ -2,7 +2,7 @@ function onAdvance(cid, type, oldlevel, newlevel)
 		
 	setStageOnAdvance(cid, type)
 	
-	if(canReceivePremiumTest(cid, newlevel)) then
+	if(type == SKILL__LEVEL and canReceivePremiumTest(cid, newlevel)) then
 		addPremiumTest(cid)
 	end
 	

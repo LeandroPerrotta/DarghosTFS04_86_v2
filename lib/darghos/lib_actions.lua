@@ -203,6 +203,12 @@ function teleportRune.firstStep(cid)
 		return
 	end	
 	
+	if(teleportScrollIsLocked(cid)) then
+		setPlayerStorageValue(cid, sid.TELEPORT_RUNE_STATE, teleportRune.STATE_NONE)
+		doCreatureSay(cid, "Arggh! A teleport rune não funciona neste lugar! O transporte foi abortado!", TALKTYPE_ORANGE_1)
+		return	
+	end
+	
 	doCreatureSay(cid, "Faltam 20 segundos para minha teleport rune ser carregada...", TALKTYPE_ORANGE_1)
 	setPlayerStorageValue(cid, sid.TELEPORT_RUNE_STATE, teleportRune.STATE_TELEPORTING_SECOND)
 	addEvent(teleportRune.secondStep, 1000 * 10, cid)
@@ -219,6 +225,12 @@ function teleportRune.secondStep(cid)
 		return
 	end	
 	
+	if(teleportScrollIsLocked(cid)) then
+		setPlayerStorageValue(cid, sid.TELEPORT_RUNE_STATE, teleportRune.STATE_NONE)
+		doCreatureSay(cid, "Arggh! A teleport rune não funciona neste lugar! O transporte foi abortado!", TALKTYPE_ORANGE_1)
+		return	
+	end	
+	
 	doCreatureSay(cid, "Faltam 10 segundos para minha teleport rune ser carregada...", TALKTYPE_ORANGE_1)
 	setPlayerStorageValue(cid, sid.TELEPORT_RUNE_STATE, teleportRune.STATE_TELEPORTING_THIRD)
 	addEvent(teleportRune.thirdStep, 1000 * 10, cid)
@@ -233,6 +245,12 @@ function teleportRune.thirdStep(cid)
 		setPlayerStorageValue(cid, sid.TELEPORT_RUNE_STATE, teleportRune.STATE_NONE)
 		doCreatureSay(cid, "Arggh! Entrei em batalha! O transporte foi abortado!", TALKTYPE_ORANGE_1)
 		return
+	end	
+	
+	if(teleportScrollIsLocked(cid)) then
+		setPlayerStorageValue(cid, sid.TELEPORT_RUNE_STATE, teleportRune.STATE_NONE)
+		doCreatureSay(cid, "Arggh! A teleport rune não funciona neste lugar! O transporte foi abortado!", TALKTYPE_ORANGE_1)
+		return	
 	end	
 	
 	doCreatureSay(cid, "Finalmente minha teleport rune foi carregada!", TALKTYPE_ORANGE_1)
