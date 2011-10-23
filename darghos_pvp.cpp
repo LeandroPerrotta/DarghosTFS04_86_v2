@@ -55,6 +55,7 @@ void Battleground::onInit()
     Bg_Team_t team_one;
 
 	team_one.points = 0;
+	team_one.levelSum = 0;
 
     team_one.look.head = 82;
     team_one.look.body = 114;
@@ -70,6 +71,7 @@ void Battleground::onInit()
     Bg_Team_t team_two;
 
 	team_two.points = 0;
+	team_two.levelSum = 0;
 
     team_two.look.head = 77;
     team_two.look.body = 94;
@@ -193,6 +195,9 @@ void Battleground::finish(Bg_Teams_t teamWinner)
 
 	teamsMap[BATTLEGROUND_TEAM_ONE].points = 0;
 	teamsMap[BATTLEGROUND_TEAM_TWO].points = 0;
+
+	teamsMap[BATTLEGROUND_TEAM_ONE].levelSum = 0;
+	teamsMap[BATTLEGROUND_TEAM_TWO].levelSum = 0;
 
 	status = BUILDING_TEAMS;
 	buildTeams();
