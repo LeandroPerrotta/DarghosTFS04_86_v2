@@ -49,6 +49,8 @@ function onLogin(cid)
 	if(darghos_distro == DISTROS_TFS) then
 		if(getPlayerTown(cid) == towns.ISLAND_OF_PEACE and getPlayerGroupId(cid) < GROUP_PLAYER_TUTOR) then
 			doUpdateCreaturePassable(cid)
+		else
+			doUpdateCreatureImpassable(cid)
 		end
 	end
 	
