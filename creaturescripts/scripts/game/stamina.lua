@@ -1,5 +1,5 @@
 function onThink(cid, interval)
-	if(not isCreature(cid)) then
+	if(not isCreature(cid) or not isPlayer(cid)) then
 		return
 	end
 
@@ -11,8 +11,7 @@ function onThink(cid, interval)
 	end
 	--]]
 	
-	local target = getCreatureTarget()
-	
+	local target = getCreatureTarget(cid)
 	if(not target or not isInArray({"Marksman Target", "Hitdoll"}, getCreatureName(target))) then
 		return
 	end
