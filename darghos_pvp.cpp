@@ -42,6 +42,9 @@ void Battleground::onClose()
 	teamsMap[BATTLEGROUND_TEAM_ONE].points = 0;
 	teamsMap[BATTLEGROUND_TEAM_TWO].points = 0;
 
+	teamsMap[BATTLEGROUND_TEAM_ONE].levelSum = 0;
+	teamsMap[BATTLEGROUND_TEAM_TWO].levelSum = 0;
+
 	clearStatistics();
 	status = BUILDING_TEAMS;
 }

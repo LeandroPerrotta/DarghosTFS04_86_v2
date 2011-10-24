@@ -662,8 +662,9 @@ bool Combat::CombatManaFunc(Creature* caster, Creature* target, const CombatPara
 				}
 				else if(casterTeamSize == targetTeamSize && casterTeam.levelSum > targetTeam.levelSum)
 				{
+					std::clog << ", CasterTeamLevelSum: " << casterTeam.levelSum << ", TargetTeamLevelSum: " << targetTeam.levelSum;
 					uint16_t casterTeamAvgLvl = std::ceil((double)(casterTeam.levelSum / g_battleground.getTeamSize()));
-					std::clog << ", CasterTeamLevelSum: " << casterTeam.levelSum << ", TargetTeamLevelSum: " << targetTeam.levelSum << ", CasterTeamLevelAvg: " << casterTeamAvgLvl;
+					std::clog << ", CasterTeamLevelAvg: " << casterTeamAvgLvl;
 
 					if((targetTeam.levelSum + casterTeamAvgLvl) < casterTeam.levelSum)
 					{
