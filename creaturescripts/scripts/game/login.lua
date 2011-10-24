@@ -22,6 +22,7 @@ function onLogin(cid)
 	registerCreatureEvent(cid, "Hacks")
 	registerCreatureEvent(cid, "GainStamina")
 	registerCreatureEvent(cid, "onLeaveChannel")
+	registerCreatureEvent(cid, "onPush")
 	
 	setStagesOnLogin(cid)
 	
