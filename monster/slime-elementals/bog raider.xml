@@ -19,7 +19,7 @@
     <flag runonhealth="1"/>
   </flags>
   <attacks>
-    <attack name="melee" interval="2000" min="-20" max="-145" poison="40"/>
+    <attack name="melee" interval="2000" skill="80" attack="40" poison="40"/>
     <attack name="lifedrain" interval="2000" chance="40" min="-90" max="-140" target="1">
       <attribute key="areaEffect" value="redshimmer"/>
     </attack>
@@ -39,12 +39,13 @@
     </defense>
   </defenses>
   <elements>
-    <element energyPercent="10"/>
-    <element earthPercent="-25"/>
-    <element icePercent="10"/>
-    <element holyPercent="10"/>
-    <element deathPercent="-20"/>
-    <element firePercent="-80"/>
+    <element energyPercent="-10"/>
+    <element earthPercent="30"/>
+    <element icePercent="-5"/>
+    <element physicalPercent="-20"/>
+    <element holyPercent="-5"/>
+    <element deathPercent="5"/>
+    <element firePercent="85"/>
   </elements>
   <immunities>
     <immunity paralyze="1"/>
@@ -55,28 +56,28 @@
     <voice sentence="Slurp!"/>
   </voices>
   <loot>
-    <item id="2148" countmax="121" chance1="100000" chancemax="0">
+    <item id="2148" countmax="100" chance1="50000">
       <!--gold coin-->
     </item>
-    <item id="2647" chance="5000">
+    <item id="2647" chance="2000">
       <!--plate legs-->
     </item>
-    <item id="8872" chance="2000">
+    <item id="8872" chance="666">
       <!--belted cape-->
     </item>
-    <item id="8912" chance="5000">
+    <item id="8912" chance="1000">
       <!--springsprout rod-->
     </item>
-    <item id="8472" chance="5000">
+    <item id="8472" chance="2000">
       <!--great spirit potion-->
     </item>
-    <item id="8473" chance="3000">
+    <item id="8473" chance="700">
       <!--ultimate health potion-->
     </item>
-    <item id="8873" chance="2500">
-      <!--hibiscus dress-->
+    <item id="10584" chance="9000">
+      <!--boggy dreads-->
     </item>
-    <item id="8891" chance="1350">
+    <item id="8891" chance="150">
       <!--paladin armor-->
     </item>
   </loot>
