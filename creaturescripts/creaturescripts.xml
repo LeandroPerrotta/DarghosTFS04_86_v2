@@ -15,6 +15,7 @@
 	
 	<!-- <event type="statschange" name="onLeaveChannel" event="script" value="game/onstatschange.lua"/> -->
 	
+	<event type="push" name="onPush" event="script" value="game/push.lua"/>
 	<event type="look" name="lookItem" event="script" value="game/look.lua"/>
 	<event type="login" name="CustomPlayerLogin" event="script" value="game/login.lua"/>
 	<event type="kill" name="pvpArena_onKill" event="script" value="game/pvp_arena.lua"/>
