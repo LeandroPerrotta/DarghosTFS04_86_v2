@@ -6,7 +6,8 @@ Polls = {
 	minlevel = 0,
 	yes = 0,
 	no = 0,
-	votes = {}	
+	votes = {},
+	messages = 0
 }	
 
 function Polls.Create(cid, msg, time, minlevel)
@@ -18,17 +19,13 @@ function Polls.Create(cid, msg, time, minlevel)
 	
 	Polls.message = msg
 	Polls.enddate = os.time() + (time * 60)
+	Polls.messages = time
 	Polls.time = time
-	Polls.minlevel = minlevel
+	Polls.minlevel = minlevel - 1
 	
 	Polls.Info()
 	
-	addEvent(Polls.ParcialResult, 1000 * 60 * 2)
-	addEvent(Polls.ParcialResult, 1000 * 60 * 4)
-	addEvent(Polls.ParcialResult, 1000 * 60 * 6)
-	addEvent(Polls.ParcialResult, 1000 * 60 * 8)
-	addEvent(Polls.ParcialResult, 1000 * 60 * 2)
-	addEvent(Polls.FinalResult, 1000 * 60 * time + (10000))
+	addEvent(Polls.ParcialResult, 1000 * 60)
 	
 	return true
 end
@@ -75,12 +72,12 @@ function Polls.InfoPlayer(cid)
 	info = info .. "As enquetes possuem um tempo em que ficam ativas, e após este tempo não é possivel mais votar. Esta enquete irá expirar em " .. minleft .. " minutos.\n"
 	info = info .. "As enquetes possuem um level minimo na qual o jogador poderá votar, no caso, esta enquete o nivel minimo para votar é " .. Polls.minlevel .. ".\n"
 	
-	doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_ORANGE, info)
+	broadcastMessage(info, MESSAGE_TYPES["orange"])
 	
 	info = "O resultado parcial da enquete é exibido de tempos em tempos, e ao final da enquete será exibido o resultado final.\n"
 	info = info .. "Para visualizar novamente esta mensagem digite o comando !voteinfo."
 	
-	doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_ORANGE, info)
+	broadcastMessage(info, MESSAGE_TYPES["orange"])
 	
 	return true
 end
@@ -95,6 +92,13 @@ end
 
 function Polls.ParcialResult()
 	broadcastMessage("Resultado parcial: Sim [" .. Polls.yes .." votos] - Não [" .. Polls.no .. " votos]", MESSAGE_TYPES["green"])
+	Polls.messages = Polls.messages - 1
+	
+	if(Polls.messages > 0) then
+		addEvent(Polls.ParcialResult, 1000 * 60)
+	else
+		addEvent(Polls.FinalResult, 1000 * 60)
+	end
 end
 
 function Polls.GMResult(cid)
@@ -166,7 +170,7 @@ function Polls.VoteNo(cid)
 	end
 	
 	table.insert(Polls.votes, account_id)
-	Polls.no = Polls.no + 1
+	Polls.yes = Polls.yes + 1
 	
 	doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "O seu voto foi registrado com sucesso! Obrigado!")
 	
