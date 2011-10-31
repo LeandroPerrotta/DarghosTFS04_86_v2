@@ -10636,9 +10636,7 @@ int32_t LuaInterface::luaSetBattlegroundTeamsPoints(lua_State* L)
 	uint32_t points = popNumber(L);
 	Bg_Teams_t team = (Bg_Teams_t)popNumber(L);
 
-	BgTeamsMap teams = g_battleground.getTeams();
-	teams[team].points = points;
-
+	g_battleground.setTeamPoints(team, points);
 	lua_pushnil(L);
 	return 1;
 }

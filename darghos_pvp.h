@@ -93,6 +93,15 @@ class Battleground
 		bool playerIsInWaitlist(Player* player);
 		void removeWaitlistPlayer(Player* player);
 		uint32_t getTeamSize() { return teamSize; }
+
+		void incrementTeamPoints(Bg_Teams_t team_id, uint32_t points = 1){
+			teamsMap[team_id].points += points;
+		}
+
+		void setTeamPoints(Bg_Teams_t team_id, uint32_t points){
+			teamsMap[team_id].points = points;
+		}
+
 		void setTeamSize(uint32_t size){ teamSize = size; }
 		void setWinPoints(uint32_t points){ winPoints = points; }
 		void setDuration(uint32_t seconds){ duration = (seconds * 1000); }
