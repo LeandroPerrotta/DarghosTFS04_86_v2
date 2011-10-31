@@ -475,7 +475,7 @@ trade_lists = {
 		{ name = "fiery relic sword", itemtype = 7745, buy_for = 25000 },	
 		{ name = "icy relic sword", itemtype = 7764, buy_for = 25000 },	
 		{ name = "jade hammer", buy_for = 25000 },	
-		{ name = "diamond spectre", buy_for = 3000 },	
+		{ name = "diamond sceptre", buy_for = 3000 },	
 		{ name = "hibiscus dress", buy_for = 3000 },	
 		{ name = "pirate boots", buy_for = 3000 },	
 		{ name = "sacred tree amulet", buy_for = 3000 },	
