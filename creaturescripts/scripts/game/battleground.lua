@@ -111,7 +111,7 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 			end				
 			
 			doPlayerSetStamina(cid, newStamina)
-			pvpBattleground.setPlayerRating(cid, currentRating + changeRating)
+			pvpBattleground.setPlayerRating(cid, math.max(currentRating - changeRating, 0))
 			doPlayerAddMoney(cid, gold)
 			doPlayerAddExp(cid, expGain)
 			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, msg)

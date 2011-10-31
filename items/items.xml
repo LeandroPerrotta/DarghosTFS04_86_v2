@@ -4168,9 +4168,9 @@
 		<attribute key="showduration" value="1" />
 		<attribute key="showattributes" value="1" />
 	</item>
-	<item id="2641" name="traper boots">
+	<item id="2641" name="patched boots">
 		<attribute key="weight" value="900" />
-		<attribute key="armor" value="3" />
+		<attribute key="armor" value="2" />
 		<attribute key="slotType" value="feet" />
 	</item>
 	<item id="2642" name="sandals">
