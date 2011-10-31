@@ -121,6 +121,9 @@ enum GamemasterCondition_t
 
 enum Exhaust_t
 {
+#ifdef __DARGHOS_CUSTOM__
+	EXHAUST_OTHERS = 0,
+#endif
 	EXHAUST_COMBAT = 1,
 	EXHAUST_HEALING = 2
 #ifdef __DARGHOS_CUSTOM__

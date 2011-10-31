@@ -231,10 +231,16 @@ bool Battleground::buildTeams()
 	if(_tempList.size() < teamSize * 2)
 		return false;
 
+	uint16_t _rand = random_range(1, 2);
+
 	i = 1;
 	for(Bg_Waitlist_t::iterator it = _tempList.begin(); it != _tempList.end(); it++, i++)
 	{
-		team = ((i & 1) == 1) ? BATTLEGROUND_TEAM_ONE : BATTLEGROUND_TEAM_TWO;
+		if(_rand == 1)
+			team = ((i & 1) == 1) ? BATTLEGROUND_TEAM_ONE : BATTLEGROUND_TEAM_TWO;
+		else
+			team = ((i & 1) == 1) ? BATTLEGROUND_TEAM_TWO : BATTLEGROUND_TEAM_ONE;
+
 
 		putInTeam((*it), team);
 		Scheduler::getInstance().addEvent(createSchedulerTask(1000 * 4,

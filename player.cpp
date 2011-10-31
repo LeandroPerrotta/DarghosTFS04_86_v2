@@ -1606,6 +1606,8 @@ void Player::onCreatureMove(const Creature* creature, const Tile* newTile, const
 		if(this->isInBattleground())
 		{
 			addExhaust(2000, EXHAUST_COMBAT_AREA);
+			addExhaust(1000, EXHAUST_HEALING);
+			addExhaust(1000, EXHAUST_OTHERS);
 		}
 		else
 		{
