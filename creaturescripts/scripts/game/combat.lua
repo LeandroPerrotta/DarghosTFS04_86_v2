@@ -1,7 +1,20 @@
 function onCombat(cid, target)
 
-	if(isPlayer(cid) and doPlayerIsInBattleground(cid) and getPlayerStorageValue(cid, sid.BATTLEGROUND_REPORTED_IDLE) == 1) then
-		setPlayerStorageValue(cid, sid.BATTLEGROUND_REPORTED_IDLE, -1)
+	if(isPlayer(cid) and doPlayerIsInBattleground(cid)) then
+	
+		--checks target
+		local player_target = nil
+		if(isPlayer(target) == TRUE) then
+			player_target = target
+		elseif(isPlayer(getCreatureMaster(target)) == TRUE) then
+			player_target = getCreatureMaster(target)
+		end	
+		
+		if(isBattlegroundEnemies(cid, player_target)) then
+			setPlayerStorageValue(cid, sid.BATTLEGROUND_LAST_DAMAGE, os.time())
+			setPlayerStorageValue(cid, sid.BATTLEGROUND_LONG_TIME_PZ, 0)
+			setPlayerStorageValue(cid, sid.BATTLEGROUND_PZTICKS, 0)			
+		end
 	end
 
 	--checks attacker

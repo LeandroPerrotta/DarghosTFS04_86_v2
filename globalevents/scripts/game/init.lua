@@ -7,6 +7,8 @@ function onStartup()
 	summonDemonOak()
 	summonInquisitionBoss()
 	
+	summonDynamicNpcs()
+	
 	local sendPlayerToTemple = getGlobalStorageValue(gid.SEND_PLAYERS_TO_TEMPLE)
 	
 	setGlobalStorageValue(gid.START_SERVER_WEEKDAY, os.date("*t").wday)
@@ -35,6 +37,19 @@ function onStartup()
 	
 	luaGlobal.truncate()
 	return true
+end
+
+function summonDynamicNpcs()
+
+	local npcs = {
+		{file = "global.rashid", startUid = uid.NPC_RASHID_START, endUid = uid.NPC_RASHID_END}
+	}
+	
+	for k,v in pairs(npcs) do
+		local uid = math.random(v.startUid, v.endUid)
+		local pos = getThingPosition(uid)
+		doCreateNpc(v.file, pos)
+	end
 end
 
 function cleanFreeHouseOwners()

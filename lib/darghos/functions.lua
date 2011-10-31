@@ -9,6 +9,17 @@ function doPlayerSetPVPBlessing(cid)
 end
 
 function doPlayerIsInBattleground(cid) return doPlayerGetBattlegroundTeam(cid) > 0 end
+function isBattlegroundEnemies(cid, target) return doPlayerGetBattlegroundTeam(cid) ~= doPlayerGetBattlegroundTeam(target) end
+
+function incPlayerStorageValue(cid, storage, value)
+	value = value or 1
+	
+	local sv = tonumber(getPlayerStorageValie(cid, storage))
+	sv = (sv == -1) and value or sv + value
+	
+	setPlayerStorageValue(cid, storage, sv)
+	return sv
+end
 
 function broadcastChannel(channelId, message, talktype)
 	local users = getChannelUsers(channelId)
