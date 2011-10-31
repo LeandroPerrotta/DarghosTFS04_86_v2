@@ -1,7 +1,5 @@
-BROADCAST_STATISTICS_INTERVAL = 20
-FREE_EXP_GAINS_DAY_LIMIT = 4
-
-BG_EXP_RATE = 1
+FREE_GAINS_PERCENT = 30
+BG_EXP_RATE = 2
 BG_EACH_BONUS_PERCENT = 50
 BG_BONUS_INTERVAL = 60 * 60
 
@@ -10,6 +8,9 @@ BG_CONFIG_WINPOINTS = 50
 BG_CONFIG_DURATION = 60 * 15
 
 BG_AFK_TIME_LIMIT = 60
+BG_WINNER_INPZ_PUNISH_INTERVAL = 60
+
+BG_LASTPLAYERS_BROADCAST_INTERVAL = 60 * 3
 
 BG_RET_NO_ERROR = 0
 BG_RET_CLOSED = 1
@@ -19,6 +20,10 @@ BG_RET_PUT_INSIDE = 4
 BG_RET_PUT_DIRECTLY = 5
 BG_RET_ALREADY_IN_WAITLIST = 6
 BG_RET_INFIGHT = 7
+
+PVPCHANNEL_MSGMODE_BROADCAST = 0
+PVPCHANNEL_MSGMODE_INBATTLE = 1
+PVPCHANNEL_MSGMODE_OUTBATTLE = 2
 
 BATTLEGROUND_TEAM_NONE = 0
 BATTLEGROUND_TEAM_ONE = 1
@@ -36,7 +41,9 @@ BG_GAIN_EVERYHOUR_DAYS = { WEEKDAY.SATURDAY, WEEKDAY.SUNDAY }
 BG_GAIN_START_HOUR = 11
 BG_GAIN_END_HOUR = 1
 
-pvpBattleground = {}
+pvpBattleground = {
+	lastJoinBroadcastMassage = 0
+}
 
 BATTLEGROUND_RATING = 3
 BATTLEGROUND_HIGH_RATE = 1601
@@ -115,13 +122,24 @@ function pvpBattleground.getChangeRating(cid, timeIn, bgDuration)
 	return math.floor(changeRating * (timeIn / bgDuration))	
 end
 
-function pvpBattleground.getExpGainRate()
+function pvpBattleground.getExpGainRate(cid)
 
 	local rate = BG_EXP_RATE
 	local bonus = pvpBattleground.getBonus()
 	if(bonus > 0) then
 		rate = rate + (bonus * (BG_EACH_BONUS_PERCENT / 100))
 		pvpBattleground.setBonus(0)
+	end
+	
+	if(not isPremium(cid)) then
+		rate = rate * (FREE_GAINS_PERCENT / 100)
+	else
+		local staminaMinutes = getPlayerStamina(cid)
+		local bonusStamina = 40 * 60
+		
+		if(staminaMinutes > bonusStamina) then
+			rate = rate + 0.5
+		end
 	end
 
 	return rate
@@ -264,7 +282,7 @@ function pvpBattleground.sendPlayerChannelMessage(cid, msg, type)
 end
 
 function pvpBattleground.getExperienceGain(cid)
-	return math.floor(getPlayerExperience(cid) * 0.0005 * getPlayerMultiple(cid, STAGES_EXPERIENCE) * pvpBattleground.getExpGainRate())
+	return math.floor(getPlayerExperience(cid) * 0.0005 * getPlayerMultiple(cid, STAGES_EXPERIENCE) * pvpBattleground.getExpGainRate(cid))
 end
 
 function pvpBattleground.playerSpeakTeam(cid, message)
@@ -279,10 +297,55 @@ function pvpBattleground.playerSpeakTeam(cid, message)
 	
 	for k,v in pairs(playersTeam) do
 		local target = v
-		doPlayerSendChannelMessage(target, getPlayerName(cid) .. " [" .. getPlayerLevel(cid) .. " | " .. pvpBattleground.getPlayerRating(cid) .. "]", message, TALKTYPE_TYPES["channel-yellow"], CUSTOM_CHANNEL_PVP)		
+		doPlayerSendChannelMessage(target, getPlayerName(cid) .. " [" .. getPlayerLevel(cid) .. " | " .. pvpBattleground.getPlayerRating(cid) .. "]", message, TALKTYPE_TYPES["channel-yellow"], CUSTOM_CHANNEL_BG_CHAT)		
 	end
 	
 	return true
+end
+
+function pvpBattleground.sendPvpChannelMessage(message, mode, talktype)
+
+	mode = mode or PVP_CHANNEL_BROADCAST
+
+	if(mode == PVPCHANNEL_MSGMODE_BROADCAST) then
+		broadcastChannel(CUSTOM_CHANNEL_PVP, message)
+	elseif(mode == PVPCHANNEL_MSGMODE_INBATTLE) then
+		local users = getChannelUsers(CUSTOM_CHANNEL_PVP)
+		talktype = talktype or TALKTYPE_TYPES["channel-white"]
+		
+		for k,v in pairs(users) do		
+			if(doPlayerGetBattlegroundTeam(cid) ~= BATTLEGROUND_TEAM_NONE) then
+				doPlayerSendChannelMessage(v, "", message, talktype, CUSTOM_CHANNEL_PVP)
+			end				
+		end		
+	elseif(mode == PVPCHANNEL_MSGMODE_OUTBATTLE) then
+		local users = getChannelUsers(CUSTOM_CHANNEL_PVP)
+		talktype = talktype or TALKTYPE_TYPES["channel-white"]
+		
+		for k,v in pairs(users) do		
+			if(doPlayerGetBattlegroundTeam(cid) == BATTLEGROUND_TEAM_NONE) then
+				doPlayerSendChannelMessage(v, "", message, talktype, CUSTOM_CHANNEL_PVP)
+			end				
+		end	
+	end
+end
+
+function pvpBattleground.broadcastLeftOnePlayer()
+
+	if(pvpBattleground.lastJoinBroadcastMassage > 0 and pvpBattleground.lastJoinBroadcastMassage + BG_LASTPLAYERS_BROADCAST_INTERVAL > os.time()) then
+		return
+	end
+
+	local messages = {
+		"Quer ganhar experiencia e dinheiro se divertindo com PvP? Participe da proxima battleground! Restam apénas mais um para fechar os times 6x6! -> !bg entrar",
+		"Restam apénas mais um jogadore para fechar os times 6x6 para a proxima Battleground! Ganhe recompensas! Ao morrer nada é perdido! Divirta-se! -> !bg entrar",
+		"Gosta de PvP? Prove seu valor! Restam apénas mais um jogadore para fechar os times 6x6 para a proxima Battleground! -> !bg entrar",
+		"Não conheçe o sistema de Battlegrounds? Conheça agora! Falta apénas você para o proxima batalha 6x6! Não há perdas nas mortes, ajude o time na vitoria e ganhe recompensas! -> !bg entrar",
+	}
+	
+	local rand = math.random(1, #messages)
+	doBroadcastMessage(messages[rand], MESSAGE_INFO_DESCR)
+	pvpBattleground.lastJoinBroadcastMassage = os.time()
 end
 
 function pvpBattleground.onEnter(cid)
@@ -334,14 +397,24 @@ function pvpBattleground.onEnter(cid)
 		
 		local leftStr = ""
 		
+		if(getBattlegroundWaitlistSize() == 0) then
+			leftStr = "Um jogador "
+		else
+			leftStr = "Mais um jogador "
+		end
+		
+		leftStr = leftStr .. "deseja participar de uma Battleground. "
+		
 		if(getBattlegroundWaitlistSize() < BG_CONFIG_TEAMSIZE * 2) then
 		
 			local playersLeft = (BG_CONFIG_TEAMSIZE * 2) - getBattlegroundWaitlistSize()
 			
-			leftStr = " Restam "
+			leftStr = leftStr .. "Restam "
 			
 			if(playersLeft <= 2) then
 				leftStr = leftStr .. "apénas "
+			elseif(playersLeft == 1) then
+				pvpBattleground.broadcastLeftOnePlayer()
 			end
 			
 			leftStr = leftStr .. "mais " .. (BG_CONFIG_TEAMSIZE * 2) - getBattlegroundWaitlistSize() .. " jogadores para iniciar a proxima partida! Quer participar também? Digite '!bg entrar'" 
@@ -351,9 +424,9 @@ function pvpBattleground.onEnter(cid)
 		end
 	
 		if(not closeTeam) then
-			broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") aguarda por uma battleground." .. leftStr)	
+			pvpBattleground.sendPvpChannelMessage("[Battleground] ." .. leftStr, PVPCHANNEL_MSGMODE_OUTBATTLE)
 		else
-			broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") fechou os times! A nova partida começará em instantes, assim que a Battleground estiver vazia...")
+			pvpBattleground.sendPvpChannelMessage("[Battleground] Os times para a proxima battleground estão completos! A nova partida começará em instantes, assim que a Battleground estiver vazia...", PVPCHANNEL_MSGMODE_OUTBATTLE)
 		end
 		
 		return true
@@ -396,9 +469,10 @@ function pvpBattleground.onEnter(cid)
 		pvpBattleground.sendPlayerChannelMessage(cid, msg)
 		
 		if(ret == BG_RET_PUT_DIRECTLY) then
-			broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") apresentou-se para recompor o " .. team .. ".")
+			pvpBattleground.sendPvpChannelMessage("[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") apresentou-se para recompor o " .. team .. ".", PVPCHANNEL_MSGMODE_INBATTLE)
 		end
-	
+		
+		doPlayerOpenChannel(cid, CUSTOM_CHANNEL_BG_CHAT)
 		return true
 	end
 	
@@ -418,10 +492,12 @@ function pvpBattleground.onExit(cid, idle)
 
 	if(ret == BG_RET_NO_ERROR) then
 		if(not idle) then
-			broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") desertou a batalha! Você gostaria de substituir-lo imediatamente? Digite '!bg entrar'!")		
+			pvpBattleground.sendPvpChannelMessage("[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") desertou a batalha!", PVPCHANNEL_MSGMODE_INBATTLE)		
 		else
-			broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") foi expulso por inatividade! Você gostaria de substituir-lo imediatamente? Digite '!bg entrar'!")
+			pvpBattleground.sendPvpChannelMessage("[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") foi expulso por inatividade!", PVPCHANNEL_MSGMODE_INBATTLE)	
 		end
+		
+		pvpBattleground.sendPvpChannelMessage("[Battleground] Um jogador desertou a batalha! Quer substituir-lo imediatamente? Digite '!bg entrar'!", PVPCHANNEL_MSGMODE_OUTBATTLE)
 		
 		local removedRating = pvpBattleground.removePlayerRating(cid, BG_CONFIG_DURATION, BG_CONFIG_DURATION)
 		doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Você piorou a sua classificação (rating) em " .. removedRating .. " pontos por seu abandono da Battleground.")
@@ -452,7 +528,7 @@ function pvpBattleground.onReportIdle(cid, idle_player)
 		return
 	end
 	
-	setPlayerStorageValue(idle_player, sid.BATTLEGROUND_REPORTED_IDLE, 1)
+	setPlayerStorageValue(idle_player, sid.BATTLEGROUND_LAST_REPORT, os.time())
 	
 	pvpBattleground.sendPlayerChannelMessage(cid, "Você denunciou o jogador " .. getPlayerName(idle_player) .. " como inativo com! Ele será expulso da Battleground se continuar inativo no proximo minuto.")
 	doPlayerPopupFYI(idle_player, "ATENÇÃO: \n\nVocê foi acusado de estar inativo dentro da Battleground, o que é proibido!\nVocê tem 1 minuto para entrar em combate com um oponente ou será expulso da batalha e marcado como desertor!")
@@ -473,8 +549,9 @@ function pvpBattleground.validateReport(cid, idle_player)
 		return
 	end
 
-	local isIdle = getPlayerStorageValue(idle_player, sid.BATTLEGROUND_REPORTED_IDLE) == 1
-	if(isIdle) then		
+	local lastDmg = getPlayerStorageValue(idle_player, sid.BATTLEGROUND_LAST_DAMAGE) 
+	local reportIn = getPlayerStorageValue(idle_player, sid.BATTLEGROUND_LAST_REPORT)
+	if(lastDmg == 0 or lastDmg <= reportIn) then		
 		pvpBattleground.onExit(idle_player, true)
 	else
 		setPlayerStorageValue(cid, sid.BATTLEGROUND_INVALID_REPORT_BLOCK, os.time() + (60 * 3))

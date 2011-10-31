@@ -483,6 +483,8 @@
 	<movevent type="DeEquip" itemid="2201" slot="necklace" event="function" value="onDeEquipItem"/>
 	<movevent type="Equip" itemid="2173" slot="necklace" event="function" value="onEquipItem"/>
 	<movevent type="DeEquip" itemid="2173" slot="necklace" event="function" value="onDeEquipItem"/>
+	<movevent type="Equip" itemid="8266" slot="necklace" event="function" value="onEquipItem"/>
+	<movevent type="DeEquip" itemid="8266" slot="necklace" event="function" value="onDeEquipItem"/>	
 	<movevent type="Equip" itemid="7887" slot="necklace" event="function" value="onEquipItem">
 		<vocation id="1"/>
 		<vocation id="5" showInDescription="0"/>

@@ -26,8 +26,10 @@ function onBattlegroundStart(notJoinPlayers)
 		doRemoveItem(thing.uid)
 	end
 	
+	pvpBattleground.sendPvpChannelMessage("[Battleground] A partida foi iniciada! Será vencedor o time que atingir primeiro 50 pontos ou o que mais tiver pontos ao fim da partida em " .. BG_CONFIG_DURATION / 60 .. " minutos!", PVPCHANNEL_MSGMODE_OUTBATTLE, TALKTYPE_TYPES["channel-orange"])
+	
 	if(notJoinPlayers > 0) then
-		broadcastChannel(CUSTOM_CHANNEL_PVP, notJoinPlayers .. " jogadores não compareceram ao inicio da partida e poderão ser substituidos! Se você deseja IMEDIATAMENTE substituir esses jogadores digite '!bg entrar'!", TALKTYPE_TYPES["channel-orange"])	
+		pvpBattleground.sendPvpChannelMessage(notJoinPlayers .. " jogadores não compareceram ao inicio da partida e poderão ser substituidos! Se você deseja IMEDIATAMENTE substituir esses jogadores digite '!bg entrar'!", PVPCHANNEL_MSGMODE_OUTBATTLE, TALKTYPE_TYPES["channel-orange"])
 	end
 	
 	addEvent(messageTimeLeft, 100)
@@ -48,7 +50,7 @@ function messageTimeLeft()
 			minutesStr = "minuto"
 		end
 	
-		broadcastChannel(CUSTOM_CHANNEL_PVP, "Restam " .. minutesLeftMessage .. " " .. minutesStr .. " para o fim da partida.", TALKTYPE_TYPES["channel-orange"])
+		pvpBattleground.sendPvpChannelMessage("Restam " .. minutesLeftMessage .. " " .. minutesStr .. " para o fim da partida.", PVPCHANNEL_MSGMODE_INBATTLE, TALKTYPE_TYPES["channel-orange"])	
 		minutesLeftMessage = minutesLeftMessage - 1
 		
 		if(minutesLeftMessage > 0) then
@@ -62,7 +64,7 @@ function messageTimeLeft()
 			reset = true
 		end	
 	
-		broadcastChannel(CUSTOM_CHANNEL_PVP, secondsLeftMessages[secondsLeftMessage].text, TALKTYPE_TYPES["channel-orange"])
+		pvpBattleground.sendPvpChannelMessage(secondsLeftMessages[secondsLeftMessage].text, PVPCHANNEL_MSGMODE_INBATTLE, TALKTYPE_TYPES["channel-orange"])
 		
 		if(not reset) then
 			bgEvents.messages = addEvent(messageTimeLeft, 1000 * secondsLeftMessages[secondsLeftMessage].interval)
@@ -104,7 +106,7 @@ function onBattlegroundEnd()
 		msg = "Não há vencedor! EMPATE por igualdade de pontos ao fim da partida!"
 	end	
 	
-	broadcastChannel(CUSTOM_CHANNEL_PVP, "Partida encerrada. " .. msg, TALKTYPE_TYPES["channel-orange"])
+	pvpBattleground.sendPvpChannelMessage("Partida encerrada. " .. msg, PVPCHANNEL_MSGMODE_BROADCAST, TALKTYPE_TYPES["channel-orange"])
 
 	minutesLeftMessage = BG_CONFIG_DURATION / 60
 	secondsLeftMessage = 1
@@ -160,10 +162,10 @@ function showMessage()
 	end
 
 	if(message == 0)  then
-		broadcastChannel(CUSTOM_CHANNEL_PVP, "A partida iniciará em 2 minutos.", TALKTYPE_TYPES["channel-orange"])
+		pvpBattleground.sendPvpChannelMessage("A partida iniciará em 2 minutos.", PVPCHANNEL_MSGMODE_BROADCAST, TALKTYPE_TYPES["channel-orange"])	
 		addEvent(showMessage, 1000 * 30)
 	else
-		broadcastChannel(CUSTOM_CHANNEL_PVP, messages[message].text, TALKTYPE_TYPES["channel-orange"])
+		pvpBattleground.sendPvpChannelMessage(messages[message].text, PVPCHANNEL_MSGMODE_BROADCAST, TALKTYPE_TYPES["channel-orange"])
 		if(not reset) then
 			addEvent(showMessage, 1000 * messages[message].interval)
 		end

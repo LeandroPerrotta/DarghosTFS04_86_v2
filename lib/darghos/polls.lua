@@ -170,7 +170,7 @@ function Polls.VoteNo(cid)
 	end
 	
 	table.insert(Polls.votes, account_id)
-	Polls.yes = Polls.yes + 1
+	Polls.no = Polls.no + 1
 	
 	doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "O seu voto foi registrado com sucesso! Obrigado!")
 	

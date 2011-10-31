@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<monster name="Wyrm" nameDescription="a wyrm" race="blood" species="fire" experience="1450" speed="290" manacost="0">
+<monster name="Wyrm" nameDescription="a wyrm" race="blood" species="fire" experience="1550" speed="290" manacost="0">
   <health now="1825" max="1825"/>
   <look type="291" corpse="8941"/>
   <targetchange interval="60000" chance="0"/>
@@ -19,8 +19,8 @@
     <flag runonhealth="1"/>
   </flags>
   <attacks>
-    <attack name="melee" interval="2000" skill="70" attack="65"/>
-    <attack name="energy" interval="1000" chance="11" radius="3" target="0" min="-110" max="-220">
+    <attack name="melee" interval="2000" skill="70" attack="60"/>
+    <attack name="energy" interval="1000" chance="11" radius="3" target="0" min="-100" max="-220">
       <attribute key="areaEffect" value="yellowenergy"/>
     </attack>
     <attack name="energy" interval="1000" chance="10" range="7" target="1" min="-101" max="-123">
@@ -30,12 +30,12 @@
     <attack name="physical" interval="1000" chance="11" length="5" spread="0" min="-95" max="-144">
       <attribute key="areaEffect" value="poff"/>
     </attack>
-    <attack name="energy" interval="1000" chance="10" length="5" spread="3" min="-10" max="-170">
+    <attack name="energy" interval="1000" chance="10" length="5" spread="3" min="-130" max="-200">
       <attribute key="areaEffect" value="purpleenergy"/>
     </attack>
   </attacks>
   <defenses armor="30" defense="30">
-    <defense name="healing" interval="6000" chance="65" min="75" max="155"/>
+    <defense name="healing" interval="6000" chance="65" min="100" max="150"/>
     <attribute key="areaEffect" value="blueshimmer"/>
   </defenses>
   <elements>
@@ -54,40 +54,59 @@
     <voice sentence="GRROARR!"/>
   </voices>
   <loot>
-    <item id="2672" countmax="3" chance1="9000" chancemax="0">
+    <item id="2672" countmax="1" chance="33333">
       <!--dragon ham-->
     </item>
-    <item id="2148" countmax="100" chance1="30000" chancemax="0">
+    <item id="2148" countmax="100" chance="25000">
       <!--gold coin-->
     </item>
-    <item id="2647" chance="2222">
-      <!--plate legs-->
+    <item id="2148" countmax="100" chance="25000">
+      <!--gold coin-->
     </item>
-    <item id="8921" chance="2100">
+    <item id="2148" countmax="20" chance="90000">
+      <!--gold coin-->
+    </item>   
+    <item id="10582" chance="15000">
+      <!--wyrm scale-->
+    </item>
+    <item id="2455" chance="5800">
+      <!--crossbow-->
+    </item>
+    <item id="8871" chance="1200">
+      <!--focus cape-->
+    </item>
+    <item id="2145" countmax="3" chance="1200">
+      <!--small diamond-->
+    </item>
+    <item id="7889" chance="700">
+      <!--lightning pendant-->
+    </item>                            
+    <item id="8921" chance="600">
       <!--wand of draconia-->
     </item>
-    <item id="7411" chance="1444">
-      <!--ornamented axe-->
+    <item id="8920" chance="420">
+      <!--wand of starstorm-->
     </item>
-    <item id="2546" countmax="10" chance1="6000" chancemax="0">
+    <item id="8873" chance="300">
+      <!--habiscus dress-->
+    </item>
+    <item id="10221" chance="200">
+      <!--shockwave amulet-->
+    </item>            
+    <item id="2546" countmax="10" chance="7000">
       <!--burst arrow-->
     </item>
-    <item id="1987" chance="100000">
-      <inside>
-        <item id="2148" countmax="100" chance1="100000" chancemax="0">
-          <!--gold coin-->
-        </item>
-        <item id="7430" chance="1654">
-          <!--dragonbone staff-->
-        </item>
-        <item id="7588" chance="5332">
-          <!--strong health potion-->
-        </item>
-        <item id="8871" chance="2400">
-          <!--focus cape-->
-        </item>
-      </inside>
-      <!--bag-->
+    <item id="7430" chance="150">
+      <!--dragonbone staff-->
     </item>
+    <item id="8855" chance="100">
+      <!--composite hornbow-->
+    </item>    
+    <item id="7588" chance="16666">
+      <!--strong health potion-->
+    </item>
+    <item id="7589" chance="15000">
+      <!--strong mana potion-->
+    </item>    
   </loot>
 </monster>
