@@ -14,7 +14,7 @@ function isBattlegroundEnemies(cid, target) return doPlayerGetBattlegroundTeam(c
 function incPlayerStorageValue(cid, storage, value)
 	value = value or 1
 	
-	local sv = tonumber(getPlayerStorageValie(cid, storage))
+	local sv = tonumber(getPlayerStorageValue(cid, storage))
 	sv = (sv == -1) and value or sv + value
 	
 	setPlayerStorageValue(cid, storage, sv)

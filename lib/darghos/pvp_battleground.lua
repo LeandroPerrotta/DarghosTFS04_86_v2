@@ -314,7 +314,7 @@ function pvpBattleground.sendPvpChannelMessage(message, mode, talktype)
 		talktype = talktype or TALKTYPE_TYPES["channel-white"]
 		
 		for k,v in pairs(users) do		
-			if(doPlayerGetBattlegroundTeam(cid) ~= BATTLEGROUND_TEAM_NONE) then
+			if(doPlayerGetBattlegroundTeam(v) ~= BATTLEGROUND_TEAM_NONE) then
 				doPlayerSendChannelMessage(v, "", message, talktype, CUSTOM_CHANNEL_PVP)
 			end				
 		end		
@@ -323,7 +323,7 @@ function pvpBattleground.sendPvpChannelMessage(message, mode, talktype)
 		talktype = talktype or TALKTYPE_TYPES["channel-white"]
 		
 		for k,v in pairs(users) do		
-			if(doPlayerGetBattlegroundTeam(cid) == BATTLEGROUND_TEAM_NONE) then
+			if(doPlayerGetBattlegroundTeam(v) == BATTLEGROUND_TEAM_NONE) then
 				doPlayerSendChannelMessage(v, "", message, talktype, CUSTOM_CHANNEL_PVP)
 			end				
 		end	
@@ -338,7 +338,7 @@ function pvpBattleground.broadcastLeftOnePlayer()
 
 	local messages = {
 		"Quer ganhar experiencia e dinheiro se divertindo com PvP? Participe da proxima battleground! Restam apénas mais um para fechar os times 6x6! -> !bg entrar",
-		"Restam apénas mais um jogadore para fechar os times 6x6 para a proxima Battleground! Ganhe recompensas! Ao morrer nada é perdido! Divirta-se! -> !bg entrar",
+		"Restam apénas mais um jogador para fechar os times 6x6 para a proxima Battleground! Ganhe recompensas! Ao morrer nada é perdido! Divirta-se! -> !bg entrar",
 		"Gosta de PvP? Prove seu valor! Restam apénas mais um jogadore para fechar os times 6x6 para a proxima Battleground! -> !bg entrar",
 		"Não conheçe o sistema de Battlegrounds? Conheça agora! Falta apénas você para o proxima batalha 6x6! Não há perdas nas mortes, ajude o time na vitoria e ganhe recompensas! -> !bg entrar",
 	}
@@ -397,7 +397,7 @@ function pvpBattleground.onEnter(cid)
 		
 		local leftStr = ""
 		
-		if(getBattlegroundWaitlistSize() == 0) then
+		if(getBattlegroundWaitlistSize() == 1) then
 			leftStr = "Um jogador "
 		else
 			leftStr = "Mais um jogador "
@@ -413,7 +413,9 @@ function pvpBattleground.onEnter(cid)
 			
 			if(playersLeft <= 2) then
 				leftStr = leftStr .. "apénas "
-			elseif(playersLeft == 1) then
+			end
+			
+			if(playersLeft == 1) then
 				pvpBattleground.broadcastLeftOnePlayer()
 			end
 			
@@ -424,7 +426,7 @@ function pvpBattleground.onEnter(cid)
 		end
 	
 		if(not closeTeam) then
-			pvpBattleground.sendPvpChannelMessage("[Battleground] ." .. leftStr, PVPCHANNEL_MSGMODE_OUTBATTLE)
+			pvpBattleground.sendPvpChannelMessage("[Battleground] " .. leftStr, PVPCHANNEL_MSGMODE_OUTBATTLE)
 		else
 			pvpBattleground.sendPvpChannelMessage("[Battleground] Os times para a proxima battleground estão completos! A nova partida começará em instantes, assim que a Battleground estiver vazia...", PVPCHANNEL_MSGMODE_OUTBATTLE)
 		end

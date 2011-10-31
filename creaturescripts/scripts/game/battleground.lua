@@ -203,13 +203,14 @@ function onThink(cid, interval)
 			points[opponent] = points[opponent] + 1
 			setBattlegroundTeamsPoints(opponent, points[opponent])
 			setPlayerStorageValue(cid, sid.BATTLEGROUND_PZTICKS, 0)
-			pvpBattleground.sendPvpChannelMessage("[Battleground | (" .. teams[BATTLEGROUND_TEAM_ONE] .. ") " .. points[BATTLEGROUND_TEAM_ONE] .. " X " .. points[BATTLEGROUND_TEAM_TWO] .. " (" .. teams[BATTLEGROUND_TEAM_TWO] .. ")] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") ficou muito tempo dentro de area protegida enquanto seu time ganhava sem entrar em combate concedendo um ponto aos oponentes!", PVPCHANNEL_MSGMODE_INBATTLE)
+			local teams = { "Time A", "Time B" }	
+			pvpBattleground.sendPvpChannelMessage("[Battleground | (" .. teams[BATTLEGROUND_TEAM_ONE] .. ") " .. points[BATTLEGROUND_TEAM_ONE] .. " X " .. points[BATTLEGROUND_TEAM_TWO] .. " (" .. teams[BATTLEGROUND_TEAM_TWO] .. ")] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") do " .. teams[doPlayerGetBattlegroundTeam(cid)] .. " ficou muito tempo dentro de area protegida enquanto seu time ganhava sem entrar em combate concedendo um ponto aos oponentes!", PVPCHANNEL_MSGMODE_INBATTLE)
 		end
 	else
 		if(pzTicks > 1000 * BG_WINNER_INPZ_PUNISH_INTERVAL) then
 			setPlayerStorageValue(cid, sid.BATTLEGROUND_LONG_TIME_PZ, 1)
 			setPlayerStorageValue(cid, sid.BATTLEGROUND_PZTICKS, 0)
-			doSendAnimatedText(getPlayerPosition(cid), "Fugindo da batalha? Entre em combate com os inimigos ou seu time sofrerá penalidades!", TEXTCOLOR_BLUE)		
+			doCreatureSay(cid, "Fugindo da batalha? Entre em combate com os inimigos ou seu time sofrerá penalidades!", TALKTYPE_ORANGE_1)		
 		end	
 	end
 end
