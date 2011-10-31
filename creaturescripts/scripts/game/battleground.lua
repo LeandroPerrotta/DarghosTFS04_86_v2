@@ -5,6 +5,7 @@ function onBattlegroundLeave(cid)
 	unregisterCreatureEvent(cid, "onBattlegroundFrag")
 	unregisterCreatureEvent(cid, "onBattlegroundEnd")
 	unregisterCreatureEvent(cid, "onBattlegroundLeave")
+	unregisterCreatureEvent(cid, "onBattlegroundThink")
 	unregisterCreatureEvent(cid, "OnChangeOutfit")
 	
 	if(isInTrainingIsland(cid)) then

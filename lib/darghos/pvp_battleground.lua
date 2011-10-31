@@ -449,7 +449,8 @@ function pvpBattleground.onEnter(cid)
 		
 		registerCreatureEvent(cid, "onBattlegroundFrag")
 		registerCreatureEvent(cid, "onBattlegroundEnd")
-		registerCreatureEvent(cid, "onBattlegroundLeave")
+		registerCreatureEvent(cid, "onBattlegroundThink")
+		registerCreatureEvent(cid, "onBattlegroundLeave")		
 		
 		doPlayerSetIdleTime(cid, 0)
 		
