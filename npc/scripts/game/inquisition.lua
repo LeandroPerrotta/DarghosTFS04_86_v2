@@ -56,7 +56,7 @@ function noCallback(cid, message, keywords, parameters, node)
 		parameters.talkState = TALK_MISSION.NONE
 	end
 	
-	npcHandler:resetNpc()
+	npcHandler:resetNpc(cid)
 	return true
 end
 

@@ -48,12 +48,12 @@ function process(cid, message, keywords, parameters, node)
     				npcHandler:say("Oooohhh! Quanto tempo eu não via isto? Todas as partes reunidas! Magnifico trabalho! Se você me entregar-las e mais 5000 moedas de ouro para amanha eu lhe entregarei o amuleto do velho Koshei, aceita?", cid)
     			elseif(amuletDate + (60 * 60 * 24) > os.time()) then
     				npcHandler:say("Mas ainda não se passou um dia, o seu amuleto ainda não está pronto! Deixe-me trabalhar ou irá atrazar!", cid)
-    				npcHandler:resetNpc()
+    				npcHandler:resetNpc(cid)
 				else
 					local tmp = doCreateItemEx(ITEM_KOSHEI_AMULET, 1)
 					if(doPlayerAddItemEx(cid, tmp, true) ~= RETURNVALUE_NOERROR) then
 						print('[Warning - ' .. getCreatureName(getNpcId()) .. '] Impossivel adicionar o amuleto a ' .. getPlayerName(cid) .. '.')
-						npcHandler:resetNpc()
+						npcHandler:resetNpc(cid)
 						return false
 					end
 					

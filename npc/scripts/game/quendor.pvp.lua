@@ -40,7 +40,7 @@ function process(cid, message, keywords, parameters, node)
 				doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Você adquiriu " .. expAdd .. " pontos de expêriencia e " .. moneyAdd .. " gold coins por concluir a tarefa.")
 			else
 				npcHandler:say("Você ainda não atingiu os 20 pontos! Não demore a completar sua missão! Quendor precisa de bravos guerreiros!", cid)
-				npcHandler:resetNpc()
+				npcHandler:resetNpc(cid)
 			end	
 		else
 			npcHandler:say("Ordon espera que os soldados estejam sempre preparados para defender Quendor de seus inimigos. Por isso ele ordena que os guerreiros que treinarem diariamente na Battleground sejam recompensados. Você quer iniciar este treinamento?", cid)
@@ -50,7 +50,7 @@ function process(cid, message, keywords, parameters, node)
 	    
 	    if(dailyStatus ~= -1 and getWeekday() == dailyStatus) then
 	    	npcHandler:say("Você já concluiu o seu treinamento por hoje, você somente pode fazer-lo novamente amanha! Até lá!", cid)
-	    	npcHandler:resetNpc()
+	    	npcHandler:resetNpc(cid)
     	else
     		npcHandler:say("A tarefa que lhe solicito é a seguinte: Vá para o campo de batalhas, o Battleground, e ganhe pontos, os pontos serão obtidos quando você derrota um jogador que não seja muito mais fraco que você, para cada vez que você for derrotado também irá perder um ponto! Você precisará atingir 20 pontos. E então, a aceita?", cid)
 	    end
@@ -58,7 +58,7 @@ function process(cid, message, keywords, parameters, node)
 		
 		npcHandler:say("Perfeito, retorne quando a tiver concluido, estarei o aguardando!", cid)
 		setPlayerStorageValue(cid, sid.DAILY_BATTLEGROUND_ACTIVE, 1)
-    	npcHandler:resetNpc()		
+    	npcHandler:resetNpc(cid)		
     end
     
     return true

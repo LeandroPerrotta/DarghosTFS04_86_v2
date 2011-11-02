@@ -127,7 +127,7 @@ if(Modules == nil) then
 	function StdModule.bless(cid, message, keywords, parameters, node)
 		local npcHandler = parameters.npcHandler
 		if(npcHandler == nil) then
-			print('[Warning - ' .. getCreatureName(getNpcId()) .. '] NpcSystem:', 'StdModule.bless - Call without any npcHandler instance.')
+			print('StdModule.bless called without any npcHandler instance.')
 			return false
 		end
 
@@ -146,36 +146,13 @@ if(Modules == nil) then
 				price = (price + ((math.min(parameters.endLevel, getPlayerLevel(cid)) - parameters.startLevel) * parameters.levelCost))
 			end
 
-			if(parameters.number > 0) then
-				if(getPlayerBlessing(cid, parameters.number)) then
-					npcHandler:say("Gods have already blessed you with this blessing!", cid)
-				elseif(not doPlayerRemoveMoney(cid, price)) then
-					npcHandler:say("You don't have enough money for blessing.", cid)
-				else
-					npcHandler:say("You have been blessed by one of the five gods!", cid)
-					doPlayerAddBlessing(cid, parameters.number)
-				end
+			if(getPlayerBlessing(cid, parameters.number)) then
+				npcHandler:say("Gods have already blessed you with this blessing!", cid)
+			elseif(not doPlayerRemoveMoney(cid, price)) then
+				npcHandler:say("You don't have enough money for blessing.", cid)
 			else
-				if(getPlayerPVPBlessing(cid)) then
-					npcHandler:say("Gods have already blessed you with this blessing!", cid)
-				elseif(not doPlayerRemoveMoney(cid, price)) then
-					npcHandler:say("You don't have enough money for blessing.", cid)
-				else
-					local any = false
-					for i = 1, 5 do
-						if(getPlayerBlessing(cid, i)) then
-							any = true
-							break
-						end
-					end
-
-					if(any) then
-						npcHandler:say("You have been blessed by the god of war!", cid)
-						doPlayerSetPVPBlessing(cid)
-					else
-						npcHandler:say("You need to be blessed by at least one god to get this blessing.", cid)
-					end
-				end
+				npcHandler:say("You have been blessed by one of the five gods!", cid)
+				doPlayerAddBlessing(cid, parameters.number)
 			end
 		else
 			npcHandler:say('You need a premium account in order to be blessed.', cid)

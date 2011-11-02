@@ -79,7 +79,7 @@ function D_CustomNpcModules.addonTradeItems(cid, message, keywords, parameters, 
 	if(not foundAll) then		
 		local msg = parameters.fail or "Sorry but you not have all needed items..."
 		npcHandler:say(msg, cid)
-		npcHandler:resetNpc()
+		npcHandler:resetNpc(cid)
 		return true
 	end
 	
@@ -92,7 +92,7 @@ function D_CustomNpcModules.addonTradeItems(cid, message, keywords, parameters, 
 	
 	if(getPlayerFreeCap(cid) < neededCap) then
 		npcHandler:say("You do not have enough capacity for all items.", cid)
-		npcHandler:resetNpc()
+		npcHandler:resetNpc(cid)
 		return true	
 	end
 	
@@ -120,7 +120,7 @@ function D_CustomNpcModules.addonTradeItems(cid, message, keywords, parameters, 
 	
 	local msg = parameters.success or "Thanks! Here it is! I hope you are happy!"
 	npcHandler:say(msg, cid)
-	npcHandler:resetNpc()
+	npcHandler:resetNpc(cid)
 	return true	
 end
 
@@ -164,7 +164,7 @@ function D_CustomNpcModules.travelTrainingIsland(cid, message, keywords, paramet
 		doSendMagicEffect(parameters.destination, CONST_ME_TELEPORT)
 	end
 
-	npcHandler:resetNpc()
+	npcHandler:resetNpc(cid)
 	return true
 end
 
@@ -194,7 +194,7 @@ function D_CustomNpcModules.pvpBless(cid, message, keywords, parameters, node)
 		doPlayerSetPVPBlessing(cid)
 	end
 
-	npcHandler:resetNpc()
+	npcHandler:resetNpc(cid)
 	return true
 end
 
@@ -213,7 +213,7 @@ function D_CustomNpcModules.inquisitionBless(cid, message, keywords, parameters,
 	
 	if(questStatus ~= 1) then
 		npcHandler:say('Você precisa completar todas as missões no combate as forças demoniacas para que eu possa lhe abençoar.', cid)
-		npcHandler:resetNpc()
+		npcHandler:resetNpc(cid)
 		
 		return true	
 	end
@@ -243,7 +243,7 @@ function D_CustomNpcModules.inquisitionBless(cid, message, keywords, parameters,
 		npcHandler:say('Eu somente posso abençoar jogadores com uma premium account.', cid)
 	end
 
-	npcHandler:resetNpc()
+	npcHandler:resetNpc(cid)
 	return true
 end
 

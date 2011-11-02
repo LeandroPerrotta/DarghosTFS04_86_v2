@@ -108,7 +108,7 @@ function boatDestiny.addIslandOfPeace(keywordHandler, npcHandler)
 		else		
 			if(getWeekday() ~= WEEKDAY.MONDAY) then
 				npcHandler:say('Desculpe mas o barco que leva de Quendor a Island of Peace so parte as segunda-feiras.', cid)
-				npcHandler:resetNpc()
+				npcHandler:resetNpc(cid)
 				return true
 			end
 			
@@ -134,13 +134,13 @@ function boatDestiny.addIslandOfPeace(keywordHandler, npcHandler)
 		
 		if(isInArray(boatDestiny.pvpChangedList, cid)) then
 			npcHandler:say('Oh, consta que chegou em Quendor hoje, desculpe mas por ordens do Rei você não poderá sair de Quendor até a proxima segunda-feira...', cid)
-			npcHandler:resetNpc()
+			npcHandler:resetNpc(cid)
 			return true		
 		end		
 		
 		if(not doPlayerRemoveMoney(cid, parameters.cost)) then
 			npcHandler:say('Oh, infelizmente você não possui o dinheiro necessario para embarcar...', cid)
-			npcHandler:resetNpc()
+			npcHandler:resetNpc(cid)
 			return true
 		end	
 		
@@ -196,7 +196,7 @@ function boatDestiny.addQuendorFromIslandOfPeace(keywordHandler, npcHandler)
 		else				
 			if(getWeekday() ~= WEEKDAY.MONDAY) then
 				npcHandler:say('Desculpe mas o barco que leva de Island of Peace a Quendor so parte as segunda-feiras.', cid)
-				npcHandler:resetNpc()
+				npcHandler:resetNpc(cid)
 				return true
 			end
 			
@@ -222,7 +222,7 @@ function boatDestiny.addQuendorFromIslandOfPeace(keywordHandler, npcHandler)
 		
 		if(isInArray(boatDestiny.pvpChangedList, cid)) then
 			npcHandler:say('Oh, consta que chegou em Island of Peace hoje, desculpe mas por ordens do Rei você não poderá sair da ilha até a proxima segunda-feira...', cid)
-			npcHandler:resetNpc()
+			npcHandler:resetNpc(cid)
 			return true		
 		end		
 		
@@ -230,7 +230,7 @@ function boatDestiny.addQuendorFromIslandOfPeace(keywordHandler, npcHandler)
 		
 		if(isInArray({0, 1}, leaveFromIslandOfPeace) and not doPlayerRemoveMoney(cid, parameters.cost)) then
 			npcHandler:say('Oh, infelizmente você não possui o dinheiro necessario para embarcar...', cid)
-			npcHandler:resetNpc()
+			npcHandler:resetNpc(cid)
 			return true
 		end	
 		

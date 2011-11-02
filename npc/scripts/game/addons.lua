@@ -17,12 +17,12 @@ function playerBuyAddonNPC(cid, message, keywords, parameters, node)
     if (parameters.confirm ~= true) and (parameters.decline ~= true) then
         if(getPlayerPremiumDays(cid) == 0) and (parameters.premium == true) then
             npcHandler:say('Sorry, but this addon is only for premium players!', cid)
-            npcHandler:resetNpc()
+            npcHandler:resetNpc(cid)
             return true
         end
         if (getPlayerStorageValue(cid, parameters.storageID) ~= -1) then
             npcHandler:say('You already have this addon!', cid)
-            npcHandler:resetNpc()
+            npcHandler:resetNpc(cid)
             return true
         end
         local itemsTable = parameters.items
@@ -73,11 +73,11 @@ function playerBuyAddonNPC(cid, message, keywords, parameters, node)
         else
             npcHandler:say('You do not have needed items or cash!', cid)
         end
-        npcHandler:resetNpc()
+        npcHandler:resetNpc(cid)
         return true
     elseif (parameters.decline == true) then
         npcHandler:say('Not interested? Maybe other addon?', cid)
-        npcHandler:resetNpc()
+        npcHandler:resetNpc(cid)
         return true
     end
     return false
