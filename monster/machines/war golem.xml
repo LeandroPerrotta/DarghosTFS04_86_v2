@@ -134,10 +134,10 @@
     <item id="7422" chance="125">
       <!--jade hammer-->
     </item>                                           
-    <item id="7403" chance="70">
+    <item id="7403" chance="100">
       <!--berserker-->
     </item>                                               
-    <item id="7893" chance="400">
+    <item id="7893" chance="100">
       <!--lightning boots-->
     </item>                                               
 
