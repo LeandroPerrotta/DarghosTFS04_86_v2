@@ -24,6 +24,8 @@ function selfMoveToThing(id)
 	return
 end
 
+selfMoveToCreature = selfMoveToThing
+
 function selfMoveTo(x, y, z)
 	local position = {x = 0, y = 0, z = 0}
 	if(type(x) ~= "table") then
