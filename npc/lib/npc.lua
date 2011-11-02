@@ -10,33 +10,18 @@ function selfSayChannel(cid, message)
 	return selfSay(message, cid, false)
 end
 
-function selfMoveToThing(id)
-	errors(false)
-	local thing = getThing(id)
-
-	errors(true)
-	if(thing.uid == 0) then
+function selfMoveToCreature(id)
+	if(not id or id == 0) then
 		return
 	end
 
-	local t = getThingPosition(id)
+	local t = getCreaturePosition(id)
+	if(not t.x or t.x == nil) then
+		return
+	end
+
 	selfMoveTo(t.x, t.y, t.z)
 	return
-end
-
-selfMoveToCreature = selfMoveToThing
-
-function selfMoveTo(x, y, z)
-	local position = {x = 0, y = 0, z = 0}
-	if(type(x) ~= "table") then
-		position = Position(x, y, z)
-	else
-		position = x
-	end
-
-	if(isValidPosition(position)) then
-		doSteerCreature(getNpcId(), position)
-	end
 end
 
 function selfMove(direction, flags)
