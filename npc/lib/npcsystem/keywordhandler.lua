@@ -43,20 +43,20 @@ if(KeywordHandler == nil) then
 
 	-- Returns true if message contains all patterns/strings found in keywords.
 	function KeywordNode:checkMessage(message)
+		local ret = false
 		if(self.keywords.callback ~= nil) then
 			return self.keywords.callback(self.keywords, message)
 		end
-	
 		for i,v in ipairs(self.keywords) do
 			if(type(v) == 'string') then
 				local a, b = string.find(message, v)
-				if(a == nil or b == nil) then
-					return false
+				if(a ~= nil and b ~= nil) then
+					ret = true
+					break
 				end
 			end
 		end
-
-		return true
+		return ret
 	end
 
 	-- Returns the parent of this node or nil if no such node exists.
