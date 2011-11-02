@@ -16,7 +16,7 @@
 ////////////////////////////////////////////////////////////////////////
 
 #ifdef __DARGHOS_SPOOF__
-	#define PLAYERS_TO_SPOOF 55
+	#define PLAYERS_TO_SPOOF 75
 	#define SPOOF_START_AT 25
 #endif
 

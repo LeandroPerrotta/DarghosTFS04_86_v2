@@ -4982,10 +4982,24 @@ int32_t LuaInterface::luaDoCreateMonster(lua_State* L)
 
 int32_t LuaInterface::luaDoCreateNpc(lua_State* L)
 {
+#ifdef __DARGHOS_CUSTOM__
+	//doCreateNpc(name, pos[, spawnRadius = 3, displayError = true])
+#else
 	//doCreateNpc(name, pos[, displayError = true])
+#endif
 	bool displayError = true;
+#ifdef __DARGHOS_CUSTOM__
+	uint32_t radius = 3;
+
+	if(lua_gettop(L) > 3)
+		displayError = popNumber(L);
+
+	if(lua_gettop(L) > 2)
+		radius = popNumber(L);
+#else
 	if(lua_gettop(L) > 2)
 		displayError = popNumber(L);
+#endif
 
 	PositionEx pos;
 	popPosition(L, pos);
@@ -5000,6 +5014,10 @@ int32_t LuaInterface::luaDoCreateNpc(lua_State* L)
 		lua_pushboolean(L, false);
 		return 1;
 	}
+
+#ifdef __DARGHOS_CUSTOM__
+	npc->setMasterPosition(pos, radius);
+#endif
 
 	if(!g_game.placeCreature(npc, pos))
 	{
