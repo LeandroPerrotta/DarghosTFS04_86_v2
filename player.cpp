@@ -2337,7 +2337,12 @@ bool Player::onDeath()
 		#endif
 		blessings = 0;
 		loginPosition = masterPosition;
+
+#ifdef __DARGHOS_CUSTOM__
+		if(!inventory[SLOT_BACKPACK] && g_config.getNumber(ConfigManager::DEATH_CONTAINER) != 0)
+#else
 		if(!inventory[SLOT_BACKPACK])
+#endif
 			__internalAddThing(SLOT_BACKPACK, Item::CreateItem(g_config.getNumber(ConfigManager::DEATH_CONTAINER)));
 
 		sendIcons();
