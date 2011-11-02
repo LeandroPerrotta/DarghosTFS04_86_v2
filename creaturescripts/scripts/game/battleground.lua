@@ -60,7 +60,7 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 					
 			local expGain = pvpBattleground.getExperienceGain(cid)
 			local staminaMinutes = getPlayerStamina(cid)		
-			local newStamina = staminaMinutes - (timeIn / 60)
+			local staminaChange = timeIn / 60
 			
 			expGain = math.floor(expGain * (timeIn / bgDuration)) -- calculamo a exp obtida com base no tempo de participação do jogador
 			expGain = math.floor(expGain * (bgDuration / BG_CONFIG_DURATION)) -- calculamo a exp obtida com base na duração da battleground
@@ -86,7 +86,7 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 		
 			if(winnerTeam == BATTLEGROUND_TEAM_NONE) then
 			
-				newStamina = math.floor(newStamina / 2)
+				staminaChange = math.floor(newStamina / 2)
 				expGain = math.floor(expGain / 2)
 				gold = 30000
 				msg = "Você adquiriu " .. expGain .. " pontos de experiencia e " .. gold .. " moedas de ouro pelo empate na Battleground!"
@@ -110,7 +110,7 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 				playerHistory.achievBattlegroundGet2000Rating(cid)
 			end				
 			
-			doPlayerSetStamina(cid, newStamina)
+			doPlayerSetStamina(cid, staminaMinutes - staminaChange)
 			pvpBattleground.setPlayerRating(cid, currentRating + changeRating)
 			doPlayerAddMoney(cid, gold)
 			doPlayerAddExp(cid, expGain)
