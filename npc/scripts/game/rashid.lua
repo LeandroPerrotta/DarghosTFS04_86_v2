@@ -14,11 +14,13 @@ function greetCallback(cid)
 
 		if(not isPremium(cid)) then
                 npcHandler:say('Eu compro uma grande variedade de armas e equipamentos por um bom preço! Mas somente negocio com jogadores que disponham de uma Conta Premium...', cid)
+				npcHandler:resetNpc(cid)
                 return false		
 		end
 
         if(pvpBattleground.getPlayerRating(cid) < 500) then
                 npcHandler:say('Eu compro uma grande variedade de armas e equipamentos por um bom preço! Mas somente negocio com bravos guerreiros! Para comprovar seu valor vença algumas Battlegrounds ({!bg entrar}) até atingir 500 pontos de classificação e terei prazer em negociar com você!', cid)
+				npcHandler:resetNpc(cid)
                 return false
         else
                 return true
