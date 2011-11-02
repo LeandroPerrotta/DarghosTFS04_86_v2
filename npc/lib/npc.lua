@@ -6,6 +6,15 @@ dofile(getDataDir() .. 'npc/lib/npc_system.lua')
 dofile(getDataDir() .. 'npc/lib/custom_modules.lua')
 dofile(getDataDir() .. 'npc/lib/addonItems.lua')
 dofile(getDataDir() .. 'npc/lib/trade.lua')
+
+function selfIdle()
+	following = false
+	attacking = false
+
+	selfAttackCreature(0)
+	target = 0
+end
+
 function selfSayChannel(cid, message)
 	return selfSay(message, cid, false)
 end
@@ -24,49 +33,36 @@ function selfMoveToCreature(id)
 	return
 end
 
-function selfMove(direction, flags)
-	local flags = flags or 0
-	doMoveCreature(getNpcId(), direction, flags)
-end
-
-function selfTurn(direction)
-	doCreatureSetLookDirection(getNpcId(), direction)
-end
-
-function getNpcDistanceTo(id)
-	errors(false)
-	local thing = getThing(id)
-
-	errors(true)
-	if(thing.uid == 0) then
+function getNpcDistanceToCreature(id)
+	if(not id or id == 0) then
+		selfIdle()
 		return nil
 	end
 
 	local c = getCreaturePosition(id)
-	if(not isValidPosition(c)) then
+	if(not c.x or c.x == 0) then
 		return nil
 	end
 
 	local s = getCreaturePosition(getNpcId())
-	if(not isValidPosition(s) or s.z ~= c.z) then
+	if(not s.x or s.x == 0 or s.z ~= c.z) then
 		return nil
 	end
 
 	return math.max(math.abs(s.x - c.x), math.abs(s.y - c.y))
 end
 
-function doMessageCheck(message, keyword, exact)
-	local exact = exact or false
+function doMessageCheck(message, keyword)
 	if(type(keyword) == "table") then
-		return isInArray(keyword, message, exact)
+		return table.isStrIn(keyword, message)
 	end
 
-	if(exact) then
-		return message == keyword
+	local a, b = message:lower():find(keyword:lower())
+	if(a ~= nil and b ~= nil) then
+		return true
 	end
 
-	local a, b = message:lower(), keyword:lower()
-	return a == b or (a:find(b) and not a:find('(%w+)' .. b))
+	return false
 end
 
 function doNpcSellItem(cid, itemid, amount, subType, ignoreCap, inBackpacks, backpack)
@@ -138,7 +134,7 @@ function doNpcSellItem(cid, itemid, amount, subType, ignoreCap, inBackpacks, bac
 	return a, 0
 end
 
-function doRemoveItemIdFromPosition(id, n, position)
+function doRemoveItemIdFromPos(id, n, position)
 	local thing = getThingFromPos({x = position.x, y = position.y, z = position.z, stackpos = 1})
 	if(thing.itemid ~= id) then
 		return false
@@ -153,25 +149,23 @@ function getNpcName()
 end
 
 function getNpcPos()
-	return getThingPosition(getNpcId())
+	return getCreaturePosition(getNpcId())
 end
 
 function selfGetPosition()
-	local t = getThingPosition(getNpcId())
+	local t = getNpcPos()
 	return t.x, t.y, t.z
 end
 
 msgcontains = doMessageCheck
 moveToPosition = selfMoveTo
-moveToCreature = selfMoveToThing
-selfMoveToCreature = selfMoveToThing
+moveToCreature = selfMoveToCreature
 selfMoveToPosition = selfMoveTo
+selfGotoIdle = selfIdle
 isPlayerPremiumCallback = isPremium
-doPosRemoveItem = doRemoveItemIdFromPosition
-doRemoveItemIdFromPos = doRemoveItemIdFromPosition
+doPosRemoveItem = doRemoveItemIdFromPos
 doNpcBuyItem = doPlayerRemoveItem
 doNpcSetCreatureFocus = selfFocus
 getNpcCid = getNpcId
 getDistanceTo = getNpcDistanceTo
-getDistanceToCreature = getNpcDistanceTo
-getNpcDistanceToCreature = getNpcDistanceTo
+getDistanceToCreature = getNpcDistanceToCreature
