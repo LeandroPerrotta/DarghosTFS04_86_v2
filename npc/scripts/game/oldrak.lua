@@ -26,7 +26,7 @@ function tradeHallowedAxe(cid, message, keywords, parameters, node)
     
     if(getPlayerItemCount(cid, ITEM_AXE) < 1 or getPlayerMoney(cid) < MONEY) then
     	npcHandler:say("Você não possui os itens solicitados, retorne aqui quando os possuir!", cid)
-    	npcHandler:resetNpc()
+    	npcHandler:resetNpc(cid)
     	return true
     end
     
@@ -37,7 +37,7 @@ function tradeHallowedAxe(cid, message, keywords, parameters, node)
 			return false
 		else
 	    	npcHandler:say("Aqui está o seu hallowed axe! Boa sorte!", cid)
-	    	npcHandler:resetNpc()
+	    	npcHandler:resetNpc(cid)
 	    	return true			
 		end
     end
@@ -59,7 +59,7 @@ function onAskTask(cid, message, keywords, parameters, node)
     	return true 	
 	elseif(taskStatus == 1) then
      	npcHandler:say("Infelizmente não possuo mais nenhuma tarefa para você...", cid)
-     	npcHandler:resetNpc()
+     	npcHandler:resetNpc(cid)
     	return true 	
     end
 end
@@ -74,14 +74,14 @@ function onAcceptTask(cid, message, keywords, parameters, node)
     
     if(taskStatus == 1) then
     	npcHandler:say("Infelizmente não possuo mais nenhuma tarefa para você...", cid)
-    	npcHandler:resetNpc()
+    	npcHandler:resetNpc(cid)
     	return true
     end
     
     if(taskStatus == -1) then
     	setPlayerStorageValue(cid, sid.TASK_KILL_DEMONS, 0)
      	npcHandler:say("Sua ajuda será muito valiosa " .. getPlayerName(cid) .. "! Me procure quando tiver concluido sua tarefa,", cid)
-    	npcHandler:resetNpc()
+    	npcHandler:resetNpc(cid)
     	return true   	
     end
     
@@ -91,11 +91,11 @@ function onAcceptTask(cid, message, keywords, parameters, node)
     	if(slainDemons >= TASK_DEMONS_KILL) then
     		setPlayerStorageValue(cid, sid.TASK_KILL_DEMONS, 1)
 	      	npcHandler:say("Como você esteve empenhado! Seremos eternamente gratos pela sua contribuição! Como recompensa você agora tem permissão para entrar na area infectada aonde fica o The Demon Oak.", cid)
-	    	npcHandler:resetNpc()
+	    	npcHandler:resetNpc(cid)
 	    	return true      	
     	else	
   	      	npcHandler:say("Ainda resta que você derrote mais " .. TASK_DEMONS_KILL - slainDemons .." demônios para concluir a sua tarefa.", cid)
-	    	npcHandler:resetNpc()
+	    	npcHandler:resetNpc(cid)
 	    	return true        	
     	end
     end    
@@ -112,12 +112,12 @@ function onAskDemonOak(cid, message, keywords, parameters, node)
     if(killDemonOak == -1) then
     
   		npcHandler:say("Ele está localizao ao leste daqui, em uma area infectada, não muito longe. Há rumores que os que o derrotaram ganharam valiosas recompensas.", cid)
-	    npcHandler:resetNpc()
+	    npcHandler:resetNpc(cid)
 	    return true     
     elseif(killDemonOak == 1) then
     
   		npcHandler:say("Parabens! Você derrotou o Demon Oak! Você agora poderá acessar a valiosa recompensa! Siga para o sul da area infectada e procure o tumulo de Yesim Adeit.", cid)
-	    npcHandler:resetNpc()
+	    npcHandler:resetNpc(cid)
 	    return true        
     end   
 end

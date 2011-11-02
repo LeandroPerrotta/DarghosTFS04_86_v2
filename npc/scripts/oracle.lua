@@ -22,15 +22,15 @@ function oracle(cid, message, keywords, parameters, node)
 	if(destination ~= nil and vocation ~= nil and town ~= nil) then
 		if(getPlayerLevel(cid) < parameters.level) then
 			npcHandler:say('You must first reach level ' .. parameters.level .. '!', cid)
-			npcHandler:resetNpc()
+			npcHandler:resetNpc(cid)
 		else
 			if(getPlayerVocation(cid) > 0) then
 				npcHandler:say('Sorry, You already have a vocation!')
-				npcHandler:resetNpc()
+				npcHandler:resetNpc(cid)
 			else
 				doPlayerSetVocation(cid, vocation)
 				doPlayerSetTown(cid, town)
-				npcHandler:resetNpc()
+				npcHandler:resetNpc(cid)
 
 				local tmp = getCreaturePosition(cid)
 				doTeleportThing(cid, destination)
