@@ -26,7 +26,7 @@ darghos_exp_multipler = 2
 -- Darghos spoof players
 -- opções: true (ativo), false (desativo)
 darghos_spoof_players = true
-darghos_players_to_spoof = 55
+darghos_players_to_spoof = 75
 darghos_spoof_start_in = 25
 
 -- Define se é necessario comer para recuperar life/mana
