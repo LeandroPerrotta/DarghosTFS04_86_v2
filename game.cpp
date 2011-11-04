@@ -5415,7 +5415,7 @@ Position Game::getClosestFreeTile(Creature* creature, Position pos, bool extende
 	uint32_t flags = 0;
 
 	if(ignoreBlockItems)
-		flags += FLAG_IGNOREBLOCKITEM;
+		flags |= FLAG_IGNOREBLOCKITEM;
 #endif
 
 	std::random_shuffle(relList.begin() + 1, relList.end());

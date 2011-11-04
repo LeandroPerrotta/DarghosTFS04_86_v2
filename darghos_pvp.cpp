@@ -228,7 +228,7 @@ bool Battleground::buildTeams()
 			break;
 	}
 
-	if(_tempList.size() < teamSize * 2)
+	if(_tempList.size() != teamSize * 2)
 		return false;
 
 	uint16_t _rand = random_range(1, 2);
