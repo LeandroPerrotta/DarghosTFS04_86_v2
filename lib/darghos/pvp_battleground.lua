@@ -7,7 +7,7 @@ BG_CONFIG_TEAMSIZE = 6
 BG_CONFIG_WINPOINTS = 50
 BG_CONFIG_DURATION = 60 * 15
 
-BG_AFK_TIME_LIMIT = 60
+BG_AFK_TIME_LIMIT = 60 * 2
 BG_WINNER_INPZ_PUNISH_INTERVAL = 60
 
 BG_LASTPLAYERS_BROADCAST_INTERVAL = 60 * 3
@@ -534,8 +534,8 @@ function pvpBattleground.onReportIdle(cid, idle_player)
 	setPlayerStorageValue(idle_player, sid.BATTLEGROUND_LAST_REPORT, os.time())
 	
 	pvpBattleground.sendPlayerChannelMessage(cid, "Você denunciou o jogador " .. getPlayerName(idle_player) .. " como inativo com! Ele será expulso da Battleground se continuar inativo no proximo minuto.")
-	doPlayerPopupFYI(idle_player, "ATENÇÃO: \n\nVocê foi acusado de estar inativo dentro da Battleground, o que é proibido!\nVocê tem 1 minuto para entrar em combate com um oponente ou será expulso da batalha e marcado como desertor!")
-	addEvent(pvpBattleground.validateReport, 1000 * 60, cid, idle_player)
+	doPlayerPopupFYI(idle_player, "ATENÇÃO: \n\nVocê foi acusado de estar inativo dentro da Battleground, o que é proibido!\nVocê tem " .. BG_AFK_TIME_LIMIT .. " segundos para entrar em combate com um oponente ou será expulso da batalha e marcado como desertor!")
+	addEvent(pvpBattleground.validateReport, 1000 * BG_AFK_TIME_LIMIT, cid, idle_player)
 end
 
 function pvpBattleground.validateReport(cid, idle_player)
