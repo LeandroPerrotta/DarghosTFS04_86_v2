@@ -47,6 +47,7 @@ pvpBattleground = {
 
 BATTLEGROUND_RATING = 3
 BATTLEGROUND_HIGH_RATE = 1601
+BATTLEGROUND_LOW_RATE = 501
 
 battlegrondRatingTable = {
 
@@ -101,7 +102,9 @@ function pvpBattleground.removePlayerRating(cid, timeIn, bgDuration)
 	local changeRating = pvpBattleground.getChangeRating(cid, timeIn, bgDuration)
 	
 	if(currentRating >= BATTLEGROUND_HIGH_RATE) then
-		changeRating = math.floor(changeRating * 1.25)
+		changeRating = math.floor(changeRating)
+	elseif(currentRating < BATTLEGROUND_LOW_RATE) then
+		changeRating = math.floor(changeRating * 0.25)
 	else
 		changeRating = math.floor(changeRating * 0.75)
 	end
