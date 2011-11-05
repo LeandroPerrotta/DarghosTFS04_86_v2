@@ -96,17 +96,23 @@ function pvpBattleground.setPlayerRating(cid, rating)
 	db.executeQuery("UPDATE `players` SET `battleground_rating` = " .. rating .. " WHERE `id` = " .. getPlayerGUID(cid) .. ";")
 end
 
-function pvpBattleground.removePlayerRating(cid, timeIn, bgDuration)
+function pvpBattleground.removePlayerRating(cid, timeIn, bgDuration, deserting)
+
+	deserting = deserting or false
 
 	local currentRating = pvpBattleground.getPlayerRating(cid)
 	local changeRating = pvpBattleground.getChangeRating(cid, timeIn, bgDuration)
 	
-	if(currentRating >= BATTLEGROUND_HIGH_RATE) then
-		changeRating = math.floor(changeRating)
-	elseif(currentRating < BATTLEGROUND_LOW_RATE) then
-		changeRating = math.floor(changeRating * 0.25)
+	if(not deserting) then
+		if(currentRating >= BATTLEGROUND_HIGH_RATE) then
+			changeRating = math.floor(changeRating)
+		elseif(currentRating < BATTLEGROUND_LOW_RATE) then
+			changeRating = math.floor(changeRating * 0.25)
+		else
+			changeRating = math.floor(changeRating * 0.75)
+		end
 	else
-		changeRating = math.floor(changeRating * 0.75)
+		changeRating = math.floor(changeRating)
 	end
 	
 	local newRating = math.max(currentRating - changeRating, 0)		
@@ -505,7 +511,7 @@ function pvpBattleground.onExit(cid, idle)
 		
 		pvpBattleground.sendPvpChannelMessage("[Battleground] Um jogador desertou a batalha! Quer substituir-lo imediatamente? Digite '!bg entrar'!", PVPCHANNEL_MSGMODE_OUTBATTLE)
 		
-		local removedRating = pvpBattleground.removePlayerRating(cid, BG_CONFIG_DURATION, BG_CONFIG_DURATION)
+		local removedRating = pvpBattleground.removePlayerRating(cid, BG_CONFIG_DURATION, BG_CONFIG_DURATION, true)
 		doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Você piorou a sua classificação (rating) em " .. removedRating .. " pontos por seu abandono da Battleground.")
 		
 		return true
