@@ -38,6 +38,7 @@
 #ifdef __DARGHOS_PVP_SYSTEM__
 #include "darghos_pvp.h"
 #include "darghos_const.h"
+#include "spells.h"
 #endif
 
 class House;
@@ -242,6 +243,8 @@ class Player : public Creature, public Cylinder
 		bool hasPvpBlessing() const;
 		void removePvpBlessing();
 		void removeBlessing(int16_t value);
+		void addCastingSpellEvent(uint32_t eventId) { castSpellEvent = eventId; }
+		void addCastingSpell(InstantSpell* spell) { castingSpell = spell; }
 		#endif
 		uint16_t getBlessings() const;
 
@@ -891,6 +894,8 @@ class Player : public Creature, public Cylinder
         bool doubleDamage;
 		time_t lastKnowUpdate;
 		bool pause;
+		uint32_t castSpellEvent;
+		InstantSpell* castingSpell;
         #endif
 
         #ifdef __DARGHOS_PVP_SYSTEM__

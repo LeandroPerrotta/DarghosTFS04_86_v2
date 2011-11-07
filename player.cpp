@@ -1215,6 +1215,12 @@ void Player::sendCancelMessage(ReturnValue message) const
 			sendCancel("You cannot add more items on this tile.");
 			break;
 
+#ifdef __DARGHOS_CUSTOM__
+		case RET_YOUINTERRUPTYOURCAST:
+			sendCancel("Your last action interrupt your spell cast.");
+			break;
+#endif
+
 		case RET_DONTSHOWMESSAGE:
 			break;
 
@@ -1583,6 +1589,13 @@ void Player::onWalk(Direction& dir)
 	Creature::onWalk(dir);
 	setNextActionTask(NULL);
 	setNextAction(OTSYS_TIME() + getStepDuration(dir));
+
+	if(castSpellEvent != 0 && castingSpell)
+	{
+		castingSpell->interruptCast(this, castSpellEvent);
+		castSpellEvent = 0;
+		castingSpell = NULL;
+	}
 }
 
 void Player::onCreatureMove(const Creature* creature, const Tile* newTile, const Position& newPos,

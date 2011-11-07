@@ -460,6 +460,9 @@ Spell::Spell()
 	soul = 0;
 	range = -1;
 	exhaustion = 1000;
+#ifdef __DARGHOS_CUSTOM__
+	castDelay = 0;
+#endif
 	needTarget = false;
 	needWeapon = false;
 	selfTarget = false;
@@ -518,6 +521,11 @@ bool Spell::configureSpell(xmlNodePtr p)
 
 	if(readXMLInteger(p, "exhaustion", intValue))
 		exhaustion = intValue;
+
+#ifdef __DARGHOS_CUSTOM__
+	if(readXMLInteger(p, "castdelay", intValue))
+		castDelay = intValue;
+#endif
 
 	if(readXMLString(p, "enabled", strValue))
 		enabled = booleanString(strValue);
@@ -598,6 +606,12 @@ bool Spell::checkSpell(Player* player) const
 	}
 	else if(player->hasCondition(CONDITION_EXHAUST, EXHAUST_HEALING))
 		exhausted = true;
+
+#ifdef __DARGHOS_CUSTOM__
+	//é sempre possivel castar uma magia com cast delay, já que, durante o cast, qualquer coisa que o jogador fizer irá interromper o cast
+	if(player->isInBattleground() && castDelay > 0)
+		exhausted = false;
+#endif
 
 	if(exhausted && !player->hasFlag(PlayerFlag_HasNoExhaustion))
 	{
@@ -735,7 +749,7 @@ bool Spell::checkInstantSpell(Player* player, Creature* creature)
 	if(!needTarget)
 	{
 		#ifdef __DARGHOS_CUSTOM__
-		if(isAggressive && player->hasCondition(CONDITION_EXHAUST, EXHAUST_COMBAT_AREA))
+		if(isAggressive && castDelay == 0 && player->hasCondition(CONDITION_EXHAUST, EXHAUST_COMBAT_AREA))
 		{
 			player->sendCancelMessage(RET_YOUAREEXHAUSTED);
 			g_game.addMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);
@@ -964,8 +978,22 @@ void Spell::postSpell(Player* player, bool finishedCast /*= true*/, bool payCost
 {
 	if(finishedCast)
 	{
+#ifdef __DARGHOS_CUSTOM__
+		if(!player->isInBattleground())
+		{
+			if(!player->hasFlag(PlayerFlag_HasNoExhaustion) && exhaustion > 0)
+				player->addExhaust(exhaustion, isAggressive ? EXHAUST_COMBAT : EXHAUST_HEALING);
+		}
+		else
+		{
+			if(!player->hasFlag(PlayerFlag_HasNoExhaustion) && exhaustion > 0 && castDelay == 0)
+				player->addExhaust(exhaustion, isAggressive ? EXHAUST_COMBAT : EXHAUST_HEALING);
+		}
+#else
 		if(!player->hasFlag(PlayerFlag_HasNoExhaustion) && exhaustion > 0)
 			player->addExhaust(exhaustion, isAggressive ? EXHAUST_COMBAT : EXHAUST_HEALING);
+#endif
+			
 
 		if(isAggressive && !player->hasFlag(PlayerFlag_NotGainInFight))
 			player->addInFightTicks(false);
@@ -1104,7 +1132,11 @@ bool InstantSpell::loadFunction(const std::string& functionName)
 	return true;
 }
 
+#ifdef __DARGHOS_CUSTOM__
+bool InstantSpell::castInstant(Player* player, const std::string& param, bool finishingCast)
+#else
 bool InstantSpell::castInstant(Player* player, const std::string& param)
+#endif
 {
 	LuaVariant var;
 	if(selfTarget)
@@ -1191,10 +1223,32 @@ bool InstantSpell::castInstant(Player* player, const std::string& param)
 			return false;
 	}
 
+#ifdef __DARGHOS_CUSTOM__
+	if(!finishingCast && player->isInBattleground() && castDelay > 0)
+	{
+		player->addCastingSpellEvent(Scheduler::getInstance().addEvent(createSchedulerTask(1000 * castDelay,
+				boost::bind(&InstantSpell::castInstant, this, player, param, true))));
+		player->addCastingSpell(this);
+	}
+	else
+	{
+		if(player->isInBattleground() && castDelay > 0)
+		{
+			player->addCastingSpell(0);
+			player->addCastingSpell(NULL);
+		}
+
+		if(!internalCastSpell(player, var))
+			return false;
+
+		Spell::postSpell(player);
+	}
+#else
 	if(!internalCastSpell(player, var))
 		return false;
 
 	Spell::postSpell(player);
+#endif
 	return true;
 }
 

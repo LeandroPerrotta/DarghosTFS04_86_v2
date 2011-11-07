@@ -130,6 +130,9 @@ class Spell : public BaseSpell
 		uint32_t getExhaustion() const {return exhaustion;}
 		bool isEnabled() const {return enabled;}
 		bool isPremium() const {return premium;}
+#ifdef __DARGHOS_CUSTOM__
+		uint32_t getCastDelay() const {return castDelay;}
+#endif
 
 		virtual bool isInstant() const = 0;
 		bool isLearnable() const {return learnable;}
@@ -155,6 +158,9 @@ class Spell : public BaseSpell
 		int32_t soul;
 		int32_t range;
 		uint32_t exhaustion;
+#ifdef __DARGHOS_CUSTOM__
+		uint32_t castDelay;
+#endif
 
 		bool needTarget;
 		bool needWeapon;
@@ -180,10 +186,21 @@ class InstantSpell : public TalkAction, public Spell
 		virtual bool configureEvent(xmlNodePtr p);
 		virtual bool loadFunction(const std::string& functionName);
 
+#ifdef __DARGHOS_CUSTOM__
+		virtual bool castInstant(Player* player, const std::string& param, bool finishingCast = false);
+		virtual bool interruptCast(Player* player, uint32_t eventId) { 
+			Scheduler::getInstance().stopEvent(eventId); 
+			player->sendCancelMessage(RET_YOUINTERRUPTYOURCAST);
+			g_game.addMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);		
+		}
+#else
 		virtual bool castInstant(Player* player, const std::string& param);
+#endif
+		
 
 		virtual bool castSpell(Creature* creature);
 		virtual bool castSpell(Creature* creature, Creature* target);
+
 
 		//scripting
 		bool executeCastSpell(Creature* creature, const LuaVariant& var);
