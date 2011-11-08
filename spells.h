@@ -27,7 +27,7 @@
 #include "actions.h"
 #include "talkaction.h"
 
-#ifdef __DARGHOS_CUSTOM__
+#ifdef __DARGHOS_CUSTOM_SPELLS__
 #include "scheduler.h"
 #endif
 
@@ -134,7 +134,7 @@ class Spell : public BaseSpell
 		uint32_t getExhaustion() const {return exhaustion;}
 		bool isEnabled() const {return enabled;}
 		bool isPremium() const {return premium;}
-#ifdef __DARGHOS_CUSTOM__
+#ifdef __DARGHOS_CUSTOM_SPELLS__
 		uint32_t getCastDelay() const {return castDelay;}
 #endif
 
@@ -162,7 +162,7 @@ class Spell : public BaseSpell
 		int32_t soul;
 		int32_t range;
 		uint32_t exhaustion;
-#ifdef __DARGHOS_CUSTOM__
+#ifdef __DARGHOS_CUSTOM_SPELLS__
 		uint32_t castDelay;
 #endif
 
@@ -190,7 +190,7 @@ class InstantSpell : public TalkAction, public Spell
 		virtual bool configureEvent(xmlNodePtr p);
 		virtual bool loadFunction(const std::string& functionName);
 
-#ifdef __DARGHOS_CUSTOM__
+#ifdef __DARGHOS_CUSTOM_SPELLS__
 		virtual bool castInstant(Player* player, const std::string& param, bool finishingCast = false);
 		virtual void interruptCast(Player* player, uint32_t eventId);
 #else
