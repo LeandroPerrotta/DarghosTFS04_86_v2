@@ -17,7 +17,7 @@ function process(cid, message, keywords, parameters, node)
     end 
     
     if(talkState == 1) then
-    	local lastChangePvp = getPlayerStorageValue(cid, sid.darghos_change_pvp_days_cooldown)
+    	local lastChangePvp = getPlayerStorageValue(cid, sid.LAST_CHANGE_PVP)
     	
     	if(lastChangePvp ~= -1 and lastChangePvp + (darghos_change_pvp_days_cooldown * 60 * 60 * 24) > os.time()) then
     	
@@ -50,13 +50,13 @@ function process(cid, message, keywords, parameters, node)
 				npcHandler:say("VOCÊ TEM CERTEZA QUE DESEJA DESATIVAR O SEU PVP???", cid)
 			else
 				npcHandler:say("Você ATUALMENTE está com o seu PVP DESATIVO! Ao ATIVAR O PVP você PODERÁ ATACAR, MATAR, SER ATACADO E ATÉ MORTO POR OUTROS JOGADORES QUE TAMBÉM ESTEJAM COM PVP ATIVO!!!", cid)
-				npcHandler:say("PRESTE MUITA ATENÇÃO!! AO FAZER ESTA MUDANÇA VOCÊ NÃO PODERÁ DESATIVAR NOVAMENTE O SEU PVP DE NENHUMA FORMA PELOS PROXIMOS " .. darghos_change_pvp_days_cooldown .. " DIAS!")
+				npcHandler:say("PRESTE MUITA ATENÇÃO!! AO FAZER ESTA MUDANÇA VOCÊ NÃO PODERÁ DESATIVAR NOVAMENTE O SEU PVP DE NENHUMA FORMA PELOS PROXIMOS " .. darghos_change_pvp_days_cooldown .. " DIAS!", cid)
 				
 				if(debuffExpMsg ~= nil) then
 					npcHandler:say(debuffExpMsg, cid)
 				end
 				
-				npcHandler:say("VOCÊ TEM CERTEZA QUE DESEJA ATIVAR O SEU PVP???")
+				npcHandler:say("VOCÊ TEM CERTEZA QUE DESEJA ATIVAR O SEU PVP???", cid)
 			end
     	end
     elseif(talkState == 2) then
