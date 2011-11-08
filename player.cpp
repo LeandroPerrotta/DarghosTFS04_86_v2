@@ -207,8 +207,18 @@ std::string Player::getDescription(int32_t lookDistance) const
 	else
 	{
 		s << nameDescription;
+#ifdef __DARGHOS_CUSTOM__
+		if(!hasCustomFlag(PlayerCustomFlag_HideLevel))
+			s << " (Level " << level;
+
+		if(isPvpEnabled())
+			s << " with pvp enabled)";
+		else
+			s << " with pvp disabled)";
+#else
 		if(!hasCustomFlag(PlayerCustomFlag_HideLevel))
 			s << " (Level " << level << ")";
+#endif
 
 		s << ". " << (sex % 2 ? "He" : "She");
 		if(hasFlag(PlayerFlag_ShowGroupNameInsteadOfVocation))
@@ -902,7 +912,6 @@ bool Player::canWalkthrough(const Creature* creature) const
 	if(!player)
 		return false;
 #endif
-		
 
 	if((((g_game.getWorldType() == WORLDTYPE_OPTIONAL &&
 #ifdef __WAR_SYSTEM__
@@ -910,9 +919,9 @@ bool Player::canWalkthrough(const Creature* creature) const
 #endif
 #ifdef __DARGHOS_CUSTOM__
 		player->getVocation()->isAttackable()) 
-		|| !isPvpEnabled()
-		|| (!isSummon && (player->getTile()->getZone() == ZONE_OPTIONAL || player->getTile()->getZone() == ZONE_PROTECTION || !player->isPvpEnabled())) 
-		|| (isSummon && (creature->getZone() == ZONE_OPTIONAL || creature->getZone() == ZONE_PROTECTION || !player->isPvpEnabled())) 
+		|| (!isPvpEnabled() && getZone() != ZONE_HARDCORE)
+		|| (!isSummon && (player->getTile()->getZone() == ZONE_OPTIONAL || player->getTile()->getZone() == ZONE_PROTECTION || (!player->isPvpEnabled() && creature->getZone() != ZONE_HARDCORE))) 
+		|| (isSummon && (creature->getZone() == ZONE_OPTIONAL || creature->getZone() == ZONE_PROTECTION || (!player->isPvpEnabled() && creature->getZone() != ZONE_HARDCORE))) 
 		|| (player->getVocation()->isAttackable() &&
 #else
 		player->getVocation()->isAttackable()) || (player->getVocation()->isAttackable() &&

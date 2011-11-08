@@ -565,7 +565,7 @@ bool Combat::CombatHealthFunc(Creature* caster, Creature* target, const CombatPa
 				change = 0;
 			else
 			{
-				std::clog << "[Health Change] Caster: " << caster->getName() << ", Target: " << target->getName() << ", TeamSize: " << g_battleground.getTeamSize() << ", Change: " << change;
+				//std::clog << "[Health Change] Caster: " << caster->getName() << ", Target: " << target->getName() << ", TeamSize: " << g_battleground.getTeamSize() << ", Change: " << change;
 
 				BgTeamsMap teams = g_battleground.getTeams();
 
@@ -577,7 +577,7 @@ bool Combat::CombatHealthFunc(Creature* caster, Creature* target, const CombatPa
 
 				if(casterTeamSize > targetTeamSize)
 				{
-					std::clog << ", CasterTeamSize: " << casterTeamSize << ", TargetTeamSize: " << targetTeamSize;
+					//std::clog << ", CasterTeamSize: " << casterTeamSize << ", TargetTeamSize: " << targetTeamSize;
 					double basePercent = 100. / g_battleground.getTeamSize();
 					double diminushPercent = ((casterTeamSize - targetTeamSize) * basePercent) / 100;
 
@@ -587,7 +587,7 @@ bool Combat::CombatHealthFunc(Creature* caster, Creature* target, const CombatPa
 				else if(casterTeamSize == targetTeamSize && casterTeam.levelSum > targetTeam.levelSum)
 				{
 					uint16_t casterTeamAvgLvl = std::ceil((double)(casterTeam.levelSum / g_battleground.getTeamSize()));
-					std::clog << ", CasterTeamLevelSum: " << casterTeam.levelSum << ", TargetTeamLevelSum: " << targetTeam.levelSum << ", CasterTeamLevelAvg: " << casterTeamAvgLvl;
+					//std::clog << ", CasterTeamLevelSum: " << casterTeam.levelSum << ", TargetTeamLevelSum: " << targetTeam.levelSum << ", CasterTeamLevelAvg: " << casterTeamAvgLvl;
 
 					if((targetTeam.levelSum + casterTeamAvgLvl) < casterTeam.levelSum)
 					{
@@ -599,7 +599,7 @@ bool Combat::CombatHealthFunc(Creature* caster, Creature* target, const CombatPa
 					}
 				}
 
-				std::clog << ", NewChange: " << change << std::endl;
+				//std::clog << ", NewChange: " << change << std::endl;
 			}
 		}
 		#endif
@@ -646,7 +646,7 @@ bool Combat::CombatManaFunc(Creature* caster, Creature* target, const CombatPara
 				change = 0;
 			else
 			{
-				std::clog << "[Mana Change] Caster: " << caster->getName() << ", Target: " << target->getName() << ", TeamSize: " << g_battleground.getTeamSize() << ", Change: " << change;
+				//std::clog << "[Mana Change] Caster: " << caster->getName() << ", Target: " << target->getName() << ", TeamSize: " << g_battleground.getTeamSize() << ", Change: " << change;
 
 				BgTeamsMap teams = g_battleground.getTeams();
 
@@ -658,7 +658,7 @@ bool Combat::CombatManaFunc(Creature* caster, Creature* target, const CombatPara
 
 				if(casterTeamSize > targetTeamSize)
 				{
-					std::clog << ", CasterTeamSize: " << casterTeamSize << ", TargetTeamSize: " << targetTeamSize;
+					//std::clog << ", CasterTeamSize: " << casterTeamSize << ", TargetTeamSize: " << targetTeamSize;
 					double basePercent = 100. / g_battleground.getTeamSize();
 					double diminushPercent = ((casterTeamSize - targetTeamSize) * basePercent) / 100;
 
@@ -667,9 +667,9 @@ bool Combat::CombatManaFunc(Creature* caster, Creature* target, const CombatPara
 				}
 				else if(casterTeamSize == targetTeamSize && casterTeam.levelSum > targetTeam.levelSum)
 				{
-					std::clog << ", CasterTeamLevelSum: " << casterTeam.levelSum << ", TargetTeamLevelSum: " << targetTeam.levelSum;
+					//std::clog << ", CasterTeamLevelSum: " << casterTeam.levelSum << ", TargetTeamLevelSum: " << targetTeam.levelSum;
 					uint16_t casterTeamAvgLvl = std::ceil((double)(casterTeam.levelSum / g_battleground.getTeamSize()));
-					std::clog << ", CasterTeamLevelAvg: " << casterTeamAvgLvl;
+					//std::clog << ", CasterTeamLevelAvg: " << casterTeamAvgLvl;
 
 					if((targetTeam.levelSum + casterTeamAvgLvl) < casterTeam.levelSum)
 					{
@@ -681,7 +681,7 @@ bool Combat::CombatManaFunc(Creature* caster, Creature* target, const CombatPara
 					}
 				}
 
-				std::clog << ", NewChange: " << change << std::endl;
+				//std::clog << ", NewChange: " << change << std::endl;
 			}
 		}
 		#endif
