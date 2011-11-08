@@ -10532,7 +10532,7 @@ int32_t LuaInterface::luaDoPlayerDisablePvp(lua_State* L)
 	return 1;
 }
 
-int32_t LuaInterface::luaDoPlayerDisablePvp(lua_State* L)
+int32_t LuaInterface::luaDoPlayerIsPvpEnable(lua_State* L)
 {
 	//doPlayerIsPvpEnable(cid)
 	ScriptEnviroment* env = getEnv();
