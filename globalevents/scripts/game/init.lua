@@ -33,7 +33,6 @@ function onStartup()
 	
 	-- resetando storages diarios
 	db.executeQuery("UPDATE `player_storage` SET `value` = -1 WHERE `key` = '" .. sid.WEBSITE_POLL_NOTIFY .. "'")
-	db.executeQuery("UPDATE `player_storage` SET `value` = -1 WHERE `key` = '" .. sid.BATTLEGROUND_FREE_EXP_GAINS .. "'")
 	
 	luaGlobal.truncate()
 	return true
