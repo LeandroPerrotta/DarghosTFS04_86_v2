@@ -879,6 +879,10 @@ bool IOLoginData::savePlayer(Player* player, bool preSave/* = true*/, bool shall
 		query << "`rank_id` = " << IOGuild::getInstance()->getRankIdByLevel(player->getGuildId(), player->getGuildLevel()) << ", ";
 	}
 
+#ifdef __DARGHOS_CUSTOM__
+	query << "`pvpEnabled` = " << (player->pvpStatus ? 1 : 0) << ", ";
+#endif
+
 	Vocation* tmpVoc = player->vocation;
 	for(uint32_t i = 0; i <= player->promotionLevel; ++i)
 		tmpVoc = Vocations::getInstance()->getVocation(tmpVoc->getFromVocation());
