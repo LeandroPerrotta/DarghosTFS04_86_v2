@@ -21,7 +21,7 @@ function process(cid, message, keywords, parameters, node)
     	
     	if(lastChangePvp ~= -1 and lastChangePvp + (darghos_change_pvp_days_cooldown * 60 * 60 * 24) > os.time()) then
     	
-    		local leftDays = math.floor(((lastChangePvp + (darghos_change_pvp_cooldown * 60 * 60 * 24)) - os.time()) / 60 / 60 / 24)
+    		local leftDays = math.floor(((lastChangePvp + (darghos_change_pvp_days_cooldown * 60 * 60 * 24)) - os.time()) / 60 / 60 / 24)
     	
     		if(leftDays > 0) then
 				npcHandler:say("Você alterou a sua habilidade de entrar em combate a muito pouco tempo! Você deve aguardar por mais " .. leftDays .. " dias para uma nova mudança!", cid)
