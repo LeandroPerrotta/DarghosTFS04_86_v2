@@ -149,6 +149,7 @@ class ConfigManager
 			#ifdef __DARGHOS_CUSTOM__
 			DEATH_FRAGGERS,
 			USE_BLESSING_AS_PVP,
+			UNFAIR_FIGHT,
 			#endif
 			RED_DAILY_LIMIT,
 			RED_WEEKLY_LIMIT,
