@@ -366,7 +366,7 @@
 	<instant name="Eternal Winter" words="exevo gran mas frigo" prem="1" lvl="60" mana="1200" exhaustion="2000" selftarget="1" script="attack/eternal_winter.lua">
 		<vocation name="Druid"/>    <vocation name="Elder Druid"/>
 	</instant>
-	<instant name="Hell's Core" words="exevo gran mas flam" prem="1" lvl="60" mana="1200" exhaustion="2000" selftarget="1" script="attack/hells_core.lua">
+	<instant name="Hell's Core" words="exevo gran mas flam" prem="1" lvl="60" mana="1200" castdelay="4000" exhaustion="2000" selftarget="1" script="attack/hells_core.lua">
 		<vocation name="Sorcerer"/> <vocation name="Master Sorcerer"/>
 	</instant>
 	<instant name="Fierce Berserk" words="exori gran" prem="1" lvl="70" mana="340" exhaustion="2000" selftarget="1" script="attack/fierce_berserk.lua">
