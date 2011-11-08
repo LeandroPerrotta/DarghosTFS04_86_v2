@@ -919,9 +919,9 @@ bool Player::canWalkthrough(const Creature* creature) const
 #endif
 #ifdef __DARGHOS_CUSTOM__
 		player->getVocation()->isAttackable()) 
-		|| (!isPvpEnabled() && getZone() != ZONE_HARDCORE)
-		|| (!isSummon && (player->getTile()->getZone() == ZONE_OPTIONAL || player->getTile()->getZone() == ZONE_PROTECTION || (!player->isPvpEnabled() && creature->getZone() != ZONE_HARDCORE))) 
-		|| (isSummon && (creature->getZone() == ZONE_OPTIONAL || creature->getZone() == ZONE_PROTECTION || (!player->isPvpEnabled() && creature->getZone() != ZONE_HARDCORE))) 
+		|| (!isPvpEnabled() && getTile() && getTile()->getZone() != ZONE_HARDCORE)
+		|| (!isSummon && player->getTile() && (player->getTile()->getZone() == ZONE_OPTIONAL || player->getTile()->getZone() == ZONE_PROTECTION || (!player->isPvpEnabled() && creature->getZone() != ZONE_HARDCORE))) 
+		|| (isSummon && player->getTile() && (creature->getZone() == ZONE_OPTIONAL || creature->getZone() == ZONE_PROTECTION || (!player->isPvpEnabled() && creature->getZone() != ZONE_HARDCORE))) 
 		|| (player->getVocation()->isAttackable() &&
 #else
 		player->getVocation()->isAttackable()) || (player->getVocation()->isAttackable() &&
