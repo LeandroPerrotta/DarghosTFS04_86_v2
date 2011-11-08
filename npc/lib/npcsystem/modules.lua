@@ -182,6 +182,10 @@ if(Modules == nil) then
 			npcHandler:say(parameters.storageInfo or 'You may not travel there yet!', cid)
 		elseif(not pzLocked and isPlayerPzLocked(cid)) then
 			npcHandler:say('First get rid of those blood stains! You are not going to ruin my vehicle!', cid)
+		--[[ DARGHOS_CUSTOM ]]--
+		elseif(parameters.pvpEnabledOnly ~= nil and parameters.pvpEnabledOnly and not doPlayerIsPvpEnable(cid)) then
+			npcHandler:say('You must enable your pvp to travel to this town.', cid)		
+		--[[ DARGHOS_CUSTOM ]]--	
 		elseif(not doPlayerRemoveMoney(cid, parameters.cost)) then
 			npcHandler:say('You don\'t have enough money.', cid)
 		else

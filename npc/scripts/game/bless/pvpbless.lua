@@ -47,6 +47,7 @@ function process(cid, message, keywords, parameters, node)
 					npcHandler:say(debuffExpMsg, cid)
 				end
 				
+				npcHandler:say("VOCÊ TAMBÉM SERÁ LEVADO PARA QUENDOR QUE PASSARÁ A SER A SUA CIDADE!", cid)
 				npcHandler:say("VOCÊ TEM CERTEZA QUE DESEJA DESATIVAR O SEU PVP???", cid)
 			else
 				npcHandler:say("Você ATUALMENTE está com o seu PVP DESATIVO! Ao ATIVAR O PVP você PODERÁ ATACAR, MATAR, SER ATACADO E ATÉ MORTO POR OUTROS JOGADORES QUE TAMBÉM ESTEJAM COM PVP ATIVO!!!", cid)
@@ -56,6 +57,7 @@ function process(cid, message, keywords, parameters, node)
 					npcHandler:say(debuffExpMsg, cid)
 				end
 				
+				npcHandler:say("VOCÊ TAMBÉM SERÁ LEVADO PARA QUENDOR QUE PASSARÁ A SER A SUA CIDADE!", cid)
 				npcHandler:say("VOCÊ TEM CERTEZA QUE DESEJA ATIVAR O SEU PVP???", cid)
 			end
     	end
@@ -66,16 +68,21 @@ function process(cid, message, keywords, parameters, node)
     	if(doPlayerIsPvpEnable(cid)) then
     		npcHandler:say("ESTÁ FEITO!! Seu PvP agora está DESATIVADO!! Espero que não se arrependa de sua decisão...", cid)
     		doPlayerDisablePvp(cid)
-    		setPlayerStorageValue(cid, sid.LAST_CHANGE_PVP, os.time())
-    		setPlayerStorageValue(cid, sid.CHANGE_PVP_EXP_DEBUFF, os.time() + (60 * 60 * 24 * darghos_change_pvp_days_cooldown))
     	else
     		npcHandler:say("ESTÁ FEITO!! Seu PvP agora está ATIVO!! Espero que não se arrependa de sua decisão...", cid)
-    		doPlayerEnablePvp(cid)
-       		setPlayerStorageValue(cid, sid.LAST_CHANGE_PVP, os.time())
-    		setPlayerStorageValue(cid, sid.CHANGE_PVP_EXP_DEBUFF, os.time() + (60 * 60 * 24 * darghos_change_pvp_days_cooldown)) 		
+    		doPlayerEnablePvp(cid)			
     	end
     	
+    	setPlayerStorageValue(cid, sid.LAST_CHANGE_PVP, os.time())
+    	setPlayerStorageValue(cid, sid.CHANGE_PVP_EXP_DEBUFF, os.time() + (60 * 60 * 24 * darghos_change_pvp_days_cooldown)) 
+    	
+    	local oldpos = getPlayerPosition(cid) 	
+    	doTeleportThing(cid, getTownTemplePosition(towns.QUENDOR))
+    	doPlayerSetTown(cid, towns.QUENDOR)
+    	doSendMagicEffect(oldpos, CONST_ME_MAGIC_BLUE)
+    	
     	setStageType(cid, SKILL__LEVEL)
+    	npcHandler:resetNpc(cid)
     end
     
     return true
