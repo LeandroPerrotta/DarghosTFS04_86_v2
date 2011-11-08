@@ -123,7 +123,12 @@
 	towns =
 	{
 		QUENDOR = 1,
-		ISLAND_OF_PEACE = 6
+		AARAGON = 2,
+		SALAZART = 5,	
+		ISLAND_OF_PEACE = 6,
+		NORTHREND = 7,
+		KASHMIR = 9,
+		ARACURA = 10
 	}
 	
 	temp_towns =
