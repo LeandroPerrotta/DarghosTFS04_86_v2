@@ -17,7 +17,7 @@ function process(cid, message, keywords, parameters, node)
     end 
     
     if(talkState == 1) then
-    	local lastChangePvp = getPlayerStorageValue(cid, sid.darghos_change_pvp_cooldown)
+    	local lastChangePvp = getPlayerStorageValue(cid, sid.darghos_change_pvp_days_cooldown)
     	
     	if(lastChangePvp ~= -1 and lastChangePvp + (darghos_change_pvp_days_cooldown * 60 * 60 * 24) > os.time()) then
     	
@@ -67,12 +67,12 @@ function process(cid, message, keywords, parameters, node)
     		npcHandler:say("ESTÁ FEITO!! Seu PvP agora está DESATIVADO!! Espero que não se arrependa de sua decisão...", cid)
     		doPlayerDisablePvp(cid)
     		setPlayerStorageValue(cid, sid.LAST_CHANGE_PVP, os.time())
-    		setPlayerStorageValue(cid, sid.CHANGE_PVP_EXP_DEBUFF, os.time() + (60 * 60 * 24 * darghos_change_pvp_cooldown))
+    		setPlayerStorageValue(cid, sid.CHANGE_PVP_EXP_DEBUFF, os.time() + (60 * 60 * 24 * darghos_change_pvp_days_cooldown))
     	else
     		npcHandler:say("ESTÁ FEITO!! Seu PvP agora está ATIVO!! Espero que não se arrependa de sua decisão...", cid)
     		doPlayerEnablePvp(cid)
        		setPlayerStorageValue(cid, sid.LAST_CHANGE_PVP, os.time())
-    		setPlayerStorageValue(cid, sid.CHANGE_PVP_EXP_DEBUFF, os.time() + (60 * 60 * 24 * darghos_change_pvp_cooldown)) 		
+    		setPlayerStorageValue(cid, sid.CHANGE_PVP_EXP_DEBUFF, os.time() + (60 * 60 * 24 * darghos_change_pvp_days_cooldown)) 		
     	end
     	
     	setStageType(cid, SKILL__LEVEL)
