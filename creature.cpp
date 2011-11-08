@@ -551,7 +551,13 @@ void Creature::onCreatureMove(const Creature* creature, const Tile* newTile, con
 		}
 
 #ifdef __DARGHOS_CUSTOM__
-		if(newTile->getZone() != oldTile->getZone() || (oldTile->ground && Item::items[oldTile->ground->getID()].walkStack && newTile->ground && !Item::items[newTile->ground->getID()].walkStack))
+		if(newTile->getZone() != oldTile->getZone() 
+			|| ((oldTile->ground && newTile->ground) 
+			&& (
+				(Item::items[oldTile->ground->getID()].walkStack && !Item::items[newTile->ground->getID()].walkStack)
+				|| (!Item::items[oldTile->ground->getID()].walkStack && Item::items[newTile->ground->getID()].walkStack)
+				))
+			)
 #else
 		if(newTile->getZone() != oldTile->getZone())
 #endif
