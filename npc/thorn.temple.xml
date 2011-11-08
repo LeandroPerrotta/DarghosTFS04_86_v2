@@ -5,10 +5,9 @@
   
  	<parameters>
 		<parameter key="module_keywords" value="1" />
-       	<parameter key="message_greet" value="Hello. How may I help you |PLAYERNAME|?" />
-		<parameter key="keywords" value="job;name" />
-		
-		<parameter key="keyword_reply1" value="My job is to help some newbies into trouble. Also I can bless someone with a {twist of fate}, the bless pvp." />
+       	<parameter key="message_greet" value="Olá |PLAYERNAME|! Como posso lhe {ajudar}?" />
+		<parameter key="keywords" value="name" />
+	
 		<parameter key="keyword_reply2" value="My name is |NPCNAME|." />		
-	</parameters>    
+	</parameters>      
 </npc>

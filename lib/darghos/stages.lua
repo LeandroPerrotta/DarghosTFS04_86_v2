@@ -114,7 +114,14 @@ end
 function changeStage(cid, skilltype, multiple)
 
 	if(skilltype == SKILL__LEVEL) then
-		setExperienceRate(cid, multiple * darghos_exp_multipler)
+		local changePvpDebuffExpire = getPlayerStorageValue(cid, sid.CHANGE_PVP_EXP_DEBUFF)		
+		local changePvpDebuff = 1
+		
+		if(changePvpDebuffExpire ~= nil and os.time() < changePvpDebuffExpire)  then
+			changePvpDebuff = round(darghos_change_pvp_debuff_percent / 100, 2)
+		end
+	
+		setExperienceRate(cid, multiple * darghos_exp_multipler * changePvpDebuff)
 	elseif(isStagedSkill(skilltype, true)) then
 		setSkillRate(cid, skilltype, multiple)
 	else
@@ -132,6 +139,7 @@ function setStagesOnLogin(cid)
 	end	
 end
 
+function setStageType(cid, skilltype) setStageOnAdvance(cid, skilltype) end
 function setStageOnAdvance(cid, skilltype)
 
 	if(isStagedSkill(skilltype)) then

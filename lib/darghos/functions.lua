@@ -1,3 +1,9 @@
+function round(number, decimals)
+	decimals = decimals or 1
+	local shift = 10 ^ decimals
+	return math.floor(number * shift + 0.5) / shift
+end
+
 function getPlayerPVPBlessing(cid)
 	local pvpBless = getConfigValue('useBlessingAsPvp')
 	return getPlayerBlessing(cid, pvpBless) or false
