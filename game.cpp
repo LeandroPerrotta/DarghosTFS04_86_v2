@@ -1146,11 +1146,20 @@ bool Game::playerMoveCreature(uint32_t playerId, uint32_t movingCreatureId,
 			}
 
 			uint32_t protectionLevel = g_config.getNumber(ConfigManager::PROTECTION_LEVEL);
+#ifdef __DARGHOS_CUSTOM__
+			if(!player->isPvpEnabled() || (player->getLevel() < protectionLevel && player->getVocation()->isAttackable()))
+#else
 			if(player->getLevel() < protectionLevel && player->getVocation()->isAttackable())
+#endif
 			{
 				Player* movingPlayer = movingCreature->getPlayer();
+#ifdef __DARGHOS_CUSTOM__
+				if(movingPlayer && (movingPlayer->isPvpEnabled() || (movingPlayer->getLevel() >= protectionLevel
+					&& movingPlayer->getVocation()->isAttackable())))
+#else
 				if(movingPlayer && movingPlayer->getLevel() >= protectionLevel
 					&& movingPlayer->getVocation()->isAttackable())
+#endif
 				{
 					player->sendCancelMessage(RET_PLAYERISNOTREACHABLE);
 					return false;

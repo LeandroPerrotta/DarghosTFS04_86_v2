@@ -392,6 +392,11 @@ bool Combat::isProtected(Player* attacker, Player* target)
 	if(target->getLevel() < protectionLevel || attacker->getLevel() < protectionLevel)
 		return true;
 
+#ifdef __DARGHOS_CUSTOM__
+	if(!target->isPvpEnabled() || !attacker->isPvpEnabled())
+		return true;
+#endif
+
 	if(!attacker->getVocation()->isAttackable() || !target->getVocation()->isAttackable())
 		return true;
 

@@ -38,6 +38,9 @@
 #ifdef __DARGHOS_PVP_SYSTEM__
 #include "darghos_pvp.h"
 #include "darghos_const.h"
+#endif
+
+#ifdef __DARGHOS_CUSTOM_SPELLS__
 #include "spells.h"
 #endif
 
@@ -243,9 +246,15 @@ class Player : public Creature, public Cylinder
 		bool hasPvpBlessing() const;
 		void removePvpBlessing();
 		void removeBlessing(int16_t value);
+		void setPvpStatus(bool status) { pvpStatus = status; }
+		bool isPvpEnabled() const { return pvpStatus; } 
+		#endif
+
+#ifdef __DARGHOS_CUSTOM_SPELLS__
 		void addCastingSpellEvent(uint32_t eventId) { castSpellEvent = eventId; }
 		void addCastingSpell(InstantSpell* spell) { castingSpell = spell; }
-		#endif
+#endif
+
 		uint16_t getBlessings() const;
 
 		OperatingSystem_t getOperatingSystem() const {return operatingSystem;}
@@ -894,9 +903,13 @@ class Player : public Creature, public Cylinder
         bool doubleDamage;
 		time_t lastKnowUpdate;
 		bool pause;
+		bool pvpStatus;
+        #endif
+
+#ifdef __DARGHOS_CUSTOM_SPELLS__
 		uint32_t castSpellEvent;
 		InstantSpell* castingSpell;
-        #endif
+#endif
 
         #ifdef __DARGHOS_PVP_SYSTEM__
         bool onBattleground;

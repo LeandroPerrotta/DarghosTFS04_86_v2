@@ -910,8 +910,9 @@ bool Player::canWalkthrough(const Creature* creature) const
 #endif
 #ifdef __DARGHOS_CUSTOM__
 		player->getVocation()->isAttackable()) 
-		|| (!isSummon && (player->getTile()->getZone() == ZONE_OPTIONAL || player->getTile()->getZone() == ZONE_PROTECTION)) 
-		|| (isSummon && (creature->getZone() == ZONE_OPTIONAL || creature->getZone() == ZONE_PROTECTION)) 
+		|| !isPvpEnabled()
+		|| (!isSummon && (player->getTile()->getZone() == ZONE_OPTIONAL || player->getTile()->getZone() == ZONE_PROTECTION || !player->isPvpEnabled())) 
+		|| (isSummon && (creature->getZone() == ZONE_OPTIONAL || creature->getZone() == ZONE_PROTECTION || !player->isPvpEnabled())) 
 		|| (player->getVocation()->isAttackable() &&
 #else
 		player->getVocation()->isAttackable()) || (player->getVocation()->isAttackable() &&
@@ -1215,7 +1216,7 @@ void Player::sendCancelMessage(ReturnValue message) const
 			sendCancel("You cannot add more items on this tile.");
 			break;
 
-#ifdef __DARGHOS_CUSTOM__
+#ifdef __DARGHOS_CUSTOM_SPELLS__
 		case RET_YOUINTERRUPTYOURCAST:
 			sendCancel("Your last action interrupt your spell cast.");
 			break;
@@ -1590,12 +1591,14 @@ void Player::onWalk(Direction& dir)
 	setNextActionTask(NULL);
 	setNextAction(OTSYS_TIME() + getStepDuration(dir));
 
+#ifdef __DARGHOS_CUSTOM_SPELLS__
 	if(castSpellEvent != 0 && castingSpell)
 	{
 		castingSpell->interruptCast(this, castSpellEvent);
 		castSpellEvent = 0;
 		castingSpell = NULL;
 	}
+#endif
 }
 
 void Player::onCreatureMove(const Creature* creature, const Tile* newTile, const Position& newPos,

@@ -374,7 +374,11 @@ bool IOLoginData::loadPlayer(Player* player, const std::string& name, bool preLo
 	<< "`lookfeet`, `lookhead`, `looklegs`, `looktype`, `lookaddons`, `posx`, `posy`, `posz`, `cap`, "
 	<< "`lastlogin`, `lastlogout`, `lastip`, `conditions`, `skull`, `skulltime`, `guildnick`, `rank_id`, "
 	<< "`town_id`, `balance`, `stamina`, `direction`, `loss_experience`, `loss_mana`, `loss_skills`, "
+#ifdef __DARGHOS_CUSTOM__
+	<< "`loss_containers`, `loss_items`, `marriage`, `promotion`, `description`, `pvpEnabled` FROM `players` WHERE "
+#else
 	<< "`loss_containers`, `loss_items`, `marriage`, `promotion`, `description` FROM `players` WHERE "
+#endif
 	<< "`name` " << db->getStringComparer() << db->escapeString(name) << " AND `world_id` = "
 	<< g_config.getNumber(ConfigManager::WORLD_ID) << " AND `deleted` = 0 LIMIT 1";
 
@@ -436,6 +440,10 @@ bool IOLoginData::loadPlayer(Player* player, const std::string& name, bool preLo
 
 	uint64_t conditionsSize = 0;
 	const char* conditions = result->getDataStream("conditions", conditionsSize);
+
+#ifdef __DARGHOS_CUSTOM__
+	player->pvpStatus = (bool)result->getDataInt("pvpEnabled");
+#endif
 
 	PropStream propStream;
 	propStream.init(conditions, conditionsSize);

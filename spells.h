@@ -27,6 +27,10 @@
 #include "actions.h"
 #include "talkaction.h"
 
+#ifdef __DARGHOS_CUSTOM__
+#include "scheduler.h"
+#endif
+
 class InstantSpell;
 class ConjureSpell;
 class RuneSpell;
@@ -188,11 +192,7 @@ class InstantSpell : public TalkAction, public Spell
 
 #ifdef __DARGHOS_CUSTOM__
 		virtual bool castInstant(Player* player, const std::string& param, bool finishingCast = false);
-		virtual bool interruptCast(Player* player, uint32_t eventId) { 
-			Scheduler::getInstance().stopEvent(eventId); 
-			player->sendCancelMessage(RET_YOUINTERRUPTYOURCAST);
-			g_game.addMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);		
-		}
+		virtual void interruptCast(Player* player, uint32_t eventId);
 #else
 		virtual bool castInstant(Player* player, const std::string& param);
 #endif

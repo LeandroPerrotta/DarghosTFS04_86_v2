@@ -460,7 +460,7 @@ Spell::Spell()
 	soul = 0;
 	range = -1;
 	exhaustion = 1000;
-#ifdef __DARGHOS_CUSTOM__
+#ifdef __DARGHOS_CUSTOM_SPELLS__
 	castDelay = 0;
 #endif
 	needTarget = false;
@@ -522,7 +522,7 @@ bool Spell::configureSpell(xmlNodePtr p)
 	if(readXMLInteger(p, "exhaustion", intValue))
 		exhaustion = intValue;
 
-#ifdef __DARGHOS_CUSTOM__
+#ifdef __DARGHOS_CUSTOM_SPELLS__
 	if(readXMLInteger(p, "castdelay", intValue))
 		castDelay = intValue;
 #endif
@@ -607,7 +607,7 @@ bool Spell::checkSpell(Player* player) const
 	else if(player->hasCondition(CONDITION_EXHAUST, EXHAUST_HEALING))
 		exhausted = true;
 
-#ifdef __DARGHOS_CUSTOM__
+#ifdef __DARGHOS_CUSTOM_SPELLS__
 	//é sempre possivel castar uma magia com cast delay, já que, durante o cast, qualquer coisa que o jogador fizer irá interromper o cast
 	if(player->isInBattleground() && castDelay > 0)
 		exhausted = false;
@@ -749,12 +749,21 @@ bool Spell::checkInstantSpell(Player* player, Creature* creature)
 	if(!needTarget)
 	{
 		#ifdef __DARGHOS_CUSTOM__
+#ifdef __DARGHOS_CUSTOM_SPELLS__
 		if(isAggressive && castDelay == 0 && player->hasCondition(CONDITION_EXHAUST, EXHAUST_COMBAT_AREA))
 		{
 			player->sendCancelMessage(RET_YOUAREEXHAUSTED);
 			g_game.addMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);
 			return false;
 		}
+#else
+		if(isAggressive && player->hasCondition(CONDITION_EXHAUST, EXHAUST_COMBAT_AREA))
+		{
+			player->sendCancelMessage(RET_YOUAREEXHAUSTED);
+			g_game.addMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);
+			return false;
+		}
+#endif
 		#endif	
 	
 		if(!isAggressive || player->getSkull() != SKULL_BLACK)
@@ -978,7 +987,7 @@ void Spell::postSpell(Player* player, bool finishedCast /*= true*/, bool payCost
 {
 	if(finishedCast)
 	{
-#ifdef __DARGHOS_CUSTOM__
+#ifdef __DARGHOS_CUSTOM_SPELLS__
 		if(!player->isInBattleground())
 		{
 			if(!player->hasFlag(PlayerFlag_HasNoExhaustion) && exhaustion > 0)
@@ -1132,7 +1141,7 @@ bool InstantSpell::loadFunction(const std::string& functionName)
 	return true;
 }
 
-#ifdef __DARGHOS_CUSTOM__
+#ifdef __DARGHOS_CUSTOM_SPELLS__
 bool InstantSpell::castInstant(Player* player, const std::string& param, bool finishingCast)
 #else
 bool InstantSpell::castInstant(Player* player, const std::string& param)
@@ -1223,7 +1232,7 @@ bool InstantSpell::castInstant(Player* player, const std::string& param)
 			return false;
 	}
 
-#ifdef __DARGHOS_CUSTOM__
+#ifdef __DARGHOS_CUSTOM_SPELLS__
 	if(!finishingCast && player->isInBattleground() && castDelay > 0)
 	{
 		player->addCastingSpellEvent(Scheduler::getInstance().addEvent(createSchedulerTask(1000 * castDelay,
@@ -1251,6 +1260,15 @@ bool InstantSpell::castInstant(Player* player, const std::string& param)
 #endif
 	return true;
 }
+
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+void InstantSpell::interruptCast(Player* player, uint32_t eventId)
+{
+	Scheduler::getInstance().stopEvent(eventId); 
+	player->sendCancelMessage(RET_YOUINTERRUPTYOURCAST);
+	g_game.addMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);		
+}
+#endif
 
 bool InstantSpell::canThrowSpell(const Creature* creature, const Creature* target) const
 {
