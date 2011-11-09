@@ -16,9 +16,9 @@ function process(cid, message, keywords, parameters, node)
         return false
     end 
     
-    if(talkState == 1) then
-    	local lastChangePvp = getPlayerStorageValue(cid, sid.LAST_CHANGE_PVP)
-    	
+    local lastChangePvp = getPlayerStorageValue(cid, sid.LAST_CHANGE_PVP)
+    
+    if(talkState == 1) then 	
     	if(lastChangePvp ~= -1 and lastChangePvp + (darghos_change_pvp_days_cooldown * 60 * 60 * 24) > os.time()) then
     	
     		local leftDays = math.floor(((lastChangePvp + (darghos_change_pvp_days_cooldown * 60 * 60 * 24)) - os.time()) / 60 / 60 / 24)
@@ -74,7 +74,10 @@ function process(cid, message, keywords, parameters, node)
     	end
     	
     	setPlayerStorageValue(cid, sid.LAST_CHANGE_PVP, os.time())
-    	setPlayerStorageValue(cid, sid.CHANGE_PVP_EXP_DEBUFF, os.time() + (60 * 60 * 24 * darghos_change_pvp_days_cooldown)) 
+    	
+    	if(lastChangePvp ~= -1) then
+    		setPlayerStorageValue(cid, sid.CHANGE_PVP_EXP_DEBUFF, os.time() + (60 * 60 * 24 * darghos_change_pvp_days_cooldown)) 
+		end
     	
     	local oldpos = getPlayerPosition(cid) 	
     	doTeleportThing(cid, getTownTemplePosition(towns.QUENDOR))
