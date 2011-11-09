@@ -48,11 +48,11 @@ function onLogin(cid)
 	
 	-- island of peace non pvp for TFS via onLogin
 	if(darghos_distro == DISTROS_TFS) then
-		if(getPlayerTown(cid) == towns.ISLAND_OF_PEACE and getPlayerGroupId(cid) < GROUP_PLAYER_TUTOR) then
-			doUpdateCreaturePassable(cid)
-		else
-			doUpdateCreatureImpassable(cid)
-		end
+		--if(getPlayerTown(cid) == towns.ISLAND_OF_PEACE and getPlayerGroupId(cid) < GROUP_PLAYER_TUTOR) then
+		--	doUpdateCreaturePassable(cid)
+		--else
+		--	doUpdateCreatureImpassable(cid)
+		--end
 	end
 	
 	if(not hasValidEmail(cid)) then	
