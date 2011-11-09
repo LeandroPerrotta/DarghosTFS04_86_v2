@@ -18,6 +18,13 @@ function onStepIn(cid, item, position, fromPosition)
 	elseif(item.actionid > 30100 and item.actionid < 30200) then
 	
 		local town_id = item.actionid - 30100
+		
+		if(town_id == towns.ARACURA and not doPlayerIsPvpEnable(cid)) then
+			doPlayerSendCancel(cid, "Somente jogadores com PvP ativo podem viajar para está cidade.")
+			pushBack(cid, position, fromPosition)
+			return false
+		end
+		
 		local town_name = getTownNameById(town_id)
 		doTeleportThing(cid, getTownTemplePosition(town_id))
 		doPlayerSendTextMessage(cid, MESSAGE_STATUS_DEFAULT,"Bem vindo a cidade de ".. town_name .."!")
