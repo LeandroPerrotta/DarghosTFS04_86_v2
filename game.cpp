@@ -4331,6 +4331,24 @@ bool Game::combatChangeHealth(CombatType_t combatType, Creature* attacker, Creat
 		if(!force && target->getHealth() <= 0)
 			return false;
 
+#ifdef __DARGHOS_CUSTOM__
+		Player* p_attacker = NULL;
+		if((p_attacker = attacker->getPlayer()) && !p_attacker->isPvpEnabled())
+		{
+			Player* p_target = NULL;
+			//o target é um player, ou um summon de um player e com pvp ativo
+			if(((p_target = target->getPlayer()) || (target->isPlayerSummon() && (p_target = target->getPlayerMaster())))
+				&& p_target->isPvpEnabled())
+			{
+				return false;
+			}
+			else if(target->getMonster())
+			{
+				return false;
+			}
+		}
+#endif
+
 		bool deny = false;
 		CreatureEventList statsChangeEvents = target->getCreatureEvents(CREATURE_EVENT_STATSCHANGE);
 		for(CreatureEventList::iterator it = statsChangeEvents.begin(); it != statsChangeEvents.end(); ++it)
