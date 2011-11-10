@@ -148,6 +148,8 @@ if(Modules == nil) then
 
 			if(getPlayerBlessing(cid, parameters.number)) then
 				npcHandler:say("Gods have already blessed you with this blessing!", cid)
+			elseif(parameter.onlyPvpDisable and doPlayerIsPvpEnable(cid)) then
+				npcHandler:say("Only pacific players can get this blessing with me!", cid)
 			elseif(not doPlayerRemoveMoney(cid, price)) then
 				npcHandler:say("You don't have enough money for blessing.", cid)
 			else
