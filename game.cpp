@@ -4333,7 +4333,7 @@ bool Game::combatChangeHealth(CombatType_t combatType, Creature* attacker, Creat
 
 #ifdef __DARGHOS_CUSTOM__
 		Player* p_attacker = NULL;
-		if((p_attacker = attacker->getPlayer()) && !p_attacker->isPvpEnabled())
+		if(attacker && target && (p_attacker = attacker->getPlayer()) && !p_attacker->isPvpEnabled())
 		{
 			Player* p_target = NULL;
 			//o target é um player, ou um summon de um player e com pvp ativo
