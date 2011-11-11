@@ -19,18 +19,21 @@
   </flags>
   <attacks>
     <attack name="melee" interval="2000" skill="140" attack="60" poison="210" tick="2000"/>
-    <attack name="speed" interval="1000" chance="20" range="7" radius="4" target="1" speedchange="-800" duration="15000">
-      <attribute key="shootEffect" value="poison"/>
-      <attribute key="areaEffect" value="greenbubble"/>
+    <attack name="speed" interval="2000" chance="20" radius="5" target="0" speedchange="-800" duration="15000">
+      <attribute key="areaEffect" value="poff"/>
     </attack>
-    <attack name="terra strike" interval="2000" chance="50" target="1" min="-20" max="-350">
-      <attribute key="areaEffect" value="poison"/>
+    <attack name="lifedrain" interval="2000" chance="50" target="1" min="-20" max="-350">
+		<attribute key="areaEffect" value="carniphila"/>
+		<attribute key="shootEffect" value="earth"/>
     </attack>
-    <attack name="terra wave" interval="2000" chance="35" length="8" spread="3" min="-250" max="-500">
-      <attribute key="areaEffect" value="poison"/>
+    <attack name="earth" interval="2000" chance="35" length="8" spread="3" min="-250" max="-500">
+		<attribute key="areaEffect" value="smallplants"/>
     </attack>
+	<attack name="outfit" interval="2000" chance="18" range="7" item="3976" duration="4000">
+		<attribute key="areaEffect" value="blueshimmer"/>
+	</attack>    
   </attacks>
-  <defenses armor="25" defense="35">
+  <defenses armor="25" defense="25">
     <defense name="healing" interval="1000" chance="25" min="150" max="300">
       <attribute key="areaEffect" value="blueshimmer"/>
     </defense>
