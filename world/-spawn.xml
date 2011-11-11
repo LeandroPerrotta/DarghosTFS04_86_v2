@@ -7160,6 +7160,9 @@
     <monster name="Novice Of The Cult" x="-1" y="0" z="7" spawntime="60"/>
     <monster name="Demon Skeleton" x="-1" y="1" z="7" spawntime="60"/>
   </spawn>
+  <spawn centerx="2153" centery="1860" centerz="7" radius="3">
+    <npc name="quendor.bless" x="0" y="0" z="7" spawntime="60"/>
+  </spawn>
   <spawn centerx="1447" centery="1861" centerz="7" radius="5">
     <monster name="Chicken" x="-1" y="-4" z="7" spawntime="60"/>
     <monster name="Chicken" x="-2" y="-1" z="7" spawntime="60"/>
