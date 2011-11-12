@@ -21,14 +21,14 @@ function task(cid, message, keywords, parameters, node)
 		if(task:removeRequiredItems()) then
 			if(getPlayerVocation(cid) <= 4 and isPremium(cid)) then
 				setPlayerPromotionLevel(cid, 1)
-				npcHandler:say("Oh! Como soube do roubo da taÃ§a real? Este Ã© um artefato muito valioso! VocÃª merece uma generosa recompensa pelo seu ato de bravura! Por isso, eu como Rei de Island of Peace, lhe concedo a PROMOÃ‡ÃƒO!", cid)
+				npcHandler:say("Oh! Como soube do roubo da taça real? Este é um artefato muito valioso! Você merece uma generosa recompensa pelo seu ato de bravura! Por isso, eu como Rei de Island of Peace, lhe concedo a PROMOÇÃO!", cid)
 			else
 				doPlayerAddMoney(cid, 20000)
 				
 				if(isPremium(cid)) then
-					npcHandler:say("Oh! Como soube do roubo da taÃ§a real? Este Ã© um artefato muito valioso! VocÃª merece uma generosa recompensa pelo seu ato de bravura! Eu pensei em lhe dar uma promoÃ§Ã£o pelo ato, mas vejo que vocÃª jÃ¡ Ã© promovido, neste caso vou lhe dar 20 mil gold coins!", cid)
+					npcHandler:say("Oh! Como soube do roubo da taça real? Este é um artefato muito valioso! Você merece uma generosa recompensa pelo seu ato de bravura! Eu pensei em lhe dar uma promoção pelo ato, mas vejo que você já esta promovido, neste caso vou lhe dar 20.000 gold coins!", cid)
 				else
-					npcHandler:say("Oh! Como soube do roubo da taÃ§a real? Este Ã© um artefato muito valioso! VocÃª merece uma generosa recompensa pelo seu ato de bravura! Eu pensei em lhe dar uma promoÃ§Ã£o pelo ato, mas vejo que vocÃª nÃ£o possui uma premium account, neste caso vou lhe dar 20 mil gold coins!", cid)
+					npcHandler:say("Oh! Como soube do roubo da taça real? Este é um artefato muito valioso! Você merece uma generosa recompensa pelo seu ato de bravura! Eu pensei em lhe dar uma promoção pelo ato, mas vejo que você não possui uma premium account, neste caso vou lhe dar 20.000 gold coins!", cid)
 				end
 			end
 			
