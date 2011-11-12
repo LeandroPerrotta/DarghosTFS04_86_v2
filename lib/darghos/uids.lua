@@ -211,7 +211,7 @@
 	
 	-- dynamic npcs pos
 	NPC_RASHID_START			= 6500,
-	NPC_RASHID_END				= 6504,
+	NPC_RASHID_END				= 6503,
 	
 	-- pvp systems
 	ARENA_TEAM_ONE_WALLS		= {3301, 3302},
