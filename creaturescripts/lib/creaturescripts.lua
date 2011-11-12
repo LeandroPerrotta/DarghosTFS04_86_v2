@@ -49,12 +49,12 @@ function tasks.onKill(cid, target)
 				
 				if(killscount == monster.amount) then
 					-- player matou a qtd necessaria de monstros
-					local str = "Parabens! VocÃª concluiu sua missÃ£o de derrotar " .. monster.amount .. " " .. name .. "'s!"
+					local str = "Parabens! Você concluiu sua missão de derrotar " .. monster.amount .. " " .. name .. "'s!"
 					task:sendKillMessage(str)
 					--task:setFinished()
 				elseif(killscount < monster.amount) then
 					--print("[LOG] Mensagem")
-					local str = "VocÃª precisa derrotar mais " .. (monster.amount - killscount) .. " " .. name .. "'s para concluir a sua tarefa."
+					local str = "Você precisa derrotar mais " .. (monster.amount - killscount) .. " " .. name .. "'s para concluir a sua tarefa."
 					task:sendKillMessage(str)	
 				else
 					return
@@ -68,10 +68,10 @@ function tasks.onKill(cid, target)
 				local newplayerpoints = playerpoints + monsterPoints
 								
 				if(newplayerpoints == requirePoints) then
-					local str = "Parabens! VocÃª concluiu sua missÃ£o ao atingir " .. requirePoints .. " pontos!"
+					local str = "Parabens! Você concluiu sua missão ao atingir " .. requirePoints .. " pontos!"
 					task:sendKillMessage(str)		
 				elseif(newplayerpoints < requirePoints) then
-					local str = "VocÃª ganhou " .. monsterPoints .. " pontos por derrotar um " .. name .. "! VocÃª ainda precisa conseguir mais " .. (requirePoints - newplayerpoints) .. " pontos para concluir a sua tarefa."
+					local str = "Você ganhou " .. monsterPoints .. " pontos por derrotar um " .. name .. "! Você ainda precisa conseguir mais " .. (requirePoints - newplayerpoints) .. " pontos para concluir a sua tarefa."
 					task:sendKillMessage(str)	
 				else
 					if(playerpoints == requirePoints) then
