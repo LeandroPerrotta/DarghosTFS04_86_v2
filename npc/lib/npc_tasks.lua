@@ -117,7 +117,7 @@ function NpcTasks:sendTaskDescription()
 	end
 	
 	consoleLog(T_LOG_NOTIFY, getNpcName(), "NpcTasks:responseTask", "Apparently the player already know about all our tasks... So we have notthing to him :(")
-	self.dialog:say("Oh, desculpe mas nï¿½o tenho nenhuma tarefa para vocï¿½...", self.cid)
+	self.dialog:say("Oh, desculpe mas não tenho nenhuma tarefa para você...", self.cid)
 	return false	
 end
 

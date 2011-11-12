@@ -3,10 +3,10 @@ local STORAGE_START = 52100
 local EXPERIENCE_RATE = 2
 
 defaultDialogs = {
-	STARTED_TASK = "Perfeito, faï¿½a seu trabalho e volte aqui quando ele estiver concluido... Boa sorte!",
-	COMPLETED_TASK_INIT = "Oh! Vejo que nï¿½o demorou tanto tempo para terminar a tarefa! Esta ï¿½ sua recomensa:",
+	STARTED_TASK = "Perfeito,faça seu trabalho e volte aqui quando ele estiver concluido... Boa sorte!",
+	COMPLETED_TASK_INIT = "Oh! Vejo que não demorou tanto tempo para terminar a tarefa! Esta a sua recomensa:",
 	COMPLETED_TASK_END = "Espero que fique satisfeito! Muito obrigado!",
-	TELEPORTING = "Certo, vocï¿½ serï¿½ teleportado em alguns instantes..."
+	TELEPORTING = "Certo, você será teleportado em alguns instantes..."
 }
 
 destinations = {
@@ -122,10 +122,10 @@ tasksList = {
 	[CAP_ONE.ISLAND_OF_PEACE.FIRST] = {
 		monsters = {{name = "troll", amount = 25, storagePos = 1}},
 		dialogs = {
-			description = "Uhmm, vocï¿½ gostaria de ajudar derrotando alguns trolls para ajudar no controle? Se quizer apï¿½nas diga que {sim}.",
-			taskObjectives = "Certo, ao sul deste templo, existe um bueiro. Nele hï¿½ trolls e trolls champion. Vocï¿½ precisara derrotar 25 trolls. Aceita a tarefa?",
+			description = "Uhmm, você gostaria de ajudar derrotando alguns trolls para ajudar no controle? Se quizer apénas diga que {sim}.",
+			taskObjectives = "Certo, ao sul deste templo, existe um bueiro. Nele há trolls e trolls champion. Você precisara derrotar 25 trolls. Aceita a tarefa?",
 			taskStarted = defaultDialogs.STARTED_TASK,
-			taskIncomplete = "Vejo que ainda nï¿½o completou sua tarefa! Lembre-se: Precisas derrotar 25 trolls! Apresse-se!",
+			taskIncomplete = "Vejo que ainda não completou sua tarefa! Lembre-se: Precisas derrotar 25 trolls! Apresse-se!",
 			taskCompleted = {
 				defaultDialogs.COMPLETED_TASK_INIT,
 				defaultDialogs.COMPLETED_TASK_END,
@@ -134,7 +134,7 @@ tasksList = {
 		events = {
 			onComplete = { 
 				type = "question", 
-				text = "Eu tenho mais uma tarefa para vocï¿½! Quer saber dela?", 
+				text = "Eu tenho mais uma tarefa para você! Quer saber dela?", 
 				onConfirm = "action",
 				confirmParam = "callResponseTask"
 			}
@@ -147,10 +147,10 @@ tasksList = {
 	[CAP_ONE.ISLAND_OF_PEACE.SECOND] = {
 		monsters = {{name = "rotworm", amount = 15, storagePos = 1}, {name = "carrion worm", amount = 10, storagePos = 2}},
 		dialogs = {
-			description = "Os vermes da terra estï¿½o causando problemas em nossas plantaï¿½ï¿½es, eles devoram tudo e nï¿½o resta nada! Precisamos dar um jeito nestas criaturas, topa ajudar?",
-			taskObjectives = "Fico contente com a sua ajuda! Bom... Ao oeste deste templo existe um bueiro, ï¿½ nele que os vermes se escondem. Derrotar 15 rotworms e 10 carrion worms deve ser sulficiente. Aceita a tarefa?",
+			description = "Os vermes da terra estão causando problemas em nossas plantações, eles devoram tudo e não sobra nada! Precisamos dar um jeito nestas criaturas, topa ajudar?",
+			taskObjectives = "Fico contente com a sua ajuda! Bom... Ao oeste deste templo existe um bueiro, é nele que os vermes se escondem. Derrotar 15 rotworms e 10 carrion worms deve ser sulficiente. Aceita a tarefa?",
 			taskStarted = defaultDialogs.STARTED_TASK,
-			taskIncomplete = "Vejo que ainda nï¿½o completou sua tarefa! Lembre-se: Precisas derrotar 15 rotworms e 10 carrion worms! Nï¿½o perca tempo ou eles causaram mais prejuizos!",
+			taskIncomplete = "Vejo que ainda não completou sua tarefa! Lembre-se: Precisas derrotar 15 rotworms e 10 carrion worms! Não perca tempo ou eles causaram mais prejuizos!",
 			taskCompleted = {
 				defaultDialogs.COMPLETED_TASK_INIT,
 				defaultDialogs.COMPLETED_TASK_END,
@@ -159,7 +159,7 @@ tasksList = {
 		events = {
 			onComplete = { 
 				type = "question", 
-				text = "Sei que o meu amigo Hector estava precisando de uma ajuda, ele fica em uma caverna ao norte do templo, sua entrada ï¿½ meio escondida. Jï¿½ que vocï¿½ ï¿½ tï¿½o disposto a ajudar, se quiser posso lhe levar atï¿½ lï¿½ para vocï¿½ falar com ele, quer?", 
+				text = "Sei que o meu amigo Hector estava precisando de uma ajuda, ele fica em uma caverna ao norte do templo, sua entrada é meio escondida. Já que você está disposto a ajudar, se quiser posso lhe levar até lá para você falar com ele, o que acha?", 
 				onConfirm = "teleport",
 				confirmParam = destinations.secondNPC,
 				onConfirmText = defaultDialogs.TELEPORTING
@@ -175,11 +175,11 @@ tasksList = {
 		requiredTask = CAP_ONE.ISLAND_OF_PEACE.SECOND,
 		monsters = {{name = "skeleton", amount = 30, storagePos = 1}, {name = "skeleton warrior", amount = 5, storagePos = 2}},
 		dialogs = {
-			requireTask = "Eu preciso de sua ajuda para um trabalho mas primeiro vocï¿½ deve concluir os trabalhos dados por Mereus.",
-			description = "Esta sarcofago ï¿½ amaldiï¿½oado... De vez em quando ele adquire vida e passa assustar todos na cidade! Pode nos ajudar?",
-			taskObjectives = "Que bom! Ao norte daqui estï¿½ o sarcofago... Nele derrote 30 skeletons e 5 skeleton warriors e a maldiï¿½ï¿½o jï¿½ deverï¿½ diminuir. Topa?",
+			requireTask = "Eu preciso de sua ajuda para um trabalho mas primeiro você deve concluir os trabalhos dados por Mereus.",
+			description = "Este sarcofago é amaldiçoado... De vez em quando ele ganha vida e passa assustar todos na cidade! Pode nos ajudar?",
+			taskObjectives = "Que bom! Ao norte daqui está o sarcofago... Nele derrote 30 skeletons e 5 skeleton warriors e a maldição já deve diminuir. Topa?",
 			taskStarted = defaultDialogs.STARTED_TASK,
-			taskIncomplete = "Ora! A maldiï¿½ï¿½o estï¿½ por todos os lados! Seja rï¿½pido em seu trabalho! Lembre-se: Precisas derrotar 30 skeletons e 5 skeleton warriors!",
+			taskIncomplete = "Ora! A maldição ainda está por todos os lados! Seja rápido em seu trabalho! Lembre-se: Precisas derrotar 30 skeletons e 5 skeleton warriors!",
 			taskCompleted = { 
 				defaultDialogs.COMPLETED_TASK_INIT,
 				defaultDialogs.COMPLETED_TASK_END,
@@ -188,7 +188,7 @@ tasksList = {
 		events = {
 			onComplete = { 
 				type = "question", 
-				text = "Ainda hï¿½ muito trabalho a ser efetuado por aqui... Mas vocï¿½ parece estar fraco... Na academia conheï¿½o alguem que pode lhe deixar mais forte, o que acha? Quer que eu lhe leve a academia?", 
+				text = "Ainda há muito trabalho a ser efetuado por aqui... Mas você parece estar fraco... Na academia conheço alguem que pode lhe deixar mais forte, o que acha? Quer que eu lhe leve a academia?", 
 				onConfirm = "teleport",
 				confirmParam = destinations.academy,
 				onConfirmText = defaultDialogs.TELEPORTING
@@ -212,11 +212,11 @@ tasksList = {
 		requiredTask = CAP_ONE.ISLAND_OF_PEACE.FOURTH,
 		monsters = {{name = "amazon", amount = 35, storagePos = 1}, {name = "valkyrie", amount = 15, storagePos = 2}},
 		dialogs = {
-			requireTask = "Sim preciso de uma ajuda... Mas... Deixe-me ver... Ohh... Vocï¿½ ï¿½ muito fraco... Nï¿½o posso dar tarefas fora da cidade para pessoas tï¿½o fracas. Faï¿½a as tarefas de dentro da cidade depois retorne aqui...",
-			description = "As guerreiras amazonicas sï¿½o criaturas traiï¿½oeiras, elas quase sempre atacam guerreiros despreparados que nï¿½o tem muitas chances de sobreviver, precisamos dar um jeito nelas... O que acha?",
+			requireTask = "Sim preciso de uma ajuda... Mas... Deixe-me ver... Ohh... Você está muito fraco... Não posso dar tarefas fora da cidade para pessoas tão fracas. Faça as tarefas de dentro da cidade depois retorne aqui...",
+			description = "As guerreiras amazonicas são criaturas traiçoeiras, elas quase sempre atacam guerreiros despreparados que não tem muitas chances de sobreviver, precisamos dar um jeito nelas... Quer ajudar?",
 			taskObjectives = {
-				"Perfeito, elas se escondem nï¿½o muito longe daqui, saia por esta saida, dï¿½ uns 15 passos para o leste e siga para o norte, vocï¿½ encontrarï¿½ uma casa dominada pela vegetaï¿½ï¿½o. Atravesse ela e chegarï¿½ ao esconderijo [...]",
-				"No esconderijo, vocï¿½ deverï¿½ aniquilar 35 amazons e 15 valkyries, com isso espero fazer com que elas fiquem com medo de atacar novamente. Mas tome cuidado lï¿½ dentro, elas sï¿½o numerosas! E entï¿½o, aceita?"
+				"Perfeito, elas se escondem não muito longe daqui, saia por aqui, dê uns 15 passos para o leste e siga para o norte, você encontrará uma casa dominada pela vegetação. Atravesse ela e chegará ao esconderijo [...]",
+				"No esconderijo, você deverá aniquilar 35 amazons e 15 valkyries, com isso espero fazer com que elas fiquem com medo de atacar novamente. Mas tome cuidado lá dentro, elas são muitas! E então, aceita?"
 			},
 			taskStarted = defaultDialogs.STARTED_TASK,
 			taskIncomplete = "Ainda tenho noticia de viajantes despreparados sendo atacados... Lembre-se: Precisas derrotar 35 amazons e 15 valkyries!",
@@ -228,7 +228,7 @@ tasksList = {
 		events = {
 			onComplete = { 
 				type = "question", 
-				text = "Saiba que tenho mais uma tarefa para vocï¿½. Deseja conhecer-la?", 
+				text = "Saiba que tenho mais uma tarefa para você. Deseja conhecer-la?", 
 				onConfirm = "action",
 				confirmParam = "callResponseTask"
 			}
@@ -246,14 +246,14 @@ tasksList = {
 		monsters = {{name = "dwarf", points = 1}, {name = "dwarf soldier", points = 2}, {name = "dwarf guard", points = 4}},
 		dialogs = {
 			--requireTask = "",
-			description = "Os anï¿½es de Kranos nunca foram muito amigaveis aos humanos de nossa cidade. Mas recentemente eles andam ultrapassando os limites do subterraneo, estï¿½o roubando riquezas que a nos pertence. Tem interesse em ajudar a combater esta ousadia?",
+			description = "Os anões de Kranos nunca foram muito amigaveis aos humanos de nossa cidade. Mas recentemente eles andam ultrapassando os limites do subterraneo, estão roubando riquezas que a nos pertence. Tem interesse em ajudar a combater esta ousadia?",
 			taskObjectives = {
-				"Perfeito! Siga ao leste e vocï¿½ encontrarï¿½ a entrada das minas. No total existem 3 minas, cada uma com 4 andares subterraneos, conforme mais vocï¿½ for decendo vocï¿½ encontrara os anï¿½es mais fortes e perigosos [...]",
-				"Sabe-se que no fundo de uma das cavernas existe um tesouro dos anï¿½es, dizem que ele ï¿½ protegido por aranhas gigantes e nem os proprios anï¿½es se arriscam a chegar perto dele [...]",
-				"Nesta tarefa cada vez que vocï¿½ matar um dwarf vocï¿½ ganharï¿½ 1 ponto, para dwarf soldiers serï¿½o 3 pontos e para dwarf soldiers serï¿½o 5 pontos. Seu objetivo ï¿½ acumular 360 pontos. Posso contar com a sua ajuda?"
+				"Perfeito! Siga ao leste e você encontrará a entrada das minas. No total existem 3 minas, cada uma com 4 andares subterraneos, conforme mais você for decendo você encontrara os anões mais fortes e perigosos [...]",
+				"Sabe-se que no fundo de uma das cavernas existe um tesouro dos anões, dizem que ele é protegido por aranhas gigantes e nem os proprios anões se arriscam a chegar perto dele [...]",
+				"Nesta tarefa cada vez que você matar um dwarf você ganhará 1 ponto, para dwarf soldiers serão 3 pontos e para dwarf guards serão 5 pontos. Seu objetivo é acumular 360 pontos. Posso contar com a sua ajuda?"
 			},
 			taskStarted = defaultDialogs.STARTED_TASK,
-			taskIncomplete = "No sub-solo da cidade ainda ï¿½ possivel ouvir o barulho dos anï¿½es! Eles continuam nos saqueando! Lembre-se: Vocï¿½ precisa atingir 360 pontos derrotando dwarfs, dwarf soldiers e dwarf guards!",
+			taskIncomplete = "No sub-solo da cidade ainda é possivel ouvir o barulho dos anões! Eles continuam nos saqueando! Lembre-se: Você precisa atingir 360 pontos derrotando dwarfs, dwarf soldiers e dwarf guards!",
 			taskCompleted = { 
 				defaultDialogs.COMPLETED_TASK_INIT,
 				defaultDialogs.COMPLETED_TASK_END,
@@ -262,7 +262,7 @@ tasksList = {
 		events = {
 			onComplete = { 
 				type = "question", 
-				text = "Existe uma outra tarefa, mas estï¿½ nï¿½o ï¿½ para mim, ï¿½ em nome do Rei. Gostaria de saber dela?",
+				text = "Existe uma outra tarefa, mas está não é para mim, será em nome do Rei. Gostaria de saber dela?",
 				action = "setState",
 				confirmParam = 5
 			}
@@ -285,11 +285,11 @@ tasksList = {
 		requiredTask = CAP_ONE.ISLAND_OF_PEACE.EIGHTH,
 		monsters = {{name = "cyclops", amount = 70, storagePos = 1}, {name = "cyclops smith", amount = 10, storagePos = 2}},
 		dialogs = {
-			requireTask = "Dul! Fale com o guarda Winston! Ele tem informaï¿½ï¿½es sobre tarefas...",
-			description = "Percebemos movimentaï¿½ï¿½o dos Cyclops, aliados dos Orcs, nï¿½o muito longe daqui... Seria de grande ajuda se vocï¿½ pudesse nos ajudar a eliminar alguns deles, o que acha?",
-			taskObjectives = "Ar fis! Seguindo ao oeste daqui existe uma montanha dominada pelos Cyclops. Derrotar 70 cyclops e 10 cyclops smiths seria de ajuda a nossa causa. Aceita a missï¿½o?",
-			taskStarted = "Estaremos aguardando a finalizaï¿½ï¿½o de sua missï¿½o, Ith! Mas cuidado, sabe-se que a montanha possui uma ponte que leva ao territorio dos Ka. Melhor nï¿½o a atrevassar. ",
-			taskIncomplete = "Ainda hï¿½ muita movimentaï¿½ï¿½o dos cyclops... Lembre-se: Precisas derrotar 70 cyclops e 10 cyclops smiths!",
+			requireTask = "Dul! Fale com o guarda Winston! Ele tem informações sobre tarefas...",
+			description = "Percebemos movimentação dos Cyclops, aliados dos Orcs, não muito longe daqui... Seria de grande ajuda se você pudesse nos ajudar a eliminar alguns deles, o que acha?",
+			taskObjectives = "Ar fis! Seguindo ao oeste daqui existe uma montanha dominada pelos Cyclops. Derrotar 70 cyclops e 10 cyclops smiths seria de ajuda a nossa causa. Aceita a missão?",
+			taskStarted = "Estaremos aguardando a finalização de sua missão, Ith! Mas cuidado, sabe-se que a montanha possui uma ponte que leva ao territorio dos dragões. Melhor não a atrevassar. ",
+			taskIncomplete = "Ainda há muita movimentação dos cyclops... Lembre-se: Precisas derrotar 70 cyclops e 10 cyclops smiths!",
 			taskCompleted = { 
 				defaultDialogs.COMPLETED_TASK_INIT,
 				defaultDialogs.COMPLETED_TASK_END,
@@ -323,16 +323,16 @@ tasksList = {
 		},
 		dialogs = {
 			--requireTask = "",
-			description = "Otimo, Dul! Ao sul existe a fortaleza dos Orcs. Alguns informantes acreditam que eles estï¿½o tramando algo. Poderia nos ajudar enfrentando alguns deles?",
+			description = "Otimo, Dul! Ao sul existe a fortaleza dos Orcs. Alguns informantes acreditam que eles estão tramando algo perigoso. Poderia nos ajudar enfrentando alguns deles?",
 			taskObjectives = {
-				"Sua ajuda ï¿½ muito valiosa humano! Bom, acredito que se vocï¿½ os atacar derrotando alguns orcs que integram a elite da raï¿½a irï¿½ desacreditar eleas a vierem contra nï¿½s [...]",
-				"Vocï¿½ precisarï¿½ somar 850 pontos, sendo que a cada orc derrotado valera: normal 1 ponto, spearman 2 pontos, warrior 3 pontos, shaman e rider 6 pontos, berserker 8 pontos, leader 12 pontos e warlord 30 pontos... Aceita a missï¿½o?"
+				"Sua ajuda é muito valiosa humano! Bom, acredito que se você os atacar derrotando alguns orcs que integram a elite da raça irá amedrontar eleas a virem contra nós [...]",
+				"Você precisará somar 850 pontos, sendo que a cada orc derrotado valera: normal 1 ponto, spearman 2 pontos, warrior 3 pontos, shaman e rider 6 pontos, berserker 8 pontos, leader 12 pontos e warlord 30 pontos... Aceita a missão?"
 			},
 			taskStarted = defaultDialogs.STARTED_TASK,
-			taskIncomplete = "Eles continuam tramando! Seja rï¿½pido! Nï¿½o temos como resistir se eles atacarem! Lembre-se: Precisa acumular 850 pontos matando orcs de qualquer tipo!",
+			taskIncomplete = "Eles continuam tramando! Seja rápido! Não temos como resistir se eles atacarem! Lembre-se: Precisa acumular 850 pontos matando orcs de qualquer tipo!",
 			taskCompleted = { 
 				defaultDialogs.COMPLETED_TASK_INIT,
-				"Deve achar que ï¿½ uma recomensa bastante valiosa... A proposito, boatos dizem que ï¿½ possivel conseguir o titulo de matador de dragï¿½es. Mate mais alguns cyclops atravessando a montanha e chegue nos dragï¿½es e procure por Mesth'zaros...",
+				"Deve achar que é uma recomensa bastante valiosa... A proposito, boatos dizem que é possivel conseguir o titulo de matador de dragões. Mate mais alguns cyclops atravessando a montanha e chegue nos dragões e procure por Mesth'zaros...",
 			},
 		},
 		reward = {exp = 260000, money = 5000, container = { id = items.brown_backpack,
@@ -353,14 +353,14 @@ tasksList = {
 		requireItems = { { items.green_dragon_scale, amount = 1} },
 		monsters = {{name = "dragon", amount = 50, storagePos = 1}},
 		dialogs = {
-			requireTask = "Antes de vocï¿½ receber a tarefa que eu tenho para vocï¿½ ï¿½ necessario que vocï¿½ ajude os Elfos, procure Van'Caelnis.",
-			description = "Dragï¿½es sï¿½o criaturas impiedosas, entretanto elas podem dar coisas valiosas quando derrotadas. Posso lhe transformar em um matador de dragï¿½es, quer saber mais?",
-			taskObjectives = "Vocï¿½ parece valente jovem, mas precisarï¿½ de muito mais que isso para se tornar um matador de dragï¿½es... A tarefa que tenho para tï¿½ ï¿½ a seguinte: Vocï¿½ deve derrotar 50 dragï¿½es e me trazer ao menos 1 green dragon scale. Topa?",
+			requireTask = "Antes de você receber a tarefa que eu tenho para você é necessario que você ajude os Elfos, procure Van'Caelnis.",
+			description = "Dragões são criaturas impiedosas, entretanto elas podem dar coisas valiosas quando derrotadas. Posso lhe transformar em um matador de dragões, quer saber mais?",
+			taskObjectives = "Você parece muito valente jovem, mas precisará de muito mais que isso para se tornar um matador de dragões... A tarefa que tenho para ti é a seguinte: Você deve derrotar 50 dragões e me trazer ao menos 1 green dragon scale. Topa?",
 			taskStarted = defaultDialogs.STARTED_TASK,
-			taskIncomplete = "Estï¿½ demorando de mais! Lembre-se: Precisas derrotar 50 dragï¿½es e me trazer ao menos 1 green dragon scale para se firmar como um matador de dragï¿½es!",
+			taskIncomplete = "Está demorando de mais! Lembre-se: Precisas derrotar 50 dragões e me trazer ao menos 1 green dragon scale para se firmar como um matador de dragões!",
 			taskCompleted = { 
 				defaultDialogs.COMPLETED_TASK_INIT,
-				"Com esta recompensa vocï¿½ deve estar preparado para enfrentar qualquer tipo de criatura nesta ilha. Sei que Boros Krum estï¿½ tendo problemas com as aranhas... Siga para o territorio das aranhas ao sul!",
+				"Com esta recompensa você deve estar preparado para enfrentar qualquer tipo de criatura nesta ilha. Sei que Boros Krum está tendo problemas com as aranhas... Siga para o territorio das aranhas ao sul!",
 			},
 		},		
 		reward = {exp = 877000, money = 10000, container = { id = items.brown_backpack,
@@ -375,14 +375,14 @@ tasksList = {
 		requireItems = { { items.giant_spider_silk, amount = 5} },
 		monsters = {{name = "giant spider", amount = 80, storagePos = 1}},
 		dialogs = {
-			requireTask = "So tenho tarefas para matadores de dragï¿½es, mas vocï¿½ nï¿½o parece ser um...",
-			description = "Pode ver-las? Estï¿½o por toda a parte! ï¿½ preciso eliminar-las algumas, ou em breve ela estarï¿½o por todo continente! Quer nos ajudar?",
-			taskObjectives = "Vocï¿½ ï¿½ um matador de dragï¿½es, talvez tenha algum sucesso nesta tarefa. Vocï¿½ deve derrotar 80 giant spiders e me trazer ao menos 5 giant spider silk's. Se conseguir terï¿½ uma recompensa... Aceita?",
+			requireTask = "So tenho tarefas para autenticos matadores de dragões, mas você não parece ser um...",
+			description = "Pode ver-las? Estão por toda a parte! É preciso eliminar algumas, ou em breve ela estarão por todo continente! Quer nos ajudar?",
+			taskObjectives = "Você é um matador de dragões, talvez tenha algum sucesso nesta tarefa. Você deve derrotar 80 giant spiders e me trazer ao menos 5 giant spider silk's. Se conseguir terá uma recompensa... Aceita?",
 			taskStarted = defaultDialogs.STARTED_TASK,
-			taskIncomplete = "Estï¿½ demorando de mais! Lembre-se: Precisas derrotar 80 giant spiders e me trazer ao menos 5 giant spider silk's!",
+			taskIncomplete = "Está demorando de mais! Lembre-se: Precisas derrotar 80 giant spiders e me trazer ao menos 5 giant spider silk's!",
 			taskCompleted = { 
 				defaultDialogs.COMPLETED_TASK_INIT,
-				"Bastante generosa nï¿½o? Creio que vocï¿½ estï¿½ apto a enfrentar a criatura mais tenebrosa desta ilha... Os vermelhos... Volte a falar com o caï¿½ador de dragï¿½es...",
+				"Bastante generosa não? Creio que você está apto a enfrentar a criatura mais tenebrosa desta ilha... Os vermelhos... Volte a falar com o caçador de dragões...",
 			},
 		},		
 		reward = {exp = 1111000, money = 10000}
@@ -391,14 +391,14 @@ tasksList = {
 		requiredTask = CAP_ONE.ISLAND_OF_PEACE.TWELFTH,
 		monsters = {{name = "dragon lord", amount = 5, storagePos = 1}},
 		dialogs = {
-			requireTask = "Eu tenho mais uma tarefa para vocï¿½, mas primeiro ï¿½ preciso que vocï¿½ conclua a tarefa de Boros Krum, fale com ele na area das aranhas gigantes...",
-			description = "Ao noroeste daqui existe uma pequena torre em meio aos dragï¿½es, nesta torre existe os senhores dos dragï¿½es, eles sï¿½o as criaturas mais temidas dentro desta ilha. Quer saber mais sobre esta missï¿½o?",
-			taskObjectives = "Vocï¿½ devera derrotar 5 dragon lords. Se conseguir completar esta missï¿½o receberï¿½ muitos pontos de experiencia e dinheiro. Topa?",
+			requireTask = "Eu tenho mais uma tarefa para você, mas primeiro é preciso que você conclua a tarefa de Boros Krum, fale com ele na area das aranhas gigantes...",
+			description = "Ao noroeste daqui existe uma pequena torre em meio aos dragões, nesta torre existe os senhores dos dragões, eles são as criaturas mais temidas dentro desta ilha. Quer saber mais sobre esta missão?",
+			taskObjectives = "Você devera derrotar 5 dragon lords. Se conseguir completar esta missão receberá muitos pontos de experiencia e dinheiro. Topa?",
 			taskStarted = defaultDialogs.STARTED_TASK,
-			taskIncomplete = "Estï¿½ demorando de mais! Lembre-se: Precisas derrotar 5 dragon lords!",
+			taskIncomplete = "Está demorando de mais! Lembre-se: Precisas derrotar 5 dragon lords!",
 			taskCompleted = { 
 				defaultDialogs.COMPLETED_TASK_INIT,
-				"Como se sente? Agora vocï¿½ estï¿½ preparado para seguir o seu destino. Vocï¿½ deve seguir para a cidade e vï¿½ para o barco, fale com o capitï¿½o e irï¿½ sair da ilha, vï¿½ para Quendor. Procure por Daves, no centro, ele tera algo para ti. Boa sorte bravo caï¿½ador de dragï¿½es!",
+				"Como se sente? Agora você está preparado para seguir o seu destino. Você deve seguir para a cidade e ir para o barco, fale com o capitão e irá sair da ilha, vá para Quendor. Procure por Daves, no centro, ele tera algo para ti. Boa sorte bravo caçador de dragões!",
 			},
 		},
 		reward = {exp = 1073500, money = 10000}
@@ -527,7 +527,7 @@ function Task:doPlayerAddReward()
 		local oldskill = getPlayerSkill(self.cid, LEVEL_SKILL_DISTANCE)
 		if(count > 0) then
 			doPlayerAddSkill(self.cid, LEVEL_SKILL_DISTANCE, count)
-			doPlayerSendTextMessage(self.cid, MESSAGE_STATUS_CONSOLE_BLUE, "Vocï¿½ avanï¿½ou de distance skill " .. oldskill .. " para " .. reward.paladinDistTo .. ".")
+			doPlayerSendTextMessage(self.cid, MESSAGE_STATUS_CONSOLE_BLUE, "Você avançou de distance skill " .. oldskill .. " para " .. reward.paladinDistTo .. ".")
 		end
 		
 		if(reward.paladinShieldTo ~= nil and isPaladin(self.cid)) then
@@ -535,7 +535,7 @@ function Task:doPlayerAddReward()
 			local oldskill = getPlayerSkill(self.cid, LEVEL_SKILL_SHIELDING)
 			if(count > 0) then
 				doPlayerAddSkill(self.cid, LEVEL_SKILL_SHIELDING, count)
-				doPlayerSendTextMessage(self.cid, MESSAGE_STATUS_CONSOLE_BLUE, "Vocï¿½ avanï¿½ou de shield skill " .. oldskill .. " para " .. reward.paladinShieldTo .. ".")
+				doPlayerSendTextMessage(self.cid, MESSAGE_STATUS_CONSOLE_BLUE, "Você avançou de shield skill " .. oldskill .. " para " .. reward.paladinShieldTo .. ".")
 			end
 		end
 	elseif(reward.knightSkillTo ~= nil and isKnight(self.cid)) then
@@ -546,14 +546,14 @@ function Task:doPlayerAddReward()
 		local oldskill = getPlayerSkill(self.cid, skillid)
 		if(count > 0) then
 			doPlayerAddSkill(self.cid, skillid, count)
-			doPlayerSendTextMessage(self.cid, MESSAGE_STATUS_CONSOLE_BLUE, "Vocï¿½ avanï¿½ou de seu melhor melee skill " .. oldskill .. " para " .. reward.knightSkillTo .. ".")
+			doPlayerSendTextMessage(self.cid, MESSAGE_STATUS_CONSOLE_BLUE, "Você avançõu de seu melhor melee skill " .. oldskill .. " para " .. reward.knightSkillTo .. ".")
 		end
 		
 		local count = reward.knightSkillTo - getPlayerSkill(self.cid, LEVEL_SKILL_SHIELDING)
 		local oldskill = getPlayerSkill(self.cid, LEVEL_SKILL_SHIELDING)
 		if(count > 0) then
 			doPlayerAddSkill(self.cid, LEVEL_SKILL_SHIELDING, count)
-			doPlayerSendTextMessage(self.cid, MESSAGE_STATUS_CONSOLE_BLUE, "Vocï¿½ avanï¿½ou de shield skill " .. oldskill .. " para " .. reward.knightSkillTo .. ".")
+			doPlayerSendTextMessage(self.cid, MESSAGE_STATUS_CONSOLE_BLUE, "ocê avançõu de shield skill " .. oldskill .. " para " .. reward.knightSkillTo .. ".")
 		end
 	elseif(reward.magicLevelTo ~= nil and (isSorcerer(self.cid) or isDruid(self.cid))) then
 	
@@ -561,18 +561,18 @@ function Task:doPlayerAddReward()
 		local oldml = getPlayerMagLevel(self.cid)
 		if(count > 0) then
 			doPlayerAddMagLevel(self.cid, count)
-			doPlayerSendTextMessage(self.cid, MESSAGE_STATUS_CONSOLE_BLUE, "Vocï¿½ avanï¿½ou de magic level " .. oldml .. " para " .. reward.magicLevelTo .. ".")
+			doPlayerSendTextMessage(self.cid, MESSAGE_STATUS_CONSOLE_BLUE, "ocê avançõu de magic level " .. oldml .. " para " .. reward.magicLevelTo .. ".")
 		end
 	end
 	
-	if(rewards ~= nil) then
+	if(reward.exp ~= nil) then
 		doPlayerAddExp(self.cid, reward.exp * EXPERIENCE_RATE)
-		doPlayerSendTextMessage(self.cid, MESSAGE_STATUS_CONSOLE_BLUE, "Vocï¿½ adquiriu " .. (reward.exp * EXPERIENCE_RATE) .. " pontos de experiencia por concluir a tarefa.")
+		doPlayerSendTextMessage(self.cid, MESSAGE_STATUS_CONSOLE_BLUE, "Você adquiriu " .. (reward.exp * EXPERIENCE_RATE) .. " pontos de experiencia por concluir a tarefa.")
 	end
 	
 	if(reward.money ~= nil) then
 		doPlayerAddMoney(self.cid, reward.money)
-		doPlayerSendTextMessage(self.cid, MESSAGE_STATUS_CONSOLE_BLUE, "Vocï¿½ adquiriu " .. reward.money .. " gold coins por concluir a tarefa.")
+		doPlayerSendTextMessage(self.cid, MESSAGE_STATUS_CONSOLE_BLUE, "Você adquiriu " .. reward.money .. " gold coins por concluir a tarefa.")
 	end	
 	
 	self:doPlayerAddRewardItems()
