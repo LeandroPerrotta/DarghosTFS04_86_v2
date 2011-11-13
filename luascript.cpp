@@ -158,9 +158,9 @@ bool ScriptEnviroment::saveGameState()
 	query_insert.setQuery("INSERT INTO `global_storage` (`key`, `world_id`, `value`) VALUES ");
 	for(StorageMap::const_iterator it = m_storageMap.begin(); it != m_storageMap.end(); ++it)
 	{
-		char buffer[25 + it->second.length()];
-		sprintf(buffer, "%u, %u, %s", it->first, g_config.getNumber(ConfigManager::WORLD_ID), db->escapeString(it->second).c_str());
-		if(!query_insert.addRow(buffer))
+		std::stringstream ss;	
+		ss << it->first << ", " << g_config.getNumber(ConfigManager::WORLD_ID) << ", " << db->escapeString(it->second).c_str();
+		if(!query_insert.addRow(ss.str().c_str()))
 			return false;
 	}
 

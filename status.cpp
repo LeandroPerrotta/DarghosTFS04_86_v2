@@ -15,11 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ////////////////////////////////////////////////////////////////////////
 
-#ifdef __DARGHOS_SPOOF__
-	#define PLAYERS_TO_SPOOF 75
-	#define SPOOF_START_AT 25
-#endif
-
 #include "otpch.h"
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>

@@ -121,14 +121,17 @@ bool ProtocolGame::login(const std::string& name, uint32_t id, const std::string
 			else
 				IOLoginData::getInstance()->getNameByGuid(ban.adminId, name_, true);
 
-			char buffer[500 + ban.comment.length()];
-			sprintf(buffer, "Your character has been %s at:\n%s by: %s,\nfor the following reason:\n%s.\nThe action taken was:\n%s.\nThe comment given was:\n%s.\nYour %s%s.",
-				(deletion ? "deleted" : "banished"), formatDateEx(ban.added, "%d %b %Y").c_str(), name_.c_str(),
-				getReason(ban.reason).c_str(), getAction(ban.action, false).c_str(), ban.comment.c_str(),
-				(deletion ? "character won't be undeleted" : "banishment will be lifted at:\n"),
-				(deletion ? "." : formatDateEx(ban.expires).c_str()));
+			std::stringstream ss;
+			ss << "Your account has been " << (deletion ? "deleted" : "banished") << " at:\n"
+				<< formatDateEx(ban.added, "%d %b %Y").c_str() << " by: " << name_.c_str() << ",\n"
+				<< "for the following reason:\n"
+				<< getReason(ban.reason).c_str() << ".\n"
+				<< "The action taken was:\n"
+				<< getAction(ban.action, false).c_str() << ".\nThe comment given was:\n"
+				<< ban.comment.c_str() << ".\n"
+				<< "Your " << (deletion ? "account won't be undeleted" : "banishment will be lifted at:\n") << (deletion ? "." : formatDateEx(ban.expires).c_str());
 
-			disconnectClient(0x14, buffer);
+			disconnectClient(0x14, ss.str().c_str());
 			return false;
 		}
 
@@ -487,14 +490,17 @@ bool ProtocolGame::parseFirstPacket(NetworkMessage& msg)
 		else
 			IOLoginData::getInstance()->getNameByGuid(ban.adminId, name_, true);
 
-		char buffer[500 + ban.comment.length()];
-		sprintf(buffer, "Your account has been %s at:\n%s by: %s,\nfor the following reason:\n%s.\nThe action taken was:\n%s.\nThe comment given was:\n%s.\nYour %s%s.",
-			(deletion ? "deleted" : "banished"), formatDateEx(ban.added, "%d %b %Y").c_str(), name_.c_str(),
-			getReason(ban.reason).c_str(), getAction(ban.action, false).c_str(), ban.comment.c_str(),
-			(deletion ? "account won't be undeleted" : "banishment will be lifted at:\n"),
-			(deletion ? "." : formatDateEx(ban.expires).c_str()));
+		std::stringstream ss;
+		ss << "Your account has been " << (deletion ? "deleted" : "banished") << " at:\n"
+			<< formatDateEx(ban.added, "%d %b %Y").c_str() << " by: " << name_.c_str() << ",\n"
+			<< "for the following reason:\n"
+			<< getReason(ban.reason).c_str() << ".\n"
+			<< "The action taken was:\n"
+			<< getAction(ban.action, false).c_str() << ".\nThe comment given was:\n"
+			<< ban.comment.c_str() << ".\n"
+			<< "Your " << (deletion ? "account won't be undeleted" : "banishment will be lifted at:\n") << (deletion ? "." : formatDateEx(ban.expires).c_str());
 
-		disconnectClient(0x14, buffer);
+		disconnectClient(0x14, ss.str().c_str());
 		return false;
 	}
 
@@ -1374,15 +1380,15 @@ void ProtocolGame::parseHouseWindow(NetworkMessage &msg)
 void ProtocolGame::parseLookInShop(NetworkMessage &msg)
 {
 	uint16_t id = msg.get<uint16_t>();
-	uint16_t count = msg.get<char>();
+	uint8_t count = msg.get<char>();
 	addGameTaskTimed(DISPATCHER_TASK_EXPIRATION, &Game::playerLookInShop, player->getID(), id, count);
 }
 
 void ProtocolGame::parsePlayerPurchase(NetworkMessage &msg)
 {
 	uint16_t id = msg.get<uint16_t>();
-	uint16_t count = msg.get<char>();
-	uint16_t amount = msg.get<char>();
+	uint8_t  count = msg.get<char>();
+	uint8_t  amount = msg.get<char>();
 	bool ignoreCap = msg.get<char>();
 	bool inBackpacks = msg.get<char>();
 	addGameTaskTimed(DISPATCHER_TASK_EXPIRATION, &Game::playerPurchaseItem, player->getID(), id, count, amount, ignoreCap, inBackpacks);
@@ -1391,8 +1397,8 @@ void ProtocolGame::parsePlayerPurchase(NetworkMessage &msg)
 void ProtocolGame::parsePlayerSale(NetworkMessage &msg)
 {
 	uint16_t id = msg.get<uint16_t>();
-	uint16_t count = msg.get<char>();
-	uint16_t amount = msg.get<char>();
+	uint8_t  count = msg.get<char>();
+	uint8_t  amount = msg.get<char>();
 	addGameTaskTimed(DISPATCHER_TASK_EXPIRATION, &Game::playerSellItem, player->getID(), id, count, amount);
 }
 
@@ -1417,7 +1423,7 @@ void ProtocolGame::parseAcceptTrade(NetworkMessage&)
 
 void ProtocolGame::parseLookInTrade(NetworkMessage& msg)
 {
-	bool counter = msg.get<char>();
+	bool counter = (msg.get<char>() != (char)0);
 	int32_t index = msg.get<char>();
 	addGameTaskTimed(DISPATCHER_TASK_EXPIRATION, &Game::playerLookInTrade, player->getID(), counter, index);
 }
@@ -1502,7 +1508,7 @@ void ProtocolGame::parseLeaveParty(NetworkMessage&)
 
 void ProtocolGame::parseSharePartyExperience(NetworkMessage& msg)
 {
-	bool activate = msg.get<char>();
+	bool activate = (msg.get<char>() != (char)0);
 	uint8_t unknown = msg.get<char>(); //TODO: find out what is this byte
 	addGameTask(&Game::playerSharePartyExperience, player->getID(), activate, unknown);
 }

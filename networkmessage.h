@@ -113,6 +113,9 @@ class NetworkMessage
 		virtual void clearTrack() {}
 #endif
 
+		// message data
+		uint8_t m_buffer[NETWORK_MAX_SIZE];
+
 	protected:
 		// used to check available space while writing
 		inline bool hasSpace(int32_t size) {return (size + m_position < NETWORK_MAX_SIZE - 16);}
@@ -120,9 +123,6 @@ class NetworkMessage
 		// message propeties
 		uint16_t m_size;
 		uint16_t m_position;
-
-		// message data
-		uint8_t m_buffer[NETWORK_MAX_SIZE];
 };
 
 typedef boost::shared_ptr<NetworkMessage> NetworkMessage_ptr;

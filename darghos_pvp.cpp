@@ -1,6 +1,6 @@
+#include "otpch.h"
 #ifdef __DARGHOS_PVP_SYSTEM__
 
-#include "otpch.h"
 #include "darghos_pvp.h"
 #include "luascript.h"
 #include "game.h"

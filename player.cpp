@@ -5062,7 +5062,7 @@ bool Player::isPremium() const
 	if(g_config.getBool(ConfigManager::FREE_PREMIUM) || hasFlag(PlayerFlag_IsAlwaysPremium))
 		return true;
 
-	return premiumDays;
+	return (premiumDays != 0);
 }
 
 bool Player::setGuildLevel(GuildLevel_t newLevel, uint32_t rank/* = 0*/)

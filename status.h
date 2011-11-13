@@ -21,6 +21,11 @@
 #include "otsystem.h"
 #include "protocol.h"
 
+#ifdef __DARGHOS_SPOOF__
+	#define PLAYERS_TO_SPOOF 75
+	#define SPOOF_START_AT 25
+#endif
+
 enum RequestedInfo_t
 {
 	REQUEST_BASIC_SERVER_INFO 	= 0x01,

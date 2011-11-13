@@ -14,8 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ////////////////////////////////////////////////////////////////////////
-#ifdef __EXCEPTION_TRACER__
+
 #include "otpch.h"
+#ifdef __EXCEPTION_TRACER__
 #include "exception.h"
 
 #include <iostream>

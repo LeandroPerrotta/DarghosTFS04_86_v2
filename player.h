@@ -262,7 +262,7 @@ class Player : public Creature, public Cylinder
 		uint32_t getClientVersion() const {return clientVersion;}
 		void setClientVersion(uint32_t version) {clientVersion = version;}
 
-		bool hasClient() const {return client;}
+		bool hasClient() const {return (client != NULL);}
 		bool isVirtual() const {return (getID() == 0);}
 		void disconnect() {if(client) client->disconnect();}
 		uint32_t getIP() const;
@@ -296,7 +296,7 @@ class Player : public Creature, public Cylinder
 		void setIdleTime(uint32_t amount) {idleTime = amount;}
 
 		bool checkLoginDelay(uint32_t playerId) const;
-		bool isTrading() const {return tradePartner;}
+		bool isTrading() const {return (tradePartner != NULL);}
 
 		uint32_t getAccount() const {return accountId;}
 		std::string getAccountName() const {return account;}
