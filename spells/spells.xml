@@ -115,6 +115,9 @@
 	<conjure name="Conjure Power Bolt" words="exevo con vis" lvl="59" mana="700" soul="4" conjureId="2547" conjureCount="10" function="conjureItem">
 		<vocation name="Royal Paladin"/>
 	</conjure>
+	<conjure name="Conjure Infernal Bolts" words="exevo con vis hur" lvl="107" mana="1100" soul="5" reagentId="5944" conjureId="6529" conjureCount="2" function="conjureItem">
+		<vocation name="Royal Paladin"/>
+	</conjure>	
 	<conjure name="Holy Missile" words="adori san" lvl="27" mana="350" soul="3" reagentId="2260" conjureId="2295" conjureCount="5" function="conjureRune">
 		<vocation name="Paladin"/>   <vocation name="Royal Paladin"/>
 	</conjure>

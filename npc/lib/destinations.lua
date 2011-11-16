@@ -151,7 +151,6 @@ function boatDestiny.addQuendorFromIslandOfPeace(keywordHandler, npcHandler)
 			return false
 		end	
 		
-		local level = getPlayerLevel(cid)
 		local leaveFromIslandOfPeace = getPlayerStorageValue(cid, sid.LEAVE_FROM_ISLAND_OF_PEACE)
 		
 		if(leaveFromIslandOfPeace == -1) then
