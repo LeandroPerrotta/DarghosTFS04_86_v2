@@ -16,22 +16,21 @@
         <![CDATA[
         
         local isFemale = true
-        
-		if(getPlayerSex(cid)) == 1 then
-			items 	= {{5958,1}}
-			isFemale = false
-		else
-			items  	= {{5904,10} , {2193,20} , {5809,1}}
-		end
 	
 		conf  	= 
 		{
 			typeFemale		= 141,
 			typeMale		= 133,
 			addon			= 1,
-			storage			= sid.FIRST_SUMMONER
 		}
 		
+		local items, canWear = {{5904,10} , {2193,20} , {5809,1}}, canPlayerWearOutfit(cid, conf.typeFemale, conf.addon)	
+        
+		if(getPlayerSex(cid)) == 1 then
+			items 	= {{5958,1}}
+			canWear = canPlayerWearOutfit(cid, conf.typeMale, conf.addon)
+			isFemale = false
+		end				
 		
 		itemsN = 0
 		
@@ -41,7 +40,7 @@
 				itemsN = itemsN + 1
 			end
 		end	
-			if(getPlayerStorageValue(cid, conf.storage)) ~= 1 then
+			if(not canWear) then
 				if(itemsN == table.maxn(items)) then
 						for i = 1, table.maxn(items) do
 							local item = items[i]
@@ -78,7 +77,7 @@
 	-->
 	
     <interact keywords="second;summoner;addon">
- 		<response text="If you are male you need 70 bat wings, 20 red piece of cloth, 40 ape fur, 35 holy orchids, 10 spider silk yarn, 60 lizard scales, 40 red dragon scales, 15 magic sulphur and 30 ounces of vampire dust, and if you are female, you need Feumbrsa HAT. You have this?">
+ 		<response text="If you are male you need 70 bat wings, 20 red piece of cloth, 40 ape fur, 35 holy orchids, 10 spider silk yarn, 60 lizard scales, 40 red dragon scales, 15 magic sulphur and 30 ounces of vampire dust, and if you are female, you need Ferumbras HAT. You have this?">
 		<action name="topic" value="1"/>
 	
     <interact keywords="yes" topic="1">
@@ -86,20 +85,22 @@
         <action name="script">
         <![CDATA[
 		
-		if(getPlayerSex(cid)) == 1 then
-			items 	= {{5894,70} , {5911,20} , {5883,40} , {5922,35} , {5886,10} , {5881,60} , {5882,40} , {5904,15} , {5905,30}}
-		else
-			items  	= {{5903,1}}
-		end
+		local isFemale = true
 	
 		conf  	= 
 		{
 			typeFemale		= 141,
 			typeMale		= 133,
 			addon			= 2,
-			storage			= sid.SECOND_SUMMONER
 		}
 		
+		local items, canWear = {{5903,1}}, canPlayerWearOutfit(cid, conf.typeFemale, conf.addon)		
+		
+		if(getPlayerSex(cid)) == 1 then
+			items 	= {{5894,70} , {5911,20} , {5883,40} , {5922,35} , {5886,10} , {5881,60} , {5882,40} , {5904,15} , {5905,30}}
+			canWear = canPlayerWearOutfit(cid, conf.typeMale, conf.addon)
+			isFemale = false			
+		end		
 		
 		itemsN = 0
 		
@@ -109,14 +110,20 @@
 				itemsN = itemsN + 1
 			end
 		end	
-			if(getPlayerStorageValue(cid, conf.storage)) ~= 1 then
+			if(not canWear) then
 				if(itemsN == table.maxn(items)) then
-						for i = 1, table.maxn(items) do
-							local item = items[i]
-							doPlayerRemoveItem(cid,item[1],item[2])
-						end
-					doPlayerAddOutfit(cid, conf.typeFemale,conf.addon)
-					doPlayerAddOutfit(cid, conf.typeMale, conf.addon)
+				
+					for i = 1, table.maxn(items) do
+						local item = items[i]
+						doPlayerRemoveItem(cid,item[1],item[2])
+					end
+					
+					if(isFemale) then
+						doPlayerAddOutfit(cid, conf.typeFemale,conf.addon)
+					else
+						doPlayerAddOutfit(cid, conf.typeMale, conf.addon)
+					end
+					
 					setPlayerStorageValue(cid, conf.storage,1)
 					selfSay("Enjoy your newest addon!",cid)
 				else
