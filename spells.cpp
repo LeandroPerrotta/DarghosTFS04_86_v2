@@ -764,8 +764,8 @@ bool Spell::checkInstantSpell(Player* player, Creature* creature)
 			return false;
 		}
 #endif
-		#endif	
-	
+		#endif
+
 		if(!isAggressive || player->getSkull() != SKULL_BLACK)
 			return true;
 
@@ -944,8 +944,8 @@ bool Spell::checkRuneSpell(Player* player, const Position& toPos)
 			g_game.addMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);
 			return false;
 		}
-		#endif	
-	
+		#endif
+
 		if(!isAggressive || player->getSkull() != SKULL_BLACK)
 			return true;
 
@@ -1002,7 +1002,7 @@ void Spell::postSpell(Player* player, bool finishedCast /*= true*/, bool payCost
 		if(!player->hasFlag(PlayerFlag_HasNoExhaustion) && exhaustion > 0)
 			player->addExhaust(exhaustion, isAggressive ? EXHAUST_COMBAT : EXHAUST_HEALING);
 #endif
-			
+
 
 		if(isAggressive && !player->hasFlag(PlayerFlag_NotGainInFight))
 			player->addInFightTicks(false);
@@ -1235,7 +1235,7 @@ bool InstantSpell::castInstant(Player* player, const std::string& param)
 #ifdef __DARGHOS_CUSTOM_SPELLS__
 	if(!finishingCast && player->isInBattleground() && castDelay > 0)
 	{
-		player->addCastingSpellEvent(Scheduler::getInstance().addEvent(createSchedulerTask(1000 * castDelay,
+		player->addCastingSpellEvent(Scheduler::getInstance().addEvent(createSchedulerTask(castDelay,
 				boost::bind(&InstantSpell::castInstant, this, player, param, true))));
 		player->addCastingSpell(this);
 	}
@@ -1264,9 +1264,9 @@ bool InstantSpell::castInstant(Player* player, const std::string& param)
 #ifdef __DARGHOS_CUSTOM_SPELLS__
 void InstantSpell::interruptCast(Player* player, uint32_t eventId)
 {
-	Scheduler::getInstance().stopEvent(eventId); 
+	Scheduler::getInstance().stopEvent(eventId);
 	player->sendCancelMessage(RET_YOUINTERRUPTYOURCAST);
-	g_game.addMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);		
+	g_game.addMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);
 }
 #endif
 

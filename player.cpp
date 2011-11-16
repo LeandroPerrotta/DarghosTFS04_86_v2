@@ -36,6 +36,10 @@
 #include "game.h"
 #include "chat.h"
 
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+#include "spells.h"
+#endif
+
 extern ConfigManager g_config;
 extern Game g_game;
 extern Chat g_chat;
@@ -79,7 +83,7 @@ Player::Player(const std::string& _name, ProtocolGame* p):
     #ifdef __DARGHOS_PVP_SYSTEM__
     onBattleground = false;
     team_id = BATTLEGROUND_TEAM_NONE;
-	
+
     #endif
 
 	lastAttackBlockType = BLOCK_NONE;
@@ -112,6 +116,10 @@ Player::Player(const std::string& _name, ProtocolGame* p):
 	tradePartner = NULL;
 	walkTask = NULL;
 	weapon = NULL;
+
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+    castingSpell = NULL;
+#endif
 
 	setVocation(0);
 	setParty(NULL);
@@ -900,7 +908,7 @@ bool Player::canWalkthrough(const Creature* creature) const
 #ifdef __DARGHOS_CUSTOM__
 	bool isSummon = false;
 	const Player* player = NULL;
-	if(!(player = creature->getPlayer())) 
+	if(!(player = creature->getPlayer()))
 	{
 		if((player = creature->getPlayerMaster()))
 			isSummon = true;
@@ -918,10 +926,10 @@ bool Player::canWalkthrough(const Creature* creature) const
 		!player->isEnemy(this, true) &&
 #endif
 #ifdef __DARGHOS_CUSTOM__
-		player->getVocation()->isAttackable()) 
+		player->getVocation()->isAttackable())
 		|| (!isPvpEnabled() && getTile() && getTile()->getZone() != ZONE_HARDCORE)
-		|| (!isSummon && player->getTile() && (player->getTile()->getZone() == ZONE_OPTIONAL || player->getTile()->getZone() == ZONE_PROTECTION || (!player->isPvpEnabled() && creature->getZone() != ZONE_HARDCORE))) 
-		|| (isSummon && player->getTile() && (creature->getZone() == ZONE_OPTIONAL || creature->getZone() == ZONE_PROTECTION || (!player->isPvpEnabled() && creature->getZone() != ZONE_HARDCORE))) 
+		|| (!isSummon && player->getTile() && (player->getTile()->getZone() == ZONE_OPTIONAL || player->getTile()->getZone() == ZONE_PROTECTION || (!player->isPvpEnabled() && creature->getZone() != ZONE_HARDCORE)))
+		|| (isSummon && player->getTile() && (creature->getZone() == ZONE_OPTIONAL || creature->getZone() == ZONE_PROTECTION || (!player->isPvpEnabled() && creature->getZone() != ZONE_HARDCORE)))
 		|| (player->getVocation()->isAttackable() &&
 #else
 		player->getVocation()->isAttackable()) || (player->getVocation()->isAttackable() &&
@@ -2254,7 +2262,7 @@ bool Player::onDeath()
 	#ifdef __DARGHOS_CUSTOM__
 	uint32_t totalDamage = 0, pvpDamage = 0, pvpLevelSum = 0;
 	for(CountMap::iterator it = damageMap.begin(); it != damageMap.end(); ++it)
-	{	
+	{
 		// its enough when we use IDs range comparison here instead of overheating autoList
 		if(((OTSYS_TIME() - it->second.ticks) / 1000) > 60)
 			continue;
@@ -5364,7 +5372,7 @@ bool Player::isBattlegroundDeserter()
 		{
 			return true;
 		}
-	}	
+	}
 
 	return false;
 }

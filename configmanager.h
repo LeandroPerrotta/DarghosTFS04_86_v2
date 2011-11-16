@@ -149,7 +149,6 @@ class ConfigManager
 			#ifdef __DARGHOS_CUSTOM__
 			DEATH_FRAGGERS,
 			USE_BLESSING_AS_PVP,
-			UNFAIR_FIGHT,
 			#endif
 			RED_DAILY_LIMIT,
 			RED_WEEKLY_LIMIT,
@@ -287,6 +286,9 @@ class ConfigManager
 			ADDONS_PREMIUM,
 #ifdef __WAR_SYSTEM__
 			OPTIONAL_WAR_ATTACK_ALLY,
+#endif
+#ifdef __DARGHOS_CUSTOM__
+            UNFAIR_FIGHT,
 #endif
 			LAST_BOOL_CONFIG /* this must be the last one */
 		};

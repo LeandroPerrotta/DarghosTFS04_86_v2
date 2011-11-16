@@ -1,5 +1,10 @@
 -- The Forgotten Server Config
 
+	-- Darghos Configs
+	useBlessingAsPvp = 6
+	deathFraggersCount = 1
+	unfairFightEnabled = false
+
 	-- Account manager
 	accountManager = false
 	namelockManager = true
@@ -21,11 +26,11 @@
 	-- advancedFragList is not advised if you use huge frags
 	-- requirements.
 	useFragHandler = true
-	redSkullLength = 30 * 24 * 60 * 60
-	blackSkullLength = 45 * 24 * 60 * 60
-	dailyFragsToRedSkull = 3
-	weeklyFragsToRedSkull = 5
-	monthlyFragsToRedSkull = 10
+	redSkullLength = 4 * 24 * 60 * 60
+	blackSkullLength = 8 * 24 * 60 * 60
+	dailyFragsToRedSkull = 6
+	weeklyFragsToRedSkull = 42
+	monthlyFragsToRedSkull = 180
 	dailyFragsToBlackSkull = dailyFragsToRedSkull
 	weeklyFragsToBlackSkull = weeklyFragsToRedSkull
 	monthlyFragsToBlackSkull = monthlyFragsToRedSkull
@@ -47,7 +52,7 @@
 	killsBanLength = 7 * 24 * 60 * 60
 	finalBanLength = 30 * 24 * 60 * 60
 	ipBanishmentLength = 1 * 24 * 60 * 60
-	broadcastBanishments = true
+	broadcastBanishments = false
 	maxViolationCommentSize = 200
 	violationNameReportActionType = 2
 	autoBanishUnknownBytes = false
@@ -60,7 +65,7 @@
 	protectionLevel = 1
 	pvpTileIgnoreLevelAndVocationProtection = true
 	pzLocked = 60 * 1000
-	huntingDuration = 60 * 1000
+	huntingDuration = 20 * 1000
 	criticalHitChance = 7
 	criticalHitMultiplier = 1
 	displayCriticalHitNotify = false
@@ -69,7 +74,7 @@
 	removeRuneCharges = true
 	whiteSkullTime = 15 * 60 * 1000
 	noDamageToSameLookfeet = false
-	showHealingDamage = false
+	showHealingDamage = true
 	showHealingDamageForMonsters = false
 	fieldOwnershipDuration = 5 * 1000
 	stopAttackingAtExit = false
@@ -77,7 +82,7 @@
 	deathLostPercent = 10
 	stairhopDelay = 2 * 1000
 	pushCreatureDelay = 2 * 1000
-	deathContainerId = 1987
+	deathContainerId = 0
 	gainExperienceColor = 215
 	addManaSpentInPvPZone = true
 	squareColor = 0
@@ -86,7 +91,7 @@
 
 	-- Connection config
 	worldId = 0
-	ip = "200.158.97.58"
+	ip = "127.0.0.1"
 	bindOnlyGlobalAddress = false
 	loginPort = 7171
 	gamePort = 7172
@@ -94,13 +99,13 @@
 	retryTimeout = 5 * 1000
 	loginTimeout = 60 * 1000
 	maxPlayers = 1000
-	motd = "Welcome to the Forgotten Server!"
+	motd = "Bem vindos ao Darghos! \n\n Ultimas mudanças:\n\n - Modificações importantes no NPC Rashid\n - Revisados forças e lots dos montros Wyrm e War Golem\n - Mais modificações e melhorias na Battleground\n\n Confira a última notícia no website para maiores informações!\nwww.darghos.com.br \n\n Tenha um bom jogo!"
 	displayOnOrOffAtCharlist = false
 	onePlayerOnlinePerAccount = true
 	allowClones = false
-	serverName = "Forgotten"
-	loginMessage = "Welcome to the Forgotten Server!"
-	statusTimeout = 5 * 60 * 1000
+	serverName = "Darghos"
+	loginMessage = "Welcome to the Darghos Server!"
+	statusTimeout = 0
 	replaceKickOnLogin = true
 	forceSlowConnectionsToDisconnect = false
 	loginOnlyWithLoginServer = false
@@ -121,7 +126,7 @@
 	-- To disable sqlKeepAlive such as mysqlReadTimeout use 0 value.
 	-- encryptionType can be plain, md5, sha1, sha256, sha512 or vahash.
 	sqlType = "mysql"
-	sqlHost = "localhost"
+	sqlHost = "127.0.0.1"
 	sqlPort = 3306
 	sqlUser = "root"
 	sqlPass = "051190a1"
@@ -139,7 +144,7 @@
 	maxDeathRecords = 5
 
 	-- Guilds
-	ingameGuildManagement = true
+	ingameGuildManagement = false
 	levelToFormGuild = 8
 	premiumDaysToFormGuild = 0
 	guildNameMinLength = 4
@@ -154,11 +159,11 @@
 	houseNeedPremium = true
 	bedsRequirePremium = true
 	levelToBuyHouse = 1
-	housesPerAccount = 0
+	housesPerAccount = 1
 	houseRentAsPrice = false
 	housePriceAsRent = false
 	housePriceEachSquare = 1000
-	houseRentPeriod = "never"
+	houseRentPeriod = "weekly"
 	houseCleanOld = 0
 	guildHalls = false
 
@@ -170,7 +175,7 @@
 	-- Map
 	-- NOTE: storeTrash costs more memory, but will perform alot faster cleaning.
 	mapName = "test.otbm"
-	mapAuthor = "Komic"
+	mapAuthor = "Darghos"
 	randomizeTiles = true
 	storeTrash = true
 	cleanProtectedZones = true
@@ -244,8 +249,8 @@
 	reportsExpirationAfterReads = 1
 	playerQueryDeepness = 2
 	tileLimit = 0
-	protectionTileLimit = 0
-	houseTileLimit = 0
+	protectionTileLimit = 500
+	houseTileLimit = 500
 
 	-- Premium-related
 	freePremium = false
@@ -264,12 +269,12 @@
 	-- NOTE: experienceStages configuration is located in data/XML/stages.xml.
 	-- rateExperienceFromPlayers 0 to disable.
 	experienceStages = false
-	rateExperience = 5.0
+	rateExperience = 1.0
 	rateExperienceFromPlayers = 0
-	rateSkill = 3.0
-	rateMagic = 3.0
+	rateSkill = 1.0
+	rateMagic = 1.0
 	rateLoot = 2.0
-	rateSpawn = 1
+	rateSpawn = 10
 
 	-- Monster rates
 	rateMonsterHealth = 1.0
@@ -336,10 +341,10 @@
 
 	-- Status
 	statusPort = 7171
-	ownerName = ""
-	ownerEmail = "@otland.net"
-	url = "http://otland.net/"
-	location = "Europe"
+	ownerName = "Darghos Team"
+	ownerEmail = "admin@darghos.com.br"
+	url = "http://darghos.com.br/"
+	location = "North America"
 	displayGamemastersWithOnlineCommand = false
 
 	-- Logs

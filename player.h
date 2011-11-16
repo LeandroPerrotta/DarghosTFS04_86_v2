@@ -40,10 +40,6 @@
 #include "darghos_const.h"
 #endif
 
-#ifdef __DARGHOS_CUSTOM_SPELLS__
-#include "spells.h"
-#endif
-
 class House;
 class NetworkMessage;
 class Weapon;
@@ -52,6 +48,10 @@ class Npc;
 class Party;
 class SchedulerTask;
 class Quest;
+
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+class InstantSpell;
+#endif
 
 enum skillsid_t
 {

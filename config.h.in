@@ -12,27 +12,6 @@
 /* Define to 1 if you have the `ceil' function. */
 #undef HAVE_CEIL
 
-/* Define to 1 if you have the <cryptopp/adler32.h> header file. */
-#undef HAVE_CRYPTOPP_ADLER32_H
-
-/* Define to 1 if you have the <cryptopp/base64.h> header file. */
-#undef HAVE_CRYPTOPP_BASE64_H
-
-/* Define to 1 if you have the <cryptopp/cryptlib.h> header file. */
-#undef HAVE_CRYPTOPP_CRYPTLIB_H
-
-/* Define to 1 if you have the <cryptopp/hex.h> header file. */
-#undef HAVE_CRYPTOPP_HEX_H
-
-/* Define to 1 if you have the <cryptopp/hmac.h> header file. */
-#undef HAVE_CRYPTOPP_HMAC_H
-
-/* Define to 1 if you have the <cryptopp/md5.h> header file. */
-#undef HAVE_CRYPTOPP_MD5_H
-
-/* Define to 1 if you have the <cryptopp/sha.h> header file. */
-#undef HAVE_CRYPTOPP_SHA_H
-
 /* Define to 1 if you have the `floor' function. */
 #undef HAVE_FLOOR
 
@@ -44,9 +23,6 @@
 
 /* Define to 1 if you have the `gethostname' function. */
 #undef HAVE_GETHOSTNAME
-
-/* Define to 1 if you have the <gmp.h> header file. */
-#undef HAVE_GMP_H
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
@@ -107,11 +83,8 @@
    */
 #undef HAVE_LIBBOOST_THREAD_MT
 
-/* Define to 1 if you have the `cryptopp' library (-lcryptopp). */
-#undef HAVE_LIBCRYPTOPP
-
-/* Define to 1 if you have the `gmp' library (-lgmp). */
-#undef HAVE_LIBGMP
+/* Define to 1 if you have the `crypto' library (-lcrypto). */
+#undef HAVE_LIBCRYPTO
 
 /* Define to 1 if you have the `lua' library (-llua). */
 #undef HAVE_LIBLUA
@@ -149,6 +122,15 @@
 
 /* Define to 1 if you have the <netinet/in.h> header file. */
 #undef HAVE_NETINET_IN_H
+
+/* Define to 1 if you have the <openssl/bn.h> header file. */
+#undef HAVE_OPENSSL_BN_H
+
+/* Define to 1 if you have the <openssl/err.h> header file. */
+#undef HAVE_OPENSSL_ERR_H
+
+/* Define to 1 if you have the <openssl/rsa.h> header file. */
+#undef HAVE_OPENSSL_RSA_H
 
 /* Define to 1 if you have the `pow' function. */
 #undef HAVE_POW

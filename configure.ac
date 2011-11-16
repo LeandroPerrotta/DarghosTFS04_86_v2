@@ -7,7 +7,7 @@ AM_CONFIG_HEADER([config.h])
 AC_PROG_CXX
 AC_LANG(C++)
 # add own flags in here
-OPTIONAL_FLAGS="-D__WAR_SYSTEM__ -D__TFS_NEWEST_REVS_FIXIES__ -D__DARGHOS_PVP_SYSTEM__ -D__DARGHOS_CUSTOM__ -D__DARGHOS_SPOOF__"
+OPTIONAL_FLAGS="-D__WAR_SYSTEM__ -D__NO_CRYPTOPP__ -D__TFS_NEWEST_REVS_FIXIES__  -D__DARGHOS_PVP_SYSTEM__ -D__DARGHOS_CUSTOM__ -D__DARGHOS_SPOOF__"
 
 # check if we want server diag enabled
 serverDiag=no
@@ -73,7 +73,8 @@ AC_SUBST(OPTIONAL_FLAGS)
 # check if we want a debug build
 debugBuild=no
 AC_ARG_ENABLE(debug, [  --enable-debug		enable debuging],
-	[DEBUG_FLAGS="-D__DEBUG__ -D__DEBUG_MOVESYS__ -D__DEBUG_CHAT__ -D__DEBUG_EXCEPTION_REPORT__ -D__DEBUG_HOUSES__ -D__DEBUG_LUASCRIPTS__ -D__DEBUG_MAILBOX__ -D__DEBUG_NET__ -D__DEBUG_NET_DETAIL__ -D__DEBUG_RAID__ -D__DEBUG_SCHEDULER__ -D__DEBUG_SPAWN__ -D__SQL_QUERY_DEBUG__ -O0 -g3"]
+	#[DEBUG_FLAGS="-D__DEBUG__ -D__DEBUG_MOVESYS__ -D__DEBUG_CHAT__ -D__DEBUG_EXCEPTION_REPORT__ -D__DEBUG_HOUSES__ -D__DEBUG_LUASCRIPTS__ -D__DEBUG_MAILBOX__ -D__DEBUG_NET__ -D__DEBUG_NET_DETAIL__ -D__DEBUG_RAID__ -D__DEBUG_SCHEDULER__ -D__DEBUG_SPAWN__ -D__SQL_QUERY_DEBUG__ -O0 -g3"]
+	[DEBUG_FLAGS="-O0 -g3"]
 	debugBuild=yes
 )
 if test "$debugBuild" = "no" ; then
@@ -147,8 +148,8 @@ AM_PATH_XML2(2.6.5, , AC_MSG_ERROR([You need libxml2 >= 2.6.5 to compile theforg
 LIBS="$LIBS $XML_LIBS"
 
 # check for gmp
-AC_CHECK_HEADERS([gmp.h], ,[AC_MSG_ERROR("gmp header not found.")])
-AC_CHECK_LIB(gmp, __gmpz_init2, ,[AC_MSG_ERROR("Linking against gmp library failed.")])
+#AC_CHECK_HEADERS([gmp.h], ,[AC_MSG_ERROR("gmp header not found.")])
+#AC_CHECK_LIB(gmp, __gmpz_init2, ,[AC_MSG_ERROR("Linking against gmp library failed.")])
 
 # check for zlib
 AC_CHECK_HEADERS([zlib.h], ,[AC_MSG_ERROR("zlib header not found.")])
@@ -202,8 +203,12 @@ AC_CHECK_HEADERS([boost/asio.hpp], , [AC_MSG_ERROR("boost::asio header not found
 AC_CHECK_HEADERS([boost/tr1/unordered_set.hpp], , [AC_MSG_ERROR("boost::unordered_set header not found.")])
 
 # check for Crypto++
-AC_CHECK_HEADERS([cryptopp/sha.h cryptopp/md5.h cryptopp/adler32.h cryptopp/hex.h cryptopp/base64.h cryptopp/hmac.h cryptopp/cryptlib.h], , [AC_MSG_ERROR("Required Crypto++ headers not found.")])
-AC_CHECK_LIB(cryptopp, main, , [AC_MSG_ERROR("Linking against Crypto++ library failed")])
+#AC_CHECK_HEADERS([cryptopp/sha.h cryptopp/md5.h cryptopp/adler32.h cryptopp/hex.h cryptopp/base64.h cryptopp/hmac.h cryptopp/cryptlib.h], , [AC_MSG_ERROR("Required Crypto++ headers not found.")])
+#AC_CHECK_LIB(cryptopp, main, , [AC_MSG_ERROR("Linking against Crypto++ library failed")])
+
+# check for OpenSSL
+AC_CHECK_HEADERS([openssl/rsa.h openssl/bn.h openssl/err.h], , [AC_MSG_ERROR("Required OpenSSL headers not found.")])
+AC_CHECK_LIB(crypto, main, , [AC_MSG_ERROR("Linking against OpenSSL library failed")])
 
 # check for Lua
 PKG_CHECK_MODULES(LUA, lua5.1 >= 5.1, , [
