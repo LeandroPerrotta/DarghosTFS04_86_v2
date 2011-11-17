@@ -134,7 +134,7 @@ bool TalkActions::registerEvent(Event* event, xmlNodePtr p, bool override)
 
 bool TalkActions::onPlayerSay(Creature* creature, uint16_t channelId, const std::string& words, bool ignoreAccess)
 {
-	std::string cmd[TALKFILTER_LAST], param[TALKFILTER_LAST];
+	std::string cmd[TALKFILTER_LAST] = words, param[TALKFILTER_LAST] = "";
 
 	std::string::size_type loc = words.find('"', 0);
 	if(loc != std::string::npos)
@@ -185,7 +185,7 @@ bool TalkActions::onPlayerSay(Creature* creature, uint16_t channelId, const std:
 	if(player && talkAction->getChannel() != -1 && talkAction->getChannel() != channelId)
 	{
 		player->sendCancel("Você não pode digitar este comando neste canal.");
-		return true;		
+		return true;
 	}
 #endif
 
@@ -212,7 +212,7 @@ bool TalkActions::onPlayerSay(Creature* creature, uint16_t channelId, const std:
 	}
 
 	if(talkAction->isScripted())
-		return (talkAction->executeSay(creature, cmd[talkAction->getFilter()], param[talkAction->getFilter()], channelId) != 0);
+		return (talkAction->executeSay(creature, cmd[talkAction->getFilter()], param[talkAction->getFilter()], channelId));
 
 	if(TalkFunction* function = talkAction->getFunction())
 		return function(creature, cmd[talkAction->getFilter()], param[talkAction->getFilter()]);
@@ -1112,12 +1112,12 @@ bool TalkAction::banishmentInfo(Creature* creature, const std::string&, const st
 		end = what + (std::string)" won't be undeleted";
 
 	std::stringstream ss;
-	ss << what.c_str() << " has been " << (deletion ? "deleted" : "banished") << " at:\n" 
-		<< formatDateEx(ban.added, "%d %b %Y").c_str() << " by: " << admin.c_str() << "for the following reason:\n" 
+	ss << what.c_str() << " has been " << (deletion ? "deleted" : "banished") << " at:\n"
+		<< formatDateEx(ban.added, "%d %b %Y").c_str() << " by: " << admin.c_str() << "for the following reason:\n"
 		<< getReason(ban.reason).c_str() << ".\n"
-		<< "The action taken was:\n" 
+		<< "The action taken was:\n"
 		<< getAction(ban.action, false).c_str() << ",\n"
-		<< "The comment given was:\n" 
+		<< "The comment given was:\n"
 		<< ban.comment.c_str() << ".\n"
 		<< end.c_str() << (deletion ? "." : formatDateEx(ban.expires).c_str());
 
