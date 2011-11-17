@@ -1,3 +1,6 @@
+BG_ENABLED = false
+BG_ENABLED_GAINS = true
+
 FREE_GAINS_PERCENT = 30
 BG_EXP_RATE = 2
 BG_EACH_BONUS_PERCENT = 50
@@ -171,6 +174,10 @@ function pvpBattleground.onInit()
 	
 	setBattlegroundConfigs(configs)
 	pvpBattleground.setBonus(0)
+	
+	if(not BG_ENABLED) then
+		pvpBattleground.close()
+	end
 end
 
 function pvpBattleground.close()
@@ -179,6 +186,11 @@ function pvpBattleground.close()
 end
 
 function pvpBattleground.hasGain()
+
+	if(not BG_ENABLED_GAINS) then
+		return false
+	end
+
 	local date = os.date("*t")
 	return ((date.hour >= BG_GAIN_START_HOUR and date.hour <= 23)
 		or (date.hour >= 0 and date.hour < BG_GAIN_END_HOUR)
