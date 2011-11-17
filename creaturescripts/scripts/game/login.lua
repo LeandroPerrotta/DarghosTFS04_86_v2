@@ -138,14 +138,18 @@ function onLoginNotify(cid)
 			msg = msg .. "Não se esqueça que hoje é dia do evento semanal Warmaster a partir das 15:00 PM! \n\n"
 			msg = msg .. "O Warmaster é um evento de PvP que acontece as terças e domingos e premia o vencedor com um ticket para o Warmaster Outfit. \n"
 			msg = msg .. "A entrada do evento fica no deserto ao oeste de Quendor, em estrutura com teleports.\n"
+			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_ORANGE, msg)
+			msg = ""
 			msg = msg .. "Dentro do evento tudo é Hardcore PvP e se você morrer você não perderá nada. O objetivo é simplesmente destruir os obstaculos e se manter vivo!\n"
 			msg = msg .. "Na ultima sala existirá o boss que ao ser derrotado dropará o premio!\n"
 		end
+	--[[
 	elseif(today == WEEKDAY.MONDAY and getPlayerLevel(cid) >= 80) then
 	
 		msg = "Lembrete do dia:\n\n"
 		msg = msg .. "Hoje é segunda-feira e o barco que faz viagens Quendor (PvP) <-> Island of Peace (Optional PvP) está disponivel caso você deseje transferir seu personagem! \n"
 		msg = msg .. "Pense bem e lembre-se que só é permitida UMA unica viagem e que caso seja feita você terá de permanecer no destino escolhido ao menos até a proxima segunda-feira!\n"
+	--]]
 	end
 	
 	if(msg ~= nil) then

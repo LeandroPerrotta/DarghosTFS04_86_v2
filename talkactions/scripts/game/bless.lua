@@ -52,6 +52,9 @@ function onSay(cid, words, param)
 		message = message .. "\nCuidado! Você não possui nenhuma benção! A chance de você perder itens ou sua mochila são muito altas!"
 	end
 	
+	doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, message)
+	message = ""
+	
 	if(usePvPBless) then
 		message = message .. "\n\nBenção do PvP (twist of fate):"
 		
