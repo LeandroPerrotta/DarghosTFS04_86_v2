@@ -26,6 +26,9 @@ darghos_exp_multipler = 1
 -- Change pvp
 darghos_change_pvp_debuff_percent = 50
 darghos_change_pvp_days_cooldown = 30
+darghos_change_pvp_premdays_cooldown = 10
+darghos_change_pvp_premdays_cost = 20
+darghos_remove_change_pvp_debuff_cost = 25
 
 -- Darghos spoof players
 -- opções: true (ativo), false (desativo)

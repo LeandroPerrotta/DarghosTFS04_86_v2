@@ -123,7 +123,21 @@
 			<response text="Sim, uma Fire Sword. Você pode trazer uma para que eu possa mergulhar ela nas areias negras?"> 
 				<action name="topic" value="10"/>
 			</response>	
-		</interact>			
+		</interact>
+		
+		<interact keywords="unholy;sword">
+			<response>
+			<action name="script">
+			<![CDATA[
+			local courseChurch = getPlayerStorageValue(cid, QUESTLOG.DIVINE_ANKH.COURSE_CHURCH)
+			if(courseChurch == 2) then
+				selfSay("Você perdeu a sua unholy sword? Sem problemas, posso lhe arrumar outra, porem terá de me pagar 30k por esta nova, aceita? ")
+				_state.topic = 12
+			end
+			]]>
+			</action>
+			</response>					
+		</interact>				
 		
 		<interact keywords="yes" >
 			<keywords>sim</keywords>
@@ -195,6 +209,14 @@
 							setPlayerStorageValue(cid, sid.PRIEST_UNHOLY_SWORD_TIMER, os.time() + (60 * 60))	
 						else
 							selfSay("Você não possui uma Fire Sword! Arrume uma e volte aqui.", cid)	
+							_state.topic = 0
+						end
+					elseif(_state.topic == 12) then
+						if doPlayerRemoveMoney(cid, 30000) then
+							doPlayerAddItem(cid, CUSTOM_ITEMS.UNHOLY_SWORD, 1)
+							selfSay("Aqui está a sua nova unholy sword!", cid)
+						else
+							selfSay("Você não possui dinheiro sulficiente!", cid)
 							_state.topic = 0
 						end
 					end	

@@ -767,7 +767,7 @@ function summonLordVankyner()
 
 	local creaturePos = getThingPos(uid.LORD_VANKYNER)
 	local creature = doSummonCreature("Lord Vankyner", creaturePos)
-	registerCreatureEvent(creature, "CreatureDie")
+	registerCreatureEvent(creature, "monsterDeath")
 end
 
 function summonDemonOak()

@@ -17,14 +17,20 @@ function process(cid, message, keywords, parameters, node)
     end 
     
     local lastChangePvp = getPlayerStorageValue(cid, sid.LAST_CHANGE_PVP)
+    local hasPermission = getPlayerStorageValue(cid, sid.CHANGE_PVP_PERMISSION) == 1
     
     if(talkState == 1) then 	
-    	if(lastChangePvp ~= -1 and lastChangePvp + (darghos_change_pvp_days_cooldown * 60 * 60 * 24) > os.time()) then
+    	if(not hasPermission and lastChangePvp ~= -1 and lastChangePvp + (darghos_change_pvp_days_cooldown * 60 * 60 * 24) > os.time()) then
     	
     		local leftDays = math.floor(((lastChangePvp + (darghos_change_pvp_days_cooldown * 60 * 60 * 24)) - os.time()) / 60 / 60 / 24)
     	
     		if(leftDays > 0) then
-				npcHandler:say("Você alterou a sua habilidade de entrar em combate a muito pouco tempo! Você deve aguardar por mais " .. leftDays .. " dias para uma nova mudança!", cid)
+    			if(leftDays < darghos_change_pvp_days_cooldown - darghos_change_pvp_premdays_cooldown and isPremium(cid) and getPlayerPremiumDays(cid) >= darghos_change_pvp_premdays_cost) then
+    				npcHandler:say("Você alterou a sua habilidade de entrar em combate a muito pouco tempo! Você deve aguardar por mais " .. leftDays .. " dias para uma nova mudança!", cid)
+    				npcHandler:say("Porem se você estiver disposto a sacrificar " .. darghos_change_pvp_premdays_cost .. " dias de sua Conta Premium para fazer esta mudança procure o Rei Ordon e solicite uma {permissão especial}!", cid)
+    			else
+					npcHandler:say("Você alterou a sua habilidade de entrar em combate a muito pouco tempo! Você deve aguardar por mais " .. leftDays .. " dias para uma nova mudança!", cid)
+				end
 			else
 				npcHandler:say("Em mais algumas horas você poderá alterar a sua habilidade de entrar em combate!", cid)
 			end
@@ -36,7 +42,7 @@ function process(cid, message, keywords, parameters, node)
 			local debuffExpMsg = nil
 		
 			if(lastChangePvp ~= -1) then
-				debuffExpMsg = "VOCÊ TAMBÉM RECEBERA 50% MENOS EXPERIENCIA PELOS PROXIMOS " .. darghos_change_pvp_days_cooldown .. " DIAS!"
+				debuffExpMsg = "COMO PUNIÇÃO VOCÊ TAMBÉM RECEBERA 50% MENOS EXPERIENCIA PELOS PROXIMOS " .. darghos_change_pvp_days_cooldown .. " DIAS!"
 			end
 		
 			if(doPlayerIsPvpEnable(cid)) then
@@ -75,6 +81,10 @@ function process(cid, message, keywords, parameters, node)
     	
     	setPlayerStorageValue(cid, sid.LAST_CHANGE_PVP, os.time())
     	
+    	if(hasPermission) then
+    		setPlayerStorageValue(cid, sid.CHANGE_PVP_PERMISSION, -1)
+    	end
+    	
     	if(lastChangePvp ~= -1) then
     		setPlayerStorageValue(cid, sid.CHANGE_PVP_EXP_DEBUFF, os.time() + (60 * 60 * 24 * darghos_change_pvp_days_cooldown)) 
 		end
@@ -93,6 +103,8 @@ end
 
 keywordHandler:addKeyword({'bless', 'benção', 'bencao'}, D_CustomNpcModules.offerBlessing, {npcHandler = npcHandler, onlyFocus = true, ispvp = true, baseCost = 2000, levelCost = 200, startLevel = 30, endLevel = 270})
 keywordHandler:addKeyword({'job', 'trabalho', 'ajudar'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'Eu ajudo os novatos que passam por aqui. Eu também sou autorizado a abençoar com a {twist of fate}, a benção para o {pvp}.'})
+keywordHandler:addKeyword({'permissão especial', 'permissao especial'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = "Após uma mudança de PvP você não pode efetuar novas mudanças por " .. darghos_change_pvp_days_cooldown .. " dias. Porem, quando já tiverem se passado " .. darghos_change_pvp_premdays_cooldown .. " dias de sua última mudança, caso você possua " .. darghos_change_pvp_premdays_cost .. " dias de premium ou mais em sua conta você poderá sacrificar-los e obter do {Rei Ordon} a permissão especial para trocar o seu PvP novamente mais cedo."})
+keywordHandler:addKeyword({'rei ordon'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'Ordon me parece um rei justo! Ele se encontra sempre em seu palácio real na cidade de Quendor. Com ele é possivel obter a promoção além da {permissão especial} da mudança de PvP.'})
 local node = keywordHandler:addKeyword({'pvp'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'Foi me concedido pelos Deuses o poder de desligar ou ligar a sua habilidade de entrar em combate com outros jogadores. Você gostaria de fazer está mudança?'})
 	local node1 = node:addChildKeyword({'yes', 'sim'}, process, {npcHandler = npcHandler, onlyFocus = true, talk_state = 1})
 	node:addChildKeyword({"nao", "não", "no"}, StdModule.say, {npcHandler = npcHandler, reset = true, onlyFocus = true, text = 'Volte se desejar fazer está mudança!'})

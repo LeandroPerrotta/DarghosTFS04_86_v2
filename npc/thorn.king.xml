@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
-<npc name="Rei Ordon" floorchange="0" walkradius="2" walkinterval="4000" speed="220" script="promote.lua">
-	<health now="150" max="150"/>
+<npc name="Rei Ordon" floorchange="0" walkradius="2" walkinterval="4000" speed="220" script="|DATA|/game/king.ordon.lua">
+	<health now="10000" max="10000"/>
     <look type="332" head="21" body="87" legs="107" feet="95" addons="0"/>
+ 
+ 	<parameters>
+		<parameter key="message_greet" value="Ola jovem |PLAYERNAME|. Eu sou Ordon, o Rei! Como posso lhe {ajudar}?" />
+	</parameters>
   
   	<!-- 
 	<interaction talkradius="3" range="3" idletime="30" idleinterval="300" defaultpublic="0">

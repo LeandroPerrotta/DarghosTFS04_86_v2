@@ -31,6 +31,8 @@ function onDeath(cid, corpse, deathList)
 			addEvent(resummonKoshei, 1000 * 4, cid, corpse)
 		elseif(isInArray(inquisitionBosses, string.lower(getCreatureName(cid)))) then
 			addEvent(summonInquisitionBoss, 1000 * 60 * 60, string.lower(getCreatureName(cid)))
+		elseif(string.lower(getCreatureName(cid)) == "lord vankyner")
+			onLordVankynerDie()
 		end
 	end
 	
