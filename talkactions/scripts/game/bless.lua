@@ -9,6 +9,10 @@ function onSay(cid, words, param)
 		{name="Fifth", location="Salazart"}
 	}
 	
+	if(not doPlayerIsPvpEnable(cid)) then
+		blesses[2].location = "Quendor (Palacio)"
+	end
+	
 	local totalBlesses = 0
 	
 	local message = "Confire se você possui todas as benções ou não:\n\n"
