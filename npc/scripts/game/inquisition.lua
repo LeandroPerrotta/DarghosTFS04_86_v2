@@ -139,7 +139,7 @@ function startSecondMissionCallback(cid, message, keywords, parameters, node)
 	local npcHandler = parameters.npcHandler
 
 	setPlayerStorageValue(cid, QUESTLOG.INQUISITION.MISSION_FIRST_ADDON, 0)
-	npcHandler:say("Este demonio é conhecido como Ungreez, há informações que atualmente ele se encontra na caverna ao sul de Aracura. Estarei aguardando a sua volta com a missão concluida!", cid)
+	npcHandler:say("Este demonio é conhecido como Ungreez, há informações que atualmente ele pode ser encontrado atravez da caverna ao sul de Aracura, e também de algum lugar de Aaragon. Estarei aguardando a sua volta com a missão concluida!", cid)
 	npcHandler:resetNpc()
 	
 	return true

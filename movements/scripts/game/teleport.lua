@@ -52,6 +52,8 @@ function onStepIn(cid, item, position, fromPosition)
 	
 	if(item.actionid == aid.CALL_TELEPORT_BACK) then
 		return doTeleportBack(cid)
+	elseif(item.actionid == aid.STORE_TELEPORT_BACK) then
+		return doTeleportBack(cid, fromPosition)
 	end
 	
 	if(item.actionid ~= nil and item.actionid == aid.CHURCH_PORTAL) then
