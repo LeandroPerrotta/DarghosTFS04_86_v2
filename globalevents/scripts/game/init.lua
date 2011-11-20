@@ -32,8 +32,7 @@ function onStartup()
 	db.executeQuery("UPDATE `players` SET `afk` = 0 WHERE `world_id` = " .. getConfigValue('worldId') .. " AND `afk` > 0;")
 	
 	-- resetando storages diarios
-	db.executeQuery("UPDATE `player_storage` SET `value` = -1 WHERE `key` = '" .. sid.WEBSITE_POLL_NOTIFY .. "'")
-	
+	db.executeQuery("UPDATE `player_storage` SET `value` = -1 WHERE `key` = '" .. sid.WEBSITE_POLL_NOTIFY .. "'")	
 	luaGlobal.truncate()
 	return true
 end
