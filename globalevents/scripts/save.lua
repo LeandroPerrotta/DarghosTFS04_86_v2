@@ -23,16 +23,24 @@ local function executeSave(seconds)
 	if(seconds > 0) then
 		addEvent(executeSave, config.events * 1000, seconds - config.events)
 	else
-		doSaveServer(config.shallow)
+		 onSave()
 	end
 end
 
 function onThink(interval)
 	if(table.maxn(config.broadcast) == 0) then
-		doSaveServer(config.shallow)
+		 onSave()
 	else
 		executeSave(config.delay)
 	end
 
 	return true
+end
+
+function onSave()
+	doSaveServer(config.shallow)
+	
+	if(darghos_server_save_backup) then
+		addEvent(os.execute, 500, "./backup.sh")
+	end
 end

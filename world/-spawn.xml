@@ -12689,11 +12689,36 @@
     <monster name="Destroyer" x="-19" y="-6" z="8" spawntime="30"/>
     <monster name="Destroyer" x="9" y="3" z="8" spawntime="30"/>
     <monster name="Blightwalker" x="-19" y="5" z="8" spawntime="30"/>
+    <monster name="Destroyer" x="-23" y="6" z="8" spawntime="30"/>
+    <monster name="Blightwalker" x="-1" y="6" z="8" spawntime="30"/>
+    <monster name="Diabolic Imp" x="-28" y="9" z="8" spawntime="30"/>
+    <monster name="Hellfire Fighter" x="11" y="9" z="8" spawntime="30"/>
+    <monster name="Plaguesmith" x="-30" y="12" z="8" spawntime="30"/>
+    <monster name="Destroyer" x="-7" y="12" z="8" spawntime="30"/>
+    <monster name="Destroyer" x="13" y="12" z="8" spawntime="30"/>
+    <monster name="Diabolic Imp" x="-27" y="25" z="8" spawntime="30"/>
   </spawn>
   <spawn centerx="3300" centery="2162" centerz="8" radius="5">
     <monster name="Ghoul" x="5" y="-4" z="8" spawntime="60"/>
     <monster name="Ghoul" x="3" y="1" z="8" spawntime="60"/>
     <monster name="Ghoul" x="0" y="3" z="8" spawntime="60"/>
+  </spawn>
+  <spawn centerx="1795" centery="2163" centerz="8" radius="30">
+    <monster name="Destroyer" x="-15" y="-22" z="8" spawntime="30"/>
+    <monster name="Nightmare" x="-10" y="-15" z="8" spawntime="30"/>
+    <monster name="Nightmare" x="-13" y="-7" z="8" spawntime="30"/>
+    <monster name="Destroyer" x="-22" y="-2" z="8" spawntime="30"/>
+    <monster name="Nightmare" x="-19" y="-2" z="8" spawntime="30"/>
+    <monster name="Nightmare" x="-22" y="4" z="8" spawntime="30"/>
+    <monster name="Nightmare" x="-15" y="15" z="8" spawntime="30"/>
+    <monster name="Nightmare" x="-7" y="15" z="8" spawntime="30"/>
+    <monster name="Diabolic Imp" x="28" y="15" z="8" spawntime="30"/>
+    <monster name="Destroyer" x="-13" y="17" z="8" spawntime="30"/>
+    <monster name="Nightmare" x="19" y="17" z="8" spawntime="30"/>
+    <monster name="Destroyer" x="27" y="18" z="8" spawntime="30"/>
+    <monster name="Nightmare" x="-4" y="19" z="8" spawntime="30"/>
+    <monster name="Destroyer" x="10" y="23" z="8" spawntime="30"/>
+    <monster name="Nightmare" x="7" y="24" z="8" spawntime="30"/>
   </spawn>
   <spawn centerx="3251" centery="2163" centerz="8" radius="5">
     <monster name="Ghoul" x="5" y="-1" z="8" spawntime="60"/>
@@ -17272,6 +17297,12 @@
     <monster name="Hero" x="2" y="0" z="9" spawntime="180"/>
     <monster name="Hero" x="-3" y="1" z="9" spawntime="180"/>
   </spawn>
+  <spawn centerx="1876" centery="2173" centerz="9" radius="5">
+    <monster name="Gargoyle" x="-3" y="-3" z="9" spawntime="30"/>
+    <monster name="Gargoyle" x="0" y="-2" z="9" spawntime="30"/>
+    <monster name="Gargoyle" x="-3" y="0" z="9" spawntime="30"/>
+    <monster name="Gargoyle" x="1" y="2" z="9" spawntime="30"/>
+  </spawn>
   <spawn centerx="1234" centery="2177" centerz="9" radius="30">
     <monster name="Skeleton Warrior" x="-5" y="-26" z="9" spawntime="60"/>
     <monster name="Skeleton" x="-3" y="-26" z="9" spawntime="60"/>
@@ -21830,9 +21861,30 @@
     <monster name="Plaguesmith" x="-9" y="-5" z="10" spawntime="30"/>
     <monster name="Plaguesmith" x="-2" y="-4" z="10" spawntime="30"/>
     <monster name="Plaguesmith" x="-11" y="-3" z="10" spawntime="30"/>
+    <monster name="Betrayed Wraith" x="-13" y="2" z="10" spawntime="30"/>
+    <monster name="Plaguesmith" x="12" y="2" z="10" spawntime="30"/>
+    <monster name="Betrayed Wraith" x="20" y="5" z="10" spawntime="30"/>
+    <monster name="Betrayed Wraith" x="0" y="7" z="10" spawntime="30"/>
+    <monster name="Plaguesmith" x="-16" y="16" z="10" spawntime="30"/>
+    <monster name="Betrayed Wraith" x="-17" y="18" z="10" spawntime="30"/>
   </spawn>
   <spawn centerx="3502" centery="2162" centerz="10" radius="5">
     <monster name="Warlock" x="-1" y="1" z="10" spawntime="30"/>
+  </spawn>
+  <spawn centerx="1877" centery="2168" centerz="10" radius="20">
+    <monster name="Dark Torturer" x="0" y="-15" z="10" spawntime="30"/>
+    <monster name="Dark Torturer" x="-2" y="-14" z="10" spawntime="30"/>
+    <monster name="Plaguesmith" x="10" y="-13" z="10" spawntime="30"/>
+    <monster name="Destroyer" x="13" y="-13" z="10" spawntime="30"/>
+    <monster name="Dark Torturer" x="-13" y="-12" z="10" spawntime="30"/>
+    <monster name="Nightmare" x="-6" y="-7" z="10" spawntime="30"/>
+    <monster name="Nightmare" x="0" y="-5" z="10" spawntime="30"/>
+    <monster name="Dark Torturer" x="10" y="-5" z="10" spawntime="30"/>
+    <monster name="Dark Torturer" x="20" y="-3" z="10" spawntime="30"/>
+    <monster name="Nightmare" x="6" y="-2" z="10" spawntime="30"/>
+    <monster name="Nightmare" x="-9" y="1" z="10" spawntime="30"/>
+    <monster name="Dark Torturer" x="3" y="4" z="10" spawntime="30"/>
+    <monster name="Destroyer" x="-3" y="6" z="10" spawntime="30"/>
   </spawn>
   <spawn centerx="3427" centery="2168" centerz="10" radius="5">
     <monster name="Dragon" x="1" y="-3" z="10" spawntime="180"/>

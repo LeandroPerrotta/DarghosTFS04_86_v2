@@ -16,6 +16,9 @@ darghos_use_stages = true
 --	* para true é necessario que as vocações de reborn estejam devidamente configuradas em vocations.xml
 darghos_use_reborn = false
 
+-- Sistema de backup a cada Auto Save
+darghos_server_save_backup = true
+
 -- Sistema de recordes personalizado
 -- opções: true (ativo), false (desativo)
 darghos_use_record = false
