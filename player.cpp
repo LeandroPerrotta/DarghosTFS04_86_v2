@@ -220,9 +220,9 @@ std::string Player::getDescription(int32_t lookDistance) const
 			s << " (Level " << level;
 
 		if(isPvpEnabled())
-			s << " with pvp enabled)";
+			s << " pacifico)";
 		else
-			s << " with pvp disabled)";
+			s << " agressivo)";
 #else
 		if(!hasCustomFlag(PlayerCustomFlag_HideLevel))
 			s << " (Level " << level << ")";

@@ -3481,7 +3481,11 @@ bool Game::playerLookAt(uint32_t playerId, const Position& pos, uint16_t spriteI
 			ss << ".";
 			if(const Player* destPlayer = creature->getPlayer())
 			{
-				ss << std::endl << "IP: " << convertIPAddress(destPlayer->getIP()) << ", Client: " << destPlayer->getClientVersion() << ".";
+#ifdef __DARGHOS_CUSTOM__
+				ss << std::endl << "IP: " << convertIPAddress(destPlayer->getIP()) << ", Ping: " << destPlayer->getCurrentPing() << "ms, Client: " << destPlayer->getClientVersion() << ".";
+#else
+                ss << std::endl << "IP: " << convertIPAddress(destPlayer->getIP()) << ", Client: " << destPlayer->getClientVersion() << ".";
+#endif
 				if(destPlayer->isGhost())
 					ss << std::endl << "* Ghost mode *";
 			}

@@ -247,7 +247,7 @@ class Player : public Creature, public Cylinder
 		void removePvpBlessing();
 		void removeBlessing(int16_t value);
 		void setPvpStatus(bool status) { pvpStatus = status; }
-		bool isPvpEnabled() const { return pvpStatus; } 
+		bool isPvpEnabled() const { return pvpStatus; }
 		#endif
 
 #ifdef __DARGHOS_CUSTOM_SPELLS__
@@ -730,6 +730,10 @@ class Player : public Creature, public Cylinder
 		void sendPlayerIcons(Player* player);
 
 		void receivePing() {lastPong = OTSYS_TIME();}
+#ifdef __DARGHOS_CUSTOM__
+        uint32_t getCurrentPing() const { return std::ceil((lastPong - lastPing) / 2); }
+#endif
+
 		virtual void onThink(uint32_t interval);
 		uint32_t getAttackSpeed() const;
 
@@ -780,13 +784,13 @@ class Player : public Creature, public Cylinder
 
 		#ifdef __DARGHOS_PVP_SYSTEM__
 		bool isInBattleground() const { return onBattleground; }
-		void setIsInBattleground(bool in) 
-		{ 
-			onBattleground = in; 
+		void setIsInBattleground(bool in)
+		{
+			onBattleground = in;
 		}
 		Bg_Teams_t getBattlegroundTeam() const { return team_id; }
-		void setBattlegroundTeam(Bg_Teams_t tid) { 
-			team_id = tid; onBattleground = (tid == BATTLEGROUND_TEAM_NONE) ? false : true; 
+		void setBattlegroundTeam(Bg_Teams_t tid) {
+			team_id = tid; onBattleground = (tid == BATTLEGROUND_TEAM_NONE) ? false : true;
 			lastKnowUpdate = time(NULL);
 		}
 		void sendPvpChannelMessage(const std::string& text, SpeakClasses speakClass = SPEAK_CHANNEL_W) const;
