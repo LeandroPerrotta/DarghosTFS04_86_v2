@@ -25,6 +25,8 @@ function saySpecialPermission(cid, message, keywords, parameters, node)
 	    	
 	    		if(leftDays > 0 and leftDays < darghos_change_pvp_days_cooldown - darghos_change_pvp_premdays_cooldown) then
     				npcHandler:say("Eu posso lhe conceder a permissão de uma unica mudança de PvP mais curta, que pode ser feita a cada 10 dias, assim você poderá imediatamente trocar seu PvP com os funcionarios dos templos, e mais! Você gostaria de obter esta permissão?", cid)
+					node:addChildKeyword({'sim', 'yes'}, saySpecialPermission, {npcHandler = npcHandler, onlyFocus = true, talk_state = 2})
+					node:addChildKeyword({'não', 'nao', 'no'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'Tudo bem, volte se mudar de ideia!', reset = true})
 					return true
 				else
 					npcHandler:say("Eu posso lhe conceder a permissão de uma unica mudança de PvP mais curta, que pode ser feita a cada 10 dias, porém ainda não se passaram 10 dias desde a sua ultima mudança... ", cid)
@@ -34,10 +36,14 @@ function saySpecialPermission(cid, message, keywords, parameters, node)
 			end
 	 elseif(talkState == 2) then
 	 	npcHandler:say("Saiba que está permissão tem um grande custo! Para obter-la você precisará sacrificar " .. darghos_change_pvp_premdays_cost .. " dias de sua Conta Premium, você tem certeza que quer isto mesmo??", cid)
+     	node:addChildKeyword({'sim', 'yes'}, saySpecialPermission, {npcHandler = npcHandler, onlyFocus = true, talk_state = 3})
+     	node:addChildKeyword({'não', 'nao', 'no'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'Uhmm, prefere pensar melhor? Me procure se mudar de ideia', reset = true})
      	return true
 	 elseif(talkState == 3) then
 	 	if(isPremium(cid) and getPlayerPremiumDays(cid) >= darghos_change_pvp_premdays_cost) then
 		 	npcHandler:say("VOCÊ TEM CERTEZA DISTO? VOCÊ DESEJA PERDER " .. darghos_change_pvp_premdays_cost .. " DIAS DE SUA CONTA PREMIUM EM TROCA DE MINHA PERMISSÃO ESPECIAL DE MUDANÇA DE PVP??", cid)
+	     	node:addChildKeyword({'sim', 'yes'}, saySpecialPermission, {npcHandler = npcHandler, onlyFocus = true, talk_state = 4})
+	     	node:addChildKeyword({'não', 'nao', 'no'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'Eu sabia que não estava completamente certo disto!!', reset = true})
 	     	return true     	
      	else
      		npcHandler:say("Desculpe, você não possui os " .. darghos_change_pvp_premdays_cost .. " dias de Conta Premium necessários para este sacrificio...", cid)
@@ -47,6 +53,7 @@ function saySpecialPermission(cid, message, keywords, parameters, node)
  	 	doPlayerAddPremiumDays(cid, -darghos_change_pvp_premdays_cost)
  	 	changeLog.onBuySpecialPermission(cid)
 	 	npcHandler:say("FEITO! Você abriu mão de " .. darghos_change_pvp_premdays_cost .. " dias de sua conta premium em troca de minha permissão especial! Agora você pode falar com o funcionário do templo e ele não irá negar seu pedido de mudança de PvP!!", cid)
+     	npcHandler:resetNpc(cid)	
      	return true
      end
 
@@ -90,13 +97,7 @@ function sayPunishment(cid, message, keywords, parameters, node)
     return true
 end
 
-local node1 = keywordHandler:addKeyword({'permissão especial', 'permissao especial'}, saySpecialPermission, {npcHandler = npcHandler, onlyFocus = true, talk_state = 1})
-				local node2 = node1:addChildKeyword({'sim', 'yes'}, saySpecialPermission, {npcHandler = npcHandler, onlyFocus = true, talk_state = 2})
-				node1:addChildKeyword({'não', 'nao', 'no'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'Tudo bem, volte se mudar de ideia!', reset = true})
-					local node3 = node2:addChildKeyword({'sim', 'yes'}, saySpecialPermission, {npcHandler = npcHandler, onlyFocus = true, talk_state = 3})
-					node2:addChildKeyword({'não', 'nao', 'no'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'Uhmm, prefere pensar melhor? Me procure se mudar de ideia', reset = true})
-						node3:addChildKeyword({'sim', 'yes'}, saySpecialPermission, {npcHandler = npcHandler, onlyFocus = true, talk_state = 4})
-						node3:addChildKeyword({'não', 'nao', 'no'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'Eu sabia que não estava completamente certo disto!!', reset = true})					
+addKeyword({'permissão especial', 'permissao especial'}, saySpecialPermission, {npcHandler = npcHandler, onlyFocus = true, talk_state = 1})
 
 local node4 = keywordHandler:addKeyword({'punição', 'punicao'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'Após uma mudança de PvP você fica sob o efeito da punição que reduz a experiencia obtida em 50%. Com os poderes concedidos a mim eu posso remover este efeito, POREM AO CUSTO DE ' .. darghos_remove_change_pvp_debuff_cost .. ' DIAS DE SUA CONTA PREMIUM! Você gostaria?'})
 				node4:addChildKeyword({'sim', 'yes'}, sayPunishment, {npcHandler = npcHandler, onlyFocus = true})
