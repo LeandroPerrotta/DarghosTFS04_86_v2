@@ -97,7 +97,7 @@ function sayPunishment(cid, message, keywords, parameters, node)
     return true
 end
 
-addKeyword({'permissão especial', 'permissao especial'}, saySpecialPermission, {npcHandler = npcHandler, onlyFocus = true, talk_state = 1})
+keywordHandler:addKeyword({'permissão especial', 'permissao especial'}, saySpecialPermission, {npcHandler = npcHandler, onlyFocus = true, talk_state = 1})
 
 local node4 = keywordHandler:addKeyword({'punição', 'punicao'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'Após uma mudança de PvP você fica sob o efeito da punição que reduz a experiencia obtida em 50%. Com os poderes concedidos a mim eu posso remover este efeito, POREM AO CUSTO DE ' .. darghos_remove_change_pvp_debuff_cost .. ' DIAS DE SUA CONTA PREMIUM! Você gostaria?'})
 				node4:addChildKeyword({'sim', 'yes'}, sayPunishment, {npcHandler = npcHandler, onlyFocus = true})
