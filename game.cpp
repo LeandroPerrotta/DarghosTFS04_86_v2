@@ -3459,6 +3459,17 @@ bool Game::playerLookAt(uint32_t playerId, const Position& pos, uint16_t spriteI
 			if(item->getUniqueId() > 0)
 				ss << ", UniqueID: [" << item->getUniqueId() << "]";
 
+#ifdef __DARGHOS_CUSTOM__
+
+            boost::any value = item->getAttribute("itemShopLogId");
+
+            if(!value.empty())
+            {
+                int32_t shop_id = boost::any_cast<int32_t>(value);
+                ss << ", ShopLog: [" << shop_id << "]";
+            }
+#endif
+
 			ss << ".";
 			const ItemType& it = Item::items[item->getID()];
 			if(it.transformEquipTo)

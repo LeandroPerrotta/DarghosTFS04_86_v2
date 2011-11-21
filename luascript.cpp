@@ -158,7 +158,7 @@ bool ScriptEnviroment::saveGameState()
 	query_insert.setQuery("INSERT INTO `global_storage` (`key`, `world_id`, `value`) VALUES ");
 	for(StorageMap::const_iterator it = m_storageMap.begin(); it != m_storageMap.end(); ++it)
 	{
-		std::stringstream ss;	
+		std::stringstream ss;
 		ss << it->first << ", " << g_config.getNumber(ConfigManager::WORLD_ID) << ", " << db->escapeString(it->second).c_str();
 		if(!query_insert.addRow(ss.str().c_str()))
 			return false;
@@ -2492,7 +2492,7 @@ void LuaInterface::registerFunctions()
 
 	//doPlayerGetBattlegroundTeam(cid)
 	lua_register(m_luaState, "doPlayerGetBattlegroundTeam", LuaInterface::luaDoPlayerGetBattlegroundTeam);
-	
+
 	//getBattlegroundStatistics()
 	lua_register(m_luaState, "getBattlegroundStatistics", LuaInterface::luaGetBattlegroundStatistics);
 
@@ -8086,7 +8086,7 @@ int32_t LuaInterface::luaDoPlayerAddPremiumDays(lua_State* L)
 			Account account = IOLoginData::getInstance()->loadAccount(player->getAccount());
 			if(days < 0)
 			{
-				account.premiumDays = std::max((uint32_t)0, uint32_t(account.premiumDays + (int32_t)days));
+				account.premiumDays = std::max((uint32_t)0, account.premiumDays + days);
 				player->premiumDays = std::max((uint32_t)0, uint32_t(player->premiumDays + (int32_t)days));
 			}
 			else
@@ -10556,7 +10556,7 @@ int32_t LuaInterface::luaDoPlayerJoinBattleground(lua_State* L)
 	//doPlayerJoinBattleground(cid)
 	ScriptEnviroment* env = getEnv();
 	if(Player* player = env->getPlayerByUID(popNumber(L)))
-	{		
+	{
 		lua_pushnumber(L, g_battleground.onPlayerJoin(player));
 	}
 	else
@@ -10573,7 +10573,7 @@ int32_t LuaInterface::luaDoPlayerLeaveBattleground(lua_State* L)
 	//doPlayerLeaveBattleground(cid)
 	ScriptEnviroment* env = getEnv();
 	if(Player* player = env->getPlayerByUID(popNumber(L)))
-	{		
+	{
 		lua_pushnumber(L, g_battleground.kickPlayer(player));
 	}
 	else
@@ -10590,7 +10590,7 @@ int32_t LuaInterface::luaDoPlayerGetBattlegroundTeam(lua_State* L)
 	//doPlayerGetBattlegroundTeam(cid)
 	ScriptEnviroment* env = getEnv();
 	if(Player* player = env->getPlayerByUID(popNumber(L)))
-	{		
+	{
 		if(player->isInBattleground())
 		{
 			lua_pushnumber(L, player->getBattlegroundTeam());
@@ -10598,7 +10598,7 @@ int32_t LuaInterface::luaDoPlayerGetBattlegroundTeam(lua_State* L)
 		else
 		{
 			lua_pushnumber(L, BATTLEGROUND_TEAM_NONE);
-		}		
+		}
 	}
 	else
 	{
@@ -10726,7 +10726,7 @@ int32_t LuaInterface::luaGetPlayerBattlegroundInfo(lua_State* L)
 	//getPlayerBattlegroundInfo(cid)
 	ScriptEnviroment* env = getEnv();
 	if(Player* player = env->getPlayerByUID(popNumber(L)))
-	{		
+	{
 		Bg_PlayerInfo_t* infos = g_battleground.findPlayerInfo(player);
 
 		if(!infos)

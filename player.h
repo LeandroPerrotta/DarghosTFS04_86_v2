@@ -729,9 +729,11 @@ class Player : public Creature, public Cylinder
 		void sendCritical() const;
 		void sendPlayerIcons(Player* player);
 
-		void receivePing() {lastPong = OTSYS_TIME();}
 #ifdef __DARGHOS_CUSTOM__
-        uint32_t getCurrentPing() const { return std::ceil((lastPong - lastPing) / 2); }
+		void receivePing();
+        uint32_t getCurrentPing() const;
+#else
+        void receivePing() {lastPong = OTSYS_TIME();}
 #endif
 
 		virtual void onThink(uint32_t interval);
@@ -780,6 +782,9 @@ class Player : public Creature, public Cylinder
 		time_t getLastKnowUpdate() const { return lastKnowUpdate; }
 		void setPause(bool isPause) { pause = isPause; setAttackedCreature(NULL); sendCancelTarget(); }
 		bool isPause() { return pause; }
+
+        typedef std::list<uint16_t> LatencyList_t;
+		LatencyList_t latencyList;
 		#endif
 
 		#ifdef __DARGHOS_PVP_SYSTEM__

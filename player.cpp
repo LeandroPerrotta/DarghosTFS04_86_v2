@@ -5355,6 +5355,31 @@ bool Player::isDoubleDamage()
 bool Player::hasPvpBlessing() const{ return hasBlessing(g_config.getNumber(ConfigManager::USE_BLESSING_AS_PVP) - 1); }
 void Player::removePvpBlessing() { removeBlessing(g_config.getNumber(ConfigManager::USE_BLESSING_AS_PVP) - 1); }
 void Player::removeBlessing(int16_t value) { if(hasBlessing(value)) blessings -= (int16_t)1 << value;  }
+
+void Player::receivePing() {
+    lastPong = OTSYS_TIME();
+    uint16_t latency = lastPong - lastPing;
+    latencyList.push_front(latency);
+
+    if(latencyList.size() > 10)
+        latencyList.pop_back();
+}
+
+uint32_t Player::getCurrentPing() const {
+
+    uint16_t sum = 0;
+
+    if(latencyList.size() == sum)
+        return sum;
+
+
+    for(LatencyList_t::const_iterator it = latencyList.begin(); it != latencyList.end(); it++)
+    {
+        sum += *it;
+    }
+
+    return std::ceil(sum / latencyList.size());
+}
 #endif
 
 #ifdef __DARGHOS_PVP_SYSTEM__
