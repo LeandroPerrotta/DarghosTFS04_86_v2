@@ -58,7 +58,7 @@ function saySpecialPermission(cid, message, keywords, parameters, node)
      end
 
 	npcHandler:resetNpc(cid)		
-	return false 
+	return true 
 end
 
 function sayPunishment(cid, message, keywords, parameters, node)
