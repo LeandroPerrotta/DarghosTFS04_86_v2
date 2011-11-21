@@ -80,7 +80,7 @@
 	-->
 	
     <interact keywords="second;mage;addon">
-       <response text="If you are female you need 70 bat wings, 20 red piece of cloth, 40 ape fur, 35 holy orchids, 10 spider silk yarn, 60 lizard scales, 40 red dragon scales, 15 magic sulphur and 30 ounces of vampire dust, and if you are male, you need Feumbrsa HAT. You have this?">
+       <response text="If you are female you need 70 bat wings, 20 red piece of cloth, 40 ape fur, 35 holy orchids, 10 spider silk yarn, 60 lizard scales, 40 red dragon scales, 15 magic sulphur and 30 ounces of vampire dust, and if you are male, you need Ferumbras Hat. You have this?">
 		<action name="topic" value="1"/>
 
     <interact keywords="yes" topic="1">
