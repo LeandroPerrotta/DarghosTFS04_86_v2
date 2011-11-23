@@ -7,7 +7,14 @@ AM_CONFIG_HEADER([config.h])
 AC_PROG_CXX
 AC_LANG(C++)
 # add own flags in here
-OPTIONAL_FLAGS="-D__WAR_SYSTEM__ -D__NO_CRYPTOPP__ -D__TFS_NEWEST_REVS_FIXIES__  -D__DARGHOS_PVP_SYSTEM__ -D__DARGHOS_CUSTOM__ -D__DARGHOS_SPOOF__"
+OPTIONAL_FLAGS="-D__WAR_SYSTEM__ -D__NO_CRYPTOPP__ -D__TFS_NEWEST_REVS_FIXIES__ "
+
+# verifica se vamos ativar as "Darghos Features"
+darghosFeatures=no
+AC_ARG_ENABLE(darghos, [  --enable-darghos		enable dargho features],
+	[OPTIONAL_FLAGS="$OPTIONAL_FLAGS -D__DARGHOS_PVP_SYSTEM__ -D__DARGHOS_CUSTOM__ -D__DARGHOS_SPOOF__"]
+	darghosFeatures=yes
+)
 
 # check if we want server diag enabled
 serverDiag=no
@@ -256,6 +263,7 @@ echo
 #echo The Forgotten Server 0.4
 echo $PACKAGE $VERSION
 echo
+echo Darghos features............ : $darghosFeatures
 echo Server diagnostics.......... : $serverDiag
 echo Login server mode........... : $loginServer
 echo OTAdmin protocol............ : $otAdmin
