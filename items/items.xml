@@ -2458,10 +2458,12 @@
 		<attribute key="type" value="rune" />
 		<attribute key="weight" value="105" />
 	</item>
+	<!--
 	<item fromid="2263" toid="2264" article="a" name="spell rune">
 		<attribute key="type" value="rune" />
 		<attribute key="weight" value="120" />
 	</item>
+	-->
 	<item id="2265" article="a" name="intense healing rune">
 		<attribute key="runeSpellName" value="adura gran" />
 		<attribute key="type" value="rune" />
@@ -2486,10 +2488,10 @@
 		<attribute key="type" value="rune" />
 		<attribute key="weight" value="105" />
 	</item>
-	<item id="2270" article="a" name="spell rune">
+	<!--<item id="2270" article="a" name="spell rune">
 		<attribute key="type" value="rune" />
 		<attribute key="weight" value="120" />
-	</item>
+	</item>-->
 	<item id="2271" article="an" name="icicle rune">
 		<attribute key="runeSpellName" value="adori frigo" />
 		<attribute key="type" value="rune" />
@@ -17953,5 +17955,17 @@
 	</item>	
 	<item id="12691" article="a" name="outfit ticket">
 		<attribute key="weight" value="1200" />
+	</item>		
+	<item id="2270" article="a" name="holy rune">
+		<!-- <attribute key="runeSpellName" value="holy rune" /> -->
+		<attribute key="type" value="rune" />
+		<attribute key="description" value="Use esta runa para para ficar completamente imune a qualquer perda em morte pelos proximo 3 minutos." />
+		<attribute key="weight" value="120" />
+	</item>
+	<item id="2264" article="a" name="unholy rune">
+		<!-- <attribute key="runeSpellName" value="unholy rune" /> -->
+		<attribute key="type" value="rune" />
+		<attribute key="description" value="Use esta runa em seu alvo, se ele estiver sob o efeito de uma holy rune, o efeito será cancelado imediatamente." />
+		<attribute key="weight" value="120" />
 	</item>		
 </items>

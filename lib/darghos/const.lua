@@ -226,7 +226,15 @@
 	CUSTOM_CHANNEL_PVP			= 10
 	CUSTOM_CHANNEL_BG_CHAT		= 11
 	
+	-- Custom Exhausteds
+	EXHAUSTED_COMBAT_AREA = 3
+	EXHAUSTED_ESPECIAL = 4
+	
+	-- Custom Flags
 	PLAYERCUSTOMFLAG_CONTINUEONLINEWHENEXIT = 26
+	
+	-- Custom Conditions
+	CONDITION_IGNORE_DEATH_LOSS = 16777216 -- 1 << 24
 	
 	-- Constantes para o OpenTibia, nao envolvem coisas do Darghos mas nao existem no projeto original
 	HOUSE_ACCESS_NOT_INVITED = 0
