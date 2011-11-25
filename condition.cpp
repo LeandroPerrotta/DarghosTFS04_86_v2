@@ -223,6 +223,9 @@ Condition* Condition::createCondition(ConditionId_t _id, ConditionType_t _type, 
 		case CONDITION_DRUNK:
 		case CONDITION_PACIFIED:
 		case CONDITION_GAMEMASTER:
+#ifdef __DARGHOS_CUSTOM__
+        case CONDITION_IGNORE_DEATH_LOSS:
+#endif
 			return new ConditionGeneric(_id, _type, _ticks, _buff, _subId);
 
 		default:

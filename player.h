@@ -132,6 +132,7 @@ enum Exhaust_t
 	EXHAUST_HEALING = 2
 #ifdef __DARGHOS_CUSTOM__
 	,EXHAUST_COMBAT_AREA = 3
+	,EXHAUST_ESPECIAL = 4
 #endif
 };
 

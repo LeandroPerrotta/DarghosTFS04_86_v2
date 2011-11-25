@@ -179,7 +179,7 @@ int32_t Items::loadFromOtb(std::string file)
 	}
 	else if(Items::dwMinorVersion != CLIENT_VERSION_860)
 	{
-		std::clog << "[Error - Items::loadFromOtb] Another (client) version of items.otb is required." << std::endl;
+		std::clog << "[Error - Items::loadFromOtb] The (client) version " << Items::dwMinorVersion << " of your items.otb are invalid. Another version is required." << std::endl;
 		return ERROR_INVALID_FORMAT;
 	}
 
@@ -1283,7 +1283,7 @@ void Items::parseItemNode(xmlNodePtr itemNode, uint32_t id)
 #ifndef _MSC_VER
 		else if(tmpStrValue == "reflectchanceall")
 #else
-		else 
+		else
 			notloaded = true;
 
 		if(!notloaded)

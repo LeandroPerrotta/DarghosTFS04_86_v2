@@ -58,6 +58,9 @@ enum ConditionType_t
 	CONDITION_PACIFIED = 1 << 21,
 	CONDITION_GAMEMASTER = 1 << 22,
 	CONDITION_HUNTING = 1 << 23
+#ifdef __DARGHOS_CUSTOM__
+    ,CONDITION_IGNORE_DEATH_LOSS = 1 << 24
+#endif
 };
 
 enum ConditionEnd_t

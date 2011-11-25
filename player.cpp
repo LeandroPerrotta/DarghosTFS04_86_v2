@@ -211,6 +211,10 @@ std::string Player::getDescription(int32_t lookDistance) const
 			s << " You are " << vocation->getDescription();
 		else
 			s << " You have no vocation";
+
+#ifdef __DARGHOS_CUSTOM__
+        s << ". You are an" << (isPvpEnabled() ? " agressive" : "pacific") << " player";
+#endif
 	}
 	else
 	{
@@ -220,9 +224,9 @@ std::string Player::getDescription(int32_t lookDistance) const
 			s << " (Level " << level;
 
 		if(isPvpEnabled())
-			s << " pacifico)";
+			s << " agressive)";
 		else
-			s << " agressivo)";
+			s << " pacific)";
 #else
 		if(!hasCustomFlag(PlayerCustomFlag_HideLevel))
 			s << " (Level " << level << ")";
@@ -2225,6 +2229,16 @@ bool Player::onDeath()
 {
 	Item* preventLoss = NULL;
 	Item* preventDrop = NULL;
+
+#ifdef __DARGHOS_CUSTOM__
+    bool ignoreLoss = false;
+    if(hasCondition(CONDITION_IGNORE_DEATH_LOSS))
+    {
+        ignoreLoss = true;
+        setLossSkill(false);
+    }
+#endif
+
 	if(getZone() == ZONE_HARDCORE)
 	{
 		setDropLoot(LOOT_DROP_NONE);
@@ -2233,6 +2247,11 @@ bool Player::onDeath()
 	else if(skull < SKULL_RED)
 	{
 		Item* item = NULL;
+
+#ifdef __DARGHOS_CUSTOM__
+        if(!ignoreLoss)
+        {
+#endif
 		for(int32_t i = SLOT_FIRST; ((skillLoss || lootDrop == LOOT_DROP_FULL) && i < SLOT_LAST); ++i)
 		{
 			if(!(item = getInventoryItem((slots_t)i)) || item->isRemoved() ||
@@ -2249,6 +2268,12 @@ bool Player::onDeath()
 			if(skillLoss && !preventLoss && it.abilities.preventLoss)
 				preventLoss = item;
 		}
+
+#ifdef __DARGHOS_CUSTOM__
+        }
+        else
+            setDropLoot(LOOT_DROP_PREVENT);
+#endif
 	}
 
 	if(!Creature::onDeath())
@@ -2260,31 +2285,40 @@ bool Player::onDeath()
 	}
 
 	#ifdef __DARGHOS_CUSTOM__
-	uint32_t totalDamage = 0, pvpDamage = 0, pvpLevelSum = 0;
-	for(CountMap::iterator it = damageMap.begin(); it != damageMap.end(); ++it)
-	{
-		// its enough when we use IDs range comparison here instead of overheating autoList
-		if(((OTSYS_TIME() - it->second.ticks) / 1000) > 60)
-			continue;
-
-		totalDamage += it->second.total;
-
-		Creature* creature = g_game.getCreatureByID(it->first);
-		if(creature && (creature->getPlayer() || creature->isPlayerSummon()))
-		{
-			pvpLevelSum += (creature->isPlayerSummon()) ? 0 : creature->getPlayer()->getLevel();
-			pvpDamage += it->second.total;
-		}
-	}
-
 	bool usePVPBlessing = false;
-	uint8_t pvpPercent = (uint8_t)std::ceil((double)pvpDamage * 100. / std::max(1U, totalDamage));
-	if(hasPvpBlessing() && getBlessings() >= 1 && pvpPercent >= 40)
+	uint32_t totalDamage = 0, pvpDamage = 0, pvpLevelSum = 0;
+
+	if(!ignoreLoss)
 	{
-		usePVPBlessing = true;
-		removePvpBlessing();
+        for(CountMap::iterator it = damageMap.begin(); it != damageMap.end(); ++it)
+        {
+            // its enough when we use IDs range comparison here instead of overheating autoList
+            if(((OTSYS_TIME() - it->second.ticks) / 1000) > 60)
+                continue;
+
+            totalDamage += it->second.total;
+
+            Creature* creature = g_game.getCreatureByID(it->first);
+            if(creature && (creature->getPlayer() || creature->isPlayerSummon()))
+            {
+                pvpLevelSum += (creature->isPlayerSummon()) ? 0 : creature->getPlayer()->getLevel();
+                pvpDamage += it->second.total;
+            }
+        }
+
+        uint8_t pvpPercent = (uint8_t)std::ceil((double)pvpDamage * 100. / std::max(1U, totalDamage));
+        if(hasPvpBlessing() && getBlessings() >= 1 && pvpPercent >= 40)
+        {
+            usePVPBlessing = true;
+            removePvpBlessing();
+        }
 	}
 	#endif
+
+#ifdef __DARGHOS_CUSTOM__
+    if(!ignoreLoss)
+    {
+#endif
 
 	if(preventLoss)
 	{
@@ -2302,6 +2336,10 @@ bool Player::onDeath()
 		else
 			g_game.internalRemoveItem(NULL, preventDrop);
 	}
+
+#ifdef __DARGHOS_CUSTOM__
+    }
+#endif
 
 	removeConditions(CONDITIONEND_DEATH);
 	if(skillLoss)
@@ -2389,8 +2427,16 @@ bool Player::onDeath()
 	else
 	{
 		setLossSkill(true);
-		if(preventLoss)
+
+#ifdef __DARGHOS_CUSTOM__
+		if(preventLoss || ignoreLoss)
 		{
+		    if(ignoreLoss)
+                removeCondition(CONDITION_IGNORE_DEATH_LOSS);
+#else
+        if(preventLoss)
+        {
+#endif
 			loginPosition = masterPosition;
 			g_creatureEvents->playerLogout(this, true);
 			g_game.removeCreature(this, false);

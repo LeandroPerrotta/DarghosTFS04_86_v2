@@ -11,9 +11,15 @@ OPTIONAL_FLAGS="-D__WAR_SYSTEM__ -D__NO_CRYPTOPP__ -D__TFS_NEWEST_REVS_FIXIES__ 
 
 # verifica se vamos ativar as "Darghos Features"
 darghosFeatures=no
-AC_ARG_ENABLE(darghos, [  --enable-darghos		enable dargho features],
+AC_ARG_ENABLE(darghos, [  --enable-darghos		enable darghos stable features],
 	[OPTIONAL_FLAGS="$OPTIONAL_FLAGS -D__DARGHOS_PVP_SYSTEM__ -D__DARGHOS_CUSTOM__ -D__DARGHOS_SPOOF__"]
 	darghosFeatures=yes
+)
+
+darghosBetaFeatures=no
+AC_ARG_ENABLE(darghos-beta, [  --enable-darghos-beta		enable darghos beta (unstable) features],
+	[OPTIONAL_FLAGS="$OPTIONAL_FLAGS -D__CUSTOM_SPELLS_SYSTEM__"]
+	darghosBetaFeatures=yes
 )
 
 # check if we want server diag enabled
@@ -263,7 +269,8 @@ echo
 #echo The Forgotten Server 0.4
 echo $PACKAGE $VERSION
 echo
-echo Darghos features............ : $darghosFeatures
+echo Darghos stable features..... : $darghosFeatures
+echo Darghos beta features....... : $darghosBetaFeatures
 echo Server diagnostics.......... : $serverDiag
 echo Login server mode........... : $loginServer
 echo OTAdmin protocol............ : $otAdmin
