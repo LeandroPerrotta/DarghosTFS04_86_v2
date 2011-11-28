@@ -13,10 +13,10 @@ function changeLog.create(type, key, value)
 		local json = require("json")	
 		value = json.encode(value)
 	else
-		value = value or nil
+		value = value or ""
 	end
 	
-	db.executeQuery("INSERT `wb_changelog` (`type`, `key`, `value`, `time`) VALUES (" .. type .. ", " .. key .. ", " .. value .. ", " .. os.time() .. ");")
+	db.executeQuery("INSERT `wb_changelog` (`type`, `key`, `value`, `time`) VALUES (" .. type .. ", " .. key .. ", '" .. value .. "', " .. os.time() .. ");")
 end
 
 function changeLog.onBuySpecialPermission(cid)
