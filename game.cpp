@@ -4726,11 +4726,21 @@ void Game::addMagicEffect(const SpectatorVec& list, const Position& pos, uint8_t
 		return;
 
 	Player* player = NULL;
+	Creature* creature = NULL;
+
 	for(SpectatorVec::const_iterator it = list.begin(); it != list.end(); ++it)
 	{
-	    Creature* creature = (*it);
-		if(creature && (player = creature->getPlayer()))
-			player->sendMagicEffect(pos, effect);
+	    creature = (*it);
+
+	    if(!creature)
+            continue;
+
+        player = creature->getPlayer();
+
+		if(!player)
+            continue;
+
+        player->sendMagicEffect(pos, effect);
 	}
 }
 
