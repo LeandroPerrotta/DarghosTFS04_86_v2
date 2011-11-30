@@ -13,13 +13,13 @@ function onPlayerCloseChannel(cid)                      npcHandler:onPlayerClose
 function greetCallback(cid)
 
 		if(not isPremium(cid)) then
-                npcHandler:say('Eu compro uma grande variedade de armas e equipamentos por um bom preço! Mas somente negocio com jogadores que disponham de uma Conta Premium...', cid)
+                npcHandler:say('Eu compro uma grande variedade de armas e equipamentos por um bom preï¿½o! Mas somente negocio com jogadores que disponham de uma Conta Premium...', cid)
 				npcHandler:resetNpc(cid)
                 return false		
 		end
 
-        if(pvpBattleground.getPlayerRating(cid) < 500) then
-                npcHandler:say('Eu compro uma grande variedade de armas e equipamentos por um bom preço! Mas somente negocio com bravos guerreiros! Para comprovar seu valor vença algumas Battlegrounds ({!bg entrar}) até atingir 500 pontos de classificação e terei prazer em negociar com você!', cid)
+        if(getPlayerBattlegroundRating(cid) < 500) then
+                npcHandler:say('Eu compro uma grande variedade de armas e equipamentos por um bom preï¿½o! Mas somente negocio com bravos guerreiros! Para comprovar seu valor venï¿½a algumas Battlegrounds ({!bg entrar}) atï¿½ atingir 500 pontos de classificaï¿½ï¿½o e terei prazer em negociar com vocï¿½!', cid)
 				npcHandler:resetNpc(cid)
                 return false
         else
@@ -27,6 +27,6 @@ function greetCallback(cid)
         end
 end
 npcHandler:setCallback(CALLBACK_GREET, greetCallback)
-npcHandler:setMessage(MESSAGE_GREET, 'Olá |PLAYERNAME|. O que você tem para {trocar} comigo hoje?')
+npcHandler:setMessage(MESSAGE_GREET, 'Olï¿½ |PLAYERNAME|. O que vocï¿½ tem para {trocar} comigo hoje?')
 
 npcHandler:addModule(FocusModule:new())

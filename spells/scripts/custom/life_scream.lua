@@ -5,8 +5,8 @@ setCombatParam(combat, COMBAT_PARAM_AGGRESSIVE, FALSE)
 setCombatParam(combat, COMBAT_PARAM_DISPEL, CONDITION_PARALYZE)
 
 function onGetFormulaValues(cid, level, maglevel)
-	local min = ((level*0.2)+(maglevel*7.22)+44)
-	local max = ((level*0.2)+(maglevel*12.79)+79)
+	local min = math.ceil(getCreatureMaxHealth(cid) * 0.88)
+	local max = math.ceil(getCreatureMaxHealth(cid) * 0.93)
 	return min, max
 end
 
@@ -14,20 +14,11 @@ setCombatCallback(combat, CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")
 
 function onCastSpell(cid, var)
 
-	local manaCost = 160
-	
-	if(doPlayerIsInBattleground(cid)) then
-		manaCost = math.floor(getCreatureMaxMana(cid) * 0.22)
-	end
-	
-    if(getCreatureMana(cid) < manaCost) then
-            doPlayerSendDefaultCancel(cid, RETURNVALUE_NOTENOUGHMANA)
-            doSendMagicEffect(pos, CONST_ME_POFF)
+	if(not doPlayerIsInBattleground(cid)) then
+            doPlayerSendCancel(cid, "Esta magia so está disponivel dentro de partidas na Battleground.")
+            doSendMagicEffect(getCreaturePosition(cid), CONST_ME_POFF)
             return false
-    end
-    
-    doCreatureAddMana(cid, -manaCost, false)
-    doPlayerAddSpentMana(cid, manaCost)
+	end
 
 	return doCombat(cid, combat, var)
 end

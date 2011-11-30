@@ -2,13 +2,9 @@ local combat = createCombatObject()
 setCombatParam(combat, COMBAT_PARAM_TYPE, COMBAT_ICEDAMAGE)
 setCombatParam(combat, COMBAT_PARAM_EFFECT, CONST_ME_ICETORNADO)
 
-local playerDebbufs = {}
-
 function onGetFormulaValues(cid, level, maglevel)
 	local min = ((level/5)+(maglevel*6))
 	local max = ((level/5)+(maglevel*12))
-	
-	min, max, playerDebbufs = pvpBattleground.spamDebuffSpell(cid, min, max, playerDebbufs)	
 	
 	return -min, -max
 end

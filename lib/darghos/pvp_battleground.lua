@@ -1,4 +1,4 @@
-BG_ENABLED = false
+BG_ENABLED = true
 BG_ENABLED_GAINS = true
 
 FREE_GAINS_PERCENT = 30
@@ -84,26 +84,11 @@ function pvpBattleground.getRatingMultipler(cid, rating)
 	return nil
 end
 
-function pvpBattleground.getPlayerRating(cid)
-	local result = db.getResult("SELECT `battleground_rating` FROM `players` WHERE `id` = " .. getPlayerGUID(cid) .. ";")
-	
-	if(result:getID() ~= -1) then
-		local rating = result:getDataInt("battleground_rating")
-		result:free()
-		
-		return rating
-	end	
-end
-
-function pvpBattleground.setPlayerRating(cid, rating)
-	db.executeQuery("UPDATE `players` SET `battleground_rating` = " .. rating .. " WHERE `id` = " .. getPlayerGUID(cid) .. ";")
-end
-
 function pvpBattleground.removePlayerRating(cid, timeIn, bgDuration, deserting)
 
 	deserting = deserting or false
 
-	local currentRating = pvpBattleground.getPlayerRating(cid)
+	local currentRating = getPlayerBattlegroundRating(cid)
 	local changeRating = pvpBattleground.getChangeRating(cid, timeIn, bgDuration)
 	
 	if(not deserting) then
@@ -120,14 +105,14 @@ function pvpBattleground.removePlayerRating(cid, timeIn, bgDuration, deserting)
 	
 	local newRating = math.max(currentRating - changeRating, 0)		
 	
-	pvpBattleground.setPlayerRating(cid, newRating)
+	doPlayerSetBattlegroundRating(cid, newRating)
 	
 	return math.min(changeRating, currentRating)
 end
 
 function pvpBattleground.getChangeRating(cid, timeIn, bgDuration)
 
-	local currentRating = pvpBattleground.getPlayerRating(cid)
+	local currentRating = getPlayerBattlegroundRating(cid)
 	local ratingMultipler = pvpBattleground.getRatingMultipler(cid, currentRating)
 	local changeRating = ratingMultipler * BATTLEGROUND_RATING
 	
@@ -210,7 +195,7 @@ function pvpBattleground.drawRank()
 			local _cid = v.player_id
 			if(_cid ~= nil and isPlayer(_cid)) then
 				
-				local team = teams[doPlayerGetBattlegroundTeam(_cid)]
+				local team = teams[getPlayerBattlegroundTeam(_cid)]
 				
 				if(team == nil) then
 					team = "Fora"
@@ -308,7 +293,7 @@ end
 
 function pvpBattleground.playerSpeakTeam(cid, message)
 	
-	local team_id = doPlayerGetBattlegroundTeam(cid)
+	local team_id = getPlayerBattlegroundTeam(cid)
 	
 	if(team_id == BATTLEGROUND_TEAM_NONE) then
 		return false
@@ -318,7 +303,7 @@ function pvpBattleground.playerSpeakTeam(cid, message)
 	
 	for k,v in pairs(playersTeam) do
 		local target = v
-		doPlayerSendChannelMessage(target, getPlayerName(cid) .. " [" .. getPlayerLevel(cid) .. " | " .. pvpBattleground.getPlayerRating(cid) .. "]", message, TALKTYPE_TYPES["channel-yellow"], CUSTOM_CHANNEL_BG_CHAT)		
+		doPlayerSendChannelMessage(target, getPlayerName(cid) .. " [" .. getPlayerLevel(cid) .. " | " .. getPlayerBattlegroundRating(cid) .. "]", message, TALKTYPE_TYPES["channel-yellow"], CUSTOM_CHANNEL_BG_CHAT)		
 	end
 	
 	return true
@@ -335,7 +320,7 @@ function pvpBattleground.sendPvpChannelMessage(message, mode, talktype)
 		talktype = talktype or TALKTYPE_TYPES["channel-white"]
 		
 		for k,v in pairs(users) do		
-			if(doPlayerGetBattlegroundTeam(v) ~= BATTLEGROUND_TEAM_NONE) then
+			if(getPlayerBattlegroundTeam(v) ~= BATTLEGROUND_TEAM_NONE) then
 				doPlayerSendChannelMessage(v, "", message, talktype, CUSTOM_CHANNEL_PVP)
 			end				
 		end		
@@ -344,7 +329,7 @@ function pvpBattleground.sendPvpChannelMessage(message, mode, talktype)
 		talktype = talktype or TALKTYPE_TYPES["channel-white"]
 		
 		for k,v in pairs(users) do		
-			if(doPlayerGetBattlegroundTeam(v) == BATTLEGROUND_TEAM_NONE) then
+			if(getPlayerBattlegroundTeam(v) == BATTLEGROUND_TEAM_NONE) then
 				doPlayerSendChannelMessage(v, "", message, talktype, CUSTOM_CHANNEL_PVP)
 			end				
 		end	
@@ -468,7 +453,7 @@ function pvpBattleground.onEnter(cid)
 		end
 	
 		local teams = { [1] = "Time A", [2] = "Time B" }
-		local team = teams[doPlayerGetBattlegroundTeam(cid)]
+		local team = teams[getPlayerBattlegroundTeam(cid)]
 		
 		registerCreatureEvent(cid, "onBattlegroundFrag")
 		registerCreatureEvent(cid, "onBattlegroundEnd")
@@ -487,7 +472,7 @@ function pvpBattleground.onEnter(cid)
 			setPlayerStorageValue(cid, sid.FIRST_BATTLEGROUND, 1)	
 		end
 		
-		msg = msg .. pvpBattleground.getPlayersTeamString(doPlayerGetBattlegroundTeam(cid))
+		msg = msg .. pvpBattleground.getPlayersTeamString(getPlayerBattlegroundTeam(cid))
 		msg = msg .. "\nDivirta-se!"
 		
 		pvpBattleground.sendPlayerChannelMessage(cid, msg)
@@ -534,8 +519,7 @@ end
 
 function pvpBattleground.onReportIdle(cid, idle_player)
 
-	if(not doPlayerIsInBattleground(idle_player) or 
-		(doPlayerGetBattlegroundTeam(cid) ~= doPlayerGetBattlegroundTeam(idle_player))
+	if(not doPlayerIsInBattleground(idle_player) or 		(getPlayerBattlegroundTeam(cid) ~= getPlayerBattlegroundTeam(idle_player))
 		) then
 		pvpBattleground.sendPlayerChannelMessage(cid, "Este jogador não pertence a seu time ou não está na Battleground.")
 		return
