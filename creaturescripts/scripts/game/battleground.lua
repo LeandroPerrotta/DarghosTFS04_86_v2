@@ -67,7 +67,7 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 			
 			-- iremos reduzir o ganho de exp conforme o player se afasta da média de kills definida para o grupo até um limite de 50% de redução
 			local playerInfo = getPlayerBattlegroundInfo(cid)
-			local killsAvg = math.ceil(points[doPlayerGetBattlegroundTeam(cid)] / BG_CONFIG_TEAMSIZE)
+			local killsAvg = math.ceil(points[getPlayerBattlegroundTeam(cid)] / BG_CONFIG_TEAMSIZE)
 			local killsRate = math.random(math.min(killsAvg, playerInfo.kills) * 100, killsAvg * 100) / (killsAvg * 100)
 			
 			expGain = math.ceil(expGain * (math.max(0.5, killsRate)))
@@ -80,7 +80,7 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 			
 			local msg = "Você adquiriu " .. expGain .. " pontos de experiência além de " .. gold .. " moedas de ouro para ajudar a você repor os suprimentos gastos pela vitoria na Battleground!"
 			
-			local currentRating = pvpBattleground.getPlayerRating(cid)
+			local currentRating = getPlayerBattlegroundRating(cid)
 			local changeRating = pvpBattleground.getChangeRating(cid, timeIn, bgDuration)
 			local ratingMessage = "Você melhorou a sua classificação (rating) em " .. changeRating .. " pontos pela vitoria na Battleground."
 		
@@ -111,7 +111,7 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 			end				
 			
 			doPlayerSetStamina(cid, staminaMinutes - staminaChange)
-			pvpBattleground.setPlayerRating(cid, currentRating + changeRating)
+			doPlayerSetBattlegroundRating(cid, currentRating + changeRating)
 			doPlayerAddMoney(cid, gold)
 			doPlayerAddExp(cid, expGain)
 			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, msg)
@@ -137,7 +137,7 @@ function onBattlegroundFrag(cid, target)
 	local teams = { "Time A", "Time B" }	
 	local points = getBattlegroundTeamsPoints()
 	
-	pvpBattleground.sendPvpChannelMessage("[Battleground | (" .. teams[BATTLEGROUND_TEAM_ONE] .. ") " .. points[BATTLEGROUND_TEAM_ONE] .. " X " .. points[BATTLEGROUND_TEAM_TWO] .. " (" .. teams[BATTLEGROUND_TEAM_TWO] .. ")] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") matou " .. getPlayerName(target) .. " (" .. getPlayerLevel(target) .. ") pelo " .. teams[doPlayerGetBattlegroundTeam(cid)] .. "!", PVPCHANNEL_MSGMODE_INBATTLE)
+	pvpBattleground.sendPvpChannelMessage("[Battleground | (" .. teams[BATTLEGROUND_TEAM_ONE] .. ") " .. points[BATTLEGROUND_TEAM_ONE] .. " X " .. points[BATTLEGROUND_TEAM_TWO] .. " (" .. teams[BATTLEGROUND_TEAM_TWO] .. ")] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") matou " .. getPlayerName(target) .. " (" .. getPlayerLevel(target) .. ") pelo " .. teams[getPlayerBattlegroundTeam(cid)] .. "!", PVPCHANNEL_MSGMODE_INBATTLE)
 
 	if(pvpBattleground.hasGain()) then
 		
@@ -187,8 +187,8 @@ function onThink(cid, interval)
 	end
 	
 	local points = getBattlegroundTeamsPoints()
-	local opponent = (doPlayerGetBattlegroundTeam(cid) == BATTLEGROUND_TEAM_ONE) and BATTLEGROUND_TEAM_TWO or BATTLEGROUND_TEAM_ONE
-	if(points[doPlayerGetBattlegroundTeam(cid)] <= points[opponent]) then
+	local opponent = (getPlayerBattlegroundTeam(cid) == BATTLEGROUND_TEAM_ONE) and BATTLEGROUND_TEAM_TWO or BATTLEGROUND_TEAM_ONE
+	if(points[getPlayerBattlegroundTeam(cid)] <= points[opponent]) then
 		return
 	end
 	
@@ -208,7 +208,7 @@ function onThink(cid, interval)
 			setBattlegroundTeamsPoints(opponent, points[opponent])
 			setPlayerStorageValue(cid, sid.BATTLEGROUND_PZTICKS, 0)
 			local teams = { "Time A", "Time B" }	
-			pvpBattleground.sendPvpChannelMessage("[Battleground | (" .. teams[BATTLEGROUND_TEAM_ONE] .. ") " .. points[BATTLEGROUND_TEAM_ONE] .. " X " .. points[BATTLEGROUND_TEAM_TWO] .. " (" .. teams[BATTLEGROUND_TEAM_TWO] .. ")] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") do " .. teams[doPlayerGetBattlegroundTeam(cid)] .. " ficou muito tempo dentro de area protegida enquanto seu time ganhava sem entrar em combate concedendo um ponto aos oponentes!", PVPCHANNEL_MSGMODE_INBATTLE)
+			pvpBattleground.sendPvpChannelMessage("[Battleground | (" .. teams[BATTLEGROUND_TEAM_ONE] .. ") " .. points[BATTLEGROUND_TEAM_ONE] .. " X " .. points[BATTLEGROUND_TEAM_TWO] .. " (" .. teams[BATTLEGROUND_TEAM_TWO] .. ")] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") do " .. teams[getPlayerBattlegroundTeam(cid)] .. " ficou muito tempo dentro de area protegida enquanto seu time ganhava sem entrar em combate concedendo um ponto aos oponentes!", PVPCHANNEL_MSGMODE_INBATTLE)
 		end
 	else
 		if(pzTicks > 1000 * BG_WINNER_INPZ_PUNISH_INTERVAL) then

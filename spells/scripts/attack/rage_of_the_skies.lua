@@ -2,13 +2,14 @@ local combat = createCombatObject()
 setCombatParam(combat, COMBAT_PARAM_TYPE, COMBAT_ENERGYDAMAGE)
 setCombatParam(combat, COMBAT_PARAM_EFFECT, CONST_ME_BIGCLOUDS)
 
-local playerDebbufs = {}
-
 function onGetFormulaValues(cid, level, maglevel)
 	local min = ((level/5)+(maglevel*5))
 	local max = ((level/5)+(maglevel*12))
 	
-	min, max, playerDebbufs = pvpBattleground.spamDebuffSpell(cid, min, max, playerDebbufs)	
+	if(doPlayerIsInBattleground(cid)) then
+		min = math.ceil(min * 1.30)
+		max = math.ceil(max * 1.30)
+	end
 	
 	return -min, -max
 end

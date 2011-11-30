@@ -65,7 +65,7 @@ function onSay(cid, words, param)
 		end
 		
 		if not error then
-			team = doPlayerGetBattlegroundTeam(cid)
+			team = getPlayerBattlegroundTeam(cid)
 		end
 	
 		if(_access >= access.COMMUNITY_MANAGER and isInArray({1, 2}, param)) then
