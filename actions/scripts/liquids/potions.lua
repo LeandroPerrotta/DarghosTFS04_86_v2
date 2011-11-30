@@ -62,6 +62,11 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 		return true
 	end
 
+	if(doPlayerIsInBattleground(cid) and hasCondition(cid, CONDITION_INFIGHT)) then
+		doPlayerSendDefaultCancel(cid, RETURNVALUE_YOUCANNOTUSETHISITEMINFIGHT)
+		return true	
+	end
+
 	if(hasCondition(cid, CONDITION_EXHAUST)) then
 		doPlayerSendDefaultCancel(cid, RETURNVALUE_YOUAREEXHAUSTED)
 		return true
