@@ -23,7 +23,7 @@ function onCastSpell(cid, var)
 	
     if(getCreatureMana(cid) < manaCost) then
             doPlayerSendDefaultCancel(cid, RETURNVALUE_NOTENOUGHMANA)
-            doSendMagicEffect(pos, CONST_ME_POFF)
+            doSendMagicEffect(getCreaturePosition(cid), CONST_ME_POFF)
             return false
     end
     
