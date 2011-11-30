@@ -266,6 +266,7 @@ bool ConfigManager::load()
 	m_confNumber[DEATH_FRAGGERS] = getGlobalNumber("deathFraggersCount", 1);
 	m_confNumber[USE_BLESSING_AS_PVP] = getGlobalNumber("useBlessingAsPvp", 6);
 	m_confBool[UNFAIR_FIGHT] = getGlobalBool("unfairFightEnabled", false);
+	m_confNumber[BATTLEGROUND_PZ_LOCKED] = getGlobalNumber("battlegroundPzLocked", 10 * 1000);
 	#endif
 	m_confNumber[RED_DAILY_LIMIT] = getGlobalNumber("dailyFragsToRedSkull", 3);
 	m_confNumber[RED_WEEKLY_LIMIT] = getGlobalNumber("weeklyFragsToRedSkull", 5);

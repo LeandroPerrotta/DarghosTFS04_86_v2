@@ -544,6 +544,10 @@ void ProtocolGame::parsePacket(NetworkMessage &msg)
 	}
 	else
 	{
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+        bool hasPerfomedAction = false;
+#endif
+
 		switch(recvbyte)
 		{
 			case 0x14: // logout
@@ -555,6 +559,9 @@ void ProtocolGame::parsePacket(NetworkMessage &msg)
 				break;
 
 			case 0x64: // move with steps
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseAutoWalk(msg);
 				break;
 
@@ -562,6 +569,9 @@ void ProtocolGame::parsePacket(NetworkMessage &msg)
 			case 0x66: // move east
 			case 0x67: // move south
 			case 0x68: // move west
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseMove(msg, (Direction)(recvbyte - 0x65));
 				break;
 
@@ -570,18 +580,30 @@ void ProtocolGame::parsePacket(NetworkMessage &msg)
 				break;
 
 			case 0x6A:
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseMove(msg, NORTHEAST);
 				break;
 
 			case 0x6B:
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseMove(msg, SOUTHEAST);
 				break;
 
 			case 0x6C:
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseMove(msg, SOUTHWEST);
 				break;
 
 			case 0x6D:
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseMove(msg, NORTHWEST);
 				break;
 
@@ -589,50 +611,86 @@ void ProtocolGame::parsePacket(NetworkMessage &msg)
 			case 0x70: // turn east
 			case 0x71: // turn south
 			case 0x72: // turn west
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseTurn(msg, (Direction)(recvbyte - 0x6F));
 				break;
 
 			case 0x78: // throw item
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseThrow(msg);
 				break;
 
 			case 0x79: // description in shop window
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseLookInShop(msg);
 				break;
 
 			case 0x7A: // player bought from shop
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parsePlayerPurchase(msg);
 				break;
 
 			case 0x7B: // player sold to shop
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parsePlayerSale(msg);
 				break;
 
 			case 0x7C: // player closed shop window
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseCloseShop(msg);
 				break;
 
 			case 0x7D: // Request trade
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseRequestTrade(msg);
 				break;
 
 			case 0x7E: // Look at an item in trade
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseLookInTrade(msg);
 				break;
 
 			case 0x7F: // Accept trade
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseAcceptTrade(msg);
 				break;
 
 			case 0x80: // close/cancel trade
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseCloseTrade();
 				break;
 
 			case 0x82: // use item
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseUseItem(msg);
 				break;
 
 			case 0x83: // use item
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseUseItemEx(msg);
 				break;
 
@@ -641,30 +699,51 @@ void ProtocolGame::parsePacket(NetworkMessage &msg)
 				break;
 
 			case 0x85: //rotate item
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseRotateItem(msg);
 				break;
 
 			case 0x87: // close container
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseCloseContainer(msg);
 				break;
 
 			case 0x88: //"up-arrow" - container
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseUpArrowContainer(msg);
 				break;
 
 			case 0x89:
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseTextWindow(msg);
 				break;
 
 			case 0x8A:
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseHouseWindow(msg);
 				break;
 
 			case 0x8C: // throw item
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseLookAt(msg);
 				break;
 
 			case 0x96: // say something
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseSay(msg);
 				break;
 
@@ -673,14 +752,23 @@ void ProtocolGame::parsePacket(NetworkMessage &msg)
 				break;
 
 			case 0x98: // open channel
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseOpenChannel(msg);
 				break;
 
 			case 0x99: // close channel
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseCloseChannel(msg);
 				break;
 
 			case 0x9A: // open priv
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseOpenPriv(msg);
 				break;
 
@@ -697,58 +785,100 @@ void ProtocolGame::parsePacket(NetworkMessage &msg)
 				break;
 
 			case 0x9E: // close NPC
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseCloseNpc(msg);
 				break;
 
 			case 0xA0: // set attack and follow mode
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseFightModes(msg);
 				break;
 
 			case 0xA1: // attack
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseAttack(msg);
 				break;
 
 			case 0xA2: //follow
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseFollow(msg);
 				break;
 
 			case 0xA3: // invite party
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseInviteToParty(msg);
 				break;
 
 			case 0xA4: // join party
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseJoinParty(msg);
 				break;
 
 			case 0xA5: // revoke party
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseRevokePartyInvite(msg);
 				break;
 
 			case 0xA6: // pass leadership
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parsePassPartyLeadership(msg);
 				break;
 
 			case 0xA7: // leave party
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseLeaveParty(msg);
 				break;
 
 			case 0xA8: // share exp
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseSharePartyExperience(msg);
 				break;
 
 			case 0xAA:
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseCreatePrivateChannel(msg);
 				break;
 
 			case 0xAB:
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseChannelInvite(msg);
 				break;
 
 			case 0xAC:
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseChannelExclude(msg);
 				break;
 
 			case 0xBE: // cancel move
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseCancelMove(msg);
 				break;
 
@@ -761,6 +891,9 @@ void ProtocolGame::parsePacket(NetworkMessage &msg)
 				break;
 
 			case 0xD2: // request outfit
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				if((!player->hasCustomFlag(PlayerCustomFlag_GamemasterPrivileges) || !g_config.getBool(
 					ConfigManager::DISABLE_OUTFITS_PRIVILEGED)) && (g_config.getBool(ConfigManager::ALLOW_CHANGEOUTFIT)
 					|| g_config.getBool(ConfigManager::ALLOW_CHANGECOLORS) || g_config.getBool(ConfigManager::ALLOW_CHANGEADDONS)))
@@ -768,24 +901,39 @@ void ProtocolGame::parsePacket(NetworkMessage &msg)
 				break;
 
 			case 0xD3: // set outfit
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				if((!player->hasCustomFlag(PlayerCustomFlag_GamemasterPrivileges) || !g_config.getBool(ConfigManager::DISABLE_OUTFITS_PRIVILEGED))
 					&& (g_config.getBool(ConfigManager::ALLOW_CHANGECOLORS) || g_config.getBool(ConfigManager::ALLOW_CHANGEOUTFIT)))
 				parseSetOutfit(msg);
 				break;
 
 			case 0xDC:
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseAddVip(msg);
 				break;
 
 			case 0xDD:
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseRemoveVip(msg);
 				break;
 
 			case 0xE6:
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseBugReport(msg);
 				break;
 
 			case 0xE7:
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseViolationWindow(msg);
 				break;
 
@@ -794,10 +942,16 @@ void ProtocolGame::parsePacket(NetworkMessage &msg)
 				break;
 
 			case 0xF0:
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseQuests(msg);
 				break;
 
 			case 0xF1:
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+                hasPerfomedAction = true;
+#endif
 				parseQuestInfo(msg);
 				break;
 
@@ -842,6 +996,11 @@ void ProtocolGame::parsePacket(NetworkMessage &msg)
 				break;
 			}
 		}
+
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+        if(hasPerfomedAction)
+            player->onPerformAction();
+#endif
 	}
 }
 
@@ -881,7 +1040,7 @@ void ProtocolGame::GetTileDescription(const Tile* tile, NetworkMessage_ptr msg)
 			uint32_t knowId = (*cit)->getID();
 			checkCreatureAsKnown(knowId, known, removedKnown);
 			if(known && (*cit)->getPlayer() && checkPlayerNeedUpdate(knowId, (*cit)->getPlayer()->getLastKnowUpdate()))
-			{ 
+			{
 				known = false; removedKnown = knowId;
 			}
 
@@ -2963,7 +3122,7 @@ void ProtocolGame::AddTileCreature(NetworkMessage_ptr msg, const Position& pos, 
 	uint32_t knowId = creature->getID();
 	checkCreatureAsKnown(knowId, known, removedKnown);
 	if(known && creature->getPlayer() && checkPlayerNeedUpdate(knowId, creature->getPlayer()->getLastKnowUpdate()))
-	{ 
+	{
 		known = false; removedKnown = knowId;
 	}
 

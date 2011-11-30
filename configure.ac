@@ -18,7 +18,7 @@ AC_ARG_ENABLE(darghos, [  --enable-darghos		enable darghos stable features],
 
 darghosBetaFeatures=no
 AC_ARG_ENABLE(darghos-beta, [  --enable-darghos-beta		enable darghos beta (unstable) features],
-	[OPTIONAL_FLAGS="$OPTIONAL_FLAGS -D__CUSTOM_SPELLS_SYSTEM__"]
+	[OPTIONAL_FLAGS="$OPTIONAL_FLAGS -D__DARGHOS_CUSTOM_SPELLS__"]
 	darghosBetaFeatures=yes
 )
 

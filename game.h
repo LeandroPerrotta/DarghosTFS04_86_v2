@@ -602,6 +602,9 @@ class Game
 
 		void addAnimatedText(const Position& pos, uint8_t textColor, const std::string& text);
 		void addAnimatedText(const SpectatorVec& list, const Position& pos, uint8_t textColor, const std::string& text);
+#ifdef __DARGHOS_CUSTOM__
+        void addRandomMagicEffect(const Position& pos, uint8_t effect, uint16_t randomArea = 0);
+#endif
 		void addMagicEffect(const Position& pos, uint8_t effect, bool ghostMode = false);
 		void addMagicEffect(const SpectatorVec& list, const Position& pos, uint8_t effect, bool ghostMode = false);
 		void addDistanceEffect(const SpectatorVec& list, const Position& fromPos, const Position& toPos, uint8_t effect);

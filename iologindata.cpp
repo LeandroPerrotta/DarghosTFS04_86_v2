@@ -375,6 +375,9 @@ bool IOLoginData::loadPlayer(Player* player, const std::string& name, bool preLo
 	<< "`lastlogin`, `lastlogout`, `lastip`, `conditions`, `skull`, `skulltime`, `guildnick`, `rank_id`, "
 	<< "`town_id`, `balance`, `stamina`, `direction`, `loss_experience`, `loss_mana`, `loss_skills`, "
 #ifdef __DARGHOS_CUSTOM__
+#ifdef __DARGHOS_PVP_SYSTEM__
+    << "`battleground_rating`, "
+#endif
 	<< "`loss_containers`, `loss_items`, `marriage`, `promotion`, `description`, `pvpEnabled` FROM `players` WHERE "
 #else
 	<< "`loss_containers`, `loss_items`, `marriage`, `promotion`, `description` FROM `players` WHERE "
@@ -443,6 +446,9 @@ bool IOLoginData::loadPlayer(Player* player, const std::string& name, bool preLo
 
 #ifdef __DARGHOS_CUSTOM__
 	player->pvpStatus = (bool)result->getDataInt("pvpEnabled");
+#ifdef __DARGHOS_PVP_SYSTEM__
+	player->battlegroundRating = result->getDataInt("battleground_rating");
+#endif
 #endif
 
 	PropStream propStream;
@@ -881,6 +887,7 @@ bool IOLoginData::savePlayer(Player* player, bool preSave/* = true*/, bool shall
 
 #ifdef __DARGHOS_CUSTOM__
 	query << "`pvpEnabled` = " << (player->pvpStatus ? 1 : 0) << ", ";
+	query << "`battleground_rating` = " << player->battlegroundRating << ", ";
 #endif
 
 	Vocation* tmpVoc = player->vocation;

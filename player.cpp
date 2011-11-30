@@ -36,10 +36,6 @@
 #include "game.h"
 #include "chat.h"
 
-#ifdef __DARGHOS_CUSTOM_SPELLS__
-#include "spells.h"
-#endif
-
 extern ConfigManager g_config;
 extern Game g_game;
 extern Chat g_chat;
@@ -116,10 +112,6 @@ Player::Player(const std::string& _name, ProtocolGame* p):
 	tradePartner = NULL;
 	walkTask = NULL;
 	weapon = NULL;
-
-#ifdef __DARGHOS_CUSTOM_SPELLS__
-    castingSpell = NULL;
-#endif
 
 	setVocation(0);
 	setParty(NULL);
@@ -213,20 +205,32 @@ std::string Player::getDescription(int32_t lookDistance) const
 			s << " You have no vocation";
 
 #ifdef __DARGHOS_CUSTOM__
-        s << ". You are an" << (isPvpEnabled() ? " agressive" : "pacific") << " player";
+#ifdef __DARGHOS_PVP_SYSTEM__
+        if(isInBattleground())
+            s << ". You are with " << battlegroundRating << " battleground rating points";
+        else
+#endif
+        s << ". You are an " << (isPvpEnabled() ? "agressive" : "pacific") << " player";
 #endif
 	}
 	else
 	{
 		s << nameDescription;
 #ifdef __DARGHOS_CUSTOM__
-		if(!hasCustomFlag(PlayerCustomFlag_HideLevel))
-			s << " (Level " << level;
+        s << " (";
 
 		if(isPvpEnabled())
-			s << " agressive)";
+			s << "Agressive";
 		else
-			s << " pacific)";
+			s << "Pacific";
+
+		if(!hasCustomFlag(PlayerCustomFlag_HideLevel))
+			s << " level " << level;
+
+        if(isInBattleground())
+            s << ", battleground rating " << battlegroundRating;
+
+        s << ")";
 #else
 		if(!hasCustomFlag(PlayerCustomFlag_HideLevel))
 			s << " (Level " << level << ")";
@@ -1239,7 +1243,11 @@ void Player::sendCancelMessage(ReturnValue message) const
 
 #ifdef __DARGHOS_CUSTOM_SPELLS__
 		case RET_YOUINTERRUPTYOURCAST:
-			sendCancel("Your last action interrupt your spell cast.");
+			sendCancel("Your last action interrupted your spell cast.");
+			break;
+
+		case RET_YOUCANNOTUSETHISITEMINFIGHT:
+			sendCancel("You may not use this item here while you are in combat.");
 			break;
 #endif
 
@@ -1611,15 +1619,6 @@ void Player::onWalk(Direction& dir)
 	Creature::onWalk(dir);
 	setNextActionTask(NULL);
 	setNextAction(OTSYS_TIME() + getStepDuration(dir));
-
-#ifdef __DARGHOS_CUSTOM_SPELLS__
-	if(castSpellEvent != 0 && castingSpell)
-	{
-		castingSpell->interruptCast(this, castSpellEvent);
-		castSpellEvent = 0;
-		castingSpell = NULL;
-	}
-#endif
 }
 
 void Player::onCreatureMove(const Creature* creature, const Tile* newTile, const Position& newPos,
@@ -1820,9 +1819,11 @@ void Player::onThink(uint32_t interval)
 		lastPing = timeNow;
 		if(client)
 			client->sendPing();
-		#ifdef __DARGHOS_CUSTOM__
-		else if(g_config.getBool(ConfigManager::STOP_ATTACK_AT_EXIT) && !hasCustomFlag(PlayerCustomFlag_ContinueOnlineWhenExit))
-		#endif
+        else if(g_config.getBool(ConfigManager::STOP_ATTACK_AT_EXIT)
+#ifdef __DARGHOS_CUSTOM__
+                && !hasCustomFlag(PlayerCustomFlag_ContinueOnlineWhenExit)
+#endif
+                )
 			setAttackedCreature(NULL);
 	}
 
@@ -2535,7 +2536,11 @@ void Player::addInFightTicks(bool pzLock, int32_t ticks/* = 0*/)
 		return;
 
 	if(!ticks)
-		ticks = g_config.getNumber(ConfigManager::PZ_LOCKED);
+#ifdef __DARGHOS_PVP_SYSTEM__
+		ticks = (isInBattleground()) ? g_config.getNumber(ConfigManager::BATTLEGROUND_PZ_LOCKED) : g_config.getNumber(ConfigManager::PZ_LOCKED);
+#else
+        ticks = g_config.getNumber(ConfigManager::PZ_LOCKED);
+#endif
 	else
 		ticks = std::max(-1, ticks);
 

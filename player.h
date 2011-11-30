@@ -49,10 +49,6 @@ class Party;
 class SchedulerTask;
 class Quest;
 
-#ifdef __DARGHOS_CUSTOM_SPELLS__
-class InstantSpell;
-#endif
-
 enum skillsid_t
 {
 	SKILL_LEVEL = 0,
@@ -250,11 +246,6 @@ class Player : public Creature, public Cylinder
 		void setPvpStatus(bool status) { pvpStatus = status; }
 		bool isPvpEnabled() const { return pvpStatus; }
 		#endif
-
-#ifdef __DARGHOS_CUSTOM_SPELLS__
-		void addCastingSpellEvent(uint32_t eventId) { castSpellEvent = eventId; }
-		void addCastingSpell(InstantSpell* spell) { castingSpell = spell; }
-#endif
 
 		uint16_t getBlessings() const;
 
@@ -770,13 +761,13 @@ class Player : public Creature, public Cylinder
 		double rates[SKILL__LAST + 1];
 		Container transferContainer;
 
-		#ifdef __DARGHOS_IGNORE_AFK__
+#ifdef __DARGHOS_IGNORE_AFK__
 		void addAfkState();
 		void removeAfkState();
 		bool getAfkState();
-		#endif
+#endif
 
-		#ifdef __DARGHOS_CUSTOM__
+#ifdef __DARGHOS_CUSTOM__
 		void setDoubleDamage();
 		void removeDoubleDamage();
 		bool isDoubleDamage();
@@ -786,30 +777,39 @@ class Player : public Creature, public Cylinder
 
         typedef std::list<uint16_t> LatencyList_t;
 		LatencyList_t latencyList;
-		#endif
+#endif
 
-		#ifdef __DARGHOS_PVP_SYSTEM__
-		bool isInBattleground() const { return onBattleground; }
-		void setIsInBattleground(bool in)
-		{
-			onBattleground = in;
-		}
+#ifdef __DARGHOS_PVP_SYSTEM__
+        bool isInBattleground() const { return onBattleground; }
+		void setIsInBattleground(bool in) {	onBattleground = in; }
 		Bg_Teams_t getBattlegroundTeam() const { return team_id; }
+		void sendPvpChannelMessage(const std::string& text, SpeakClasses speakClass = SPEAK_CHANNEL_W) const;
+		bool isBattlegroundDeserter();
+		void setBattlegroundRating(uint32_t rating){ battlegroundRating = rating; }
+		uint32_t getBattlegroundRating() { return battlegroundRating; }
+
 		void setBattlegroundTeam(Bg_Teams_t tid) {
 			team_id = tid; onBattleground = (tid == BATTLEGROUND_TEAM_NONE) ? false : true;
 			lastKnowUpdate = time(NULL);
 		}
-		void sendPvpChannelMessage(const std::string& text, SpeakClasses speakClass = SPEAK_CHANNEL_W) const;
-		bool isBattlegroundDeserter();
 
-		void updateBattlegroundSpeed(bool useBase = false)
-		{
+		void updateBattlegroundSpeed(bool useBase = false) {
 			if(!useBase)
 				baseSpeed = vocation->getBaseSpeed() + (2 * (120 - 1));
 			else
 				updateBaseSpeed();
 		}
-		#endif
+#endif
+
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+		void onPerformAction() {
+            if(hasCondition(CONDITION_CASTING_SPELL))
+            {
+                removeCondition(CONDITION_CASTING_SPELL);
+            }
+		}
+#endif
+
 
 	protected:
 		void checkTradeState(const Item* item);
@@ -916,14 +916,10 @@ class Player : public Creature, public Cylinder
 		bool pvpStatus;
         #endif
 
-#ifdef __DARGHOS_CUSTOM_SPELLS__
-		uint32_t castSpellEvent;
-		InstantSpell* castingSpell;
-#endif
-
         #ifdef __DARGHOS_PVP_SYSTEM__
         bool onBattleground;
         Bg_Teams_t team_id;
+        uint32_t battlegroundRating;
         #endif
 
 		OperatingSystem_t operatingSystem;

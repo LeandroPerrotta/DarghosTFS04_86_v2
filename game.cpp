@@ -4348,16 +4348,18 @@ bool Game::combatChangeHealth(CombatType_t combatType, Creature* attacker, Creat
 
 #ifdef __DARGHOS_CUSTOM__
 		Player* p_attacker = NULL;
-		if(attacker && target && (p_attacker = attacker->getPlayer()) && !p_attacker->isPvpEnabled())
+		if(attacker && target && (p_attacker = attacker->getPlayer()))
 		{
+		    //nenhum player pode healar monstros mais...
+		    if(target->getMonster())
+                return false;
+
 			Player* p_target = NULL;
 			//o target é um player, ou um summon de um player e com pvp ativo
-			if(((p_target = target->getPlayer()) || (target->isPlayerSummon() && (p_target = target->getPlayerMaster())))
+			if(!p_attacker->isPvpEnabled()
+                && !p_attacker->isInBattleground()
+                && ((p_target = target->getPlayer()) || (target->isPlayerSummon() && (p_target = target->getPlayerMaster())))
 				&& p_target->isPvpEnabled())
-			{
-				return false;
-			}
-			else if(target->getMonster())
 			{
 				return false;
 			}
@@ -4689,6 +4691,24 @@ void Game::addAnimatedText(const SpectatorVec& list, const Position& pos, uint8_
 			player->sendAnimatedText(pos, textColor, text);
 	}
 }
+
+#ifdef __DARGHOS_CUSTOM__
+void Game::addRandomMagicEffect(const Position& pos, uint8_t effect, uint16_t randomArea/* = 0*/)
+{
+    Position npos;
+
+    if(randomArea != 0)
+    {
+        npos.x = pos.x + random_range(-1, randomArea);
+        npos.y = pos.y + random_range(-1, randomArea);
+        npos.z = pos.z;
+    }
+    else
+        npos = pos;
+
+    addMagicEffect(npos, effect, false);
+}
+#endif
 
 void Game::addMagicEffect(const Position& pos, uint8_t effect, bool ghostMode/* = false*/)
 {

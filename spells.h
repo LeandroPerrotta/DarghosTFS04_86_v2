@@ -27,10 +27,6 @@
 #include "actions.h"
 #include "talkaction.h"
 
-#ifdef __DARGHOS_CUSTOM_SPELLS__
-#include "scheduler.h"
-#endif
-
 class InstantSpell;
 class ConjureSpell;
 class RuneSpell;
@@ -58,6 +54,9 @@ class Spells : public BaseEvents
 		ReturnValue onPlayerSay(Player* player, const std::string& words);
 		virtual std::string getScriptBaseName() const {return "spells";}
 		static Position getCasterPosition(Creature* creature, Direction dir);
+		#ifdef __DARGHOS_CUSTOM__
+		ReturnValue doPlayerCastInstantSpell(Player* player, InstantSpell* instantSpell);
+		#endif
 
 	protected:
 		virtual void clear();
@@ -164,6 +163,7 @@ class Spell : public BaseSpell
 		uint32_t exhaustion;
 #ifdef __DARGHOS_CUSTOM_SPELLS__
 		uint32_t castDelay;
+		bool canAgressive;
 #endif
 
 		bool needTarget;
@@ -191,12 +191,12 @@ class InstantSpell : public TalkAction, public Spell
 		virtual bool loadFunction(const std::string& functionName);
 
 #ifdef __DARGHOS_CUSTOM_SPELLS__
-		virtual bool castInstant(Player* player, const std::string& param, bool finishingCast = false);
-		virtual void interruptCast(Player* player, uint32_t eventId);
+		virtual bool castInstant(Player* player, const std::string& param, LuaVariant& var);
+		bool canCast(Player* player, const std::string& param, LuaVariant& var);
 #else
 		virtual bool castInstant(Player* player, const std::string& param);
 #endif
-		
+
 
 		virtual bool castSpell(Creature* creature);
 		virtual bool castSpell(Creature* creature, Creature* target);

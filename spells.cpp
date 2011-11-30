@@ -70,8 +70,29 @@ ReturnValue Spells::onPlayerSay(Player* player, const std::string& words)
 	}
 
 	Position pos = player->getPosition();
+	#ifdef __DARGHOS_CUSTOM_SPELLS__
+	LuaVariant var;
+	if(!instantSpell->canCast(player, reParam, var))
+        return RET_NEEDEXCHANGE;
+
+    if(instantSpell->getCastDelay() == 0 || !player->isInBattleground())
+    {
+        if(!instantSpell->castInstant(player, reParam, var))
+            return RET_NEEDEXCHANGE;
+    }
+    else
+    {
+        ConditionSpellCast* condition = new ConditionSpellCast(CONDITIONID_CASTINGSPELL, CONDITION_CASTING_SPELL, instantSpell->getCastDelay(), false, 0, reWords, reParam);
+        if(!condition)
+            return RET_NOTPOSSIBLE;
+
+        player->addCondition(condition);
+        return RET_NOERROR;
+    }
+    #else
 	if(!instantSpell->castInstant(player, reParam))
 		return RET_NEEDEXCHANGE;
+	#endif
 
 	SpeakClasses type = SPEAK_SAY;
 	if(g_config.getBool(ConfigManager::EMOTE_SPELLS))
@@ -462,6 +483,7 @@ Spell::Spell()
 	exhaustion = 1000;
 #ifdef __DARGHOS_CUSTOM_SPELLS__
 	castDelay = 0;
+	canAgressive = true;
 #endif
 	needTarget = false;
 	needWeapon = false;
@@ -525,6 +547,9 @@ bool Spell::configureSpell(xmlNodePtr p)
 #ifdef __DARGHOS_CUSTOM_SPELLS__
 	if(readXMLInteger(p, "castdelay", intValue))
 		castDelay = intValue;
+
+	if(readXMLString(p, "canAgressive", strValue))
+		canAgressive = booleanString(strValue);
 #endif
 
 	if(readXMLString(p, "enabled", strValue))
@@ -962,6 +987,16 @@ bool Spell::checkRuneSpell(Player* player, const Position& toPos)
 	}
 
 	Player* targetPlayer = targetCreature->getPlayer();
+
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+    if(targetPlayer && player->isInBattleground() && !canAgressive && targetPlayer->hasCondition(CONDITION_INFIGHT))
+    {
+		player->sendCancelMessage(RET_YOUCANNOTUSETHISITEMINFIGHT);
+		g_game.addMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);
+		return false;
+    }
+#endif
+
 	if(!isAggressive || !targetPlayer || Combat::isInPvpZone(player, targetPlayer)
 		|| player->getSkullType(targetPlayer) != SKULL_NONE)
 		return true;
@@ -1142,11 +1177,106 @@ bool InstantSpell::loadFunction(const std::string& functionName)
 }
 
 #ifdef __DARGHOS_CUSTOM_SPELLS__
-bool InstantSpell::castInstant(Player* player, const std::string& param, bool finishingCast)
+bool InstantSpell::canCast(Player* player, const std::string& param, LuaVariant& var)
+{
+	if(selfTarget)
+	{
+		var.type = VARIANT_NUMBER;
+		var.number = player->getID();
+		if(!checkInstantSpell(player, player))
+			return false;
+	}
+	else if(needTarget || casterTargetOrDirection)
+	{
+		Creature* target = NULL;
+		if(hasParam)
+		{
+			Player* targetPlayer = NULL;
+			ReturnValue ret = g_game.getPlayerByNameWildcard(param, targetPlayer);
+
+			target = targetPlayer;
+			if(limitRange && target && !Position::areInRange(Position(limitRange,
+				limitRange, 0), target->getPosition(), player->getPosition()))
+				target = NULL;
+
+			if((!target || target->getHealth() <= 0) && !casterTargetOrDirection)
+			{
+				player->sendCancelMessage(ret);
+				g_game.addMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);
+				return false;
+			}
+		}
+		else
+		{
+			target = player->getAttackedCreature();
+			if(limitRange && target && !Position::areInRange(Position(limitRange,
+				limitRange, 0), target->getPosition(), player->getPosition()))
+				target = NULL;
+
+			if((!target || target->getHealth() <= 0) && !casterTargetOrDirection)
+			{
+				player->sendCancelMessage(RET_YOUCANONLYUSEITONCREATURES);
+				g_game.addMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);
+				return false;
+			}
+		}
+
+		if(target)
+		{
+			bool canSee = player->canSeeCreature(target);
+			if(!canSee || !canThrowSpell(player, target))
+			{
+				player->sendCancelMessage(canSee ? RET_CREATUREISNOTREACHABLE : RET_PLAYERWITHTHISNAMEISNOTONLINE);
+				g_game.addMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);
+				return false;
+			}
+
+			var.type = VARIANT_NUMBER;
+			var.number = target->getID();
+			if(!checkInstantSpell(player, target))
+				return false;
+		}
+		else
+		{
+			var.type = VARIANT_POSITION;
+			var.pos = Spells::getCasterPosition(player, player->getDirection());
+			if(!checkInstantSpell(player, var.pos))
+				return false;
+		}
+	}
+	else if(hasParam)
+	{
+		var.type = VARIANT_STRING;
+		var.text = param;
+		if(!checkSpell(player))
+			return false;
+	}
+	else
+	{
+		var.type = VARIANT_POSITION;
+		if(needDirection)
+			var.pos = Spells::getCasterPosition(player, player->getDirection());
+		else
+			var.pos = player->getPosition();
+
+		if(!checkInstantSpell(player, var.pos))
+			return false;
+	}
+
+	return true;
+}
+
+bool InstantSpell::castInstant(Player* player, const std::string& param, LuaVariant& var)
 #else
 bool InstantSpell::castInstant(Player* player, const std::string& param)
 #endif
 {
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+    if(!internalCastSpell(player, var))
+        return false;
+
+    Spell::postSpell(player);
+#else
 	LuaVariant var;
 	if(selfTarget)
 	{
@@ -1232,27 +1362,6 @@ bool InstantSpell::castInstant(Player* player, const std::string& param)
 			return false;
 	}
 
-#ifdef __DARGHOS_CUSTOM_SPELLS__
-	if(!finishingCast && player->isInBattleground() && castDelay > 0)
-	{
-		player->addCastingSpellEvent(Scheduler::getInstance().addEvent(createSchedulerTask(castDelay,
-				boost::bind(&InstantSpell::castInstant, this, player, param, true))));
-		player->addCastingSpell(this);
-	}
-	else
-	{
-		if(player->isInBattleground() && castDelay > 0)
-		{
-			player->addCastingSpell(0);
-			player->addCastingSpell(NULL);
-		}
-
-		if(!internalCastSpell(player, var))
-			return false;
-
-		Spell::postSpell(player);
-	}
-#else
 	if(!internalCastSpell(player, var))
 		return false;
 
@@ -1260,15 +1369,6 @@ bool InstantSpell::castInstant(Player* player, const std::string& param)
 #endif
 	return true;
 }
-
-#ifdef __DARGHOS_CUSTOM_SPELLS__
-void InstantSpell::interruptCast(Player* player, uint32_t eventId)
-{
-	Scheduler::getInstance().stopEvent(eventId);
-	player->sendCancelMessage(RET_YOUINTERRUPTYOURCAST);
-	g_game.addMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);
-}
-#endif
 
 bool InstantSpell::canThrowSpell(const Creature* creature, const Creature* target) const
 {

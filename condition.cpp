@@ -23,6 +23,12 @@
 #include "creature.h"
 #include "combat.h"
 
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+#include "spells.h"
+
+extern Spells* g_spells;
+#endif
+
 extern Game g_game;
 
 Condition::Condition(ConditionId_t _id, ConditionType_t _type, int32_t _ticks, bool _buff, uint32_t _subId):
@@ -1702,3 +1708,97 @@ bool ConditionLight::serialize(PropWriteStream& propWriteStream)
 
 	return true;
 }
+
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+ConditionSpellCast::ConditionSpellCast(ConditionId_t _id, ConditionType_t _type, uint32_t _ticks, bool _buff, uint32_t _subId, std::string _words, std::string _param):
+Condition(_id, _type, _ticks, _buff, _subId)
+{
+    words = _words;
+    param = _param;
+    internalCastTicks = 0;
+}
+
+bool ConditionSpellCast::startCondition(Creature* creature)
+{
+    InstantSpell* instantSpell = g_spells->getInstantSpell(words);
+
+    SpeakClasses type = SPEAK_MONSTER_SAY;
+
+    std::string _words = instantSpell->getWords();
+
+    StringVec strVec = explodeString(_words, " ");
+    std::stringstream ss;
+
+    uint16_t i = 1;
+    for(StringVec::iterator it = strVec.begin(); it != strVec.end(); ++it, i++)
+    {
+        if(i == strVec.size())
+            break;
+
+        ss << (*it) << " ";
+    }
+
+    ss << "...";
+
+    g_game.internalCreatureSay(creature, type, ss.str(), creature->isGhost());
+
+	return Condition::startCondition(creature);
+}
+
+bool ConditionSpellCast::executeCondition(Creature* creature, int32_t interval)
+{
+    internalCastTicks += interval;
+    if(internalCastTicks >= 1000)
+    {
+        g_game.addRandomMagicEffect(creature->getPosition(), MAGIC_EFFECT_ENERGY_DAMAGE, 1);
+        internalCastTicks = 0;
+    }
+
+	return Condition::executeCondition(creature, interval);
+}
+
+void ConditionSpellCast::endCondition(Creature* creature, ConditionEnd_t reason)
+{
+    if(reason == CONDITIONEND_TICKS)
+    {
+        InstantSpell* instantSpell = g_spells->getInstantSpell(words);
+        if(!instantSpell)
+            return;
+
+        SpeakClasses type = SPEAK_MONSTER_SAY;
+
+        StringVec strVec = explodeString(instantSpell->getWords(), " ");
+
+        std::stringstream ss;
+        ss << strVec[strVec.size() - 1] << "!";
+
+        g_game.internalCreatureSay(creature, type, ss.str(), creature->isGhost());
+
+        LuaVariant var;
+        if(!instantSpell->canCast(creature->getPlayer(), param, var))
+            return;
+
+        if(!instantSpell->castInstant(creature->getPlayer(), param, var))
+            return;
+    }
+    else
+    {
+        creature->getPlayer()->sendCancelMessage(RET_YOUINTERRUPTYOURCAST);
+        g_game.addMagicEffect(creature->getPosition(), MAGIC_EFFECT_POFF);
+    }
+}
+
+void ConditionSpellCast::addCondition(Creature* creature, const Condition* addCondition)
+{
+	if(updateCondition(addCondition))
+	{
+		setTicks(addCondition->getTicks());
+		const ConditionSpellCast& conditionSpellCast = static_cast<const ConditionSpellCast&>(*addCondition);
+
+		words = conditionSpellCast.words;
+
+        SpeakClasses type = SPEAK_MONSTER_SAY;
+        g_game.internalCreatureSay(creature, type, words, creature->isGhost());
+	}
+}
+#endif

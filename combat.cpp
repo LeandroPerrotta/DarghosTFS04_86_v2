@@ -565,8 +565,6 @@ bool Combat::CombatHealthFunc(Creature* caster, Creature* target, const CombatPa
 				change = 0;
 			else
 			{
-				//std::clog << "[Health Change] Caster: " << caster->getName() << ", Target: " << target->getName() << ", TeamSize: " << g_battleground.getTeamSize() << ", Change: " << change;
-
 				BgTeamsMap teams = g_battleground.getTeams();
 
 				Bg_Team_t casterTeam = teams[caster->getPlayer()->getBattlegroundTeam()];
@@ -577,7 +575,6 @@ bool Combat::CombatHealthFunc(Creature* caster, Creature* target, const CombatPa
 
 				if(casterTeamSize > targetTeamSize)
 				{
-					//std::clog << ", CasterTeamSize: " << casterTeamSize << ", TargetTeamSize: " << targetTeamSize;
 					double basePercent = 100. / g_battleground.getTeamSize();
 					double diminushPercent = ((casterTeamSize - targetTeamSize) * basePercent) / 100;
 
@@ -587,7 +584,6 @@ bool Combat::CombatHealthFunc(Creature* caster, Creature* target, const CombatPa
 				else if(casterTeamSize == targetTeamSize && casterTeam.levelSum > targetTeam.levelSum)
 				{
 					uint16_t casterTeamAvgLvl = std::ceil((double)(casterTeam.levelSum / g_battleground.getTeamSize()));
-					//std::clog << ", CasterTeamLevelSum: " << casterTeam.levelSum << ", TargetTeamLevelSum: " << targetTeam.levelSum << ", CasterTeamLevelAvg: " << casterTeamAvgLvl;
 
 					if((targetTeam.levelSum + casterTeamAvgLvl) < casterTeam.levelSum)
 					{
@@ -598,13 +594,11 @@ bool Combat::CombatHealthFunc(Creature* caster, Creature* target, const CombatPa
 							change = std::ceil(change * (1. - diminushPercent));
 					}
 				}
-
-				//std::clog << ", NewChange: " << change << std::endl;
 			}
 		}
 		#endif
 
-        if(!casterOnBattleground && target->getPlayer()->getSkull() != SKULL_BLACK && !target->getPlayer()->isDoubleDamage())
+        if(/*!casterOnBattleground && */target->getPlayer()->getSkull() != SKULL_BLACK && !target->getPlayer()->isDoubleDamage())
             change = change / 2;
     }
 	#endif
@@ -646,8 +640,6 @@ bool Combat::CombatManaFunc(Creature* caster, Creature* target, const CombatPara
 				change = 0;
 			else
 			{
-				//std::clog << "[Mana Change] Caster: " << caster->getName() << ", Target: " << target->getName() << ", TeamSize: " << g_battleground.getTeamSize() << ", Change: " << change;
-
 				BgTeamsMap teams = g_battleground.getTeams();
 
 				Bg_Team_t casterTeam = teams[caster->getPlayer()->getBattlegroundTeam()];
@@ -658,7 +650,6 @@ bool Combat::CombatManaFunc(Creature* caster, Creature* target, const CombatPara
 
 				if(casterTeamSize > targetTeamSize)
 				{
-					//std::clog << ", CasterTeamSize: " << casterTeamSize << ", TargetTeamSize: " << targetTeamSize;
 					double basePercent = 100. / g_battleground.getTeamSize();
 					double diminushPercent = ((casterTeamSize - targetTeamSize) * basePercent) / 100;
 
@@ -667,9 +658,7 @@ bool Combat::CombatManaFunc(Creature* caster, Creature* target, const CombatPara
 				}
 				else if(casterTeamSize == targetTeamSize && casterTeam.levelSum > targetTeam.levelSum)
 				{
-					//std::clog << ", CasterTeamLevelSum: " << casterTeam.levelSum << ", TargetTeamLevelSum: " << targetTeam.levelSum;
 					uint16_t casterTeamAvgLvl = std::ceil((double)(casterTeam.levelSum / g_battleground.getTeamSize()));
-					//std::clog << ", CasterTeamLevelAvg: " << casterTeamAvgLvl;
 
 					if((targetTeam.levelSum + casterTeamAvgLvl) < casterTeam.levelSum)
 					{
@@ -680,13 +669,11 @@ bool Combat::CombatManaFunc(Creature* caster, Creature* target, const CombatPara
 							change = std::ceil(change * (1. - diminushPercent));
 					}
 				}
-
-				//std::clog << ", NewChange: " << change << std::endl;
 			}
 		}
 		#endif
 
-        if(!casterOnBattleground && target->getPlayer()->getSkull() != SKULL_BLACK && !target->getPlayer()->isDoubleDamage())
+        if(/*!casterOnBattleground && */target->getPlayer()->getSkull() != SKULL_BLACK && !target->getPlayer()->isDoubleDamage())
             change = change / 2;
     }
 	#endif

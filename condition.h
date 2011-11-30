@@ -60,6 +60,10 @@ enum ConditionType_t
 	CONDITION_HUNTING = 1 << 23
 #ifdef __DARGHOS_CUSTOM__
     ,CONDITION_IGNORE_DEATH_LOSS = 1 << 24
+
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+    ,CONDITION_CASTING_SPELL = 1 << 25
+#endif
 #endif
 };
 
@@ -142,7 +146,7 @@ class Condition
 		virtual bool serialize(PropWriteStream& propWriteStream);
 		virtual bool unserializeProp(ConditionAttr_t attr, PropStream& propStream);
 
-		bool isPersistent() const {return (ticks > 0 && (id == CONDITIONID_DEFAULT || id != CONDITIONID_COMBAT));}
+		bool isPersistent() const {return (ticks > 0 && (id == CONDITIONID_DEFAULT || id /*!*/== CONDITIONID_COMBAT));}
 
 	protected:
 		virtual bool updateCondition(const Condition* addCondition);
@@ -369,4 +373,24 @@ class ConditionLight: public Condition
 		LightInfo lightInfo;
 		uint32_t internalLightTicks, lightChangeInterval;
 };
+
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+class ConditionSpellCast: public Condition
+{
+    public:
+        ConditionSpellCast(ConditionId_t _id, ConditionType_t _type, uint32_t _ticks, bool _buff, uint32_t _subId, std::string _words, std::string _param);
+        virtual ~ConditionSpellCast() {}
+
+        virtual bool startCondition(Creature* creature);
+		virtual bool executeCondition(Creature* creature, int32_t interval);
+		virtual void endCondition(Creature* creature, ConditionEnd_t reason);
+		virtual void addCondition(Creature* creature, const Condition* addCondition);
+
+    protected:
+        std::string words;
+        std::string param;
+        uint32_t internalCastTicks;
+
+};
+#endif
 #endif
