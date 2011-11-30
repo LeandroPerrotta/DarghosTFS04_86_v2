@@ -18,7 +18,7 @@ function greetCallback(cid)
                 return false		
 		end
 
-        if(getPlayerBattlegroundRating(cid) < 500) then
+        if(BG_ENABLED and getPlayerBattlegroundRating(cid) < 500) then
                 npcHandler:say('Eu compro uma grande variedade de armas e equipamentos por um bom preço! Mas somente negocio com bravos guerreiros! Para comprovar seu valor vença algumas Battlegrounds ({!bg entrar}) até atingir 500 pontos de classificão e terei prazer em negociar com você!', cid)
 				npcHandler:resetNpc(cid)
                 return false
