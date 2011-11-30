@@ -82,7 +82,7 @@ ReturnValue Spells::onPlayerSay(Player* player, const std::string& words)
     }
     else
     {
-        ConditionSpellCast* condition = new ConditionSpellCast(CONDITIONID_CASTINGSPELL, CONDITION_CASTING_SPELL, instantSpell->getCastDelay(), false, 0, reWords, reParam);
+        ConditionSpellCast* condition = new ConditionSpellCast(CONDITIONID_COMBAT, CONDITION_CASTING_SPELL, instantSpell->getCastDelay(), false, 0, reWords, reParam);
         if(!condition)
             return RET_NOTPOSSIBLE;
 

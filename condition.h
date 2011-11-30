@@ -146,7 +146,7 @@ class Condition
 		virtual bool serialize(PropWriteStream& propWriteStream);
 		virtual bool unserializeProp(ConditionAttr_t attr, PropStream& propStream);
 
-		bool isPersistent() const {return (ticks > 0 && (id == CONDITIONID_DEFAULT || id /*!*/== CONDITIONID_COMBAT));}
+		bool isPersistent() const {return (ticks > 0 && (id == CONDITIONID_DEFAULT || id != CONDITIONID_COMBAT));}
 
 	protected:
 		virtual bool updateCondition(const Condition* addCondition);
