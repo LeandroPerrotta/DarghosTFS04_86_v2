@@ -4735,9 +4735,7 @@ void Game::addMagicEffect(const SpectatorVec& list, const Position& pos, uint8_t
 	    if(!creature)
             continue;
 
-        player = creature->getPlayer();
-
-		if(!player)
+		if(!(player = creature->getPlayer()))
             continue;
 
         player->sendMagicEffect(pos, effect);
