@@ -34,11 +34,6 @@ function movementTileOnStepIn(cid, item, position, fromPosition)
 end
 
 function movementTileOnStepOut(cid, item, position, fromPosition)
-
-	-- special depot tile (non walkover)[
-	if(item.itemid == 11062 or item.itemid == 11063 ) then
-		doUpdateCreaturePassable(cid)
-	end
 	
 	return false
 end
