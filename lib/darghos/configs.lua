@@ -35,7 +35,7 @@ darghos_remove_change_pvp_debuff_cost = 25
 
 -- Darghos spoof players
 -- opções: true (ativo), false (desativo)
-darghos_spoof_players = true
+darghos_spoof_players = false
 darghos_players_to_spoof = 75
 darghos_spoof_start_in = 25
 
