@@ -12,12 +12,6 @@ function onBattlegroundLeave(cid)
 		doUpdateCreaturePassable(cid)
 	end	
 	
-	-- islando of peace
-	local onIslandOfPeace = getPlayerTown(cid) == towns.ISLAND_OF_PEACE
-	if(onIslandOfPeace) then
-		doUpdateCreaturePassable(cid)
-	end	
-	
 	doRemoveCondition(cid, CONDITION_INFIGHT)
 end
 
