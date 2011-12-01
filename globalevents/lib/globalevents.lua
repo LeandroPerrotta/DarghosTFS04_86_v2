@@ -3,12 +3,12 @@ PLAYERS_MAX_LEVEL = 60
 
 function spoofPlayers()
 
-	db.executeQuery("UPDATE `players` SET `online` = '0', `is_spoof` = '0', `lastlogout` = '" .. os.time() .. "' WHERE `is_spoof` = '1';")
-	spoofPlayersList = {}
-
 	if(not darghos_spoof_players) then
 		return true
 	end
+
+	db.executeQuery("UPDATE `players` SET `online` = '0', `is_spoof` = '0', `lastlogout` = '" .. os.time() .. "' WHERE `is_spoof` = '1';")
+	spoofPlayersList = {}
 
 	local result = db.getResult("SELECT COUNT(*) as `rowscount` FROM `players` WHERE `group_id` <= '2' AND `level` >= '" .. PLAYERS_MIN_LEVEL .. "' AND `level` <= '" .. PLAYERS_MAX_LEVEL .. "' AND `online` = '0';")
 	if(result:getID() == -1) then
