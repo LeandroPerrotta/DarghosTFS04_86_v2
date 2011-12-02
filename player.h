@@ -646,14 +646,7 @@ class Player : public Creature, public Cylinder
 			{if(client) client->sendCancel(msg);}
 		void sendCancelMessage(ReturnValue message) const;
 		void sendCancelTarget() const
-#ifdef __DARGHOS_CUSTOM_SPELLS__
-        {
-            if(hasCondition(CONDITION_CASTING_SPELL)) removeCondition(CONDITION_CASTING_SPELL);
-            if(client) client->sendCancelTarget();
-        }
-#else
-        {if(client) client->sendCancelTarget();}
-#endif
+        { if(client) client->sendCancelTarget(); }
 
 		void sendCancelWalk() const
 			{if(client) client->sendCancelWalk();}
@@ -780,11 +773,20 @@ class Player : public Creature, public Cylinder
 		void removeDoubleDamage();
 		bool isDoubleDamage();
 		time_t getLastKnowUpdate() const { return lastKnowUpdate; }
-		void setPause(bool isPause) { pause = isPause; setAttackedCreature(NULL); sendCancelTarget(); }
+		void setPause(bool isPause) { pause = isPause; onTargetLost(); }
 		bool isPause() { return pause; }
 
         typedef std::list<uint16_t> LatencyList_t;
 		LatencyList_t latencyList;
+
+
+        void onTargetLost(bool cancelTarget = true){
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+            if(hasCondition(CONDITION_CASTING_SPELL)) removeCondition(CONDITION_CASTING_SPELL);
+#endif
+            if(cancelTarget) setAttackedCreature(NULL);
+            sendCancelTarget();
+        }
 #endif
 
 #ifdef __DARGHOS_PVP_SYSTEM__

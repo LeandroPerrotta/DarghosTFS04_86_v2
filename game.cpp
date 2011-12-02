@@ -3555,16 +3555,26 @@ bool Game::playerSetAttackedCreature(uint32_t playerId, uint32_t creatureId)
 
 	if(player->getAttackedCreature() && !creatureId)
 	{
-		player->setAttackedCreature(NULL);
-		player->sendCancelTarget();
+#ifdef __DARGHOS_CUSTOM__
+        player->onTargetLost();
+#else
+        player->setAttackedCreature(NULL);
+        player->sendCancelTarget();
+#endif
+
 		return true;
 	}
 
 	Creature* attackCreature = getCreatureByID(creatureId);
 	if(!attackCreature)
 	{
-		player->setAttackedCreature(NULL);
-		player->sendCancelTarget();
+#ifdef __DARGHOS_CUSTOM__
+        player->onTargetLost();
+#else
+        player->setAttackedCreature(NULL);
+        player->sendCancelTarget();
+#endif
+
 		return false;
 	}
 
@@ -3572,8 +3582,13 @@ bool Game::playerSetAttackedCreature(uint32_t playerId, uint32_t creatureId)
 	if(ret != RET_NOERROR)
 	{
 		player->sendCancelMessage(ret);
-		player->sendCancelTarget();
-		player->setAttackedCreature(NULL);
+
+#ifdef __DARGHOS_CUSTOM__
+        player->onTargetLost();
+#else
+        player->setAttackedCreature(NULL);
+        player->sendCancelTarget();
+#endif
 		return false;
 	}
 

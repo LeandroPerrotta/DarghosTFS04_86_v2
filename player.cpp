@@ -1454,14 +1454,22 @@ void Player::onCreatureAppear(const Creature* creature)
 
 void Player::onAttackedCreatureDisappear(bool isLogout)
 {
-	sendCancelTarget();
+#ifdef __DARGHOS_CUSTOM__
+        onTargetLost(false);
+#else
+        sendCancelTarget();
+#endif
 	if(!isLogout)
 		sendTextMessage(MSG_STATUS_SMALL, "Target lost.");
 }
 
 void Player::onFollowCreatureDisappear(bool isLogout)
 {
-	sendCancelTarget();
+#ifdef __DARGHOS_CUSTOM__
+    onTargetLost(false);
+#else
+    sendCancelTarget();
+#endif
 	if(!isLogout)
 		sendTextMessage(MSG_STATUS_SMALL, "Target lost.");
 }
@@ -3503,11 +3511,20 @@ bool Player::setFollowCreature(Creature* creature, bool fullPathSearch /*= false
 		return true;
 
 	setFollowCreature(NULL);
-	setAttackedCreature(NULL);
+
+#ifndef __DARGHOS_CUSTOM__
+    setAttackedCreature(NULL);
+#endif
+
 	if(!deny)
 		sendCancelMessage(RET_THEREISNOWAY);
 
-	sendCancelTarget();
+#ifdef __DARGHOS_CUSTOM__
+    onTargetLost();
+#else
+    sendCancelTarget();
+#endif
+
 	cancelNextWalk = true;
 	return false;
 }
