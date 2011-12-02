@@ -646,7 +646,15 @@ class Player : public Creature, public Cylinder
 			{if(client) client->sendCancel(msg);}
 		void sendCancelMessage(ReturnValue message) const;
 		void sendCancelTarget() const
-			{if(client) client->sendCancelTarget();}
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+        {
+            if(hasCondition(CONDITION_CASTING_SPELL)) removeCondition(CONDITION_CASTING_SPELL);
+            if(client) client->sendCancelTarget();
+        }
+#else
+        {if(client) client->sendCancelTarget();}
+#endif
+
 		void sendCancelWalk() const
 			{if(client) client->sendCancelWalk();}
 		void sendChangeSpeed(const Creature* creature, uint32_t newSpeed) const
