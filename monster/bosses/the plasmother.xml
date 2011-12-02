@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <monster name="The Plasmother" nameDescription="the plasmother" race="venom" experience="8300" speed="310" manacost="0">
   <health now="22500" max="22500"/>
-  <look type="238" corpse="6532"/>
+  <look type="238" corpse="6552"/>
   <targetchange interval="5500" chance="10"/>
   <strategy attack="100" defense="0"/>
   <flags>
