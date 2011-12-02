@@ -312,7 +312,7 @@ ReturnValue Combat::canDoCombat(const Creature* attacker, const Creature* target
 					return RET_YOUMAYNOTATTACKTHISCREATURE;
 
 #ifdef __DARGHOS_CUSTOM__
-                if(!attackerPlayer->isPvpEnabled() && !Combat::isInPvpZone(attacker, target)
+                if(!attackerPlayer->isPvpEnabled() && target->getPlayerMaster() != attackerPlayer && !Combat::isInPvpZone(attacker, target)
 #ifdef __WAR_SYSTEM__
 					&& !attackerPlayer->isEnemy(target->getPlayerMaster(), true)
 #endif

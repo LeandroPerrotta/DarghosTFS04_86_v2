@@ -4351,15 +4351,16 @@ bool Game::combatChangeHealth(CombatType_t combatType, Creature* attacker, Creat
 		if(attacker && target && (p_attacker = attacker->getPlayer()))
 		{
 		    //nenhum player pode healar monstros mais...
-		    if(target->getMonster())
+		    if(target->getMonster() && !target->isPlayerSummon())
                 return false;
 
 			Player* p_target = NULL;
-			//o target é um player, ou um summon de um player e com pvp ativo
+			//o target é um player, ou um summon de um player e com pvp ativo, e não é ele mesmo
 			if(!p_attacker->isPvpEnabled()
                 && !p_attacker->isInBattleground()
                 && ((p_target = target->getPlayer()) || (target->isPlayerSummon() && (p_target = target->getPlayerMaster())))
-				&& p_target->isPvpEnabled())
+				&& p_target->isPvpEnabled()
+                && p_target != p_attacker)
 			{
 				return false;
 			}

@@ -1784,7 +1784,7 @@ void ConditionSpellCast::endCondition(Creature* creature, ConditionEnd_t reason)
     else
     {
         creature->getPlayer()->sendCancelMessage(RET_YOUINTERRUPTYOURCAST);
-        g_game.addMagicEffect(creature->getPosition(), MAGIC_EFFECT_POFF);
+        creature->getPlayer()->sendMagicEffect(creature->getPosition(), MAGIC_EFFECT_POFF);
     }
 }
 

@@ -1462,6 +1462,9 @@ void Tile::postAddNotification(Creature* actor, Thing* thing, const Cylinder* ol
 	thing->addRef();
 	if(link == LINK_OWNER)
 	{
+#ifdef __DARGHOS_CUSTOM__
+        bool done = true;
+#endif
 		//calling movement scripts
 		if(Creature* creature = thing->getCreature())
 		{
@@ -1469,15 +1472,29 @@ void Tile::postAddNotification(Creature* actor, Thing* thing, const Cylinder* ol
 			if(oldParent)
 				fromTile = oldParent->getTile();
 
-			g_moveEvents->onCreatureMove(actor, creature, fromTile, this, true);
+#ifdef __DARGHOS_CUSTOM__
+			if(!g_moveEvents->onCreatureMove(actor, creature, fromTile, this, true))
+                done = false;
+#else
+            g_moveEvents->onCreatureMove(actor, creature, fromTile, this, true);
+#endif
 		}
 		else if(Item* item = thing->getItem())
 		{
 			g_moveEvents->onAddTileItem(this, item);
+#ifdef __DARGHOS_CUSTOM__
+            if(!g_moveEvents->onItemMove(actor, item, this, true))
+                done = false;
+#else
 			g_moveEvents->onItemMove(actor, item, this, true);
+#endif
 		}
 
-		if(hasFlag(TILESTATE_TELEPORT))
+#ifdef __DARGHOS_CUSTOM__
+		if(hasFlag(TILESTATE_TELEPORT) && done)
+#else
+        if(hasFlag(TILESTATE_TELEPORT))
+#endif
 		{
 			if(Teleport* teleport = getTeleportItem())
 				teleport->__addThing(actor, thing);
