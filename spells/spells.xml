@@ -409,7 +409,7 @@
 		<vocation name="Knight"/>   <vocation name="Elite Knight"/>
 	</instant>
 	
-	<instant name="Life Scream" words="exana vita" prem="1" lvl="91" manapercent="30" exhaustion="1000" selftarget="1" aggressive="0" script="custom/life_scream.lua">
+	<instant name="Life Scream" words="exana vita" lvl="91" manapercent="30" exhaustion="1000" selftarget="1" aggressive="0" script="custom/life_scream.lua">
 		 <vocation name="Knight"/> <vocation name="Elite Knight"/>
 	</instant>
 	
