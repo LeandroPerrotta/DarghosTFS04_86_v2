@@ -1,10 +1,29 @@
-function movementTileOnStepIn(cid, item, position, fromPosition)
+function onEnterInUngreezPortal(cid, position, fromPosition)
 
-	if(item.itemid == 11062 or item.itemid == 11063) then
-		doUpdateCreatureImpassable(cid)
+	local killUngreez = getPlayerStorageValue(cid, sid.INQ_KILL_UNGREEZ) == 1
+	if(killUngreez) then
+		doPlayerSendCancel(cid, "Você já derrotou o demonio Ungreez.")
+		doTeleportThing(cid, fromPosition, false)
+		doSendMagicEffect(position, CONST_ME_MAGIC_BLUE)
+		
+		return false
 	end
 	
-	if(item.actionid ~= nil and item.actionid == aid.INQ_PORTAL) then
+	local inQuest = getPlayerStorageValue(cid, QUESTLOG.INQUISITION.MISSION_FIRST_ADDON) == 0
+	if(not inQuest) then
+		doPlayerSendCancel(cid, "Somente jogadores que estiverem em uma certa missão podem atravessar este portal.")
+		doTeleportThing(cid, fromPosition, false)
+		doSendMagicEffect(position, CONST_ME_MAGIC_BLUE)		
+		
+		return false
+	end
+	
+	return true
+end
+
+function movementTileOnStepIn(cid, item, position, fromPosition)	
+
+	if(item.actionid == aid.INQ_PORTAL) then
 		
 		local killUngreez = (getPlayerStorageValue(cid, sid.INQ_KILL_UNGREEZ) == 1) and true or false	
 		
@@ -12,21 +31,6 @@ function movementTileOnStepIn(cid, item, position, fromPosition)
 			doPlayerSendCancel(cid, "Somente os que ajudam a combater as forças demoniacas estão autorizados a atravessar este portal.")
 			doTeleportThing(cid, fromPosition, false)
 			doSendMagicEffect(position, CONST_ME_MAGIC_BLUE)
-		end
-	elseif(item.actionid ~= nil and item.actionid == aid.INQ_UNGREEZ_PORTAL) then
-		
-		local killUngreez = getPlayerStorageValue(cid, sid.INQ_KILL_UNGREEZ) == 1
-		if(killUngreez) then
-			doPlayerSendCancel(cid, "Você já derrotou o demonio Ungreez.")
-			doTeleportThing(cid, fromPosition, false)
-			doSendMagicEffect(position, CONST_ME_MAGIC_BLUE)
-		end
-		
-		local inQuest = getPlayerStorageValue(cid, QUESTLOG.INQUISITION.MISSION_FIRST_ADDON) == 0
-		if(not inQuest) then
-			doPlayerSendCancel(cid, "Somente jogadores que estiverem em uma certa missão podem atravessar este portal.")
-			doTeleportThing(cid, fromPosition, false)
-			doSendMagicEffect(position, CONST_ME_MAGIC_BLUE)		
 		end
 	end	
 

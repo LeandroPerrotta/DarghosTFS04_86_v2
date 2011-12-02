@@ -46,13 +46,18 @@ function onStepIn(cid, item, position, fromPosition)
 		end
 	end
 	
+	if(item.actionid == aid.INQ_UNGREEZ_PORTAL and not onEnterInUngreezPortal(cid, position, fromPosition)) then
+		pushBack(cid, position, fromPosition)
+		return false
+	end
+	
 	if(item.actionid >= aid.SHRINE_MIN and item.actionid <= aid.SHRINE_MAX) then
 		return teleportToShrine(cid, item, position, fromPosition)
 	end
 	
-	if(item.actionid == aid.CALL_TELEPORT_BACK) then
+	if(item.uid == uid.TELEPORT_BACK) then
 		return doTeleportBack(cid)
-	elseif(item.actionid == aid.STORE_TELEPORT_BACK) then
+	elseif(item.uid == uid.TELEPORT_GO) then
 		return doTeleportBack(cid, fromPosition)
 	end
 	

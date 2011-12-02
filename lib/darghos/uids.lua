@@ -209,6 +209,10 @@
 	INQ_ANNIHILON_SPAWN			= 1084,
 	INQ_HELLGORAK_SPAWN			= 1085,
 	
+	-- dinamyc teleport go/back
+	TELEPORT_GO						= 6400,
+	TELEPORT_BACK					= 6401,
+	
 	-- dynamic npcs pos
 	NPC_RASHID_START			= 6500,
 	NPC_RASHID_END				= 6503,
