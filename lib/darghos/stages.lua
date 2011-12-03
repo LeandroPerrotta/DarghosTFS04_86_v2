@@ -124,7 +124,7 @@ function changeStage(cid, skilltype, multiple)
 		local expSpecialBonus = 1
 		local expSpecialBonusEnd = getPlayerStorageValue(cid, sid.EXP_MOD_ESPECIAL_END)
 		 if(expSpecialBonusEnd ~= -1  and os.time() <= expSpecialBonusEnd) then
-		 	expSpecialBonus = (getPlayerStorageValue(cid, sid.EXP_MOD_ESPECIAL) > 0) and round(getPlayerStorageValue(cid, sid.EXP_MOD_ESPECIAL) / 100, 2) or 0
+		 	expSpecialBonus = (getPlayerStorageValue(cid, sid.EXP_MOD_ESPECIAL) > 0) and round(getPlayerStorageValue(cid, sid.EXP_MOD_ESPECIAL) / 100, 2) or 1
 		 end
 	
 		setExperienceRate(cid, multiple * darghos_exp_multipler * changePvpDebuff * expSpecialBonus)
