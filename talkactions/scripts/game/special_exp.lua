@@ -13,8 +13,8 @@ function onSay(cid, words, param)
 	local expBonus = tonumber(param[2]) or nil
 	local expBonusHours = tonumber(param[3]) or nil
 	
-	if(player == 0 or expBonus == nil or expBonusHours or nil) then
-		doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Comando errado, tente. Ex: '/expbonus Slash;100;12' aonde slash e  nome, 100 e a quantidade de exp bonus e 12 e a quantidade de horas.")
+	if(player == 0 or expBonus == nil or expBonusHours == nil) then
+		doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Comando errado, tente. Ex: '/specialexp Slash;100;12' aonde slash e  nome, 100 e a quantidade de exp bonus e 12 e a quantidade de horas.")
 		doSendMagicEffect(playerPos, CONST_ME_POFF)
 		return true			
 	end
