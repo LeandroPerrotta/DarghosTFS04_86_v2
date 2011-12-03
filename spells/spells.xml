@@ -405,7 +405,7 @@
 		<vocation name="Royal Paladin"/>
 	</conjure>	
 		
-	<instant name="Intense Wound Cleasing" words="exana gran mort" prem="1" lvl="84" mana="240" exhaustion="1000" selftarget="1" aggressive="0" script="custom/intense_wound_cleasing.lua">
+	<instant name="Intense Wound Cleasing" words="exana gran mort" lvl="84" mana="240" exhaustion="1000" selftarget="1" aggressive="0" script="custom/intense_wound_cleasing.lua">
 		<vocation name="Knight"/>   <vocation name="Elite Knight"/>
 	</instant>
 	
@@ -417,7 +417,7 @@
 		<vocation name="Druid"/>    <vocation name="Elder Druid"/>
 	</instant>
 	
-	<instant name="Focused Shot" words="exori con mort" lvl="96" range="5" mana="720" castdelay="3000" prem="1" needtarget="1" aggressive="1" script="custom/focused_shot.lua">
+	<instant name="Focused Shot" words="exori con mort" lvl="96" range="5" mana="720" castdelay="3000" needtarget="1" aggressive="1" script="custom/focused_shot.lua">
 		<vocation name="Paladin"/>  <vocation name="Royal Paladin"/>
 	</instant>	
 		
