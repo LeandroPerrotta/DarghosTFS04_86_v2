@@ -9,4 +9,6 @@ function onStepIn(cid, item, position, fromPosition)
 		
 		setPlayerStorageValue(cid, sid.INSIDE_MINI_GAME, -1)
 	end
+	
+	return true
 end
