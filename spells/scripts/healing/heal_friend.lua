@@ -7,6 +7,11 @@ function onGetFormulaValues(cid, level, maglevel)
 	local min = ((level/5)+(maglevel*10))
 	local max = ((level/5)+(maglevel*14))
 	
+	if(doPlayerIsInBattleground()) then
+		min = ((level/5)+(maglevel*6.1))
+		max = ((level/5)+(maglevel*8.8))
+	end	
+	
 	local baseMin = min
 	local baseMax = max
 	
