@@ -1147,7 +1147,7 @@ bool Game::playerMoveCreature(uint32_t playerId, uint32_t movingCreatureId,
 
 			uint32_t protectionLevel = g_config.getNumber(ConfigManager::PROTECTION_LEVEL);
 #ifdef __DARGHOS_CUSTOM__
-			if(!player->isPvpEnabled() || (player->getLevel() < protectionLevel && player->getVocation()->isAttackable()))
+			if(!player->isInBattleground() && (!player->isPvpEnabled() || (player->getLevel() < protectionLevel && player->getVocation()->isAttackable())))
 #else
 			if(player->getLevel() < protectionLevel && player->getVocation()->isAttackable())
 #endif
@@ -4370,12 +4370,20 @@ bool Game::combatChangeHealth(CombatType_t combatType, Creature* attacker, Creat
                 return false;
 
 			Player* p_target = NULL;
+			bool isSummon = false;
+
+			if(!(p_target = target->getPlayer()))
+			{
+			    if(target->isPlayerSummon() && (p_target = target->getPlayerMaster()))
+                    isSummon = true;
+			}
+
 			//o target é um player, ou um summon de um player e com pvp ativo, e não é ele mesmo
-			if(!p_attacker->isPvpEnabled()
-                && !p_attacker->isInBattleground()
-                && ((p_target = target->getPlayer()) || (target->isPlayerSummon() && (p_target = target->getPlayerMaster())))
-				&& p_target->isPvpEnabled()
-                && p_target != p_attacker)
+			//ou está na Battleground, e o target é um inimigo
+			if(p_target
+                && ((!p_attacker->isInBattleground() && !p_attacker->isPvpEnabled() && p_target->isPvpEnabled() && p_target != p_attacker)
+                || (p_attacker->isInBattleground() && p_target->getBattlegroundTeam() != p_attacker->getBattlegroundTeam()))
+            )
 			{
 				return false;
 			}
