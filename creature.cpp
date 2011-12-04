@@ -551,8 +551,8 @@ void Creature::onCreatureMove(const Creature* creature, const Tile* newTile, con
 		}
 
 #ifdef __DARGHOS_CUSTOM__
-		if(newTile->getZone() != oldTile->getZone() 
-			|| ((oldTile->ground && newTile->ground) 
+		if(newTile->getZone() != oldTile->getZone()
+			|| ((oldTile->ground && newTile->ground)
 			&& (
 				(Item::items[oldTile->ground->getID()].walkStack && !Item::items[newTile->ground->getID()].walkStack)
 				|| (!Item::items[oldTile->ground->getID()].walkStack && Item::items[newTile->ground->getID()].walkStack)
@@ -1517,6 +1517,14 @@ bool Creature::hasCondition(ConditionType_t type, int32_t subId/* = 0*/, bool ch
 
 	for(ConditionList::const_iterator it = conditions.begin(); it != conditions.end(); ++it)
 	{
+#ifdef __CUSTOM_DARGHOS__
+        if(!(*it))
+        {
+            clog << "Creature::hasCondition() -> Condição vazia, crash evitado...";
+            continue;
+        }
+#endif
+
 		if((*it)->getType() != type || (subId != -1 && (*it)->getSubId() != (uint32_t)subId))
 			continue;
 
