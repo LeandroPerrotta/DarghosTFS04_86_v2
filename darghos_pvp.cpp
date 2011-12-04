@@ -159,7 +159,7 @@ void Battleground::finish()
 void Battleground::finish(Bg_Teams_t teamWinner)
 {
 	for(BgTeamsMap::iterator it = teamsMap.begin(); it != teamsMap.end(); it++)
-	{		
+	{
 		for(PlayersMap::iterator it_players = it->second.players.begin(); it_players != it->second.players.end(); it_players++)
 		{
 			bool isWinner = false;
@@ -259,7 +259,7 @@ bool Battleground::buildTeams()
 
 void Battleground::callPlayer(Player* player)
 {
-	if(!player)
+	if(!player || player->isRemoved())
 		return;
 
 	player->sendPvpChannelMessage("A battleground está pronta para iniciar! Você tem 2 minutos para digitar o comando \"!bg entrar\" para ser enviado a batalha! Boa sorte bravo guerreiro!", SPEAK_CHANNEL_O);
@@ -274,15 +274,15 @@ void Battleground::start()
 	storeNew();
 
 	for(BgTeamsMap::iterator it = teamsMap.begin(); it != teamsMap.end(); it++)
-	{		
+	{
 		for(PlayersMap::iterator it_players = it->second.players.begin(); it_players != it->second.players.end(); it_players++)
 		{
 			Player* player = g_game.getPlayerByID(it_players->first);
 			if(!it_players->second.areInside)
-			{								
+			{
 				if(player)
 					player->sendPvpChannelMessage("Você não apareceu na battleground no tempo esperado... Você ainda pode participar da batalha digitando \"!bg entrar\" novamente.");
-				
+
 				it->second.players.erase(it_players->first);
 				notJoin++;
 				continue;
@@ -392,7 +392,7 @@ BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
 		if(playerIsInWaitlist(player))
 			return BATTLEGROUND_ALREADY_IN_WAITLIST;
 
-		waitlist.push_back(player);	
+		waitlist.push_back(player);
 		buildTeams();
 
 		return BATTLEGROUND_PUT_IN_WAITLIST;
@@ -411,7 +411,7 @@ BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
 					if(playerIsInWaitlist(player))
 						return BATTLEGROUND_ALREADY_IN_WAITLIST;
 
-					waitlist.push_back(player);	
+					waitlist.push_back(player);
 					return BATTLEGROUND_PUT_IN_WAITLIST;
 				}
 
@@ -437,7 +437,7 @@ BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
 
 				putInside(player);
 				return BATTLEGROUND_PUT_INSIDE;
-			}			
+			}
 		}
 		else
 		{
@@ -450,7 +450,7 @@ BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
 
 BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 {
-	if(!player)
+	if(!player || player->isRemoved())
 	{
 		return BATTLEGROUND_NO_ERROR;
 	}
@@ -490,7 +490,7 @@ BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 		team->players.erase(player->getID());
 		team->levelSum = std::max((int32_t)(team->levelSum - player->getLevel()), 0);
 	}
-	else 
+	else
 	{
 		g_game.internalTeleport(player, player->getMasterPosition(), true);
 		g_game.addMagicEffect(player->getMasterPosition(), MAGIC_EFFECT_TELEPORT);
@@ -576,7 +576,7 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 	}
 
 	if(killer)
-	{  
+	{
 		Bg_Team_t* team = findPlayerTeam(killer);
 		team->points++;
 
@@ -645,7 +645,7 @@ bool Battleground::isValidFrag(Bg_PlayerInfo_t* killer_info, Bg_PlayerInfo_t* ta
 
 	temp_list.sort(Battleground::orderDeathListByDate);
 
-	/* Finalmente vamos tentar descobrir se o jogador está dando 'free frag'... 
+	/* Finalmente vamos tentar descobrir se o jogador está dando 'free frag'...
 		Se as 3 ultimas coisas que o jogador fez foi morrer então esta frag
 		será negada, caso exista algum assist ou kill, então é validado
 	*/
@@ -676,9 +676,9 @@ bool Battleground::isValidFrag(Bg_PlayerInfo_t* killer_info, Bg_PlayerInfo_t* ta
 		}
 	}
 
-	/* 
-	Haviam menos de 3 ações, provavelmente inicio de bg ou algo assim... então validaremos a frag mesmo sem kills/assists. 
-	hipoteticamente	este ponto do codigo nunca será acessado, mas vamos previnir ne... 
+	/*
+	Haviam menos de 3 ações, provavelmente inicio de bg ou algo assim... então validaremos a frag mesmo sem kills/assists.
+	hipoteticamente	este ponto do codigo nunca será acessado, mas vamos previnir ne...
 	*/
 	return true;
 }
