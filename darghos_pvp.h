@@ -67,7 +67,7 @@ class Battleground
 
 		void setOpen(){ open = true; }
 		void setClosed() { open = false; onClose(); }
-        bool isOpen(){ return open; }	
+        bool isOpen(){ return open; }
 		void onClose();
 
 		bool buildTeams();
@@ -105,10 +105,10 @@ class Battleground
 		void setTeamSize(uint32_t size){ teamSize = size; }
 		void setWinPoints(uint32_t points){ winPoints = points; }
 		void setDuration(uint32_t seconds){ duration = (seconds * 1000); }
-       
+
 		StatisticsList getStatistics();
-		void clearStatistics(){ 
-			statisticsList.clear(); 
+		void clearStatistics(){
+			statisticsList.clear();
 
 			for(DeathsEntryList::iterator it = deathsList.begin(); it != deathsList.end(); it++)
 			{
@@ -117,17 +117,17 @@ class Battleground
 
 			deathsList.clear();
 		}
-		
+
 		static bool orderStatisticsListByPerformance(Bg_Statistic_t* first, Bg_Statistic_t* second) {
 			if(first->kills.size() == second->kills.size()) return (first->deaths.size() < second->deaths.size()) ? true : false;
-			else return (first->kills.size() > second->kills.size()) ? true : false;		
+			else return (first->kills.size() > second->kills.size()) ? true : false;
 		}
 
 		static bool orderDeathListByDate(Bg_DeathEntry_t* first, Bg_DeathEntry_t* second) {
-			return (first->date > second->date) ? true : false;		
+			return (first->date > second->date) ? true : false;
 		}
 
-		static bool orderWaitlistByLevel(Player* first, Player* second);		
+		static bool orderWaitlistByLevel(Player* first, Player* second);
 
     private:
         bool open;
@@ -145,7 +145,7 @@ class Battleground
 
 		uint32_t endEvent;
 
-		void callPlayer(Player* player);
+		void callPlayer(uint32_t player_id);
 
 		bool isValidFrag(Bg_PlayerInfo_t* killer_info, Bg_PlayerInfo_t* target_info);
 
