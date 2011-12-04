@@ -244,7 +244,7 @@ bool Battleground::buildTeams()
 
 		putInTeam((*it), team);
 		Scheduler::getInstance().addEvent(createSchedulerTask(1000 * 4,
-			boost::bind(&Battleground::callPlayer, this, (*it))));
+			boost::bind(&Battleground::callPlayer, this, (*it)->getID())));
 
 		removeWaitlistPlayer((*it));
 	}
@@ -257,9 +257,10 @@ bool Battleground::buildTeams()
 	return true;
 }
 
-void Battleground::callPlayer(Player* player)
+void Battleground::callPlayer(uint32_t player_id)
 {
-	if(!player || player->isRemoved())
+    Player* player = g_game.getPlayerByID(player_id);
+	if(!player)
 		return;
 
 	player->sendPvpChannelMessage("A battleground está pronta para iniciar! Você tem 2 minutos para digitar o comando \"!bg entrar\" para ser enviado a batalha! Boa sorte bravo guerreiro!", SPEAK_CHANNEL_O);
