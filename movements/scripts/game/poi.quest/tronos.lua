@@ -1,66 +1,47 @@
 function onStepIn(cid, item, position, fromPosition)
 
-	--@ Ashfalors Throne
-	if item.actionid == aid.POI_TRONE1 and item.itemid == 5915 then
-		if getPlayerStorageValue(cid,cid,sid.POI_TRONE_1) ~= 1 then
-			setPlayerStorageValue(cid, sid.POI_TRONE_1,1)
-			doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, 'You have touched Ashfalors throne and absorbed sobe of his sprit')
+	local thrones = {
+	
+		[aid.POI_TRONE1] = {
+			name = "Ashfalors",
+			sid = sid.POI_TRONE_1
+		},
+		
+		[aid.POI_TRONE2] = {
+			name = "Pumins",
+			sid = sid.POI_TRONE_2
+		},
+		
+		[aid.POI_TRONE3] = {
+			name = "Apocalypses",
+			sid = sid.POI_TRONE_3
+		},
+		
+		[aid.POI_TRONE4] = {
+			name = "Tafariels",
+			sid = sid.POI_TRONE_4
+		},
+		
+		[aid.POI_TRONE5] = {
+			name = "Infernatils",
+			sid = sid.POI_TRONE_5
+		},
+		
+		[aid.POI_TRONE6] = {
+			name = "Verminors",
+			sid = sid.POI_TRONE_6
+		}
+		
+	}
+	
+	if((thrones[item.actionid] ~= nil)) then
+		if(getPlayerStorageValue(cid, thrones[item.actionid].sid) ~= 1) then
+			setPlayerStorageValue(cid, thrones[item.actionid].sid, 1)
+			doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "You have touched " .. thrones[item.actionid].name .. " throne and absorbed sobe of his spirit!")
 		else
-			doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, 'You already have touched this throne.')			
+			doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "You already have touched the " .. thrones[item.actionid].name .. " throne.")			
 		end
 	end
-	
-	--@ Pumin Throne
-	if item.actionid == aid.POI_TRONE2 and item.itemid == 5915 then
-		if getPlayerStorageValue(cid,sid.POI_TRONE_2) ~= 1 then
-			setPlayerStorageValue(cid, sid.POI_TRONE_2,1)
-			doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, 'You have touched Pumins throne and absorbed sobe of his sprit')
-		else
-			doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, 'You already have touched this throne.')			
-		end
-	end	
-	
-	--@ Apocalypses Throne
-	if item.actionid == aid.POI_TRONE3 and item.itemid == 5915 then
-		if getPlayerStorageValue(cid,sid.POI_TRONE_3) ~= 1 then
-			setPlayerStorageValue(cid, sid.POI_TRONE_3,1)
-			doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, 'You have touched Apocalypses throne and absorbed sobe of his sprit')
-		else
-			doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, 'You already have touched this throne.')			
-		end
-	end		
-	
-	--@ Tafariels Throne
-	if item.actionid == aid.POI_TRONE4 and item.itemid == 5916 then
-		if getPlayerStorageValue(cid,sid.POI_TRONE_4) ~= 1 then
-			setPlayerStorageValue(cid, sid.POI_TRONE_4,1)
-			doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, 'You have touched Tafariels throne and absorbed sobe of her sprit')
-		else
-			doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, 'You already have touched this throne.')			
-		end
-	end	
-	
-	--@ Infernatils Throne
-	if item.actionid == aid.POI_TRONE5 and item.itemid == 5915 then
-		if getPlayerStorageValue(cid,sid.POI_TRONE_5) ~= 1 then
-			setPlayerStorageValue(cid, sid.POI_TRONE_5,1)
-			doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, 'You have touched Infernatils throne and absorbed sobe of his sprit')
-		else
-			doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, 'You already have touched this throne.')			
-		end
-	end		
-	
-	--@ Verminor Throne
-	if item.actionid == aid.POI_TRONE6 and item.itemid == 5915 then
-		if getPlayerStorageValue(cid,sid.POI_TRONE_6) ~= 1 then
-			setPlayerStorageValue(cid, sid.POI_TRONE_6,1)
-			doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, 'You have touched Verminors throne and absorbed sobe of his sprit')
-		else
-			doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, 'You already have touched this throne.')			
-		end
-	end		
-	
-	
 	
 end
 

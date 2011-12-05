@@ -292,8 +292,11 @@ local quests =
 		},
 		[uid.POI_BACKPACK] = {
 			storageId = sid.POI_BACKPACK,
-			rewardId = 2365,
-			count = 1
+			count = 1,
+			rewardContainer = 2365,
+			rewardContainerItems = { 
+				{itemid = 2361, count = 1}
+			}
 		},
 		[uid.POI_SOFTBOOTS] = {
 			storageId = sid.POI_SOFTBOOTS,
