@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <monster name="diabolic imp" nameDescription="a diabolic imp" race="blood" experience="1950" speed="360" manacost="0">
   <health now="1950" max="1950"/>
-  <look type="237" corpse="6364"/>
+  <look type="237" corpse="6365"/>
   <targetchange interval="5000" chance="8"/>
   <strategy attack="100" defense="0"/>
   <flags>
