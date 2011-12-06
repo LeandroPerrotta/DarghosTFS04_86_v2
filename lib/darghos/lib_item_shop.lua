@@ -80,23 +80,29 @@ end
 
 function itemShop:giveItem(data)
 
-	local PRESENT_BOX = 1990
-	
-	local container = doCreateItemEx(PRESENT_BOX, 1)
-	local item = doCreateItemEx(data.item_id, data.item_count)	
+	local usePresent = data.use_present
+
+	local PRESENT_BOX, main, subitem = 1990, nil, nil
+
+	if(usePresent) then
+		main = doCreateItemEx(PRESENT_BOX, 1)
+		subitem = doCreateItemEx(data.item_id, data.item_count)	
+	else
+		main = doCreateItemEx(data.item_id, data.item_count)	
+	end
 
 	if(data.item_action_id ~= nil) then
-		doItemSetActionId(item, data.item_action_id)
+		doItemSetActionId((usePresent and subitem or main), data.item_action_id)
 	end
 	
-	doItemSetItemShopLogId(item, data.log_id)
+	doItemSetItemShopLogId((usePresent and subitem or main), data.log_id)
 	
-	if(doAddContainerItemEx(container, item) == LUA_ERROR) then
+	if(usePresent and doAddContainerItemEx(main, subitem) ~= RETURNVALUE_NOERROR) then
 		self:log("Impossivel colocar em container " .. json.encode(data) .. "")
 		return false
 	end
 	
-	if(doPlayerAddItemEx(self.cid, container, false) == RETURNVALUE_NOERROR) then
+	if(doPlayerAddItemEx(self.cid, main, false) == RETURNVALUE_NOERROR) then
 		self:log("Item Data Entregue com sucesso: " .. json.encode(data) .. "")
 		return true
 	end	
@@ -128,8 +134,14 @@ function itemShop:onLogin(cid)
 			
 			if(getPlayerFreeCap(cid) > totalWeight) then
 						
+				local usePresentBox = true
+				if(item_params["use_present"] and not getBooleanFromString(item_params["use_present"])) then
+					usePresentBox = false
+				end
+						
 				table.insert(self.receive_list, {
 					log_id = result:getDataInt("id"), 
+					use_present = usePresentBox,
 					item_id = tonumber(item_params["item_id"]), 
 					item_count = tonumber(item_params["item_count"]), 
 					item_name = result:getDataString("name"), 
