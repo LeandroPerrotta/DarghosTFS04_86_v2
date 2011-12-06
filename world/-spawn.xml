@@ -6479,6 +6479,9 @@
     <monster name="Snake" x="-3" y="-1" z="7" spawntime="60"/>
     <monster name="Snake" x="1" y="1" z="7" spawntime="60"/>
   </spawn>
+  <spawn centerx="2202" centery="1853" centerz="7" radius="1">
+    <npc name="quendor.food" x="0" y="0" z="7" spawntime="60"/>
+  </spawn>
   <spawn centerx="2088" centery="1854" centerz="7" radius="5">
     <monster name="Amazon" x="2" y="-2" z="7" spawntime="120"/>
     <monster name="Amazon" x="-1" y="1" z="7" spawntime="120"/>
@@ -6515,8 +6518,8 @@
     <npc name="quendor.weapons" x="0" y="0" z="7" spawntime="60"/>
   </spawn>
   <spawn centerx="2213" centery="1864" centerz="7" radius="1"/>
-  <spawn centerx="2218" centery="1864" centerz="7" radius="1">
-    <npc name="quendor.armors" x="0" y="0" z="7" spawntime="60"/>
+  <spawn centerx="2219" centery="1864" centerz="7" radius="1">
+    <npc name="quendor.armors" x="-1" y="0" z="7" spawntime="60"/>
   </spawn>
   <spawn centerx="2313" centery="1866" centerz="7" radius="5">
     <monster name="Snake" x="3" y="-2" z="7" spawntime="60"/>
