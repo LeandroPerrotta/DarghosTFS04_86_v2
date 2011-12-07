@@ -239,7 +239,11 @@ class ConjureSpell : public InstantSpell
 		virtual bool configureEvent(xmlNodePtr p);
 		virtual bool loadFunction(const std::string& functionName);
 
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+        virtual bool castInstant(Player* player, const std::string& param, LuaVariant& var);
+#else
 		virtual bool castInstant(Player* player, const std::string& param);
+#endif
 
 		virtual bool castSpell(Creature*) {return false;}
 		virtual bool castSpell(Creature*, Creature*) {return false;}

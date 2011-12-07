@@ -1818,7 +1818,11 @@ bool ConjureSpell::ConjureItem(const ConjureSpell* spell, Creature* creature, co
 	return false;
 }
 
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+bool ConjureSpell::castInstant(Player* player, const std::string& param, LuaVariant& var)
+#else
 bool ConjureSpell::castInstant(Player* player, const std::string& param)
+#endif
 {
 	if(!checkSpell(player))
 		return false;
@@ -1826,7 +1830,9 @@ bool ConjureSpell::castInstant(Player* player, const std::string& param)
 	if(!isScripted())
 		return function ? function(this, player, param) : false;
 
+#ifndef __DARGHOS_CUSTOM_SPELLS__
 	LuaVariant var;
+#endif
 	var.type = VARIANT_STRING;
 	var.text = param;
 	return executeCastSpell(player, var);
