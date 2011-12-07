@@ -15,6 +15,20 @@ function process(cid, message, keywords, parameters, node)
     if(not npcHandler:isFocused(cid)) then
         return false
     end 
+
+    if(hasCondition(cid, CONDITION_INFIGHT)) then
+    	npcHandler:say("Ohh por Deus! Você está muito agressivo! Volte quando estiver mais calmo...", cid)
+		npcHandler:resetNpc(cid)		
+		return false
+    end
+    
+    local nonPermitedSkulls = { SKULL_RED, SKULL_BLACK }
+    local skull = getCreatureSkullType(cid)
+    if(isInArray(nonPermitedSkulls, skull)) then
+    	npcHandler:say("Você é sujo! Parece ter matado várias pessoas injustificadamente! Não lhe darei este beneficio! Volte quando estiver limpo!", cid)
+		npcHandler:resetNpc(cid)		
+		return false    
+    end
     
     local lastChangePvp = getPlayerStorageValue(cid, sid.LAST_CHANGE_PVP)
     local hasPermission = getPlayerStorageValue(cid, sid.CHANGE_PVP_PERMISSION) == 1
