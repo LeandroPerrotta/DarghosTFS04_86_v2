@@ -9,6 +9,10 @@
 	<action uniqueid="1075-1076" script="game/koshei.lua"/>
 	<action itemid="8266" script="game/koshei.lua"/>
 	
+	<!-- Poi Levers -->
+	<action uniqueid="1088-1103" script="game/poi.quest/levers/lever.remove_stones.lua"/>
+	<action actionid="4076-4079" script="game/poi.quest/levers/lever.vocations.lua"/>
+	
 	<!-- Divine Ankh -->
 	<action itemid="2193" script="game/ankh.lua"/>
 
