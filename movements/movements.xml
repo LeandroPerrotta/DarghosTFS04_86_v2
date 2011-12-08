@@ -43,6 +43,7 @@
 	<movevent type="StepIn" actionid="262" event="script" value="game/mini_game_tile.lua"/>	
 	
 	*POI QUEST
+	
 	<movevent type="StepIn" actionid="250" event="script" value="game/poi.quest/tps.lua"/>
 	<movevent type="StepIn" actionid="251" event="script" value="game/poi.quest/tps.lua"/>
 	<movevent type="StepIn" actionid="252" event="script" value="game/poi.quest/tps.lua"/>
@@ -77,7 +78,11 @@
 	<movevent type="StepIn" actionid="4006" event="script" value="game/banshee.lua"/>
 	<movevent type="StepIn" actionid="4007" event="script" value="game/banshee.lua"/>
 	<movevent type="StepIn" actionid="4008" event="script" value="game/banshee.lua"/>
-	<movevent type="StepIn" actionid="4009" event="script" value="game/banshee.lua"/>		
+	<movevent type="StepIn" actionid="4009" event="script" value="game/banshee.lua"/>	
+
+	
+	*POI ENTRANCE FIELDS
+	<movevent type="StepIn" actionid="6010-6046" event="script" value="game/poi.quest/entrance_fields.lua"/>	
 	
 	*TELEPORTS
 	<movevent type="StepIn" itemid="1387" event="script" value="game/teleport.lua"/>
@@ -405,6 +410,7 @@
 	<movevent type="AddItem" itemid="11095" event="function" value="onAddField"/>
 	<movevent type="StepIn" itemid="11096" event="function" value="onStepInField"/>
 	<movevent type="AddItem" itemid="11096" event="function" value="onAddField"/>
+
 
 	<!-- Boots -->
 	<movevent type="Equip" itemid="2195" slot="feet" event="function" value="onEquipItem"/>
