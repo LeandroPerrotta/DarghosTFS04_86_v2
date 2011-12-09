@@ -22,7 +22,7 @@ function onStepIn(cid, item, position, fromPosition)
 		
 		doCreatureAddHealth(cid, -damage, CONST_ME_FIREAREA, COLOR_RED)
 	
-		doPlayerSendCancel(cid, "Você está no caminho errado!")
+		doPlayerSendCancel(cid, "Você está no caminho errado.")
 	end
 	
 	return true
