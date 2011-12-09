@@ -1,6 +1,6 @@
 leversCount = 1
 
-local INTERVAL_TO_RESET = 0.1
+local INTERVAL_TO_RESET = 15
 local STONE_ID = 1304
 
 local leversState_T = {
