@@ -9510,6 +9510,7 @@ int32_t LuaInterface::luaDoSetGameState(lua_State* L)
 int32_t LuaInterface::luaDoCreatureExecuteTalkAction(lua_State* L)
 {
 	//doCreatureExecuteTalkAction(cid, text[, ignoreAccess = false[, channelId = CHANNEL_DEFAULT]])
+#ifndef __DARGHOS_CUSTOM__
 	uint32_t params = lua_gettop(L), channelId = CHANNEL_DEFAULT;
 	if(params > 3)
 		channelId = popNumber(L);
@@ -9529,6 +9530,11 @@ int32_t LuaInterface::luaDoCreatureExecuteTalkAction(lua_State* L)
 	}
 
 	return 1;
+#else
+    errorEx("[Warning] doCreatureExecuteTalkAction :: Please, not use the noob TFS stupid functions...");
+    lua_pushnil(L);
+    return 1;
+#endif
 }
 
 int32_t LuaInterface::luaDoExecuteRaid(lua_State* L)

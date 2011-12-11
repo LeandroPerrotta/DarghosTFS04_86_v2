@@ -43,7 +43,11 @@ class TalkActions : public BaseEvents
 		TalkActions();
 		virtual ~TalkActions();
 
-		bool onPlayerSay(Creature* creature, uint16_t channelId, const std::string& words, bool ignoreAccess);
+#ifdef __DARGHOS_CUSTOM__
+		bool onPlayerSay(Creature* creature, uint16_t channelId, SpeakClasses type, const std::string& words, bool ignoreAccess);
+#else
+        bool onPlayerSay(Creature* creature, uint16_t channelId, const std::string& words, bool ignoreAccess);
+#endif
 
 		inline TalkActionsMap::const_iterator getFirstTalk() const {return talksMap.begin();}
 		inline TalkActionsMap::const_iterator getLastTalk() const {return talksMap.end();}
@@ -73,7 +77,11 @@ class TalkAction : public Event
 		virtual bool configureEvent(xmlNodePtr p);
 		virtual bool loadFunction(const std::string& functionName);
 
-		int32_t executeSay(Creature* creature, const std::string& words, std::string param, uint16_t channel);
+#ifdef __DARGHOS_CUSTOM__
+		int32_t executeSay(Creature* creature, const std::string& words, std::string param, uint16_t channel, SpeakClasses type);
+#else
+        int32_t executeSay(Creature* creature, const std::string& words, std::string param, uint16_t channel);
+#endif
 
 		std::string getFunctionName() const {return m_functionName;}
 		std::string getWords() const {return m_words;}

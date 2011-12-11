@@ -3746,7 +3746,11 @@ bool Game::playerSay(uint32_t playerId, uint16_t channelId, SpeakClasses type, c
 		return internalCreatureSay(player, SPEAK_SAY, text, false);
 	}
 
+    #ifdef __DARGHOS_CUSTOM__
 	if(g_talkActions->onPlayerSay(player, type == SPEAK_SAY ? (unsigned)CHANNEL_DEFAULT : channelId, text, false))
+	#else
+	if(g_talkActions->onPlayerSay(player, type == SPEAK_SAY ? (unsigned)CHANNEL_DEFAULT : channelId, type, text, false))
+	#endif
 		return true;
 
 	ReturnValue ret = RET_NOERROR;

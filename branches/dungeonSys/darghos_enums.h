@@ -18,7 +18,7 @@ enum SlotTemplateRule_t
 enum Role_t
 {
     ROLE_NONE = 0,
-    ROLE_BLOCKER,
+    ROLE_DEFENSER,
     ROLE_ATTACKER,
     ROLE_HEALER
 }
