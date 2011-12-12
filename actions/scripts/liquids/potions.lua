@@ -71,6 +71,11 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 		doPlayerSendDefaultCancel(cid, RETURNVALUE_YOUAREEXHAUSTED)
 		return true
 	end
+	
+	if(not doPlayerIsPvpEnable(cid) and doPlayerIsPvpEnable(itemEx.uid)) then
+		doPlayerSendCancel(cid, "You can not use this item on agressive players.")
+		return true	
+	end
 
 	if(((potion.level and getPlayerLevel(itemEx.uid) < potion.level) or (potion.vocations and not isInArray(potion.vocations, getPlayerVocation(itemEx.uid)))) and
 		not getPlayerCustomFlagValue(cid, PLAYERCUSTOMFLAG_GAMEMASTERPRIVILEGES))
