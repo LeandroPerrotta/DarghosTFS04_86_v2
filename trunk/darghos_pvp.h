@@ -128,6 +128,7 @@ class Battleground
 		}
 
 		static bool orderWaitlistByLevel(Player* first, Player* second);
+		static bool orderWaitlistByRating(Player* first, Player* second);
 
     private:
         bool open;

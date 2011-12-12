@@ -214,7 +214,7 @@ bool Battleground::buildTeams()
 	if(status == STARTED || status == PREPARING)
 		return false;
 
-	waitlist.sort(Battleground::orderWaitlistByLevel);
+	waitlist.sort(Battleground::orderWaitlistByRating);
 
 	Bg_Teams_t team;
 	Bg_Waitlist_t _tempList;
@@ -807,6 +807,11 @@ PlayersMap Battleground::listPlayersOfTeam(Bg_Teams_t team)
 bool Battleground::orderWaitlistByLevel(Player* first, Player* second)
 {
 	return first->getLevel() > second->getLevel();
+}
+
+bool Battleground::orderWaitlistByRating(Player* first, Player* second)
+{
+    return first->getBattlegroundRating() > second->getBattlegroundRating();
 }
 
 #endif
