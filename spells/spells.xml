@@ -409,9 +409,13 @@
 		<vocation name="Knight"/>   <vocation name="Elite Knight"/>
 	</instant>
 	
-	<instant name="Life Scream" words="exana vita" lvl="91" manapercent="30" exhaustion="1000" selftarget="1" aggressive="0" script="custom/life_scream.lua">
+	<instant name="Life Scream" words="exana vita" lvl="91" manapercent="50" exhaustion="1000" selftarget="1" aggressive="0" script="custom/life_scream.lua">
 		 <vocation name="Knight"/> <vocation name="Elite Knight"/>
-	</instant>
+	</instant>	
+	
+	<instant name="Divine WhirlWind Throw" words="exori hur san" lvl="97" range="1" exhaustion="2000" prem="0" needtarget="1" needweapon="1" script="custom/divine_whirlwind_throw.lua">
+		<vocation name="Knight"/>   <vocation name="Elite Knight"/>
+	</instant>	
 	
 	<instant name="Friend Rejuvenation" words="utura sio" lvl="85" mana="380" exhaustion="1000" needtarget="1" params="1" aggressive="0" script="custom/friend_rejuvenation.lua">
 		<vocation name="Druid"/>    <vocation name="Elder Druid"/>
