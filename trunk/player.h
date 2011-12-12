@@ -782,7 +782,7 @@ class Player : public Creature, public Cylinder
 
         void onTargetLost(bool cancelTarget = true){
 #ifdef __DARGHOS_CUSTOM_SPELLS__
-            if(hasCondition(CONDITION_CASTING_SPELL)) removeCondition(CONDITION_CASTING_SPELL);
+            if(hasCondition(CONDITION_CASTING_SPELL, -1, false)) removeCondition(CONDITION_CASTING_SPELL);
 #endif
             if(cancelTarget) setAttackedCreature(NULL);
             sendCancelTarget();
@@ -813,7 +813,7 @@ class Player : public Creature, public Cylinder
 
 #ifdef __DARGHOS_CUSTOM_SPELLS__
 		void onPerformAction() {
-            if(hasCondition(CONDITION_CASTING_SPELL))
+            if(hasCondition(CONDITION_CASTING_SPELL, -1, false))
             {
                 removeCondition(CONDITION_CASTING_SPELL);
             }

@@ -1518,9 +1518,10 @@ bool Creature::hasCondition(ConditionType_t type, int32_t subId/* = 0*/, bool ch
 	for(ConditionList::const_iterator it = conditions.begin(); it != conditions.end(); ++it)
 	{
 #ifdef __CUSTOM_DARGHOS__
-        if(!(*it))
+        Condition* condition = NULL;
+        if(!(condition = (*it)))
         {
-            clog << "Creature::hasCondition() -> Condição vazia, crash evitado...";
+            std::clog << "Creature::hasCondition() -> Condição vazia, crash evitado...";
             continue;
         }
 #endif

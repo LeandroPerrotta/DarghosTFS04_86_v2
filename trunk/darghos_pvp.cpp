@@ -214,42 +214,31 @@ bool Battleground::buildTeams()
 	if(status == STARTED || status == PREPARING)
 		return false;
 
+    //daqui em diante nada pode mudar, a BG irá começar...
+    status = PREPARING;
+
 	waitlist.sort(Battleground::orderWaitlistByRating);
 
 	Bg_Teams_t team;
-	Bg_Waitlist_t _tempList;
-
-	uint16_t i = 1;
-	for(Bg_Waitlist_t::iterator it = waitlist.begin(); it != waitlist.end(); it++, i++)
-	{
-		_tempList.push_back((*it));
-
-		if(i == teamSize * 2)
-			break;
-	}
-
-	if(_tempList.size() != teamSize * 2)
-		return false;
 
 	uint16_t _rand = random_range(1, 2);
-
-	i = 1;
-	for(Bg_Waitlist_t::iterator it = _tempList.begin(); it != _tempList.end(); it++, i++)
+	for(uint16_t i = 1; i <= teamSize * 2; i++)
 	{
+	    //iremos sempre apagar o primeiro na lista...
+	    Bg_Waitlist_t::iterator it = waitlist.begin();
+
 		if(_rand == 1)
 			team = ((i & 1) == 1) ? BATTLEGROUND_TEAM_ONE : BATTLEGROUND_TEAM_TWO;
 		else
 			team = ((i & 1) == 1) ? BATTLEGROUND_TEAM_TWO : BATTLEGROUND_TEAM_ONE;
 
-
 		putInTeam((*it), team);
 		Scheduler::getInstance().addEvent(createSchedulerTask(1000 * 4,
 			boost::bind(&Battleground::callPlayer, this, (*it)->getID())));
 
-		removeWaitlistPlayer((*it));
+        waitlist.erase(it);
 	}
 
-	status = PREPARING;
 	g_globalEvents->execute(GLOBALEVENT_BATTLEGROUND_PREPARE);
 
 	Scheduler::getInstance().addEvent(createSchedulerTask((1000 * 60 * 2) + (1000 * 5),
