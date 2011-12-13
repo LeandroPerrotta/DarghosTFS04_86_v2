@@ -396,7 +396,7 @@ BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
 			if(!team_id)
 			{
 				//se a bg já estiver cheia ele é colocado na fila para a proxima bg
-				if(teamsMap[BATTLEGROUND_TEAM_ONE].players.size() == teamSize && teamsMap[BATTLEGROUND_TEAM_TWO].players.size() == teamSize)
+				if(teamsMap[BATTLEGROUND_TEAM_ONE].players.size() >= teamSize && teamsMap[BATTLEGROUND_TEAM_TWO].players.size() >= teamSize)
 				{
 					if(playerIsInWaitlist(player))
 						return BATTLEGROUND_ALREADY_IN_WAITLIST;
