@@ -1,27 +1,27 @@
-leversCount = 1
-
 local INTERVAL_TO_RESET = 15
 local STONE_ID = 1304
 
-local leversState_T = {
+local FIRST_LEVER = uid.POI_LEVER_1
+local LAST_LEVER = uid.POI_LEVER_15
 
-	[1] = uid.POI_LEVER_1,
-	[2] = uid.POI_LEVER_2,
-	[3] = uid.POI_LEVER_3,
-	[4] = uid.POI_LEVER_4,
-	[5] = uid.POI_LEVER_5,
-	[6] = uid.POI_LEVER_6,
-	[7] = uid.POI_LEVER_7,
-	[8] = uid.POI_LEVER_8,
-	[9] = uid.POI_LEVER_9,
-	[10] = uid.POI_LEVER_10,
-	[11] = uid.POI_LEVER_11,
-	[12] = uid.POI_LEVER_12,
-	[13] = uid.POI_LEVER_13,
-	[14] = uid.POI_LEVER_14,
-	[15] = uid.POI_LEVER_15,
-	[16] = uid.POI_LEVER_MAIN
+local lastLevers = 15
+leversState_T = {
 
+	[uid.POI_LEVER_1] = false,
+	[uid.POI_LEVER_2] = false,
+	[uid.POI_LEVER_3] = false,
+	[uid.POI_LEVER_4] = false,
+	[uid.POI_LEVER_5] = false,
+	[uid.POI_LEVER_6] = false,
+	[uid.POI_LEVER_7] = false,
+	[uid.POI_LEVER_8] = false,
+	[uid.POI_LEVER_9] = false,
+	[uid.POI_LEVER_10] = false,
+	[uid.POI_LEVER_11] = false,
+	[uid.POI_LEVER_12] = false,
+	[uid.POI_LEVER_13] = false,
+	[uid.POI_LEVER_14] = false,
+	[uid.POI_LEVER_15] = false
 }
 
 local function resetLevers()
@@ -34,7 +34,7 @@ local function resetLevers()
 	
 	for k,v in pairs(leversState_T) do
 	
-		local leverPos = getThingPosition(v)
+		local leverPos = getThingPosition(k)
 		leverPos.stackpos = 1
 		
 		local lever = getTileThingByPos(leverPos)
@@ -43,9 +43,10 @@ local function resetLevers()
 			doTransformItem(lever.uid, 1945)
 		end
 		
+		leversState_T[k] = false
 	end	
 	
-	leversCount = 1
+	lastLevers = 15
 	
 	doCreateItem(STONE_ID, 1, pos_stone_1)
 	doCreateItem(STONE_ID, 1, pos_stone_2)
@@ -78,27 +79,53 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 
 	
 	if(item.itemid == 1945) then
+		local wrongSeq = false
 		
-		if(leversState_T[leversCount] == item.uid) then
-			
-			if((item.uid == uid.POI_LEVER_MAIN) and (leversCount == 16)) then
-				finishLevers()	
-			else
-				leversCount = leversCount + 1
-				doPlayerSendCancel(cid, "Alavanca ativada com sucesso! Restam mais " .. 15 - (leversCount - 1) .. " alavanca (s)!")
+		if(item.uid == uid.POI_LEVER_MAIN) then	
+		
+			if(lastLevers == 0) then
+				finishLevers()
+				doPlayerSendTextMessage(cid, MESSAGE_EVENT_DEFAULT, "A passagem foi aberta por algum tempo!")
+			else		
+				wrongSeq = true
+			end
+		else	
+			local done = true
+	
+			for x = FIRST_LEVER, (item.uid - 1), 1 do
+				if(not leversState_T[x]) then
+					done = false
+					break
+				end
 			end
 			
-		else
-			return true
+			if(done) then
+				lastLevers = lastLevers - 1
+				leversState_T[item.uid] = true
+				doPlayerSendTextMessage(cid, MESSAGE_EVENT_DEFAULT, "Alavanca ativada com sucesso! " .. (lastLevers == 0) and "Não resta mais nenhuma alavanca!" or "Restam mais " .. lastLevers .. " alavanca (s)!")
+			else
+				wrongSeq = true
+			end
 		end
 		
-	else
-		if(leversState_T[leversCount - 1] == item.uid) then
-			leversCount = leversCount - 1
-		else
+		if(wrongSeq) then
+			doPlayerSendCancel(cid, "Esta alavanca não funcionará enquanto uma sequencia de outras alavancas não forem ativas na ordem correta.")
 			return true
 		end
+	else
+		if(item.uid == uid.POI_LEVER_MAIN) then
+			doPlayerSendCancel(cid, "A passagem já está aberta! Atravesse pois ela irá se fechar em breve!")
+			return true
+		else
+			if(leversState_T[item.uid]) then
+				leversState_T[item.uid] = false
+				lastLevers = lastLevers + 1
+			else
+				error("Alavanca na posição de desativada mas internamente deveria estar ativa e está desativa.")
+				return true
+			end
+		end
 	end
-
+	
+	return false
 end
-
