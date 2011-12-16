@@ -668,11 +668,12 @@ void Monster::doAttacking(uint32_t interval)
 			}
 		}
 
-        /*
 		if(inRange)
-			outOfRange = false;
-
-		else */if(it->isMelee) //melee swing out of reach
+		{
+			/*outOfRange = false;*/
+			/* nothing to do? */
+        }
+		else if(it->isMelee) //melee swing out of reach
 			extraMeleeAttack = true;
 	}
 
