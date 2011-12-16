@@ -219,7 +219,11 @@ ConditionType_t Combat::DamageToConditionType(CombatType_t type)
 
 ReturnValue Combat::canDoCombat(const Creature* caster, const Tile* tile, bool isAggressive)
 {
-	if(tile->hasProperty(BLOCKPROJECTILE) || tile->floorChange() || tile->getTeleportItem())
+#ifdef __DARGHOS_CUSTOM__
+    if((tile->getPosition() != caster->getPosition() && tile->hasProperty(BLOCKPROJECTILE)) || tile->floorChange() || tile->getTeleportItem())
+#else
+    if(tile->hasProperty(BLOCKPROJECTILE) || tile->floorChange() || tile->getTeleportItem())
+#endif
 		return RET_NOTENOUGHROOM;
 
 	if(caster)
@@ -400,6 +404,11 @@ bool Combat::isProtected(Player* attacker, Player* target)
 #ifdef __DARGHOS_CUSTOM__
 	if(!target->isPvpEnabled() || !attacker->isPvpEnabled())
 		return true;
+#endif
+
+#ifdef __DARGHOS_PVP_SYSTEM__
+    if(attacker->isInBattleground() && attacker->getBattlegroundTeam() == target->getBattlegroundTeam())
+        return true;
 #endif
 
 	if(!attacker->getVocation()->isAttackable() || !target->getVocation()->isAttackable())
