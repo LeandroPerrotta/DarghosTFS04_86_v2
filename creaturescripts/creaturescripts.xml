@@ -41,7 +41,7 @@
 	
 	<!-- DARGHOS SOURCE SCRIPTED EVENTS -->
 	<event type="think" name="onBattlegroundThink" event="script" value="game/battleground.lua"/>
-	<event type="bgfrag" name="onBattlegroundFrag" event="script" value="game/battleground.lua"/>
+	<event type="bgdeath" name="onBattlegroundDeath" event="script" value="game/battleground.lua"/>
 	<event type="bgend" name="onBattlegroundEnd" event="script" value="game/battleground.lua"/>
 	<event type="bgleave" name="onBattlegroundLeave" event="script" value="game/battleground.lua"/>
 	

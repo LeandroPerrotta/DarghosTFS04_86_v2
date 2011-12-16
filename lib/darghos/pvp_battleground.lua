@@ -167,16 +167,18 @@ end
 
 function pvpBattleground.close()
 	battlegroundClose()
-	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] Battleground temporareamente fechada. Voltará em alguns instantes.", TALKTYPE_TYPES["channel-red"])
+	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] Battleground temporareamente fechada. Voltarï¿½ em alguns instantes.", TALKTYPE_TYPES["channel-red"])
 end
 
-function pvpBattleground.hasGain()
+function pvpBattleground.hasGain(time)
+
+	time = time or os.time()
 
 	if(not BG_ENABLED_GAINS) then
 		return false
 	end
 
-	local date = os.date("*t")
+	local date = os.date("*t", time)
 	return ((date.hour >= BG_GAIN_START_HOUR and date.hour <= 23)
 		or (date.hour >= 0 and date.hour < BG_GAIN_END_HOUR)
 		or isInArray(BG_GAIN_EVERYHOUR_DAYS, date.wday))
@@ -235,10 +237,10 @@ function pvpBattleground.showResult(cid, winnner)
 
 	local teams = { "Time A", "Time B" }
 	
-	local msg = "Não houve vencedor, declarado EMPATE!\n\n"
+	local msg = "Nï¿½o houve vencedor, declarado EMPATE!\n\n"
 	
 	if(winnner ~= BATTLEGROUND_TEAM_NONE) then
-		msg = "O " .. teams[winnner] .. " é o VENCEDOR!\n\n"
+		msg = "O " .. teams[winnner] .. " ï¿½ o VENCEDOR!\n\n"
 	end
 	
 	msg = msg .. pvpBattleground.drawRank()
@@ -247,11 +249,11 @@ end
 
 function pvpBattleground.getInformations()
 	local msg = ""
-	msg = msg .. "Este é um sistema de PvP do Darghos, e o objetivo é seu time atingir 50 pontos, obtidos ao derrotar um oponente. A partida tem duração de até 15 minuto\n"
-	msg = msg .. "se ao final do tempo nenhum time tiver atingido os 50 pontos a vitoria é concedida ao com maior numero de pontos, e empate no caso de igualdade de pontos\n"
-	msg = msg .. "Aos participantes do time vencedor é concedido uma quantidade de pontos de experiencia e algum dinheiro!\n"
-	msg = msg .. "Ao morrer você não perderá nada e nascera na base de seu time. Dentro da Battleground os danos são mais efetivos contra inimigos (100%) e diminuidos em aliados (25%)!\n"
-	msg = msg .. "Use o PvP Channel para se comunicar com seus companheiros, somente eles poderão ler suas mensagens. Boa sorte!\n"
+	msg = msg .. "Este ï¿½ um sistema de PvP do Darghos, e o objetivo ï¿½ seu time atingir 50 pontos, obtidos ao derrotar um oponente. A partida tem duraï¿½ï¿½o de atï¿½ 15 minuto\n"
+	msg = msg .. "se ao final do tempo nenhum time tiver atingido os 50 pontos a vitoria ï¿½ concedida ao com maior numero de pontos, e empate no caso de igualdade de pontos\n"
+	msg = msg .. "Aos participantes do time vencedor ï¿½ concedido uma quantidade de pontos de experiencia e algum dinheiro!\n"
+	msg = msg .. "Ao morrer vocï¿½ nï¿½o perderï¿½ nada e nascera na base de seu time. Dentro da Battleground os danos sï¿½o mais efetivos contra inimigos (100%) e diminuidos em aliados (25%)!\n"
+	msg = msg .. "Use o PvP Channel para se comunicar com seus companheiros, somente eles poderï¿½o ler suas mensagens. Boa sorte!\n"
 
 	return msg
 end
@@ -343,10 +345,10 @@ function pvpBattleground.broadcastLeftOnePlayer()
 	end
 
 	local messages = {
-		"Quer ganhar experiencia e dinheiro se divertindo com PvP? Participe da proxima battleground! Restam apénas mais um para fechar os times 6x6! -> !bg entrar",
-		"Restam apénas mais um jogador para fechar os times 6x6 para a proxima Battleground! Ganhe recompensas! Ao morrer nada é perdido! Divirta-se! -> !bg entrar",
-		"Gosta de PvP? Prove seu valor! Restam apénas mais um jogadore para fechar os times 6x6 para a proxima Battleground! -> !bg entrar",
-		"Não conheçe o sistema de Battlegrounds? Conheça agora! Falta apénas você para o proxima batalha 6x6! Não há perdas nas mortes, ajude o time na vitoria e ganhe recompensas! -> !bg entrar",
+		"Quer ganhar experiencia e dinheiro se divertindo com PvP? Participe da proxima battleground! Restam apï¿½nas mais um para fechar os times 6x6! -> !bg entrar",
+		"Restam apï¿½nas mais um jogador para fechar os times 6x6 para a proxima Battleground! Ganhe recompensas! Ao morrer nada ï¿½ perdido! Divirta-se! -> !bg entrar",
+		"Gosta de PvP? Prove seu valor! Restam apï¿½nas mais um jogadore para fechar os times 6x6 para a proxima Battleground! -> !bg entrar",
+		"Nï¿½o conheï¿½e o sistema de Battlegrounds? Conheï¿½a agora! Falta apï¿½nas vocï¿½ para o proxima batalha 6x6! Nï¿½o hï¿½ perdas nas mortes, ajude o time na vitoria e ganhe recompensas! -> !bg entrar",
 	}
 	
 	local rand = math.random(1, #messages)
@@ -361,18 +363,18 @@ function pvpBattleground.onEnter(cid)
 	end
 
 	if(getCreatureCondition(cid, CONDITION_OUTFIT)) then
-		doPlayerSendCancel(cid, "Você não pode entrar na battleground enquanto estiver sob certos efeitos magicos.")
+		doPlayerSendCancel(cid, "Vocï¿½ nï¿½o pode entrar na battleground enquanto estiver sob certos efeitos magicos.")
 		return false
 	end
 	
 	if(getPlayerLevel(cid) < BATTLEGROUND_MIN_LEVEL) then
-		doPlayerSendCancel(cid, "So é permitido jogadores com level " .. BATTLEGROUND_MIN_LEVEL .. " ou superior a participarem de uma battleground.")
+		doPlayerSendCancel(cid, "So ï¿½ permitido jogadores com level " .. BATTLEGROUND_MIN_LEVEL .. " ou superior a participarem de uma battleground.")
 		return false	
 	end
 	
 	local onIslandOfPeace = getPlayerTown(cid) == towns.ISLAND_OF_PEACE
 	if(not BATTLEGROUND_CAN_NON_PVP and onIslandOfPeace) then
-		doPlayerSendCancel(cid, "So é permitido jogadores em areas Open PvP a participarem de Battlegrounds.")
+		doPlayerSendCancel(cid, "So ï¿½ permitido jogadores em areas Open PvP a participarem de Battlegrounds.")
 		return false	
 	end	
 	
@@ -380,22 +382,22 @@ function pvpBattleground.onEnter(cid)
 	local ret = doPlayerJoinBattleground(cid)
 
 	if(ret == BG_RET_CLOSED) then
-		doPlayerSendCancel(cid, "A battleground está temporareamente fechada.")	
+		doPlayerSendCancel(cid, "A battleground estï¿½ temporareamente fechada.")	
 		return false
 	end
 
 	if(ret == BG_RET_CAN_NOT_JOIN) then
-		doPlayerSendCancel(cid, "Você abandonou uma battleground e foi marcado como desertor, e não poderá entrar em outra durante 20 minutos.")
+		doPlayerSendCancel(cid, "Vocï¿½ abandonou uma battleground e foi marcado como desertor, e nï¿½o poderï¿½ entrar em outra durante 20 minutos.")
 		return false
 	end	
 	
 	if(ret == BG_RET_ALREADY_IN_WAITLIST) then
-		doPlayerSendCancel(cid, "Você já se encontra na fila para a battleground!")
+		doPlayerSendCancel(cid, "Vocï¿½ jï¿½ se encontra na fila para a battleground!")
 		return false	
 	end
 	
 	if(ret == BG_RET_INFIGHT) then
-		doPlayerSendCancel(cid, "Você está em condição de batalha, aguarde sair a condição e tente novamente.")
+		doPlayerSendCancel(cid, "Vocï¿½ estï¿½ em condiï¿½ï¿½o de batalha, aguarde sair a condiï¿½ï¿½o e tente novamente.")
 		return false
 	end
 		
@@ -418,23 +420,23 @@ function pvpBattleground.onEnter(cid)
 			leftStr = leftStr .. "Restam "
 			
 			if(playersLeft <= 2) then
-				leftStr = leftStr .. "apénas "
+				leftStr = leftStr .. "apï¿½nas "
 			end
 			
 			if(playersLeft == 1) then
 				pvpBattleground.broadcastLeftOnePlayer()
 			end
 			
-			leftStr = leftStr .. "mais " .. (BG_CONFIG_TEAMSIZE * 2) - getBattlegroundWaitlistSize() .. " jogadores para iniciar a proxima partida! Quer participar também? Digite '!bg entrar'" 
+			leftStr = leftStr .. "mais " .. (BG_CONFIG_TEAMSIZE * 2) - getBattlegroundWaitlistSize() .. " jogadores para iniciar a proxima partida! Quer participar tambï¿½m? Digite '!bg entrar'" 
 		else
 			closeTeam = false
-			leftStr = leftStr .. " Quer participar também? Digite '!bg entrar'"
+			leftStr = leftStr .. " Quer participar tambï¿½m? Digite '!bg entrar'"
 		end
 	
 		if(not closeTeam) then
 			pvpBattleground.sendPvpChannelMessage("[Battleground] " .. leftStr, PVPCHANNEL_MSGMODE_OUTBATTLE)
 		else
-			pvpBattleground.sendPvpChannelMessage("[Battleground] Os times para a proxima battleground estão completos! A nova partida começará em instantes, assim que a Battleground estiver vazia...", PVPCHANNEL_MSGMODE_OUTBATTLE)
+			pvpBattleground.sendPvpChannelMessage("[Battleground] Os times para a proxima battleground estï¿½o completos! A nova partida comeï¿½arï¿½ em instantes, assim que a Battleground estiver vazia...", PVPCHANNEL_MSGMODE_OUTBATTLE)
 		end
 		
 		return true
@@ -455,7 +457,7 @@ function pvpBattleground.onEnter(cid)
 		local teams = { [1] = "Time A", [2] = "Time B" }
 		local team = teams[getPlayerBattlegroundTeam(cid)]
 		
-		registerCreatureEvent(cid, "onBattlegroundFrag")
+		registerCreatureEvent(cid, "onBattlegroundDeath")
 		registerCreatureEvent(cid, "onBattlegroundEnd")
 		registerCreatureEvent(cid, "onBattlegroundThink")
 		registerCreatureEvent(cid, "onBattlegroundLeave")		
@@ -509,7 +511,7 @@ function pvpBattleground.onExit(cid, idle)
 		pvpBattleground.sendPvpChannelMessage("[Battleground] Um jogador desertou a batalha! Quer substituir-lo imediatamente? Digite '!bg entrar'!", PVPCHANNEL_MSGMODE_OUTBATTLE)
 		
 		local removedRating = pvpBattleground.removePlayerRating(cid, BG_CONFIG_DURATION, BG_CONFIG_DURATION, true)
-		doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Você piorou a sua classificação (rating) em " .. removedRating .. " pontos por seu abandono da Battleground.")
+		doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Vocï¿½ piorou a sua classificaï¿½ï¿½o (rating) em " .. removedRating .. " pontos por seu abandono da Battleground.")
 		
 		return true
 	end
@@ -521,25 +523,25 @@ function pvpBattleground.onReportIdle(cid, idle_player)
 
 	if(not doPlayerIsInBattleground(idle_player) or 		(getPlayerBattlegroundTeam(cid) ~= getPlayerBattlegroundTeam(idle_player))
 		) then
-		pvpBattleground.sendPlayerChannelMessage(cid, "Este jogador não pertence a seu time ou não está na Battleground.")
+		pvpBattleground.sendPlayerChannelMessage(cid, "Este jogador nï¿½o pertence a seu time ou nï¿½o estï¿½ na Battleground.")
 		return
 	end
 	
 	if(getBattlegroundStatus() ~= BATTLEGROUND_STATUS_STARTED) then
-		pvpBattleground.sendPlayerChannelMessage(cid, "Somente é permitido fazer denúncias após a Battleground ter iniciado.")
+		pvpBattleground.sendPlayerChannelMessage(cid, "Somente ï¿½ permitido fazer denï¿½ncias apï¿½s a Battleground ter iniciado.")
 		return
 	end	
 	
 	local report_block = getPlayerStorageValue(cid, sid.BATTLEGROUND_INVALID_REPORT_BLOCK)
 	if(report_block ~= 0 and os.time() <= report_block) then
-		pvpBattleground.sendPlayerChannelMessage(cid, "Você está impossibilitado de efetuar denuncias de jogadores inativos momentaneamente por uma denuncia invalida recente.")
+		pvpBattleground.sendPlayerChannelMessage(cid, "Vocï¿½ estï¿½ impossibilitado de efetuar denuncias de jogadores inativos momentaneamente por uma denuncia invalida recente.")
 		return
 	end
 	
 	setPlayerStorageValue(idle_player, sid.BATTLEGROUND_LAST_REPORT, os.time())
 	
-	pvpBattleground.sendPlayerChannelMessage(cid, "Você denunciou o jogador " .. getPlayerName(idle_player) .. " como inativo com! Ele será expulso da Battleground se continuar inativo no proximo minuto.")
-	doPlayerPopupFYI(idle_player, "ATENÇÃO: \n\nVocê foi acusado de estar inativo dentro da Battleground, o que é proibido!\nVocê tem " .. BG_AFK_TIME_LIMIT .. " segundos para entrar em combate com um oponente ou será expulso da batalha e marcado como desertor!")
+	pvpBattleground.sendPlayerChannelMessage(cid, "Vocï¿½ denunciou o jogador " .. getPlayerName(idle_player) .. " como inativo com! Ele serï¿½ expulso da Battleground se continuar inativo no proximo minuto.")
+	doPlayerPopupFYI(idle_player, "ATENï¿½ï¿½O: \n\nVocï¿½ foi acusado de estar inativo dentro da Battleground, o que ï¿½ proibido!\nVocï¿½ tem " .. BG_AFK_TIME_LIMIT .. " segundos para entrar em combate com um oponente ou serï¿½ expulso da batalha e marcado como desertor!")
 	addEvent(pvpBattleground.validateReport, 1000 * BG_AFK_TIME_LIMIT, cid, idle_player)
 end
 
@@ -563,7 +565,7 @@ function pvpBattleground.validateReport(cid, idle_player)
 		pvpBattleground.onExit(idle_player, true)
 	else
 		setPlayerStorageValue(cid, sid.BATTLEGROUND_INVALID_REPORT_BLOCK, os.time() + (60 * 3))
-		pvpBattleground.sendPlayerChannelMessage(cid, "Não foi constatado que o jogador que você reportou estava inativo. Pela denuncia invalida você nao poderá denunciar outros jogadores por 3 minutos.")
+		pvpBattleground.sendPlayerChannelMessage(cid, "Nï¿½o foi constatado que o jogador que vocï¿½ reportou estava inativo. Pela denuncia invalida vocï¿½ nao poderï¿½ denunciar outros jogadores por 3 minutos.")
 	end
 end
 
