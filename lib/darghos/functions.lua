@@ -1,3 +1,33 @@
+function isOnContainer(position)
+	if(position.x == CONTAINER_POSITION) then
+		return true
+	end
+	
+	return false
+end
+
+function isOnSlot(position)
+
+	if(not isOnContainer(position)) then
+		return false
+	end
+
+	if(getBooleanFromString(bit.uband(position.y, 64))) then
+		return false
+	end
+	
+	return true
+end
+
+function isOnGround(position)
+
+	if(not isOnContainer(position) and not isOnSlot(position)) then
+		return true
+	end
+	
+	return false
+end
+
 function round(number, decimals)
 	decimals = decimals or 1
 	local shift = 10 ^ decimals
@@ -630,7 +660,7 @@ function addShieldTrie(cid, target)
 	local cTarget = getCreatureTarget(cid)
 	
 	if(cTarget == 0) then
-		--print("Alvo não encontrado, limpando... ")
+		--print("Alvo nï¿½o encontrado, limpando... ")
 		setPlayerStorageValue(cid, sid.TRAINING_SHIELD, 0)
 		return
 	else 
@@ -985,7 +1015,7 @@ function playerRecord()
 		if(total > record) then
 		
 			setGlobalStorageValue(gid.PLAYERS_RECORD, total)
-			broadcastMessage("A marca de ".. total .." jogadores online é um novo recorde no Darghos!", MESSAGE_EVENT_DEFAULT)
+			broadcastMessage("A marca de ".. total .." jogadores online ï¿½ um novo recorde no Darghos!", MESSAGE_EVENT_DEFAULT)
 		end
 	else
 
@@ -1048,7 +1078,7 @@ function runPremiumSystem(cid)
 		end
 		doCreatureChangeOutfit(cid, {lookType = lookType, lookHead = 78, lookBody = 69, lookLegs = 97, lookFeet = 95, lookAddons = 0})	
 		
-		local message = "Caro " .. getCreatureName(cid) ..",\n\nA sua conta premium expirou e por isso você perdeu os privilegios exclusivos deste tipo de conta.\nVocê pode re-adquirir uma nova Conta Premium atraves de nosso website e todos os privilegios serão novamente ativos.\n\n Tenha um bom jogo!\nUltraXSoft Team."	
+		local message = "Caro " .. getCreatureName(cid) ..",\n\nA sua conta premium expirou e por isso vocï¿½ perdeu os privilegios exclusivos deste tipo de conta.\nVocï¿½ pode re-adquirir uma nova Conta Premium atraves de nosso website e todos os privilegios serï¿½o novamente ativos.\n\n Tenha um bom jogo!\nUltraXSoft Team."	
 		doPlayerPopupFYI(cid, message)
 	end
 end
@@ -1072,7 +1102,7 @@ function addPremiumTest(cid)
 	doPlayerAddPremiumDays(cid, 7)
 	local account = getPlayerAccountId(cid)
 	db.executeQuery("INSERT INTO `wb_premiumtest` VALUES ('" .. account .. "', '" .. os.time() .. "');")
-	doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_ORANGE, "Parabens! Este é o seu primeiro personagem a atingir o level 100 no Darghos! Como prêmio você acaba de receber uma Conta Premium por uma semana gratuitamente, que irá permitir que você conheça todo o Darghos! Boa sorte!")
+	doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_ORANGE, "Parabens! Este ï¿½ o seu primeiro personagem a atingir o level 100 no Darghos! Como prï¿½mio vocï¿½ acaba de receber uma Conta Premium por uma semana gratuitamente, que irï¿½ permitir que vocï¿½ conheï¿½a todo o Darghos! Boa sorte!")
 	sendEnvolveEffect(cid, CONST_ME_HOLYAREA)
 end
 
@@ -1129,20 +1159,20 @@ end
 
 function notifyValidateEmail(cid)
 	local message = "Caro " .. getCreatureName(cid) ..",\n\n"
-	message = message .. "Você ainda não registrou um e-mail valido em sua conta. Lembre-se que por isso\n"
-	message = message .. "sua conta não está segura e você não conseguirá recuperar-la caso perda seus dados de acesso!\n\n"
-	message = message .. "Os seguintes recursos também estarão disponiveis para sua conta após o registro do e-mail:\n\n"
+	message = message .. "Vocï¿½ ainda nï¿½o registrou um e-mail valido em sua conta. Lembre-se que por isso\n"
+	message = message .. "sua conta nï¿½o estï¿½ segura e vocï¿½ nï¿½o conseguirï¿½ recuperar-la caso perda seus dados de acesso!\n\n"
+	message = message .. "Os seguintes recursos tambï¿½m estarï¿½o disponiveis para sua conta apï¿½s o registro do e-mail:\n\n"
 	message = message .. " - Obter uma conta Premium.\n"
 	message = message .. " - Receber a Premium Test ao atingir level 100.\n"
-	message = message .. " - Gerar uma chave de recuperação.\n\n"
+	message = message .. " - Gerar uma chave de recuperaï¿½ï¿½o.\n\n"
 	message = message .. "Acesse o website o mais breve possivel e registre o e-mail de sua conta!\n"
 	message = message .. "www.darghos.com.br\n\n"
 	message = message .. "Tenha um bom jogo!"	
 	doPlayerPopupFYI(cid, message)	
 end
 
--- Verifica se o jogador ja foi notificado, existe uma enquete aberta, se o jogador possui um usuario e se esse usuario já votou, se tudo for verdadeiro, ele retorna falso
--- se não, retorna o resumo da enquete para ser exibido
+-- Verifica se o jogador ja foi notificado, existe uma enquete aberta, se o jogador possui um usuario e se esse usuario jï¿½ votou, se tudo for verdadeiro, ele retorna falso
+-- se nï¿½o, retorna o resumo da enquete para ser exibido
 function hasPollToNotify(cid)
 
 	local notify = getPlayerStorageValue(cid, sid.WEBSITE_POLL_NOTIFY)

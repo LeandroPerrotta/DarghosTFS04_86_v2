@@ -1,8 +1,8 @@
 function onMoveItem(cid, item, position)
 
-	if(position.x == CONTAINER_POSITION) then
+	if(isOnContainer(position)) then
 	
-		if(getBooleanFromString(bit.uband(position.y, 64))) then
+		if(not isOnSlot(position)) then
 			return onMoveContainerItem(cid, item, position.z)
 		else
 			return onMoveSlotItem(cid, item, position.y)
@@ -38,6 +38,8 @@ function onMoveGroundItem(cid, item, position)
 			doPlayerSendCancel(cid, "Você precisa estar convidado para entrar nesta casa para poder jogar itens dentro dela.")
 			return false		
 		end
+	elseif(not getItemAttribute(item.uid, "dropGroundByPacified") and not doPlayerIsPvpEnable(cid) and isOnGround(position)) then
+		doItemSetAttribute(item.uid, "dropGroundByPacified", true)
 	end
 	
 	return true
@@ -74,10 +76,28 @@ end
 
 function onMoveContainerItem(cid, item, containerPos)
 
+	if(getItemAttribute(item.uid, "dropGroundByPacified")) then
+		if(doPlayerIsPvpEnable(cid) and hasCondition(cid, CONDITION_INFIGHT)) then
+			doPlayerSendCancel(cid, "Você não pode pegar um item colocado no chão por um jogador Pacifico enquanto estiver em combate.")
+			return false
+		else
+			doItemSetAttribute(item.uid, "dropGroundByPacified", false)
+		end
+	end
+
 	return true
 end
 
 function onMoveSlotItem(cid, item, slot)
+
+	if(getItemAttribute(item.uid, "dropGroundByPacified")) then
+		if(doPlayerIsPvpEnable(cid) and hasCondition(cid, CONDITION_INFIGHT)) then
+			doPlayerSendCancel(cid, "Você não pode pegar um item colocado no chão por um jogador Pacifico enquanto estiver em combate.")
+			return false
+		else
+			doItemSetAttribute(item.uid, "dropGroundByPacified", false)
+		end
+	end
 
 	--[[
 	local isSoulBound = isInArray(SOULBOUND_ITEMS, item.itemid)

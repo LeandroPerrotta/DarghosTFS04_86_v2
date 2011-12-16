@@ -78,6 +78,11 @@ function onTradeAccept(cid, target, item, targetItem)
 	end	
 	]]--
 	
+	if(doPlayerIsPvpEnable(cid) and not doPlayerIsPvpEnable(target) and hasCondition(cid, CONDITION_INFIGHT)) then
+		doPlayerSendCancel(cid, "Você não pode trocar um item com um jogador Pacifico enquanto estiver em combate.")
+		return false
+	end	
+	
 	if(not canTradeItem(item) or not canTradeItem(targetItem)) then
 		foundItems = 1
 	end
