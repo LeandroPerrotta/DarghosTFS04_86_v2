@@ -692,7 +692,22 @@ void Creature::onCreatureMove(const Creature* creature, const Tile* newTile, con
 
 bool Creature::onDeath()
 {
-	DeathList deathList = getKillers();
+    DeathList deathList = getKillers();
+
+    #ifdef __DARGHOS_PVP_SYSTEM__
+	if(getPlayer() && getPlayer()->isInBattleground())
+	{
+		g_battleground.onPlayerDeath(getPlayer(), deathList);
+
+        dropCorpse(deathList);
+        if(master)
+            master->removeSummon(this);
+
+		return true;
+	}
+	#endif
+
+
 	bool deny = false;
 
 	CreatureEventList prepareDeathEvents = getCreatureEvents(CREATURE_EVENT_PREPAREDEATH);
@@ -704,13 +719,6 @@ bool Creature::onDeath()
 
 	if(deny)
 		return false;
-
-	#ifdef __DARGHOS_PVP_SYSTEM__
-	if((this)->getPlayer() && (this)->getPlayer()->isInBattleground())
-	{
-		g_battleground.onPlayerDeath((this)->getPlayer(), deathList);
-	}
-	#endif
 
     #ifdef __DARGHOS_CUSTOM__
     int32_t i = 0, size = deathList.size(), limit = g_config.getNumber(ConfigManager::DEATH_FRAGGERS) + 1;
@@ -839,6 +847,10 @@ DeathList Creature::getKillers()
 	int32_t requiredTime = g_config.getNumber(ConfigManager::DEATHLIST_REQUIRED_TIME);
 	int64_t now = OTSYS_TIME();
 
+#ifdef __DARGHOS_PVP_SYSTEM__
+    Player* player = getPlayer();
+#endif
+
 	CountBlock_t cb;
 	for(it = damageMap.begin(); it != damageMap.end(); ++it)
 	{
@@ -849,6 +861,11 @@ DeathList Creature::getKillers()
 		Creature* mdc = g_game.getCreatureByID(it->first);
 		if(!mdc || mdc == lhc || (lhc && (mdc->getMaster() == lhc || lhc->getMaster() == mdc)))
 			continue;
+
+#ifdef __DARGHOS_PVP_SYSTEM__
+        if(player && player->isInBattleground() && cb.ticks < player->getLastBattlegroundDeath())
+            continue;
+#endif
 
 		bool deny = false;
 		for(DeathList::iterator fit = list.begin(); fit != list.end(); ++fit)

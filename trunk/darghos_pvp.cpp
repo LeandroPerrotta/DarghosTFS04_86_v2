@@ -183,7 +183,7 @@ void Battleground::finish(Bg_Teams_t teamWinner)
 			CreatureEventList bgFragEvents = player->getCreatureEvents(CREATURE_EVENT_BG_END);
 			for(CreatureEventList::iterator it = bgFragEvents.begin(); it != bgFragEvents.end(); ++it)
 			{
-				(*it)->executeBgEnd(player, isWinner, timeInBg, bgDuration);
+				(*it)->executeBgEnd(player, isWinner, timeInBg, bgDuration, lastInit);
 			}
 		}
 	}
@@ -253,7 +253,7 @@ void Battleground::callPlayer(uint32_t player_id)
 		return;
 
 	player->sendPvpChannelMessage("A battleground está pronta para iniciar! Você tem 2 minutos para digitar o comando \"!bg entrar\" para ser enviado a batalha! Boa sorte bravo guerreiro!", SPEAK_CHANNEL_O);
-	player->sendFYIBox("A battleground está pronta para iniciar! Você tem 2 minutos para digitar o comando \"!bg entrar\" para ser enviado a batalha!\n\n Boa sorte bravo guerreiro!");
+	player->sendFYIBox("A battleground está pronta para iniciar!\n Você tem 2 minutos para digitar o comando \n\"!bg entrar\" para ser enviado a batalha!\n\n Boa sorte bravo guerreiro!");
 }
 
 void Battleground::start()
@@ -513,11 +513,9 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 	Bg_DeathEntry_t* deathEntry = new Bg_DeathEntry_t;
 	deathEntry->date = time(NULL);
 
-	deathsList.push_back(deathEntry);
-
 	bool success = true;
 
-	Player* killer = NULL;
+	Player* lastDmg = NULL;
 	Player* tmp = NULL;
 
 	for(DeathList::iterator it = deathList.begin(); it != deathList.end(); ++it)
@@ -537,9 +535,9 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 
             Bg_PlayerInfo_t* playerInfo = findPlayerInfo(tmp);
 
-            if(!playerInfo)
+            if(!playerInfo || tmp->getBattlegroundTeam() == BATTLEGROUND_TEAM_NONE)
             {
-                std::clog << "Player " << tmp->getName() << " killing other players in Battleground but are not in any team?" << std::endl;
+                std::clog << "Player " << tmp->getName() << " killing player " << player->getName() << " in Battleground but are not in any team?" << std::endl;
                 continue;
             }
 
@@ -552,38 +550,34 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
                 }
 
                 deathEntry->lasthit = tmp->getID();
-                killer = tmp;
+                lastDmg = tmp;
 
                 incrementPlayerKill(playerInfo, deathEntry, true);
             }
             else
             {
+                if(!lastDmg)
+                    lastDmg = tmp;
+
                 incrementPlayerKill(playerInfo, deathEntry);
                 deathEntry->assists.push_back(tmp->getID());
             }
         }
 	}
 
-	if(!success)
+	if(lastDmg)
 	{
-		deathsList.remove(deathEntry);
-		delete deathEntry;
-		return;
-	}
-
-	if(killer)
-	{
-		Bg_Team_t* team = findPlayerTeam(killer);
+		Bg_Team_t* team = findPlayerTeam(lastDmg);
 		team->points++;
 
 		Bg_PlayerInfo_t* playerInfo = findPlayerInfo(player);
 
 		incrementPlayerDeaths(playerInfo, deathEntry);
 
-		CreatureEventList bgFragEvents = killer->getCreatureEvents(CREATURE_EVENT_BG_FRAG);
-		for(CreatureEventList::iterator it = bgFragEvents.begin(); it != bgFragEvents.end(); ++it)
+		CreatureEventList bgDeathEvents = lastDmg->getCreatureEvents(CREATURE_EVENT_BG_DEATH);
+		for(CreatureEventList::iterator it = bgDeathEvents.begin(); it != bgDeathEvents.end(); ++it)
 		{
-			(*it)->executeBgFrag(killer, player);
+			(*it)->executeBgDeath(player, lastDmg);
 		}
 
 		if(team->points >= winPoints && status == STARTED)
@@ -591,9 +585,16 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 			status = FINISHED;
 
 			Scheduler::getInstance().addEvent(createSchedulerTask(1000,
-				boost::bind(&Battleground::finish, this, killer->getBattlegroundTeam())));
+				boost::bind(&Battleground::finish, this, lastDmg->getBattlegroundTeam())));
 		}
 	}
+
+	if(!success || !lastDmg)
+	{
+		delete deathEntry;
+	}
+
+	player->lastBattlegroundDeath = OTSYS_TIME();
 }
 
 bool Battleground::isValidFrag(Bg_PlayerInfo_t* killer_info, Bg_PlayerInfo_t* target_info)

@@ -219,8 +219,8 @@ bool CreatureEvent::configureEvent(xmlNodePtr p)
 	else if(tmpStr == "preparedeath")
 		m_type = CREATURE_EVENT_PREPAREDEATH;
 	#ifdef __DARGHOS_PVP_SYSTEM__
-	else if(tmpStr == "bgfrag")
-		m_type = CREATURE_EVENT_BG_FRAG;
+	else if(tmpStr == "bgdeath")
+		m_type = CREATURE_EVENT_BG_DEATH;
 	else if(tmpStr == "bgend")
 		m_type = CREATURE_EVENT_BG_END;
 	else if(tmpStr == "bgleave")
@@ -297,12 +297,12 @@ std::string CreatureEvent::getScriptEventName() const
 		case CREATURE_EVENT_PREPAREDEATH:
 			return "onPrepareDeath";
 		#ifdef __DARGHOS_PVP_SYSTEM__
-		case CREATURE_EVENT_BG_FRAG:
-			return "onBattlegroundFrag";
+		case CREATURE_EVENT_BG_DEATH:
+			return "onBattlegroundDeath";
 		case CREATURE_EVENT_BG_END:
-			return "onBattlegroundEnd";			
+			return "onBattlegroundEnd";
 		case CREATURE_EVENT_BG_LEAVE:
-			return "onBattlegroundLeave";	
+			return "onBattlegroundLeave";
 		#endif
 #ifdef __DARGHOS_CUSTOM__
 		case CREATURE_EVENT_MOVE_ITEM:
@@ -360,9 +360,6 @@ std::string CreatureEvent::getScriptEventParams() const
 		case CREATURE_EVENT_COMBAT:
 		case CREATURE_EVENT_ATTACK:
 		case CREATURE_EVENT_CAST:
-		#ifdef __DARGHOS_PVP_SYSTEM__
-		case CREATURE_EVENT_BG_FRAG:
-		#endif
 			return "cid, target";
 		case CREATURE_EVENT_KILL:
 #ifndef __WAR_SYSTEM__
@@ -374,10 +371,12 @@ std::string CreatureEvent::getScriptEventParams() const
 			return "cid, corpse, deathList";
 		case CREATURE_EVENT_PREPAREDEATH:
 			return "cid, deathList";
-		#ifdef __DARGHOS_PVP_SYSTEM__
-		case CREATURE_EVENT_BG_END:
-			return "cid, winner, timeIn, bgDuration";
-		#endif
+#ifdef __DARGHOS_PVP_SYSTEM__
+        case CREATURE_EVENT_BG_END:
+            return "cid, winner, timeIn, bgDuration, initIn";
+        case CREATURE_EVENT_BG_DEATH:
+            return "cid, lastDamager";
+#endif
 #ifdef __DARGHOS_CUSTOM__
 		case CREATURE_EVENT_MOVE_ITEM:
 			return "cid, item, position";
@@ -1950,19 +1949,19 @@ uint32_t CreatureEvent::executeFollow(Creature* creature, Creature* target)
 }
 
 #ifdef __DARGHOS_PVP_SYSTEM__
-uint32_t CreatureEvent::executeBgFrag(Player* killer, Player* target)
+uint32_t CreatureEvent::executeBgDeath(Player* player, Player* lastDamager)
 {
-	//onBattlegroundFrag(cid, target)
+	//onBattlegroundDeath(cid, lastDamager)
 	if(m_interface->reserveEnv())
 	{
 		ScriptEnviroment* env = m_interface->getEnv();
 		if(m_scripted == EVENT_SCRIPT_BUFFER)
 		{
-			env->setRealPos(killer->getPosition());
+			env->setRealPos(player->getPosition());
 			std::stringstream scriptstream;
 
-			scriptstream << "local cid = " << env->addThing(killer) << std::endl;
-			scriptstream << "local target = " << env->addThing(target) << std::endl;
+			scriptstream << "local cid = " << env->addThing(player) << std::endl;
+			scriptstream << "local lastDamager = " << env->addThing(lastDamager) << std::endl;
 
 			scriptstream << m_scriptData;
 			bool result = true;
@@ -1984,13 +1983,13 @@ uint32_t CreatureEvent::executeBgFrag(Player* killer, Player* target)
 			#endif
 
 			env->setScriptId(m_scriptId, m_interface);
-			env->setRealPos(killer->getPosition());
+			env->setRealPos(player->getPosition());
 
 			lua_State* L = m_interface->getState();
 			m_interface->pushFunction(m_scriptId);
 
-			lua_pushnumber(L, env->addThing(killer));
-			lua_pushnumber(L, env->addThing(target));
+			lua_pushnumber(L, env->addThing(player));
+			lua_pushnumber(L, env->addThing(lastDamager));
 
 			bool result = m_interface->callFunction(2);
 			m_interface->releaseEnv();
@@ -2004,9 +2003,9 @@ uint32_t CreatureEvent::executeBgFrag(Player* killer, Player* target)
 	}
 }
 
-uint32_t CreatureEvent::executeBgEnd(Player* player, bool isWinner, uint32_t timeIn, uint32_t bgDuration)
+uint32_t CreatureEvent::executeBgEnd(Player* player, bool isWinner, uint32_t timeIn, uint32_t bgDuration, uint32_t initIn)
 {
-	//onBattlegroundEnd(cid, winner, timeIn, bgDuration)
+	//onBattlegroundEnd(cid, winner, timeIn, bgDuration, initIn)
 	if(m_interface->reserveEnv())
 	{
 		ScriptEnviroment* env = m_interface->getEnv();
@@ -2016,9 +2015,10 @@ uint32_t CreatureEvent::executeBgEnd(Player* player, bool isWinner, uint32_t tim
 			std::stringstream scriptstream;
 
 			scriptstream << "local cid = " << env->addThing(player) << std::endl;
-			scriptstream << "local winner = " << isWinner << std::endl;
+			scriptstream << "local winner = " << (isWinner ? "true" : "false") << std::endl;
 			scriptstream << "local timeIn = " << timeIn << std::endl;
 			scriptstream << "local bgDuration = " << bgDuration << std::endl;
+			scriptstream << "local initIn = " << initIn << std::endl;
 
 			scriptstream << m_scriptData;
 			bool result = true;
@@ -2049,8 +2049,9 @@ uint32_t CreatureEvent::executeBgEnd(Player* player, bool isWinner, uint32_t tim
 			lua_pushboolean(L, isWinner);
 			lua_pushnumber(L, timeIn);
 			lua_pushnumber(L, bgDuration);
+			lua_pushnumber(L, initIn);
 
-			bool result = m_interface->callFunction(4);
+			bool result = m_interface->callFunction(5);
 			m_interface->releaseEnv();
 			return result;
 		}

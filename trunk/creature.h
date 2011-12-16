@@ -89,7 +89,6 @@ struct DeathEntry
 		bool isCreatureKill() const {return data.type() == typeid(Creature*);}
 		bool isNameKill() const {return !isCreatureKill();}
 #ifdef __WAR_SYSTEM__
-
 		void setWar(War_t v) {war = v;}
 		War_t getWar() const {return war;}
 #endif

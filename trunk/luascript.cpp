@@ -9348,15 +9348,11 @@ int32_t LuaInterface::luaGetTownName(lua_State* L)
 int32_t LuaInterface::luaGetTownTemplePosition(lua_State* L)
 {
 	//getTownTemplePosition(townId)
-	bool displayError = true;
-	if(lua_gettop(L) >= 2)
-		displayError = popNumber(L);
-
 	uint32_t townId = popNumber(L);
 	if(Town* town = Towns::getInstance()->getTown(townId))
 		pushPosition(L, town->getPosition(), 255);
 	else
-		lua_pushboolean(L, false);
+	    lua_pushboolean(L, false);
 
 	return 1;
 }
@@ -9510,6 +9506,7 @@ int32_t LuaInterface::luaDoSetGameState(lua_State* L)
 int32_t LuaInterface::luaDoCreatureExecuteTalkAction(lua_State* L)
 {
 	//doCreatureExecuteTalkAction(cid, text[, ignoreAccess = false[, channelId = CHANNEL_DEFAULT]])
+#ifndef __DARGHOS_CUSTOM__
 	uint32_t params = lua_gettop(L), channelId = CHANNEL_DEFAULT;
 	if(params > 3)
 		channelId = popNumber(L);
@@ -9529,6 +9526,11 @@ int32_t LuaInterface::luaDoCreatureExecuteTalkAction(lua_State* L)
 	}
 
 	return 1;
+#else
+    errorEx("[Warning] doCreatureExecuteTalkAction :: Please, not use the noob TFS stupid functions...");
+    lua_pushnil(L);
+    return 1;
+#endif
 }
 
 int32_t LuaInterface::luaDoExecuteRaid(lua_State* L)

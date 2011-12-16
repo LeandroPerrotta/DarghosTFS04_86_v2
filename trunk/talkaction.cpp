@@ -132,7 +132,11 @@ bool TalkActions::registerEvent(Event* event, xmlNodePtr p, bool override)
 	return true;
 }
 
+#ifdef __DARGHOS_CUSTOM__
+bool TalkActions::onPlayerSay(Creature* creature, uint16_t channelId, SpeakClasses type, const std::string& words, bool ignoreAccess)
+#else
 bool TalkActions::onPlayerSay(Creature* creature, uint16_t channelId, const std::string& words, bool ignoreAccess)
+#endif
 {
 	std::string cmd[TALKFILTER_LAST] = words, param[TALKFILTER_LAST] = "";
 
@@ -212,7 +216,11 @@ bool TalkActions::onPlayerSay(Creature* creature, uint16_t channelId, const std:
 	}
 
 	if(talkAction->isScripted())
-		return (talkAction->executeSay(creature, cmd[talkAction->getFilter()], param[talkAction->getFilter()], channelId));
+#ifdef __DARGHOS_CUSTOM__
+		return (talkAction->executeSay(creature, cmd[talkAction->getFilter()], param[talkAction->getFilter()], channelId, type));
+#else
+        return (talkAction->executeSay(creature, cmd[talkAction->getFilter()], param[talkAction->getFilter()], channelId));
+#endif
 
 	if(TalkFunction* function = talkAction->getFunction())
 		return function(creature, cmd[talkAction->getFilter()], param[talkAction->getFilter()]);
@@ -332,9 +340,17 @@ bool TalkAction::loadFunction(const std::string& functionName)
 	return true;
 }
 
+#ifdef __DARGHOS_CUSTOM__
+int32_t TalkAction::executeSay(Creature* creature, const std::string& words, std::string param, uint16_t channel, SpeakClasses type)
+#else
 int32_t TalkAction::executeSay(Creature* creature, const std::string& words, std::string param, uint16_t channel)
+#endif
 {
-	//onSay(cid, words, param, channel)
+#ifdef __DARGHOS_CUSTOM__
+	//onSay(cid, words, param, channel, type)
+#else
+    //onSay(cid, words, param, channel)
+#endif
 	if(m_interface->reserveEnv())
 	{
 		trimString(param);
@@ -348,6 +364,9 @@ int32_t TalkAction::executeSay(Creature* creature, const std::string& words, std
 			scriptstream << "local words = \"" << words << "\"" << std::endl;
 			scriptstream << "local param = \"" << param << "\"" << std::endl;
 			scriptstream << "local channel = " << channel << std::endl;
+            #ifdef __DARGHOS_CUSTOM__
+            scriptstream << "local type = " << type << std::endl;
+            #endif
 
 			scriptstream << m_scriptData;
 			bool result = true;
@@ -378,8 +397,13 @@ int32_t TalkAction::executeSay(Creature* creature, const std::string& words, std
 			lua_pushstring(L, words.c_str());
 			lua_pushstring(L, param.c_str());
 			lua_pushnumber(L, channel);
+            #ifdef __DARGHOS_CUSTOM__
+            lua_pushnumber(L, type);
 
-			bool result = m_interface->callFunction(4);
+            bool result = m_interface->callFunction(5);
+            #else
+            bool result = m_interface->callFunction(4);
+            #endif
 			m_interface->releaseEnv();
 			return result;
 		}
@@ -986,7 +1010,11 @@ bool TalkAction::thingProporties(Creature* creature, const std::string&, const s
 				else if(action == "capacity" || action == "cap")
 					_player->setCapacity(atoi(parseParams(it, tokens.end()).c_str()));
 				else if(action == "execute")
-					g_talkActions->onPlayerSay(_player, atoi(parseParams(it, tokens.end()).c_str()),
+#ifdef __DARGHOS_CUSTOM__
+					g_talkActions->onPlayerSay(_player, atoi(parseParams(it, tokens.end()).c_str()), (SpeakClasses)atoi(parseParams(it, tokens.end()).c_str()),
+#else
+                    g_talkActions->onPlayerSay(_player, atoi(parseParams(it, tokens.end()).c_str()),
+#endif
 						parseParams(it, tokens.end()), booleanString(parseParams(it, tokens.end())));
 				else if(action == "saving" || action == "save")
 					_player->switchSaving();

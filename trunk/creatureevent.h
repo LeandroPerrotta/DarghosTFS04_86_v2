@@ -52,7 +52,7 @@ enum CreatureEventType_t
 	CREATURE_EVENT_DEATH,
 	CREATURE_EVENT_PREPAREDEATH
 	#ifdef __DARGHOS_PVP_SYSTEM__
-	,CREATURE_EVENT_BG_FRAG
+	,CREATURE_EVENT_BG_DEATH
 	,CREATURE_EVENT_BG_END
 	,CREATURE_EVENT_BG_LEAVE
 	#endif
@@ -145,8 +145,8 @@ class CreatureEvent : public Event
 		uint32_t executePrepareDeath(Creature* creature, DeathList deathList);
 
 		#ifdef __DARGHOS_PVP_SYSTEM__
-		uint32_t executeBgFrag(Player* killer, Player* target);
-		uint32_t executeBgEnd(Player* player, bool winner, uint32_t timeIn, uint32_t bgDuration);
+		uint32_t executeBgDeath(Player* player, Player* lastDamager);
+		uint32_t executeBgEnd(Player* player, bool winner, uint32_t timeIn, uint32_t bgDuration, uint32_t initIn);
 		uint32_t executeBgLeave(Player* player);
 
 		uint32_t executeMoveItem(Player* player, Item* item, const Position &position);

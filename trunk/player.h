@@ -782,7 +782,7 @@ class Player : public Creature, public Cylinder
 
         void onTargetLost(bool cancelTarget = true){
 #ifdef __DARGHOS_CUSTOM_SPELLS__
-            if(hasCondition(CONDITION_CASTING_SPELL, -1, false)) removeCondition(CONDITION_CASTING_SPELL);
+            if(hasCondition(CONDITION_CASTING_SPELL, 0, false)) removeCondition(CONDITION_CASTING_SPELL);
 #endif
             if(cancelTarget) setAttackedCreature(NULL);
             sendCancelTarget();
@@ -797,6 +797,7 @@ class Player : public Creature, public Cylinder
 		bool isBattlegroundDeserter();
 		void setBattlegroundRating(uint32_t rating){ battlegroundRating = rating; }
 		uint32_t getBattlegroundRating() { return battlegroundRating; }
+		int64_t getLastBattlegroundDeath() { return lastBattlegroundDeath; }
 
 		void setBattlegroundTeam(Bg_Teams_t tid) {
 			team_id = tid; onBattleground = (tid == BATTLEGROUND_TEAM_NONE) ? false : true;
@@ -813,10 +814,7 @@ class Player : public Creature, public Cylinder
 
 #ifdef __DARGHOS_CUSTOM_SPELLS__
 		void onPerformAction() {
-            if(hasCondition(CONDITION_CASTING_SPELL, -1, false))
-            {
-                removeCondition(CONDITION_CASTING_SPELL);
-            }
+            if(hasCondition(CONDITION_CASTING_SPELL, 0, false)) removeCondition(CONDITION_CASTING_SPELL);
 		}
 #endif
 
@@ -930,6 +928,7 @@ class Player : public Creature, public Cylinder
         bool onBattleground;
         Bg_Teams_t team_id;
         uint32_t battlegroundRating;
+        int64_t lastBattlegroundDeath;
         #endif
 
 		OperatingSystem_t operatingSystem;
@@ -1034,6 +1033,9 @@ class Player : public Creature, public Cylinder
 		WarMap warMap;
 #endif
 
+#ifdef __DARGHOS_PVP_SYSTEM__
+        friend class Battleground;
+#endif
 		friend class Game;
 		friend class LuaInterface;
 		friend class Npc;

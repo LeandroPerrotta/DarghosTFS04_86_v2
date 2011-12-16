@@ -3746,7 +3746,11 @@ bool Game::playerSay(uint32_t playerId, uint16_t channelId, SpeakClasses type, c
 		return internalCreatureSay(player, SPEAK_SAY, text, false);
 	}
 
+    #ifdef __DARGHOS_CUSTOM__
+	if(g_talkActions->onPlayerSay(player, type == SPEAK_SAY ? (unsigned)CHANNEL_DEFAULT : channelId, type, text, false))
+	#else
 	if(g_talkActions->onPlayerSay(player, type == SPEAK_SAY ? (unsigned)CHANNEL_DEFAULT : channelId, text, false))
+	#endif
 		return true;
 
 	ReturnValue ret = RET_NOERROR;
@@ -4370,12 +4374,10 @@ bool Game::combatChangeHealth(CombatType_t combatType, Creature* attacker, Creat
                 return false;
 
 			Player* p_target = NULL;
-			bool isSummon = false;
-
 			if(!(p_target = target->getPlayer()))
 			{
-			    if(target->isPlayerSummon() && (p_target = target->getPlayerMaster()))
-                    isSummon = true;
+			    if(target->isPlayerSummon())
+                    p_target = target->getPlayerMaster();
 			}
 
 			//o target é um player, ou um summon de um player e com pvp ativo, e não é ele mesmo

@@ -312,11 +312,7 @@ ReturnValue Combat::canDoCombat(const Creature* attacker, const Creature* target
 					return RET_YOUMAYNOTATTACKTHISCREATURE;
 
 #ifdef __DARGHOS_CUSTOM__
-                if(!attackerPlayer->isPvpEnabled() && target->getPlayerMaster() != attackerPlayer && !Combat::isInPvpZone(attacker, target)
-#ifdef __WAR_SYSTEM__
-					&& !attackerPlayer->isEnemy(target->getPlayerMaster(), true)
-#endif
-                )
+                if(!attackerPlayer->isPvpEnabled() && !attackerPlayer->isInBattleground() && !Combat::isInPvpZone(attacker, target))
                     return RET_YOUMAYNOTATTACKTHISCREATURE;
 #endif
 			}
@@ -607,8 +603,13 @@ bool Combat::CombatHealthFunc(Creature* caster, Creature* target, const CombatPa
 		}
 		#endif
 
-        if(/*!casterOnBattleground && */target->getPlayer()->getSkull() != SKULL_BLACK && !target->getPlayer()->isDoubleDamage())
-            change = change / 2;
+        if(target->getPlayer()->getSkull() != SKULL_BLACK && !target->getPlayer()->isDoubleDamage())
+        {
+            if(casterOnBattleground)
+                change = change * g_config.getDouble(ConfigManager::BATTLEGROUND_DAMAGE_RATE);
+            else
+                change = change / 2;
+        }
     }
 	#endif
 
@@ -682,8 +683,13 @@ bool Combat::CombatManaFunc(Creature* caster, Creature* target, const CombatPara
 		}
 		#endif
 
-        if(/*!casterOnBattleground && */target->getPlayer()->getSkull() != SKULL_BLACK && !target->getPlayer()->isDoubleDamage())
-            change = change / 2;
+        if(target->getPlayer()->getSkull() != SKULL_BLACK && !target->getPlayer()->isDoubleDamage())
+        {
+            if(casterOnBattleground)
+                change = change * g_config.getDouble(ConfigManager::BATTLEGROUND_DAMAGE_RATE);
+            else
+                change = change / 2;
+        }
     }
 	#endif
 

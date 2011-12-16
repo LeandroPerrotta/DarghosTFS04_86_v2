@@ -146,11 +146,6 @@ class ConfigManager
 			DEATH_CONTAINER,
 			MAXIMUM_DOOR_LEVEL,
 			DEATH_ASSISTS,
-			#ifdef __DARGHOS_CUSTOM__
-			DEATH_FRAGGERS,
-			USE_BLESSING_AS_PVP,
-			BATTLEGROUND_PZ_LOCKED,
-			#endif
 			RED_DAILY_LIMIT,
 			RED_WEEKLY_LIMIT,
 			RED_MONTHLY_LIMIT,
@@ -178,6 +173,16 @@ class ConfigManager
 			VIPLIST_DEFAULT_PREMIUM_LIMIT,
 			STAMINA_DESTROY_LOOT,
 			FIST_BASE_ATTACK,
+
+			#ifdef __DARGHOS_CUSTOM__
+			DEATH_FRAGGERS,
+			USE_BLESSING_AS_PVP,
+			#endif
+
+			#ifdef __DARGHOS_PVP_SYSTEM__
+			BATTLEGROUND_PZ_LOCKED,
+			#endif
+
 			LAST_NUMBER_CONFIG /* this must be the last one */
 		};
 
@@ -202,6 +207,9 @@ class ConfigManager
 			RATE_MONSTER_DEFENSE,
 			FORMULA_LEVEL,
 			FORMULA_MAGIC,
+#ifdef __DARGHOS_PVP_SYSTEM__
+            BATTLEGROUND_DAMAGE_RATE,
+#endif
 			LAST_DOUBLE_CONFIG /* this must be the last one */
 		};
 
