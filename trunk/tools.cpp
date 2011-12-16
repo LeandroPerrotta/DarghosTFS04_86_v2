@@ -41,7 +41,7 @@ extern ConfigManager g_config;
 
 std::string transformToMD5(std::string plainText, bool upperCase)
 {
-	#ifndef __NO_CRYPTOPP__
+#ifndef __NO_CRYPTOPP__
 	// Crypto++ MD5 object
 	CryptoPP::Weak::MD5 hash;
 
@@ -77,7 +77,7 @@ std::string transformToMD5(std::string plainText, bool upperCase)
 	MD5_Final(md, &c);
 
 	char output[MD5_DIGEST_LENGTH*2+1] = "";
-	for(int i = 0; i < sizeof(md); i++)
+	for(uint32_t i = 0; i < sizeof(md); i++)
 		sprintf(output, "%s%.2X", output, md[i]);
 
 	if(upperCase) return std::string(output);
@@ -123,7 +123,7 @@ std::string transformToSHA1(std::string plainText, bool upperCase)
 	SHA1_Final(md, &c);
 
 	char output[SHA_DIGEST_LENGTH*2+1] = "";
-	for(int i = 0; i < sizeof(md); i++)
+	for(uint32_t i = 0; i < sizeof(md); i++)
 		sprintf(output, "%s%.2X", output, md[i]);
 
 	if(upperCase) return std::string(output);
@@ -168,7 +168,7 @@ std::string transformToSHA256(std::string plainText, bool upperCase)
 	uint8_t md[SHA256_DIGEST_LENGTH];
 	SHA256_Final(md, &c);
 	char output[SHA256_DIGEST_LENGTH*2+1] = "";
-	for(int i = 0; i < sizeof(md); i++)
+	for(uint32_t i = 0; i < sizeof(md); i++)
 		sprintf(output, "%s%.2X", output, md[i]);
 
 	if(upperCase) return std::string(output);
@@ -214,7 +214,7 @@ std::string transformToSHA512(std::string plainText, bool upperCase)
 	SHA512_Final(md, &c);
 
 	char output[SHA512_DIGEST_LENGTH*2+1] = "";
-	for(int i = 0; i < sizeof(md); i++)
+	for(uint32_t i = 0; i < sizeof(md); i++)
 		sprintf(output, "%s%.2X", output, md[i]);
 
 	if(upperCase) return std::string(output);
