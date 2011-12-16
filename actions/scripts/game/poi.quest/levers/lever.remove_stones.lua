@@ -102,7 +102,7 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 			if(done) then
 				lastLevers = lastLevers - 1
 				leversState_T[item.uid] = true
-				doPlayerSendTextMessage(cid, MESSAGE_EVENT_DEFAULT, "Alavanca ativada com sucesso! " .. (lastLevers == 0) and "Não resta mais nenhuma alavanca!" or "Restam mais " .. lastLevers .. " alavanca (s)!")
+				doPlayerSendTextMessage(cid, MESSAGE_EVENT_DEFAULT, "Alavanca ativada com sucesso! " .. ((lastLevers == 0) and "Não resta mais nenhuma alavanca!" or "Restam mais " .. lastLevers .. " alavanca (s)!"))
 			else
 				wrongSeq = true
 			end
