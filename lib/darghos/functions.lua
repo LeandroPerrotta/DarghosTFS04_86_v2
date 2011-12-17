@@ -806,6 +806,16 @@ function summonDemonOak()
 	setGlobalStorageValue(gid.THE_DEMON_OAK, temp_monster)
 end
 
+inquisitionBosses =	{
+	{name = "Ushuriel", uid = uid.INQ_USHURIEL_SPAWN},
+	{name = "Madareth", uid = uid.INQ_MADARETH_SPAWN},
+	{name = "Zugurosh", uid = uid.INQ_ZUGOROSH_SPAWN},
+	{name = "Latrivan", uid = uid.INQ_LATRIVAN_SPAWN},
+	{name = "Golgordan", uid = uid.INQ_GOLGORDAN_SPAWN},
+	{name = "Annihilon", uid = uid.INQ_ANNIHILON_SPAWN},
+	{name = "Hellgorak", uid = uid.INQ_HELLGORAK_SPAWN}
+}
+
 function summonInquisitionBoss(boss)
 
 	boss = boss or nil
@@ -813,47 +823,14 @@ function summonInquisitionBoss(boss)
 	local pos = nil
 	local temp_monster = nil
 	
-	if(boss == nil or boss == "ushuriel") then
-		pos = getThingPos(uid.INQ_USHURIEL_SPAWN)
-		temp_monster = doSummonCreature("Ushuriel", pos)
-		registerCreatureEvent(temp_monster, "monsterDeath")
+	for k,v in pairs(inquisitionBosses) do
+		if((boss == nil or string.lower(v.name) == boss) and not getCreatureByName(v.name)) then
+			pos = getThingPos(v.uid)
+			temp_monster = doSummonCreature(v.name, pos)
+			registerCreatureEvent(temp_monster, "monsterDeath")	
+			print("Summoning inquisition boss " .. v.name)
+		end
 	end
-
-	if(boss == nil or boss == "madareth") then
-		pos = getThingPos(uid.INQ_MADARETH_SPAWN)
-		temp_monster = doSummonCreature("Madareth", pos)	
-		registerCreatureEvent(temp_monster, "monsterDeath")
-	end
-	
-	if(boss == nil or boss == "zugurosh") then
-		pos = getThingPos(uid.INQ_ZUGOROSH_SPAWN)
-		temp_monster = doSummonCreature("Zugurosh", pos)	
-		registerCreatureEvent(temp_monster, "monsterDeath")
-	end
-	
-	if(boss == nil or boss == "latrivan") then
-		pos = getThingPos(uid.INQ_LATRIVAN_SPAWN)
-		temp_monster = doSummonCreature("Latrivan", pos)
-		registerCreatureEvent(temp_monster, "monsterDeath")
-	end	
-	
-	if(boss == nil or boss == "golgordan") then
-		pos = getThingPos(uid.INQ_GOLGORDAN_SPAWN)
-		temp_monster = doSummonCreature("Golgordan", pos)	
-		registerCreatureEvent(temp_monster, "monsterDeath")
-	end
-	
-	if(boss == nil or boss == "annihilon") then
-		pos = getThingPos(uid.INQ_ANNIHILON_SPAWN)
-		temp_monster = doSummonCreature("Annihilon", pos)
-		registerCreatureEvent(temp_monster, "monsterDeath")
-	end
-	
-	if(boss == nil or boss == "hellgorak") then
-		pos = getThingPos(uid.INQ_HELLGORAK_SPAWN)
-		temp_monster = doSummonCreature("Hellgorak", pos)	
-		registerCreatureEvent(temp_monster, "monsterDeath")
-	end	
 end
 
 --[[
@@ -870,11 +847,11 @@ function obsidianKnifeOnGhazranCorpse(cid, corpse)
 	
 	if not(hasRemovedTongue) then
 
-		doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Voc? conseguiu obter a l?ngua de Ghazran. Seu questlog foi atualizado.")
+		doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Voc? conseguiu obter a língua de Ghazran. Seu questlog foi atualizado.")
 		setPlayerStorageValue(cid, sid.ARIADNE_GHAZRAN_TONGUE, 1)
 		setPlayerStorageValue(cid, QUESTLOG.ARIADNE.GHAZRAN_WING, 3)
 	else
-		doPlayerSendCancel(cid, "Voc? j? obteve a l?ngua de Ghazran.")
+		doPlayerSendCancel(cid, "Você já obteve a língua de Ghazran.")
 	end
 end
 
@@ -1015,7 +992,7 @@ function playerRecord()
 		if(total > record) then
 		
 			setGlobalStorageValue(gid.PLAYERS_RECORD, total)
-			broadcastMessage("A marca de ".. total .." jogadores online ï¿½ um novo recorde no Darghos!", MESSAGE_EVENT_DEFAULT)
+			broadcastMessage("A marca de ".. total .." jogadores online é um novo recorde no Darghos!", MESSAGE_EVENT_DEFAULT)
 		end
 	else
 
@@ -1078,7 +1055,7 @@ function runPremiumSystem(cid)
 		end
 		doCreatureChangeOutfit(cid, {lookType = lookType, lookHead = 78, lookBody = 69, lookLegs = 97, lookFeet = 95, lookAddons = 0})	
 		
-		local message = "Caro " .. getCreatureName(cid) ..",\n\nA sua conta premium expirou e por isso vocï¿½ perdeu os privilegios exclusivos deste tipo de conta.\nVocï¿½ pode re-adquirir uma nova Conta Premium atraves de nosso website e todos os privilegios serï¿½o novamente ativos.\n\n Tenha um bom jogo!\nUltraXSoft Team."	
+		local message = "Caro " .. getCreatureName(cid) ..",\n\nA sua conta premium expirou e por isso você perdeu os privilegios exclusivos deste tipo de conta.\nVocê pode re-adquirir uma nova Conta Premium atraves de nosso website e todos os privilegios serão novamente ativos.\n\n Tenha um bom jogo!\nUltraXSoft Team."	
 		doPlayerPopupFYI(cid, message)
 	end
 end
@@ -1102,7 +1079,7 @@ function addPremiumTest(cid)
 	doPlayerAddPremiumDays(cid, 7)
 	local account = getPlayerAccountId(cid)
 	db.executeQuery("INSERT INTO `wb_premiumtest` VALUES ('" .. account .. "', '" .. os.time() .. "');")
-	doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_ORANGE, "Parabens! Este ï¿½ o seu primeiro personagem a atingir o level 100 no Darghos! Como prï¿½mio vocï¿½ acaba de receber uma Conta Premium por uma semana gratuitamente, que irï¿½ permitir que vocï¿½ conheï¿½a todo o Darghos! Boa sorte!")
+	doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_ORANGE, "Parabens! Este é o seu primeiro personagem a atingir o level 100 no Darghos! Como prêmio você acaba de receber uma Conta Premium por uma semana gratuitamente, que irá permitir que você conheça todo o Darghos! Boa sorte!")
 	sendEnvolveEffect(cid, CONST_ME_HOLYAREA)
 end
 
@@ -1159,12 +1136,12 @@ end
 
 function notifyValidateEmail(cid)
 	local message = "Caro " .. getCreatureName(cid) ..",\n\n"
-	message = message .. "Vocï¿½ ainda nï¿½o registrou um e-mail valido em sua conta. Lembre-se que por isso\n"
-	message = message .. "sua conta nï¿½o estï¿½ segura e vocï¿½ nï¿½o conseguirï¿½ recuperar-la caso perda seus dados de acesso!\n\n"
-	message = message .. "Os seguintes recursos tambï¿½m estarï¿½o disponiveis para sua conta apï¿½s o registro do e-mail:\n\n"
+	message = message .. "Você ainda não registrou um e-mail valido em sua conta. Lembre-se que por isso\n"
+	message = message .. "sua conta não esta segura e você não conseguirá recuperar-la caso perda seus dados de acesso!\n\n"
+	message = message .. "Os seguintes recursos também estarão disponiveis para sua conta após o registro do e-mail:\n\n"
 	message = message .. " - Obter uma conta Premium.\n"
 	message = message .. " - Receber a Premium Test ao atingir level 100.\n"
-	message = message .. " - Gerar uma chave de recuperaï¿½ï¿½o.\n\n"
+	message = message .. " - Gerar uma chave de recuperação.\n\n"
 	message = message .. "Acesse o website o mais breve possivel e registre o e-mail de sua conta!\n"
 	message = message .. "www.darghos.com.br\n\n"
 	message = message .. "Tenha um bom jogo!"	

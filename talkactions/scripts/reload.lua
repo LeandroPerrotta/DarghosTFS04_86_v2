@@ -36,6 +36,11 @@ function onSay(cid, words, param, channel)
 		if(table.isStrIn(param, v)) then
 			doReloadInfo(v[1], cid)
 			str = "Reloading " .. v[2] .. "..."
+			
+			if(v[1] == RELOAD_CREATUREEVENTS) then
+				summonInquisitionBoss()
+			end
+			
 			break
 		end
 	end

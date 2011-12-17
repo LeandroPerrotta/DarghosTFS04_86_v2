@@ -2245,9 +2245,9 @@
 		<attribute key="decayTo" value="0" />
 		<attribute key="transformDeEquipTo" value="2168" />
 		<attribute key="duration" value="1200" />
-		<attribute key="healthGain" value="10"/>
-		<attribute key="healthTicks" value="3000"/>
-		<attribute key="manaGain" value="12"/>
+		<attribute key="healthGain" value="20"/>
+		<attribute key="healthTicks" value="6000"/>
+		<attribute key="manaGain" value="80"/>
 		<attribute key="manaTicks" value="6000"/>
 		<attribute key="showduration" value="1" />
 		<attribute key="showattributes" value="1" />
@@ -2339,10 +2339,10 @@
 		<attribute key="decayTo" value="0" />
 		<attribute key="transformDeEquipTo" value="2214" />
 		<attribute key="duration" value="450" />
-		<attribute key="healthGain" value="7"/>
-		<attribute key="healthTicks" value="1000"/>
-		<attribute key="manaGain" value="10"/>
-		<attribute key="manaTicks" value="1500"/>
+		<attribute key="healthGain" value="60"/>
+		<attribute key="healthTicks" value="6000"/>
+		<attribute key="manaGain" value="240"/>
+		<attribute key="manaTicks" value="6000"/>
 		<attribute key="showduration" value="1" />
 		<attribute key="showattributes" value="1" />
 	</item>
@@ -4159,10 +4159,10 @@
 		<attribute key="decayTo" value="10021" />
 		<attribute key="transformDeEquipTo" value="6132" />
 		<attribute key="duration" value="14400" />
-		<attribute key="healthGain" value="12" />
-		<attribute key="healthTicks" value="2000" />
-		<attribute key="manaGain" value="18" />
-		<attribute key="manaTicks" value="1000" />
+		<attribute key="healthGain" value="30" />
+		<attribute key="healthTicks" value="6000" />
+		<attribute key="manaGain" value="120" />
+		<attribute key="manaTicks" value="6000" />
 		<attribute key="showduration" value="1" />
 		<attribute key="showattributes" value="1" />
 	</item>
@@ -18567,10 +18567,10 @@
 		<attribute key="speed" value="40" />
 		<attribute key="armor" value="3" />
 		<attribute key="duration" value="50400" />
-		<attribute key="healthGain" value="7"/>
-		<attribute key="healthTicks" value="1000"/>
-		<attribute key="manaGain" value="10"/>
-		<attribute key="manaTicks" value="1500"/>
+		<attribute key="healthGain" value="60"/>
+		<attribute key="healthTicks" value="6000"/>
+		<attribute key="manaGain" value="240"/>
+		<attribute key="manaTicks" value="6000"/>
 		<attribute key="showduration" value="1" />
 		<attribute key="showattributes" value="1" />
 	</item>
@@ -18591,10 +18591,10 @@
 		<attribute key="speed" value="40" />
 		<attribute key="armor" value="3" />
 		<attribute key="duration" value="12600" />
-		<attribute key="healthGain" value="12" />
-		<attribute key="healthTicks" value="2000" />
-		<attribute key="manaGain" value="18" />
-		<attribute key="manaTicks" value="1000" />
+		<attribute key="healthGain" value="30" />
+		<attribute key="healthTicks" value="6000" />
+		<attribute key="manaGain" value="120" />
+		<attribute key="manaTicks" value="6000" />
 		<attribute key="showduration" value="1" />
 		<attribute key="showattributes" value="1" />
 	</item>
