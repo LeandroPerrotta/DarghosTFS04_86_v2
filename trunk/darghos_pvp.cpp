@@ -217,7 +217,7 @@ bool Battleground::buildTeams()
     //daqui em diante nada pode mudar, a BG irá começar...
     status = PREPARING;
 
-	waitlist.sort(Battleground::orderWaitlistByLevel);
+	waitlist.sort(Battleground::orderWaitlistByRating());
 
 	Bg_Teams_t team;
 
