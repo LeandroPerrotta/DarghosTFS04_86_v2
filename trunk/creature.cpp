@@ -1534,7 +1534,7 @@ bool Creature::hasCondition(ConditionType_t type, int32_t subId/* = 0*/, bool ch
 
 	for(ConditionList::const_iterator it = conditions.begin(); it != conditions.end(); ++it)
 	{
-#ifdef __CUSTOM_DARGHOS__
+#ifdef __DARGHOS_CUSTOM__
         Condition* condition = NULL;
         if((condition = (*it)))
         {
