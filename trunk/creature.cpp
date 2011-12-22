@@ -1543,8 +1543,11 @@ bool Creature::hasCondition(ConditionType_t type, int32_t subId/* = 0*/, bool ch
         }
 #endif
 
-		if((*it)->getType() != type || (subId != -1 && (*it)->getSubId() != (uint32_t)subId))
+		if((*it)->getType() != type)
 			continue;
+
+        if(subId != -1 && (*it)->getSubId() != (uint32_t)subId)
+            continue;
 
 		if(!checkTime || !(*it)->getEndTime() || (*it)->getEndTime() >= OTSYS_TIME())
 			return true;
