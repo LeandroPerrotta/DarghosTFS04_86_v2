@@ -1536,21 +1536,18 @@ bool Creature::hasCondition(ConditionType_t type, int32_t subId/* = 0*/, bool ch
 	{
 #ifdef __CUSTOM_DARGHOS__
         Condition* condition = NULL;
-        if(!(condition = (*it)))
+        if((condition = (*it)))
         {
-            std::clog << "Creature::hasCondition() -> Condição vazia, crash evitado...";
-            continue;
+            if(condition->getType() != type)
+                continue;
+
+            if(subId != -1 && condition->getSubId() != (uint32_t)subId)
+                continue;
+
+            if(!checkTime || !condition->getEndTime() || condition->getEndTime() >= OTSYS_TIME())
+                return true;
         }
 #endif
-
-		if((*it)->getType() != type)
-			continue;
-
-        if(subId != -1 && (*it)->getSubId() != (uint32_t)subId)
-            continue;
-
-		if(!checkTime || !(*it)->getEndTime() || (*it)->getEndTime() >= OTSYS_TIME())
-			return true;
 	}
 
 	return false;
