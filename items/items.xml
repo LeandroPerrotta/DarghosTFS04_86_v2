@@ -18724,22 +18724,22 @@
 	</item>
 	<item id="12692" article="um" name="presente de natal">
 		<attribute key="weight" value="2500" />
-		<attribute key="containerSize" value="4" />
+		<attribute key="containerSize" value="10" />
 		<attribute key="description" value="Abra para saber qual presente sortido você ganhou no Darghos! Mas somente no dia de Natal!" />
 	</item>
 	<item id="12693" article="um" name="presente de natal">
 		<attribute key="weight" value="2500" />
-		<attribute key="containerSize" value="4" />
+		<attribute key="containerSize" value="10" />
 		<attribute key="description" value="Abra para saber qual presente sortido você ganhou no Darghos! Mas somente no dia de Natal!" />
 	</item>
 	<item id="12694" article="um" name="presente de natal">
 		<attribute key="weight" value="2500" />
-		<attribute key="containerSize" value="4" />
+		<attribute key="containerSize" value="10" />
 		<attribute key="description" value="Abra para saber qual presente sortido você ganhou no Darghos! Mas somente no dia de Natal!" />
 	</item>
 	<item id="12695" article="um" name="grande presente de natal">
 		<attribute key="weight" value="2500" />
-		<attribute key="containerSize" value="4" />
+		<attribute key="containerSize" value="10" />
 		<attribute key="description" value="Abra para saber qual presente sortido você ganhou no Darghos! Mas somente no dia de Natal!" />
 	</item>	
 	<item id="2270" article="a" name="holy rune">

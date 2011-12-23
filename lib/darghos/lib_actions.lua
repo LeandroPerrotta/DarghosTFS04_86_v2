@@ -126,6 +126,23 @@ function christmasPresent.onUse(cid, item, fromPosition, itemEx, toPosition)
 			presentContent.item1[math.random(1, #presentContent.item1)].id,
 			presentContent.item2[math.random(1, #presentContent.item2)].id
 		}		
+		
+		if(item.itemid == CUSTOM_ITEMS.BIG_CHRISTMAS_PRESENT) then
+			christmasPresent.sortBonusItems()
+			
+			local checkItems = {
+				{logId = getStorage(gid.CHRISTMAS_PRESENT_DRAGON_SCALE_LEGS), id = 2469},
+				{logId = getStorage(gid.CHRISTMAS_PRESENT_BLESSED_SHIELD), id = 2523},
+				{logId = getStorage(CHRISTMAS_PRESENT_SOLAR_AXE), id = 8925}
+			}
+			
+			for k,v in pairs(checkItems) do
+				local shopLog = getItemAttribute(item.uid, "itemShopLogId")
+				if(shopLog and shopLog == v.logId) then
+					table.insert(toCreateItems, v.id)
+				end
+			end			
+		end
 
 		local success = true
 		local addedItems = {}
@@ -165,6 +182,37 @@ function christmasPresent.onUse(cid, item, fromPosition, itemEx, toPosition)
 	end
 	
 	return false
+end
+
+function christmasPresent.sortBonusItems()
+
+	if(getStorage(gid.CHRISTMAS_PRESENT_DRAGON_SCALE_LEGS) ~= -1) then
+		return
+	end
+
+	local result = db.getResult("SELECT `id FROM `wb_itemshop_log` WHERE `shop_id` = 75;")
+	
+	if(result:getID() ~= -1) then
+		local logIdTable = {}
+	
+		repeat
+			table.insert(logIdTable, result:getDataInt("id"))	
+		until not(result:next())
+		result:free()
+		
+		local toSort = {
+			gid.CHRISTMAS_PRESENT_DRAGON_SCALE_LEGS,
+			gid.CHRISTMAS_PRESENT_BLESSED_SHIELD,
+			gid.CHRISTMAS_PRESENT_SOLAR_AXE
+		}
+		
+		for k,v in pairs(toSort) do
+		
+			local sortedKey = math.random(1, #logIdTable)
+			doSetStorage(v, logIdTable[sortedKey])
+			logIdTable[sortedKey] = nil
+		end
+	end
 end
 
 unholySword = {}
