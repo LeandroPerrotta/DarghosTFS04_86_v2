@@ -133,7 +133,7 @@ function christmasPresent.onUse(cid, item, fromPosition, itemEx, toPosition)
 			local checkItems = {
 				{logId = getStorage(gid.CHRISTMAS_PRESENT_DRAGON_SCALE_LEGS), id = 2469},
 				{logId = getStorage(gid.CHRISTMAS_PRESENT_BLESSED_SHIELD), id = 2523},
-				{logId = getStorage(CHRISTMAS_PRESENT_SOLAR_AXE), id = 8925}
+				{logId = getStorage(gid.CHRISTMAS_PRESENT_SOLAR_AXE), id = 8925}
 			}
 			
 			for k,v in pairs(checkItems) do
@@ -151,7 +151,7 @@ function christmasPresent.onUse(cid, item, fromPosition, itemEx, toPosition)
 			local _item = doAddContainerItem(item.uid, v)
 			if (not _item) then
 				success = false
-				error("Não foi possivel adicionar um item ao presente de natal do jogador " .. getPlayerName(cid) .. ". Uid: ".. _item .. "")
+				error("Não foi possivel adicionar um item ao presente de natal do jogador " .. getPlayerName(cid) .. ". Uid: ".. v .. "")
 				break
 			else
 				if( k == 2) then
@@ -163,7 +163,7 @@ function christmasPresent.onUse(cid, item, fromPosition, itemEx, toPosition)
 		
 		if(not success) then
 			for k,v in pairs(addedItems) do
-				doRemoveItem(_item)
+				doRemoveItem(v)
 			end
 			
 			doPlayerSendCancel(cid, "Não foi possivel entregar o seu presente! Cerfique de possuir espaço e capacidade sulficiente.")
@@ -190,7 +190,7 @@ function christmasPresent.sortBonusItems()
 		return
 	end
 
-	local result = db.getResult("SELECT `id FROM `wb_itemshop_log` WHERE `shop_id` = 75;")
+	local result = db.getResult("SELECT `id` FROM `wb_itemshop_log` WHERE `shop_id` = 75;")
 	
 	if(result:getID() ~= -1) then
 		local logIdTable = {}
