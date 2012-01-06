@@ -150,7 +150,7 @@ function onSay(cid, words, param)
 	elseif(option == "spells") then
 		doShowTextDialog(cid, 2390, pvpBattleground.getSpellsInfo(cid))
 	elseif(option == "points") then
-		local text = "Estatisticas de pontos:\n"
+		local text = "Estatisticas de pontos:\n\n"
 		
 		text = text .. "Classificação (rating): " .. getPlayerBattlegroundRating(cid) .. "\n"
 		text = text .. "Pontos de honra: " .. getPlayerBattlegroundHonor(cid) .. " / " .. BATTLEGROUND_HONOR_LIMIT .. ""
