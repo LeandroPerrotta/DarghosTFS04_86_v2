@@ -215,7 +215,6 @@ function pvpBattleground.doUpdateHonor(cid)
 	local storage = getPlayerStorageValue(cid, sid.BATTLEGROUND_TEMP_HONOR)
 	local gainHonor = (storage >= 0) and storage or 0
 	changePlayerBattlegroundHonor(cid, gainHonor)
-	setPlayerStorageValue(cid, sid.BATTLEGROUND_TEMP_HONOR, 0)
 	return gainHonor
 end
 
@@ -660,6 +659,7 @@ function pvpBattleground.onEnter(cid)
 		
 		setPlayerStorageValue(cid, sid.BATTLEGROUND_MATCH_DAMAGE_DONE, 0)
 		setPlayerStorageValue(cid, sid.BATTLEGROUND_MATCH_HEALING_DONE, 0)
+		setPlayerStorageValue(cid, sid.BATTLEGROUND_TEMP_HONOR, 0)
 		
 		-- teleportando direto da ilha de treinamento...
 		if(isInTrainingIsland(cid)) then
