@@ -86,7 +86,7 @@ function onSay(cid, words, param)
 	elseif(option == "open" and _access >= access.COMMUNITY_MANAGER) then
 		msg = msg .. "Battleground aberta."
 		battlegroundOpen()	
-	elseif(option == "reload" and _access >= access.COMMUNITY_MANAGER)
+	elseif(option == "reload" and _access >= access.COMMUNITY_MANAGER) then
 		msg = msg .. "Battleground recarregada"
 		pvpBattleground.reload()
 	elseif(option == "ban" and _access >= access.COMMUNITY_MANAGER) then
