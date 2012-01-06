@@ -19,6 +19,7 @@ function onSay(cid, words, param)
 			msg = msg .. "!bg stats -> Exibe as estatisticas da partida.*\n"
 			msg = msg .. "!bg team -> Exibe os membros de seu time.*\n"
 			msg = msg .. "!bg afk [nick] -> Denúncia um jogador de seu time que esteja inativo.*\n"
+			msg = msg .. "!bg points -> Exibe seus pontos de honra e classificação (rating).\n"
 			msg = msg .. "!bg spells -> Exibe as magias extra disponiveis na Battleground.\n"
 			msg = msg .. "!bg regras -> Exibe as regras de uso da Battleground."
 		end
@@ -148,6 +149,13 @@ function onSay(cid, words, param)
 		end		
 	elseif(option == "spells") then
 		doShowTextDialog(cid, 2390, pvpBattleground.getSpellsInfo(cid))
+	elseif(option == "points") then
+		local text = "Estatisticas de pontos:\n"
+		
+		text = text .. "Classificação (rating): " .. getPlayerBattlegroundRating(cid) .. "\n"
+		text = text .. "Pontos de honra: " .. getPlayerBattlegroundHonor(cid) .. " / " .. BATTLEGROUND_HONOR_LIMIT .. ""
+		
+		doPlayerPopupFYI(cid, text)
 	elseif(option == "regras") then
 		local text = "Termos de regras de uso da Battleground:\n\n"
 		
