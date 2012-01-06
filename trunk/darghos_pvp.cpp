@@ -279,7 +279,7 @@ void Battleground::start()
 			}
 
 			if(player)
-				storePlayerJoin(player->getGUID(), player->getBattlegroundTeam());
+				storePlayerJoin(player->getGUID(), player->getBattlegroundTeam(), player->getIP());
 
 			it_players->second.join_in = time(NULL);
 		}
@@ -366,7 +366,7 @@ void Battleground::putInside(Player* player)
 	playerInfo->areInside = true;
 
 	if(status == STARTED)
-		storePlayerJoin(player->getGUID(), team_id);
+		storePlayerJoin(player->getGUID(), team_id, player->getIP());
 }
 
 BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
@@ -518,6 +518,8 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 	Player* lastDmg = NULL;
 	Player* tmp = NULL;
 
+    std::list<uint32_t> tempList;
+
 	for(DeathList::iterator it = deathList.begin(); it != deathList.end(); ++it)
 	{
         if(it->isNameKill())
@@ -561,6 +563,8 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 
                 incrementPlayerKill(playerInfo, deathEntry);
                 deathEntry->assists.push_back(tmp->getID());
+
+                tempList.push_back(tmp->getID());
             }
         }
 	}
@@ -577,7 +581,7 @@ void Battleground::onPlayerDeath(Player* player, DeathList deathList)
 		CreatureEventList bgDeathEvents = lastDmg->getCreatureEvents(CREATURE_EVENT_BG_DEATH);
 		for(CreatureEventList::iterator it = bgDeathEvents.begin(); it != bgDeathEvents.end(); ++it)
 		{
-			(*it)->executeBgDeath(player, lastDmg);
+			(*it)->executeBgDeath(player, lastDmg, tempList);
 		}
 
 		if(team->points >= winPoints && status == STARTED)
@@ -754,12 +758,12 @@ bool Battleground::storeFinish(time_t end, uint32_t finishBy, uint32_t team1_poi
 	return true;
 }
 
-bool Battleground::storePlayerJoin(uint32_t player_id, Bg_Teams_t team_id)
+bool Battleground::storePlayerJoin(uint32_t player_id, Bg_Teams_t team_id, uint32_t ip_address)
 {
 	Database* db = Database::getInstance();
 	DBQuery query;
 
-	query << "INSERT INTO `battleground_teamplayers` (`player_id`, `battleground_id`, `team_id`, `deserter`) VALUES (" << player_id << ", " << lastID << ", " << team_id << ", 0)";
+	query << "INSERT INTO `battleground_teamplayers` (`player_id`, `battleground_id`, `team_id`, `deserter`, `ip_address`) VALUES (" << player_id << ", " << lastID << ", " << team_id << ", 0, " << ip_address << ")";
 	if(!db->query(query.str()))
 		return false;
 
@@ -780,6 +784,32 @@ bool Battleground::storePlayerDeserter(uint32_t player_id)
 		return false;
 
 	return true;
+}
+
+void Battleground::incrementTeamPoints(Bg_Teams_t team_id, uint32_t points)
+{
+	teamsMap[team_id].points += points;
+
+    if(teamsMap[team_id].points >= winPoints && status == STARTED)
+    {
+        status = FINISHED;
+
+        Scheduler::getInstance().addEvent(createSchedulerTask(1000,
+            boost::bind(&Battleground::finish, this, team_id)));
+    }
+}
+
+void Battleground::setTeamPoints(Bg_Teams_t team_id, uint32_t points)
+{
+    teamsMap[team_id].points = points;
+
+    if(teamsMap[team_id].points >= winPoints && status == STARTED)
+    {
+        status = FINISHED;
+
+        Scheduler::getInstance().addEvent(createSchedulerTask(1000,
+            boost::bind(&Battleground::finish, this, team_id)));
+    }
 }
 
 StatisticsList Battleground::getStatistics()

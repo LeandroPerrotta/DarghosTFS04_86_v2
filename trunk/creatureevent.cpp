@@ -24,10 +24,6 @@
 #include "tools.h"
 
 #ifdef __DARGHOS_PVP_SYSTEM__
-#include "darghos_pvp.h"
-#endif
-
-#ifdef __DARGHOS_PVP_SYSTEM__
 extern Battleground g_battleground;
 #endif
 
@@ -375,7 +371,7 @@ std::string CreatureEvent::getScriptEventParams() const
         case CREATURE_EVENT_BG_END:
             return "cid, winner, timeIn, bgDuration, initIn";
         case CREATURE_EVENT_BG_DEATH:
-            return "cid, lastDamager";
+            return "cid, lastDamager, assistList";
 #endif
 #ifdef __DARGHOS_CUSTOM__
 		case CREATURE_EVENT_MOVE_ITEM:
@@ -1949,9 +1945,9 @@ uint32_t CreatureEvent::executeFollow(Creature* creature, Creature* target)
 }
 
 #ifdef __DARGHOS_PVP_SYSTEM__
-uint32_t CreatureEvent::executeBgDeath(Player* player, Player* lastDamager)
+uint32_t CreatureEvent::executeBgDeath(Player* player, Player* lastDamager, std::list<uint32_t> assistList)
 {
-	//onBattlegroundDeath(cid, lastDamager)
+	//onBattlegroundDeath(cid, lastDamager, assistList)
 	if(m_interface->reserveEnv())
 	{
 		ScriptEnviroment* env = m_interface->getEnv();
@@ -1962,6 +1958,13 @@ uint32_t CreatureEvent::executeBgDeath(Player* player, Player* lastDamager)
 
 			scriptstream << "local cid = " << env->addThing(player) << std::endl;
 			scriptstream << "local lastDamager = " << env->addThing(lastDamager) << std::endl;
+
+			scriptstream << "local assistList = {}" << std::endl;
+			std::list<uint32_t>::iterator it;
+			for(it = assistList.begin(); it != assistList.end(); ++it)
+			{
+				scriptstream << "assistList:insert(" << (*it) << ")";
+			}
 
 			scriptstream << m_scriptData;
 			bool result = true;
@@ -1991,7 +1994,17 @@ uint32_t CreatureEvent::executeBgDeath(Player* player, Player* lastDamager)
 			lua_pushnumber(L, env->addThing(player));
 			lua_pushnumber(L, env->addThing(lastDamager));
 
-			bool result = m_interface->callFunction(2);
+			lua_newtable(L);
+			std::list<uint32_t>::iterator it = assistList.begin();
+			for(int32_t i = 1;it != assistList.end(); ++it, i++)
+			{
+			    lua_pushnumber(L, i);
+			    lua_pushnumber(L, *it);
+
+				lua_settable(L, -3);
+			}
+
+			bool result = m_interface->callFunction(3);
 			m_interface->releaseEnv();
 			return result;
 		}

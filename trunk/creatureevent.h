@@ -145,7 +145,7 @@ class CreatureEvent : public Event
 		uint32_t executePrepareDeath(Creature* creature, DeathList deathList);
 
 		#ifdef __DARGHOS_PVP_SYSTEM__
-		uint32_t executeBgDeath(Player* player, Player* lastDamager);
+		uint32_t executeBgDeath(Player* player, Player* lastDamager, std::list<uint32_t> assistList);
 		uint32_t executeBgEnd(Player* player, bool winner, uint32_t timeIn, uint32_t bgDuration, uint32_t initIn);
 		uint32_t executeBgLeave(Player* player);
 

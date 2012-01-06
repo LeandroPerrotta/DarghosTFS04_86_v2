@@ -27,6 +27,7 @@ struct Bg_Statistic_t
 };
 
 typedef std::list<Bg_Statistic_t*> StatisticsList;
+typedef std::list<uint32_t> AssistList;
 
 struct Bg_PlayerInfo_t
 {
@@ -94,13 +95,8 @@ class Battleground
 		void removeWaitlistPlayer(Player* player);
 		uint32_t getTeamSize() { return teamSize; }
 
-		void incrementTeamPoints(Bg_Teams_t team_id, uint32_t points = 1){
-			teamsMap[team_id].points += points;
-		}
-
-		void setTeamPoints(Bg_Teams_t team_id, uint32_t points){
-			teamsMap[team_id].points = points;
-		}
+		void incrementTeamPoints(Bg_Teams_t team_id, uint32_t points = 1);
+		void setTeamPoints(Bg_Teams_t team_id, uint32_t points);
 
 		void setTeamSize(uint32_t size){ teamSize = size; }
 		void setWinPoints(uint32_t points){ winPoints = points; }
@@ -155,7 +151,7 @@ class Battleground
 
 		bool storeNew();
 		bool storeFinish(time_t end, uint32_t finishBy, uint32_t team1_points, uint32_t team2_points);
-		bool storePlayerJoin(uint32_t player_id, Bg_Teams_t team_id);
+		bool storePlayerJoin(uint32_t player_id, Bg_Teams_t team_id, uint32_t ip_address);
 		bool storePlayerDeserter(uint32_t player_id);
 
 		bool storePlayerKill(uint32_t player_id, bool lasthit);

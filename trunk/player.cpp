@@ -598,6 +598,22 @@ void Player::updateInventoryGoods(uint32_t itemId)
 	}
 }
 
+#ifdef __DARGHOS_CUSTOM__
+uint32_t Player::findShopItemIdByClientId(uint16_t sprite_id)
+{
+	for(ShopInfoList::const_iterator it = shopOffer.begin(); it != shopOffer.end(); ++it)
+	{
+	    const ItemType& itemType = Item::items[it->itemId];
+		if(itemType.clientId != sprite_id)
+			continue;
+
+		return it->itemId;
+	}
+
+	return 0;
+}
+#endif
+
 int32_t Player::getPlayerInfo(playerinfo_t playerinfo) const
 {
 	switch(playerinfo)

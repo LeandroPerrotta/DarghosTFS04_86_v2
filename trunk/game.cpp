@@ -3324,9 +3324,17 @@ bool Game::playerPurchaseItem(uint32_t playerId, uint16_t spriteId, uint8_t coun
 	if(!merchant)
 		return false;
 
+    #ifdef __DARGHOS_CUSTOM__
+    uint32_t item_id = player->findShopItemIdByClientId(spriteId);
+    if(!item_id)
+        return false;
+
+    const ItemType& it = Item::items[item_id];
+    #else
 	const ItemType& it = Item::items.getItemIdByClientId(spriteId);
 	if(!it.id)
 		return false;
+    #endif
 
 	uint8_t subType = count;
 	if(it.isFluidContainer() && count < uint8_t(sizeof(reverseFluidMap) / sizeof(int8_t)))
@@ -3381,9 +3389,14 @@ bool Game::playerLookInShop(uint32_t playerId, uint16_t spriteId, uint8_t count)
 	if(player == NULL || player->isRemoved())
 		return false;
 
+    #ifdef __DARGHOS_CUSTOM__
+    uint32_t item_id = player->findShopItemIdByClientId(spriteId);
+    const ItemType& it = Item::items[item_id];
+    #else
 	const ItemType& it = Item::items.getItemIdByClientId(spriteId);
 	if(it.id == 0)
 		return false;
+    #endif
 
 	int32_t subType = count;
 	if(it.isFluidContainer())
