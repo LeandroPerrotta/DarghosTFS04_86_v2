@@ -658,7 +658,7 @@ function pvpBattleground.onEnter(cid)
 		
 		doPlayerSetIdleTime(cid, 0)
 		
-		local msg = "Bem vindo ao sistema de Battleground do Darghos!\nComandos úteis: !bg stats, !bg afk [nick], !bg spells. "
+		local msg = "Bem vindo ao sistema de Battleground do Darghos!\nComandos úteis: !bg stats, !bg afk [nick], !bg spells. Leia as regras em !bg regras.\n"
 		
 		local isFirstBattleground = getPlayerStorageValue(cid, sid.FIRST_BATTLEGROUND)		
 		if(isFirstBattleground == -1) then

@@ -18,7 +18,8 @@ function onSay(cid, words, param)
 			msg = msg .. "!bg stats -> Exibe as estatisticas da partida.*\n"
 			msg = msg .. "!bg team -> Exibe os membros de seu time.*\n"
 			msg = msg .. "!bg afk [nick] -> Denúncia um jogador de seu time que esteja inativo.*\n"
-			msg = msg .. "!bg spells -> Exibe as magias extra disponiveis na Battleground"	
+			msg = msg .. "!bg spells -> Exibe as magias extra disponiveis na Battleground.\n"
+			msg = msg .. "!bg regras -> Exibe as regras de uso da Battleground."
 		end
 	
 		msg = msg .. "\n * = Requer estar dentro de uma partida."	
@@ -143,7 +144,22 @@ function onSay(cid, words, param)
 		end		
 	elseif(option == "spells") then
 		doShowTextDialog(cid, 2390, pvpBattleground.getSpellsInfo(cid))
+	elseif(option == "regras") then
+		local text = "Termos de regras de uso da Battleground:\n\n"
 		
+		text = text .. "1) Bugs:\nÉ expressamente proibido abusar de qualquer tipo de bug seja para beneficio alheio ou não. Bugs devem ser reportado, diretamente para um Gamemaster (usando o Control + R) ou enviando um e-mail para suporte@darghos.com.\n\n"
+		
+		text = text .. "2) Multi-client (MC):\nÉ expressamente proibido ultilizar multi-client dentro da Battleground.\n\n"
+		
+		text = text .. "Punições aplicadas quando as regras são quebradas:\n"
+		text = text .. "1a - Banição da Battleground por 7 dias.\n"
+		text = text .. "2a - Banição da Battleground por 15 dias + remoção de todos pontos de Rating.\n"
+		text = text .. "3a - Banição da Battleground (toda conta) por 30 dias + remoção de todos pontos de Rating.\n"
+		text = text .. "4a - Banição permanente da Battleground (toda conta) + remoção de todos pontos de Rating.\n\n"
+		
+		text = text .. "Obs: Ao participar de uma Battleground, assume-se que você tenha lido estes termos de regras, e portanto, você automaticamente está o aceitando."
+		
+		doShowTextDialog(cid, 2390, text)
 	--elseif(option == "statsall" and _access >= access.COMMUNITY_MANAGER) then	
 		--pvpBattleground.broadcastStatistics(false)
 		--return true		
