@@ -261,9 +261,31 @@ function pvpBattleground.onInit()
 	end
 end
 
-function pvpBattleground.close()
+function pvpBattleground.reload()
+	pvpBattleground.close(false)
+	pvpBattleground.setConfigs()
+	battlegroundOpen()
+	
+	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] Battleground recarregada. Use o !bg entrar para entrar!", TALKTYPE_TYPES["channel-red"])
+end
+
+function pvpBattleground.setConfigs()
+	local configs = {
+		teamSize = BG_CONFIG_TEAMSIZE,
+		winPoints = BG_CONFIG_WINPOINTS,
+		duration = BG_CONFIG_DURATION,
+	}
+	
+	setBattlegroundConfigs(configs)
+end
+
+function pvpBattleground.close(message)
+	message = message or true
 	battlegroundClose()
-	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] Battleground temporareamente fechada. Voltarão em alguns instantes.", TALKTYPE_TYPES["channel-red"])
+	
+	if(message) then
+		broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] Battleground temporareamente fechada. Voltarão em alguns instantes.", TALKTYPE_TYPES["channel-red"])
+	end
 end
 
 function pvpBattleground.hasGain(time)

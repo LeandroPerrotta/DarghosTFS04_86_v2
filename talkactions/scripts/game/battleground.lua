@@ -11,6 +11,7 @@ function onSay(cid, words, param)
 			msg = msg .. "!bg team team_id -> Exibe as informações de um time (1 ou 2).\n"
 			msg = msg .. "!bg close -> Expulsa todos jogadores na battleground e a fecha.\n"
 			msg = msg .. "!bg open -> Permite que jogadores entrem na battleground.\n"
+			msg = msg .. "!bg reload -> Recarrega configurações da Battleground.\n"
 			msg = msg .. "!bg ban [name, type, reason] -> Aplica uma banição a um determinado jogador (ou sua conta).\n"
 			--msg = msg .. "!bg unban [name, type] -> Remove uma banição ao jogador (ou sua conta).\n"
 		else
@@ -85,6 +86,9 @@ function onSay(cid, words, param)
 	elseif(option == "open" and _access >= access.COMMUNITY_MANAGER) then
 		msg = msg .. "Battleground aberta."
 		battlegroundOpen()	
+	elseif(option == "reload" and _access >= access.COMMUNITY_MANAGER)
+		msg = msg .. "Battleground recarregada"
+		pvpBattleground.reload()
 	elseif(option == "ban" and _access >= access.COMMUNITY_MANAGER) then
 		
 		local error = false
