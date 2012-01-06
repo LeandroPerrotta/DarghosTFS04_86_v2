@@ -215,6 +215,7 @@ function pvpBattleground.doUpdateHonor(cid)
 	local storage = getPlayerStorageValue(cid, sid.BATTLEGROUND_TEMP_HONOR)
 	local gainHonor = (storage >= 0) and storage or 0
 	changePlayerBattlegroundHonor(cid, gainHonor)
+	setPlayerStorageValue(cid, sid.BATTLEGROUND_TEMP_HONOR, 0)
 	return gainHonor
 end
 
