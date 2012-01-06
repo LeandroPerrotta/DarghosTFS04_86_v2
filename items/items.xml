@@ -8794,9 +8794,10 @@
 		<attribute key="weight" value="1500" />
 	</item>
 	<item id="5800" article="a" name="grappling hook" />
-	<item id="5801" article="a" name="key ring">
-		<attribute key="weight" value="50" />
-		<attribute key="containerSize" value="20" />
+	<item id="5801" article="a" name="jewelled backpack">
+		<attribute key="weight" value="1700" />
+		<attribute key="containerSize" value="22" />
+		<attribute slotType="backpack"/>
 	</item>
 	<item id="5802" article="a" name="bottle with a message"> <!-- Not a real item -->
 		<attribute key="weight" value="2500" />
@@ -16143,8 +16144,9 @@
 	<item id="9929" article="a" name="flower dress">
 		<attribute key="weight" value="1900" />
 	</item>
-	<item id="9930" article="a" name="rust remover">
-		<attribute key="weight" value="250" />
+	<item id="9930" article="a" name="flask of rusty remover">
+		<attribute key="description" value="It can be used to clean and polish old and rusty armors."/>
+		<attribute key="weight" value="90" />
 	</item>
 	<item id="9931" article="a" name="coconut shoes">
 		<attribute key="weight" value="600" />
@@ -16766,17 +16768,35 @@
 		<attribute key="weight" value="40" />
 		<attribute key="slotType" value="ring" />
 	</item>
-	<item fromid="10511" toid="10512" name="squeezing gear of girlpower">
+	<item id="10511" article="a" name="sneaky stabber of eliteness">
 		<attribute key="description" value="This nifty gadget can be used for many vital and less vital purposes. If it's not jammed, that is." />
 		<attribute key="weight" value="300" />
 	</item>
-	<item fromid="10513" toid="10514" name="sneaky stabber of eliteness">
+	<item id="10512" article="a" name="sneaky stabber of eliteness">
+		<attribute key="description" value="This nifty gadget can be used for many vital and less vital purposes. If it's not jammed, that is." />
+		<attribute key="weight" value="300" />
+		<attribute key="decayTo" value="10511" />
+		<attribute key="duration" value="60" />
+	</item>
+	<item id="10513" article="a" name="squeezing gear of girlpower">
 		<attribute key="description" value="This nifty gadget can be used for many vital and less vital purposes. If it's not jammed, that is." />
 		<attribute key="weight" value="300" />
 	</item>
-	<item fromid="10515" toid="10516" name="whacking driller of fate">
+	<item id="10514" article="a" name="squeezing gear of girlpower">
 		<attribute key="description" value="This nifty gadget can be used for many vital and less vital purposes. If it's not jammed, that is." />
 		<attribute key="weight" value="300" />
+		<attribute key="decayTo" value="10513" />
+		<attribute key="duration" value="60" />
+	</item>
+	<item id="10515" article="a" name="whacking driller of fate">
+		<attribute key="description" value="This nifty gadget can be used for many vital and less vital purposes. If it's not jammed, that is." />
+		<attribute key="weight" value="300" />
+	</item>
+	<item id="10516" article="a" name="whacking driller of fate">
+		<attribute key="description" value="This nifty gadget can be used for many vital and less vital purposes. If it's not jammed, that is." />
+		<attribute key="weight" value="300" />
+		<attribute key="decayTo" value="10515" />
+		<attribute key="duration" value="60" />
 	</item>
 	<!-- 10517 is empty -->
 	<item id="10518" article="a" name="demon backpack">

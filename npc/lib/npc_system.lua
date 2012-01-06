@@ -74,6 +74,8 @@ function _NpcSystem:setDialog(dialog)
 end
 
 function _NpcSystem:onCreatureSay(cid, type, message)
+
+
 end
 
 function _NpcSystem:onCreatureAppear(cid)

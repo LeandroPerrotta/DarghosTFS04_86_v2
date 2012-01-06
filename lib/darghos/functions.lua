@@ -1,3 +1,16 @@
+function getPlayerAccountIdByName(name)
+	local result = db.getResult("SELECT `account_id` FROM `players` WHERE `name` = " .. db.escapeString(name) .. " LIMIT 1;")
+	
+	if(result:getID() == -1) then
+		return false
+	end
+	
+	local account_id = result:getDataInt("account_id")
+	result:free()
+	
+	return account_id
+end
+
 function isOnContainer(position)
 	if(position.x == CONTAINER_POSITION) then
 		return true

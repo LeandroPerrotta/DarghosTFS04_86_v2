@@ -17,19 +17,11 @@ local secondsLeftMessages = {
 }
 
 function onBattlegroundStart(notJoinPlayers)
-
-	local wallsUidStart, wallsUidEnd = 20502, 20509
-	local ITEM_GATE = 10652
-	
-	for i = wallsUidStart, wallsUidEnd do
-		local thing = getTileItemById(getThingPos(i), ITEM_GATE)
-		doRemoveItem(thing.uid)
-	end
 	
 	pvpBattleground.sendPvpChannelMessage("[Battleground] A partida foi iniciada! Será vencedor o time que atingir primeiro 50 pontos ou o que mais tiver pontos ao fim da partida em " .. BG_CONFIG_DURATION / 60 .. " minutos!", PVPCHANNEL_MSGMODE_OUTBATTLE, TALKTYPE_TYPES["channel-orange"])
 	
 	if(notJoinPlayers > 0) then
-		pvpBattleground.sendPvpChannelMessage(notJoinPlayers .. " jogadores não compareceram ao inicio da partida e poderão ser substituidos! Se você deseja IMEDIATAMENTE substituir esses jogadores digite '!bg entrar'!", PVPCHANNEL_MSGMODE_OUTBATTLE, TALKTYPE_TYPES["channel-orange"])
+		pvpBattleground.sendPvpChannelMessage(notJoinPlayers .. " jogadores não compareceram ao inicio da partida e poderam ser substituidos! Se você deseja IMEDIATAMENTE substituir esses jogadores digite '!bg entrar'!", PVPCHANNEL_MSGMODE_OUTBATTLE, TALKTYPE_TYPES["channel-orange"])
 	end
 	
 	addEvent(messageTimeLeft, 100)
@@ -78,8 +70,6 @@ function messageTimeLeft()
 end
 
 function onBattlegroundEnd()
-
-	addEvent(addWalls, 1000 * 6)	
 	
 	if(bgEvents.messages ~= nil) then
 		stopEvent(bgEvents.messages)
@@ -98,12 +88,12 @@ function onBattlegroundEnd()
 		msg = "" .. teams[winnerTeam] .. " é o VENCEDOR por ";
 		
 		if(points[winnerTeam] == BG_CONFIG_WINPOINTS) then
-			msg = msg .. "pontos necessário para vitoria!"
+			msg = msg .. "pontos necessários para vitoria!"
 		else
 			msg = msg .. "mais pontos ao fim da partida!"
 		end
 	else
-		msg = "Não há vencedor! EMPATE por igualdade de pontos ao fim da partida!"
+		msg = "Não houve vencedor! EMPATE por igualdade de pontos ao fim da partida!"
 	end	
 	
 	pvpBattleground.sendPvpChannelMessage("Partida encerrada. " .. msg, PVPCHANNEL_MSGMODE_BROADCAST, TALKTYPE_TYPES["channel-orange"])
@@ -117,19 +107,6 @@ function onBattlegroundEnd()
 	end
 	
 	return true
-end
-
-function addWalls()
-
-	clearBattlegroundStatistics()
-
-	local wallsUidStart, wallsUidEnd = 20502, 20509
-	local ITEM_GATE = 10652
-	
-	for i = wallsUidStart, wallsUidEnd do
-		local pos = getThingPos(i)
-		doCreateItem(ITEM_GATE, pos)
-	end
 end
 
 local messages = {
@@ -150,6 +127,7 @@ local message = 0
 
 function onBattlegroundPrepare()
 
+	pvpBattleground.addObjects()
 	addEvent(showMessage, 5000)
 	return true
 end
@@ -196,7 +174,7 @@ function checkBonus(onlyAlert)
 		hourStr = "há " .. bonus .. " horas"
 	end
 	
-	doBroadcastMessage("Nenhuma Battleground foi iniciada " .. hourStr .. ", será concedido bonûs extra de " .. percent .. "% mais experience ao time vencedor da proxima Battleground! Garanta seu lugar na proxima e aproveite! -> !bg entrar",  MESSAGE_TYPES["green"])
+	doBroadcastMessage("Nenhuma Battleground foi iniciada " .. hourStr .. ", será concedido bonus extra de " .. percent .. "% mais experience ao time vencedor da proxima Battleground! Garanta seu lugar na proxima e aproveite! -> !bg entrar",  MESSAGE_TYPES["green"])
 	bgEvents.bonus = addEvent(checkBonus, 1000 * BG_BONUS_INTERVAL)
 	
 	if(not onlyAlert) then
@@ -215,13 +193,13 @@ function onTime(time)
 	
 	if(not isInArray(BG_GAIN_EVERYHOUR_DAYS, date.wday)) then
 		if(date.hour == BG_GAIN_START_HOUR) then
-			doBroadcastMessage("Este é um alerta para avisar que esta iniciado o periodo de recompensas em Battlegrounds de hoje! São mais de 12 horas de muito PvP para você aproveitar e conseguir experiencia, dinheiro, rating e façanhas no sistema! Tenha um bom dia!",  MESSAGE_TYPES["green"])
+			doBroadcastMessage("Este é um alerta para avisar que esta iniciado o periodo de recompensas em Battlegrounds de hoje! São mais de 12 horas de muito PvP para você aproveitar e conseguir experiencia, pontos de honra e rating além de façanhas! Boa sorte!",  MESSAGE_TYPES["green"])
 		
 			if(pvpBattleground.getBonus() > 0) then
 				bgEvents.bonus = addEvent(checkBonus, 1000 * 10, true)
 			end
 		elseif(date.hour == BG_GAIN_END_HOUR) then
-			doBroadcastMessage("Este é um alerta para avisar que esta encerrado o periodo de recompensas em Battlegrounds por hoje! As Battlegrounds irão voltar a conceder recompensas a 11:00! Tenha uma boa noite!",  MESSAGE_TYPES["green"])
+			doBroadcastMessage("Este é um alerta para avisar que esta encerrado o periodo de recompensas em Battlegrounds por hoje! As Battlegrounds iram voltar a conceder recompensas a 11:00! Tenha uma boa noite!",  MESSAGE_TYPES["green"])
 		end
 	end
 	

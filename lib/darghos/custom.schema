@@ -42,3 +42,14 @@ CREATE TABLE `battleground_teamplayers` (
   `deserter` INTEGER UNSIGNED NOT NULL
 )
 ENGINE = InnoDB;
+
+CREATE TABLE `battleground_bans` (
+  `id` INTEGER  NOT NULL AUTO_INCREMENT,
+  `type` INTEGER  NOT NULL,
+  `value` INTEGER  NOT NULL,
+  `ends` INTEGER  NOT NULL,
+  `reason` TEXT  NOT NULL,
+  `by` INTEGER  NOT NULL,
+  PRIMARY KEY (`id`)
+)
+ENGINE = InnoDB;

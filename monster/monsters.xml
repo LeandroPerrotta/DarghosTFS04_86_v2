@@ -63,7 +63,8 @@
 	<monster name="Catapult R" file="darghos/timegame/catapult r.xml"/>
 	<monster name="Stone" file="darghos/timegame/stone.xml"/>
 	<monster name="Stone Wall" file="darghos/timegame/stone wall.xml"/>
-	<monster name="Pillar" file="darghos/timegame/pillar.xml"/>	
+	<monster name="Pillar" file="darghos/timegame/pillar.xml"/>
+	<monster name="bg_wall" file="darghos/battleground_wall.xml"/>	
 
 	<!-- Amazons -->
 	<monster name="Amazon" file="amazons/amazon.xml"/>

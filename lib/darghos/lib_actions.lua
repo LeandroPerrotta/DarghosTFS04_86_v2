@@ -45,7 +45,7 @@ function christmasPresent.onUse(cid, item, fromPosition, itemEx, toPosition)
 		barbarian_ticket = {id = 12691, actionid = 8},
 		hunter_ticket = {id = 12691, actionid = 2},
 		warrior_ticket = {id = 12691, actionid = 7},
-		mage_ticket = {id = 12691, actionid = 7},
+		mage_ticket = {id = 12691, actionid = 3},
 		summoner_ticket = {id = 12691, actionid = 6},
 		warmaster_ticket = {id = 12691, actionid = 22},
 		yalaharian_ticket = {id = 12691, actionid = 21},
@@ -159,7 +159,7 @@ function christmasPresent.onUse(cid, item, fromPosition, itemEx, toPosition)
 				end
 				table.insert(addedItems, _item)
 			end
-		end		
+		end
 		
 		if(not success) then
 			for k,v in pairs(addedItems) do

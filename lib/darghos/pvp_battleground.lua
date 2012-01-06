@@ -6,7 +6,7 @@ BG_EXP_RATE = 2
 BG_EACH_BONUS_PERCENT = 50
 BG_BONUS_INTERVAL = 60 * 60
 
-BG_CONFIG_TEAMSIZE = 6
+BG_CONFIG_TEAMSIZE = 1
 BG_CONFIG_WINPOINTS = 50
 BG_CONFIG_DURATION = 60 * 15
 
@@ -40,9 +40,23 @@ BATTLEGROUND_STATUS_FINISHED = 3
 BATTLEGROUND_MIN_LEVEL = 100
 BATTLEGROUND_CAN_NON_PVP = true
 
+BATTLEGROUND_FLAG_BONUS_POINTS = 30
+
+BATTLEGROUND_HONOR_LIMIT = 8000
+BATTLEGROUND_DEATH_HONOR_GIVE = 20
+BATTLEGROUND_FRAGGER_HONOR_PERCENT = 50
+BATTLEGROUND_HONOR_WIN = 150
+BATTLEGROUND_HONOR_DESTROY_FLAG = 50
+
 BG_GAIN_EVERYHOUR_DAYS = { WEEKDAY.SATURDAY, WEEKDAY.SUNDAY }
 BG_GAIN_START_HOUR = 11
-BG_GAIN_END_HOUR = 1
+BG_GAIN_END_HOUR = 5
+
+-- BANS CONSTS
+BATTLEGROUND_BAN_TYPE_PLAYER = 0
+BATTLEGROUND_BAN_TYPE_ACCOUNT = 1
+
+BATTLEGROUND_BAN_ENDS_NEVER = -1
 
 pvpBattleground = {
 	lastJoinBroadcastMassage = 0
@@ -51,6 +65,10 @@ pvpBattleground = {
 BATTLEGROUND_RATING = 3
 BATTLEGROUND_HIGH_RATE = 1601
 BATTLEGROUND_LOW_RATE = 501
+
+--[[
+	RATING AREA
+]]--
 
 battlegrondRatingTable = {
 
@@ -119,6 +137,10 @@ function pvpBattleground.getChangeRating(cid, timeIn, bgDuration)
 	return math.floor(changeRating * (timeIn / bgDuration))	
 end
 
+--[[
+	GAIN EXP AREA
+]]--
+
 function pvpBattleground.getExpGainRate(cid)
 
 	local rate = BG_EXP_RATE
@@ -150,6 +172,80 @@ function pvpBattleground.setBonus(bonus)
 	return setGlobalStorageValue(gid.BATTLEGROUND_BONUS, bonus)
 end
 
+--[[
+	GAIN HONOR AREA
+]]--
+
+function pvpBattleground.onGainHonor(cid, honorGain, showEffect)
+	showEffect = showEffect or false
+
+	local storage = getPlayerStorageValue(cid, sid.BATTLEGROUND_TEMP_HONOR)
+	local current = (storage >= 0) and storage or 0
+	current = current + honorGain
+	setPlayerStorageValue(cid, sid.BATTLEGROUND_TEMP_HONOR, current)
+	
+	if(showEffect) then
+		doPlayerSendTextMessage(cid, MESSAGE_EVENT_DEFAULT, "Você garantiu " .. honorGain .. " pontos de honra!")
+	end
+end
+
+function getPlayerBattlegroundHonor(cid)
+	local storage = getPlayerStorageValue(cid, sid.BATTLEGROUND_HONOR_POINTS)
+	return (storage >= 0) and storage or 0	
+end
+
+function setPlayerBattlegroundHonor(cid, honor)
+	setPlayerStorageValue(cid, sid.BATTLEGROUND_HONOR_POINTS, honor)
+end
+
+function changePlayerBattlegroundHonor(cid, honorChange)
+	local newHonor = getPlayerBattlegroundHonor(cid) + honorChange
+	
+	if(newHonor < 0) then
+		setPlayerBattlegroundHonor(cid, 0)
+	elseif(newHonor > BATTLEGROUND_HONOR_LIMIT) then
+		setPlayerBattlegroundHonor(cid, BATTLEGROUND_HONOR_LIMIT)
+	else
+		setPlayerBattlegroundHonor(cid, newHonor)
+	end
+end
+
+function pvpBattleground.doUpdateHonor(cid)
+
+	local storage = getPlayerStorageValue(cid, sid.BATTLEGROUND_TEMP_HONOR)
+	local gainHonor = (storage >= 0) and storage or 0
+	changePlayerBattlegroundHonor(cid, gainHonor)
+	return gainHonor
+end
+
+--[[
+	COMBAT STATS AREA
+]]--
+
+function pvpBattleground.getDamageDone(cid)
+	local storage = getPlayerStorageValue(cid, sid.BATTLEGROUND_MATCH_DAMAGE_DONE)
+	return (storage >= 0) and storage or 0
+end
+
+function pvpBattleground.getHealDone(cid)
+	local storage = getPlayerStorageValue(cid, sid.BATTLEGROUND_MATCH_HEALING_DONE)
+	return (storage >= 0) and storage or 0
+end
+
+function pvpBattleground.damageDone2Honor(cid)
+	local damageDone = pvpBattleground.getDamageDone(cid)
+	pvpBattleground.onGainHonor(cid, math.ceil(damageDone * 0.0005))
+end
+
+function pvpBattleground.healDone2Honor(cid)
+	local healingDone = pvpBattleground.getHealDone(cid)
+	pvpBattleground.onGainHonor(cid, math.ceil(healingDone * 0.00075))
+end
+
+--[[
+	CORE AREA
+]]--
+
 function pvpBattleground.onInit()
 	local configs = {
 		teamSize = BG_CONFIG_TEAMSIZE,
@@ -167,7 +263,7 @@ end
 
 function pvpBattleground.close()
 	battlegroundClose()
-	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] Battleground temporareamente fechada. Voltarï¿½ em alguns instantes.", TALKTYPE_TYPES["channel-red"])
+	broadcastChannel(CUSTOM_CHANNEL_PVP, "[Battleground] Battleground temporareamente fechada. Voltarão em alguns instantes.", TALKTYPE_TYPES["channel-red"])
 end
 
 function pvpBattleground.hasGain(time)
@@ -190,6 +286,20 @@ function pvpBattleground.drawRank()
 	local teams = { "Time A", "Time B" }
 	local data = getBattlegroundStatistics()
 	
+	--msg = msg .. "*B => Destruiu a bandeira\n"
+	msg = msg .. "Informações personagem:\nFrags / Mortes / [Assists] | Danos | Cura\n\n"
+	
+	local vocStr = {
+		"S",
+		"D",
+		"P",
+		"K",
+		"MS",
+		"ED",
+		"RP",
+		"EK"
+	}
+	
 	if(data and #data > 0) then
 		local i = 1
 		for k,v in pairs(data) do
@@ -197,18 +307,20 @@ function pvpBattleground.drawRank()
 			local _cid = v.player_id
 			if(_cid ~= nil and isPlayer(_cid)) then
 				
-				local team = teams[getPlayerBattlegroundTeam(_cid)]
+				local team = "Fora"
 				
-				if(team == nil) then
-					team = "Fora"
-				end
+				if(getPlayerBattlegroundTeam(_cid) ~= BATTLEGROUND_TEAM_NONE) then
+					team = teams[getPlayerBattlegroundTeam(_cid)]
+				end	
 				
-				local spaces_c = 40 - string.len(getPlayerName(_cid)) - string.len(team)
-				
+				local spaces_c = 5	
 				local spaces = ""	
 				for i=1, spaces_c do spaces = spaces .. " " end
+				
+				local _vocStr = vocStr[getPlayerVocation(_cid)] or "??"
 						
-				msg = msg .. i .. "# " .. getPlayerName(_cid) .. " (" .. team .. ")".. spaces .. "" .. v.kills .. " / " .. v.deaths .. "  [" .. v.assists .. "] \n"	
+				msg = msg .. i .. "# " .. getPlayerName(_cid) .. " (" .. _vocStr .. ", lv " .. getPlayerLevel(_cid) .. ", " .. team .. ")\n " 
+				msg = msg .. spaces .. "" .. v.kills .. " / " .. v.deaths .. "  [" .. v.assists .. "] | " .. pvpBattleground.getDamageDone(_cid) .. " | " .. pvpBattleground.getHealDone(_cid) .. " \n"	
 				i = i + 1
 			end
 		end
@@ -228,7 +340,7 @@ function pvpBattleground.showStatistics(cid)
 	msg = msg .. "(" .. teams[BATTLEGROUND_TEAM_ONE] .. ") " .. points[BATTLEGROUND_TEAM_ONE] .. " X " .. points[BATTLEGROUND_TEAM_TWO] .. " (" .. teams[BATTLEGROUND_TEAM_TWO] .. ")\n\n"
 	
 	msg = msg .. pvpBattleground.drawRank()
-	doPlayerPopupFYI(cid, msg)
+	doShowTextDialog(cid, 2390, msg)
 end
 
 function pvpBattleground.showResult(cid, winnner)
@@ -237,25 +349,71 @@ function pvpBattleground.showResult(cid, winnner)
 
 	local teams = { "Time A", "Time B" }
 	
-	local msg = "Nï¿½o houve vencedor, declarado EMPATE!\n\n"
+	local msg = "Não houve vencedor, declarado EMPATE!\n\n"
 	
 	if(winnner ~= BATTLEGROUND_TEAM_NONE) then
-		msg = "O " .. teams[winnner] .. " ï¿½ o VENCEDOR!\n\n"
+		msg = "O " .. teams[winnner] .. " é o VENCEDOR!\n\n"
 	end
 	
 	msg = msg .. pvpBattleground.drawRank()
-	doPlayerPopupFYI(cid, msg)
+	doShowTextDialog(cid, 2390, msg)
 end
 
 function pvpBattleground.getInformations()
-	local msg = ""
-	msg = msg .. "Este ï¿½ um sistema de PvP do Darghos, e o objetivo ï¿½ seu time atingir 50 pontos, obtidos ao derrotar um oponente. A partida tem duraï¿½ï¿½o de atï¿½ 15 minuto\n"
-	msg = msg .. "se ao final do tempo nenhum time tiver atingido os 50 pontos a vitoria ï¿½ concedida ao com maior numero de pontos, e empate no caso de igualdade de pontos\n"
-	msg = msg .. "Aos participantes do time vencedor ï¿½ concedido uma quantidade de pontos de experiencia e algum dinheiro!\n"
-	msg = msg .. "Ao morrer vocï¿½ nï¿½o perderï¿½ nada e nascera na base de seu time. Dentro da Battleground os danos sï¿½o mais efetivos contra inimigos (100%) e diminuidos em aliados (25%)!\n"
-	msg = msg .. "Use o PvP Channel para se comunicar com seus companheiros, somente eles poderï¿½o ler suas mensagens. Boa sorte!\n"
+	local msg = "INSTRUÇÕES BASICAS:\n\n"
+	msg = msg .. "Este é um sistema de PvP do Darghos, e o objetivo é seu time atingir 50 pontos, obtidos ao derrotar um oponente ou derrubando o muro de proteção da bandeira na base inimiga e a destruindo. A partida tem duração de até 15 minutos "
+	msg = msg .. "se ao final do tempo nenhum time tiver atingido os 50 pontos a vitoria é concedida ao com maior numero de pontos, e empate no caso de igualdade de pontos\n\n"
+	msg = msg .. "Aos participantes do time vencedor é concedido uma quantidade de pontos de experiencia, rating e honra que você poderá usar para trocar por itens uteis com alguns NPCs!\n\n"
+	msg = msg .. "Ao morrer você não perderá nada e nascera na base de seu time e logo poderá voltar para o combate!\n\n"
+	msg = msg .. "Use o PvP Channel para se comunicar com seus companheiros, somente eles poderão ler suas mensagens.\n\n"
+	msg = msg .. "Isto é um resumo muito curto, o sistema é muito maior! Você poderá encontrar informações mais detalhadas no link:\n"
+	msg = msg .. "http://pt-br.darghos.wikia.com/wiki/Battlegrounds\n\nBoa Sorte!"
 
 	return msg
+end
+
+function pvpBattleground.getSpellsInfo(cid)
+
+	local newSpells = {
+		{
+			nil
+		},
+		{
+			{words = "utura sio [nick]", name = "Friend Rejuvenation", mana = "340", desc = "Magia de turno. Recupera boa quantidade de vida do alvo a cada 1 segundo por 10 segundos."}
+		},
+		{
+			{words = "exori con mort", name = "Focused Shot", mana = "720", cast = "3 seg", desc = "Principal magia de ataque, muito eficiente para finalização de um oponente imovel, causando um grande dano."}
+		},
+		{
+			{words = "exana gran mort", name = "Intense Wound Cleasing", mana = "240", desc = "Recupera 40% da vida, sendo 10% instantaneamente e 30% em turnos de 1 segundo durante 15 segundos."},
+			{words = "exana vita", name = "Life Scream", mana = "50%", desc = "Recupera 90% da vida."},
+			{words = "exori hur san", name = "Divine Whirlwind Throw", desc = "Dano semelhante ao exori hur, porem recupera de 50 a 100 de mana, mas so pode ser usada a 1 quadrado de distancia."}
+		}
+	}
+
+	local voc = (getPlayerPromotionLevel(cid) == 1) and getPlayerVocation(cid) - 4 or getPlayerVocation(cid)
+	
+	local str = ""
+	
+	if(newSpells[voc]) then
+		for k,v in pairs(newSpells[voc]) do
+			str = str .. v.words .. " (" .. v.name .. "):\n"
+			
+			if(v.mana) then
+				str = str .. "Consome " .. v.mana .. " mana.\n"
+			end
+			
+			if(v.cast) then
+				str = str .. "Requer " .. v.cast .. " para lançar.\n"
+			end			
+			
+			str = str .. "Descrição: " .. v.desc .. "\n\n"		
+		end
+	else
+		str = "Nenhuma nova magia disponivel na Battleground para sua vocação"		
+	end
+
+	return str
 end
 
 function pvpBattleground.getPlayersTeamString(team_id)
@@ -345,15 +503,27 @@ function pvpBattleground.broadcastLeftOnePlayer()
 	end
 
 	local messages = {
-		"Quer ganhar experiencia e dinheiro se divertindo com PvP? Participe da proxima battleground! Restam apï¿½nas mais um para fechar os times 6x6! -> !bg entrar",
-		"Restam apï¿½nas mais um jogador para fechar os times 6x6 para a proxima Battleground! Ganhe recompensas! Ao morrer nada ï¿½ perdido! Divirta-se! -> !bg entrar",
-		"Gosta de PvP? Prove seu valor! Restam apï¿½nas mais um jogadore para fechar os times 6x6 para a proxima Battleground! -> !bg entrar",
-		"Nï¿½o conheï¿½e o sistema de Battlegrounds? Conheï¿½a agora! Falta apï¿½nas vocï¿½ para o proxima batalha 6x6! Nï¿½o hï¿½ perdas nas mortes, ajude o time na vitoria e ganhe recompensas! -> !bg entrar",
+		"Quer ganhar experiencia e dinheiro se divertindo com PvP? Participe da proxima battleground! Restam apénas mais um para fechar os times 6x6! -> !bg entrar",
+		"Restam apénas mais um jogador para fechar os times 6x6 para a proxima Battleground! Ganhe recompensas! Ao morrer nada é perdido! Divirta-se! -> !bg entrar",
+		"Gosta de PvP? Prove seu valor! Restam apénas mais um jogadore para fechar os times 6x6 para a proxima Battleground! -> !bg entrar",
+		"Não conhece o sistema de Battlegrounds? Conheça agora! Falta apénas você para o proxima batalha 6x6! Não há perdas nas mortes, ajude o time na vitoria e ganhe recompensas! -> !bg entrar",
 	}
 	
 	local rand = math.random(1, #messages)
 	doBroadcastMessage(messages[rand], MESSAGE_INFO_DESCR)
 	pvpBattleground.lastJoinBroadcastMassage = os.time()
+end
+
+function pvpBattleground.onDealDamage(cid, damage)
+	local storage = getPlayerStorageValue(cid, sid.BATTLEGROUND_MATCH_DAMAGE_DONE)
+	local currDamage = (storage >= 0) and storage or 0
+	setPlayerStorageValue(cid, sid.BATTLEGROUND_MATCH_DAMAGE_DONE, currDamage + damage)
+end
+
+function pvpBattleground.onDealHeal(cid, heal)
+	local storage = getPlayerStorageValue(cid, sid.BATTLEGROUND_MATCH_HEALING_DONE)
+	local currHeal = (storage >= 0) and storage or 0
+	setPlayerStorageValue(cid, sid.BATTLEGROUND_MATCH_HEALING_DONE, currHeal + heal)
 end
 
 function pvpBattleground.onEnter(cid)
@@ -362,19 +532,39 @@ function pvpBattleground.onEnter(cid)
 		return false
 	end
 
+	local isBanned, banData = pvpBattleground.doPlayerIsBanned(cid)
+	if(isBanned) then
+		local endsStr = "Permanente (deletado)"
+		if(banData.ends ~= BATTLEGROUND_BAN_ENDS_NEVER) then
+			endsStr = os.date("%d/%m/%y %X", banData.ends)
+		end
+
+		local typeStr = (banData.type == BATTLEGROUND_BAN_TYPE_PLAYER) and "Apénas este personagem" or "Toda a conta"
+		
+		local str = ""
+		str = str .. "ATENÇÃO:\n\n"
+		str = str .. "Você está banido de participar de partidas na Battleground pela seguinte razão:\n\n"
+		str = str .. banData.reason .. "\n\n"
+		str = str .. "Esta punição afeta: " .. typeStr .. ".\n"
+		str = str .. "Está punição durará até: " .. endsStr .. "."
+		
+		doPlayerPopupFYI(cid, str)
+		return false
+	end
+	
 	if(getCreatureCondition(cid, CONDITION_OUTFIT)) then
-		doPlayerSendCancel(cid, "Vocï¿½ nï¿½o pode entrar na battleground enquanto estiver sob certos efeitos magicos.")
+		doPlayerSendCancel(cid, "Você não pode entrar na battleground enquanto estiver sob certos efeitos magicos.")
 		return false
 	end
 	
 	if(getPlayerLevel(cid) < BATTLEGROUND_MIN_LEVEL) then
-		doPlayerSendCancel(cid, "So ï¿½ permitido jogadores com level " .. BATTLEGROUND_MIN_LEVEL .. " ou superior a participarem de uma battleground.")
+		doPlayerSendCancel(cid, "So é permitido jogadores com level " .. BATTLEGROUND_MIN_LEVEL .. " ou superior a participarem de uma battleground.")
 		return false	
 	end
 	
 	local onIslandOfPeace = getPlayerTown(cid) == towns.ISLAND_OF_PEACE
 	if(not BATTLEGROUND_CAN_NON_PVP and onIslandOfPeace) then
-		doPlayerSendCancel(cid, "So ï¿½ permitido jogadores em areas Open PvP a participarem de Battlegrounds.")
+		doPlayerSendCancel(cid, "So é permitido jogadores em areas Open PvP a participarem de Battlegrounds.")
 		return false	
 	end	
 	
@@ -382,22 +572,22 @@ function pvpBattleground.onEnter(cid)
 	local ret = doPlayerJoinBattleground(cid)
 
 	if(ret == BG_RET_CLOSED) then
-		doPlayerSendCancel(cid, "A battleground estï¿½ temporareamente fechada.")	
+		doPlayerSendCancel(cid, "A battleground está temporareamente fechada.")	
 		return false
 	end
 
 	if(ret == BG_RET_CAN_NOT_JOIN) then
-		doPlayerSendCancel(cid, "Vocï¿½ abandonou uma battleground e foi marcado como desertor, e nï¿½o poderï¿½ entrar em outra durante 20 minutos.")
+		doPlayerSendCancel(cid, "Você abandonou uma battleground e foi marcado como desertor, e não poderá entrar em outra durante 20 minutos.")
 		return false
 	end	
 	
 	if(ret == BG_RET_ALREADY_IN_WAITLIST) then
-		doPlayerSendCancel(cid, "Vocï¿½ jï¿½ se encontra na fila para a battleground!")
+		doPlayerSendCancel(cid, "Você já se encontra na fila para a battleground!")
 		return false	
 	end
 	
 	if(ret == BG_RET_INFIGHT) then
-		doPlayerSendCancel(cid, "Vocï¿½ estï¿½ em condiï¿½ï¿½o de batalha, aguarde sair a condiï¿½ï¿½o e tente novamente.")
+		doPlayerSendCancel(cid, "Você está em condição de combate, aguarde sair e tente novamente.")
 		return false
 	end
 		
@@ -420,29 +610,33 @@ function pvpBattleground.onEnter(cid)
 			leftStr = leftStr .. "Restam "
 			
 			if(playersLeft <= 2) then
-				leftStr = leftStr .. "apï¿½nas "
+				leftStr = leftStr .. "apénas "
 			end
 			
 			if(playersLeft == 1) then
 				pvpBattleground.broadcastLeftOnePlayer()
 			end
 			
-			leftStr = leftStr .. "mais " .. (BG_CONFIG_TEAMSIZE * 2) - getBattlegroundWaitlistSize() .. " jogadores para iniciar a proxima partida! Quer participar tambï¿½m? Digite '!bg entrar'" 
+			leftStr = leftStr .. "mais " .. (BG_CONFIG_TEAMSIZE * 2) - getBattlegroundWaitlistSize() .. " jogadores para iniciar a proxima partida! Quer participar também? Digite '!bg entrar'" 
 		else
 			closeTeam = false
-			leftStr = leftStr .. " Quer participar tambï¿½m? Digite '!bg entrar'"
+			leftStr = leftStr .. " Quer participar também? Digite '!bg entrar'"
 		end
 	
 		if(not closeTeam) then
 			pvpBattleground.sendPvpChannelMessage("[Battleground] " .. leftStr, PVPCHANNEL_MSGMODE_OUTBATTLE)
 		else
-			pvpBattleground.sendPvpChannelMessage("[Battleground] Os times para a proxima battleground estï¿½o completos! A nova partida comeï¿½arï¿½ em instantes, assim que a Battleground estiver vazia...", PVPCHANNEL_MSGMODE_OUTBATTLE)
+			pvpBattleground.sendPvpChannelMessage("[Battleground] Os times para a proxima battleground estão completos! A nova partida começara em instantes, assim que a Battleground estiver vazia...", PVPCHANNEL_MSGMODE_OUTBATTLE)
 		end
 		
 		return true
 	elseif(ret == BG_RET_PUT_INSIDE or ret == BG_RET_PUT_DIRECTLY) then
 		lockTeleportScroll(cid)
 		registerCreatureEvent(cid, "OnChangeOutfit")
+		registerCreatureEvent(cid, "onStateChange")
+		
+		setPlayerStorageValue(cid, sid.BATTLEGROUND_MATCH_DAMAGE_DONE, 0)
+		setPlayerStorageValue(cid, sid.BATTLEGROUND_MATCH_HEALING_DONE, 0)
 		
 		-- teleportando direto da ilha de treinamento...
 		if(isInTrainingIsland(cid)) then
@@ -460,18 +654,16 @@ function pvpBattleground.onEnter(cid)
 		registerCreatureEvent(cid, "onBattlegroundDeath")
 		registerCreatureEvent(cid, "onBattlegroundEnd")
 		registerCreatureEvent(cid, "onBattlegroundThink")
-		registerCreatureEvent(cid, "onBattlegroundLeave")		
+		registerCreatureEvent(cid, "onBattlegroundLeave")
 		
 		doPlayerSetIdleTime(cid, 0)
 		
-		local msg = "Bem vindo ao sistema de Battleground do Darghos!\n"
+		local msg = "Bem vindo ao sistema de Battleground do Darghos!\nComandos úteis: !bg stats, !bg afk [nick], !bg spells. "
 		
 		local isFirstBattleground = getPlayerStorageValue(cid, sid.FIRST_BATTLEGROUND)		
 		if(isFirstBattleground == -1) then
-			msg = msg .. pvpBattleground.getInformations()
-			pvpBattleground.sendPlayerChannelMessage(cid, msg)
-			msg = ""
 			setPlayerStorageValue(cid, sid.FIRST_BATTLEGROUND, 1)	
+			doShowTextDialog(cid, 2390, pvpBattleground.getInformations())
 		end
 		
 		msg = msg .. pvpBattleground.getPlayersTeamString(getPlayerBattlegroundTeam(cid))
@@ -490,12 +682,91 @@ function pvpBattleground.onEnter(cid)
 	return false
 end
 
+function pvpBattleground.addObjects()
+
+	clearBattlegroundStatistics()
+	local ITEM_GATE = 1560
+	
+	-- creature walls
+	local gid_creatures = {
+		[uid.BATTLEGROUND_WALL_CREATURE_TEAM_ONE] = gid.WALL_CID_TEAM_ONE,
+		[uid.BATTLEGROUND_WALL_CREATURE_TEAM_TWO] = gid.WALL_CID_TEAM_TWO
+	}
+	
+	for i = uid.BATTLEGROUND_WALL_CREATURE_TEAM_ONE, uid.BATTLEGROUND_WALL_CREATURE_TEAM_TWO do
+		local pos = getThingPos(i)
+		local creature = getTopCreature(pos)
+		if(creature and isMonster(creature.uid) and getCreatureName(creature.uid) == "bg_wall") then
+			-- o wall já está lá... so iremos "topar" a sua vida
+			doCreatureAddHealth(creature.uid, getCreatureMaxHealth(creature.uid) - getCreatureHealth(creature.uid))
+		else
+			local temp_monster = doSummonCreature("bg_wall", pos)
+			doSetStorage(gid_creatures[i], temp_monster)
+			registerCreatureEvent(temp_monster, "onStateChange")
+		end
+	end
+	
+	-- static items walls
+	for i = uid.BATTLEGROUND_WALLS_START, uid.BATTLEGROUND_WALLS_END do
+		local pos = getThingPos(i)
+		if(getTileItemById(pos, ITEM_GATE).uid == 0) then
+			doCreateItem(ITEM_GATE, pos)
+		end
+	end	
+	
+	-- flags
+	local ITEM_FLAGS = {
+		[uid.BATTLEGROUND_TEAM_ONE_FLAG] = 11293,
+		[uid.BATTLEGROUND_TEAM_TWO_FLAG] = 10952
+	}
+	
+	for k,v in pairs(ITEM_FLAGS) do
+		local pos = getThingPos(k)
+		if(getTileItemById(pos, v).uid == 0) then
+			doCreateItem(v, pos)
+		end
+	end
+end
+
+function pvpBattleground.removeWall(team)
+	local teamWalls = {
+		[BATTLEGROUND_TEAM_ONE] = {uid.BATTLEGROUND_WALLS_START, uid.BATTLEGROUND_WALLS_START + 1},
+		[BATTLEGROUND_TEAM_TWO] = {uid.BATTLEGROUND_WALLS_END, uid.BATTLEGROUND_WALLS_END - 1}
+	}
+	
+	local ITEM_GATE = 1560
+	
+	for k,v in pairs(teamWalls[team]) do
+		local pos = getThingPos(v)
+		local item = getTileItemById(pos, ITEM_GATE)
+		if(item.uid ~= 0) then
+			doRemoveItem(item.uid)
+		end
+	end
+end
+
+function pvpBattleground.onLeaveBase(cid, teamBase)
+
+	if(getBattlegroundStatus() ~= BATTLEGROUND_STATUS_STARTED) then
+		doPlayerSendCancel(cid, "Aguarde o inicio da partida para sair de sua base.")
+		return false		
+	end
+	
+	if(getPlayerBattlegroundTeam(cid) ~= teamBase) then
+		local teams = { [1] = "Time A", [2] = "Time B" }
+		doPlayerSendCancel(cid, "Somente jogadores do " .. teams[teamBase] .. " podem entrar neste portal.")
+		return false	
+	end
+	
+	return true
+end
+
 function pvpBattleground.onExit(cid, idle)
 
 	idle = idle or false
 
 	if(getBattlegroundStatus() ~= BATTLEGROUND_STATUS_STARTED) then
-		doPlayerSendCancel(cid, "Aguarde o inicio da Battleground para abandonar-la.")
+		doPlayerSendCancel(cid, "Aguarde o inicio da partida para abandonar a Battleground.")
 		return false
 	end
 
@@ -511,7 +782,7 @@ function pvpBattleground.onExit(cid, idle)
 		pvpBattleground.sendPvpChannelMessage("[Battleground] Um jogador desertou a batalha! Quer substituir-lo imediatamente? Digite '!bg entrar'!", PVPCHANNEL_MSGMODE_OUTBATTLE)
 		
 		local removedRating = pvpBattleground.removePlayerRating(cid, BG_CONFIG_DURATION, BG_CONFIG_DURATION, true)
-		doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Vocï¿½ piorou a sua classificaï¿½ï¿½o (rating) em " .. removedRating .. " pontos por seu abandono da Battleground.")
+		doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Você piorou a sua classificação (rating) em " .. removedRating .. " pontos por seu abandono da Battleground.")
 		
 		return true
 	end
@@ -519,29 +790,34 @@ function pvpBattleground.onExit(cid, idle)
 	return false	
 end
 
+--[[
+	IDLE REPORT AREA
+]]--
+
 function pvpBattleground.onReportIdle(cid, idle_player)
 
-	if(not doPlayerIsInBattleground(idle_player) or 		(getPlayerBattlegroundTeam(cid) ~= getPlayerBattlegroundTeam(idle_player))
+	if(not doPlayerIsInBattleground(idle_player) or 
+		(getPlayerBattlegroundTeam(cid) ~= getPlayerBattlegroundTeam(idle_player))
 		) then
-		pvpBattleground.sendPlayerChannelMessage(cid, "Este jogador nï¿½o pertence a seu time ou nï¿½o estï¿½ na Battleground.")
+		pvpBattleground.sendPlayerChannelMessage(cid, "Este jogador não pertence a seu time ou não está na Battleground.")
 		return
 	end
 	
 	if(getBattlegroundStatus() ~= BATTLEGROUND_STATUS_STARTED) then
-		pvpBattleground.sendPlayerChannelMessage(cid, "Somente ï¿½ permitido fazer denï¿½ncias apï¿½s a Battleground ter iniciado.")
+		pvpBattleground.sendPlayerChannelMessage(cid, "Somente é permitido fazer denuncias após a Battleground ter iniciado.")
 		return
 	end	
 	
 	local report_block = getPlayerStorageValue(cid, sid.BATTLEGROUND_INVALID_REPORT_BLOCK)
 	if(report_block ~= 0 and os.time() <= report_block) then
-		pvpBattleground.sendPlayerChannelMessage(cid, "Vocï¿½ estï¿½ impossibilitado de efetuar denuncias de jogadores inativos momentaneamente por uma denuncia invalida recente.")
+		pvpBattleground.sendPlayerChannelMessage(cid, "Você esta impossibilitado de efetuar denuncias de jogadores inativos momentaneamente por uma denuncia invalida recente.")
 		return
 	end
 	
 	setPlayerStorageValue(idle_player, sid.BATTLEGROUND_LAST_REPORT, os.time())
 	
-	pvpBattleground.sendPlayerChannelMessage(cid, "Vocï¿½ denunciou o jogador " .. getPlayerName(idle_player) .. " como inativo com! Ele serï¿½ expulso da Battleground se continuar inativo no proximo minuto.")
-	doPlayerPopupFYI(idle_player, "ATENï¿½ï¿½O: \n\nVocï¿½ foi acusado de estar inativo dentro da Battleground, o que ï¿½ proibido!\nVocï¿½ tem " .. BG_AFK_TIME_LIMIT .. " segundos para entrar em combate com um oponente ou serï¿½ expulso da batalha e marcado como desertor!")
+	pvpBattleground.sendPlayerChannelMessage(cid, "Você denunciou o jogador " .. getPlayerName(idle_player) .. " como inativo com! Ele será expulso da Battleground se continuar inativo no proximo minuto.")
+	doPlayerPopupFYI(idle_player, "ATENÇÃO: \n\nVocê foi acusado de estar inativo dentro da Battleground, o que é proibido!\nVocê tem " .. BG_AFK_TIME_LIMIT .. " segundos para entrar em combate com um oponente ou será expulso da batalha e marcado como desertor!")
 	addEvent(pvpBattleground.validateReport, 1000 * BG_AFK_TIME_LIMIT, cid, idle_player)
 end
 
@@ -565,9 +841,94 @@ function pvpBattleground.validateReport(cid, idle_player)
 		pvpBattleground.onExit(idle_player, true)
 	else
 		setPlayerStorageValue(cid, sid.BATTLEGROUND_INVALID_REPORT_BLOCK, os.time() + (60 * 3))
-		pvpBattleground.sendPlayerChannelMessage(cid, "Nï¿½o foi constatado que o jogador que vocï¿½ reportou estava inativo. Pela denuncia invalida vocï¿½ nao poderï¿½ denunciar outros jogadores por 3 minutos.")
+		pvpBattleground.sendPlayerChannelMessage(cid, "Não foi constatado que o jogador que você reportou estava inativo. Pela denuncia invalida você nao poderá denunciar outros jogadores por 3 minutos.")
 	end
 end
+
+--[[
+	BANS AREA
+]]--
+
+function pvpBattleground.doPlayerIsBanned(cid)
+	local result = db.getResult("SELECT `id`, `type`, `value`, `added`, `ends`, `reason`, `by` FROM `battleground_bans` WHERE ((`value` = " .. getPlayerGUID(cid) .. ") OR (`account_id` = " .. getPlayerAccountId(cid) .. " AND `type` = " .. BATTLEGROUND_BAN_TYPE_ACCOUNT .. ")) AND (`ends` = -1 OR `ends` >= " .. os.time() .. ") AND `active` = 1 ORDER BY `added` DESC LIMIT 1;")
+	
+	local banned, data = false, {}
+	
+	if(result:getID() ~= -1) then
+		banned = true
+		
+		data["type"] = result:getDataInt("type")
+		data["added"] = result:getDataInt("added")
+		data["ends"] = result:getDataInt("ends")
+		data["reason"] = result:getDataString("reason")
+		data["by"] = result:getDataInt("by")
+	end
+	
+	return banned, data
+end
+
+function pvpBattleground.getAccountBans(account_id)
+	local result = db.getResult("SELECT `id`, `type`, `value`, `added`, `ends`, `reason`, `by` FROM `battleground_bans` WHERE `account_id` = " .. account_id .. " AND `active` = 1 ORDER BY `added` DESC;")
+	
+	local bans = {}
+	
+	if(result:getID() ~= -1) then
+		repeat
+			table.insert(bans, {id = result:getDataInt("id"), type = result:getDataInt("type"), value = result:getDataInt("value"), added = result:getDataInt("added"), ends = result:getDataInt("ends"), reason = result:getDataString("reason"), by = result:getDataInt("by")})
+		until not(result:next())
+		
+		result:free()
+	end
+	
+	return bans
+end
+
+function pvpBattleground.addPlayerBan(account_id, value, type, reason, by)
+	
+	local bans = pvpBattleground.getAccountBans(account_id)
+	
+	local BAN_RULES = {
+		{count = 1, period = 60 * 60 * 24 * 7, resetRating = false}
+		,{count = 2, period = 60 * 60 * 24 * 15, resetRating = true}
+		,{count = 3, period = 60 * 60 * 24 * 30, resetRating = true}
+		,{period = -1, resetRating = true}
+	}
+	
+	local playerbans = 1
+	if(#bans > 0) then
+		playerbans = playerbans + #bans
+	end
+	
+	local banArgs = nil
+	
+	for k,v in ipairs(BAN_RULES) do
+		if(not v.count or v.count >= playerbans) then
+			banArgs = v
+			break
+		end
+	end
+	
+	local ends = BATTLEGROUND_BAN_ENDS_NEVER
+	if(banArgs.period ~= BATTLEGROUND_BAN_ENDS_NEVER) then
+		ends = banArgs.period + os.time()
+	end
+	
+	db.executeQuery("INSERT INTO `battleground_bans` (`type`, `account_id`, `value`, `added`, `ends`, `reason`, `by`) VALUES (" .. type .. ", " .. account_id .. ", " .. value .. ", " .. os.time() .. ", " .. ends .. ", '" .. reason .. "', " .. getPlayerGUID(by) .. ");")
+
+	if(banArgs.resetRating) then
+		local pid = getPlayerByGUID(value)
+		
+		if(pid) then
+			doPlayerSetBattlegroundRating(pid, 0)
+		else
+			db.executeQuery("UPDATE `players` SET `battleground_rating` = 0 WHERE `id` = " .. value .. ";")
+		end
+	end
+end
+
+--[[
+	MISC AREA
+]]--
 
 function pvpBattleground.spamDebuffSpell(cid, min, max, playerDebbufs)
 

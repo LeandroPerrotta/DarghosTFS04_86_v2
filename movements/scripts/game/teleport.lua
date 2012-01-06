@@ -32,14 +32,15 @@ function onStepIn(cid, item, position, fromPosition)
 		return TRUE
 	end
 	
-	if(item.actionid == aid.BATTLEGROUND_ENTRANCE) then
-		local ret = pvpBattleground.onEnter(cid)
+	if(item.actionid == aid.BATTLEGROUND_EXIT) then
+		local ret = pvpBattleground.onExit(cid)
 		if(not ret) then
 			pushBack(cid, position, fromPosition)
 			return false
-		end	
-	elseif(item.actionid == aid.BATTLEGROUND_EXIT) then
-		local ret = pvpBattleground.onExit(cid)
+		end
+	elseif(isInArray({aid.BATTLEGROUND_LEAVE_BASE_TEAM_ONE, aid.BATTLEGROUND_LEAVE_BASE_TEAM_TWO}, item.actionid)) then
+		local team = (item.actionid == aid.BATTLEGROUND_LEAVE_BASE_TEAM_ONE) and BATTLEGROUND_TEAM_ONE or BATTLEGROUND_TEAM_TWO
+		local ret = pvpBattleground.onLeaveBase(cid, team)
 		if(not ret) then
 			pushBack(cid, position, fromPosition)
 			return false

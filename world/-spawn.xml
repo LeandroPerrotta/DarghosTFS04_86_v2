@@ -6408,6 +6408,9 @@
   <spawn centerx="2175" centery="1825" centerz="7" radius="1">
     <npc name="quendor.vase" x="-1" y="1" z="7" spawntime="60"/>
   </spawn>
+  <spawn centerx="2212" centery="1825" centerz="7" radius="1">
+    <npc name="quendor.pvp" x="0" y="0" z="7" spawntime="60"/>
+  </spawn>
   <spawn centerx="2380" centery="1828" centerz="7" radius="5">
     <monster name="Snake" x="3" y="-2" z="7" spawntime="60"/>
     <monster name="Snake" x="-2" y="-1" z="7" spawntime="60"/>
@@ -10138,6 +10141,9 @@
     <monster name="catapult r" x="3" y="5" z="8" spawntime="3600"/>
     <monster name="pillar" x="5" y="5" z="8" spawntime="60"/>
   </spawn>
+  <spawn centerx="2466" centery="1635" centerz="8" radius="1">
+    <npc name="battleground.magic2" x="0" y="0" z="8" spawntime="60"/>
+  </spawn>
   <spawn centerx="2606" centery="1644" centerz="8" radius="5">
     <monster name="pillar" x="-4" y="-3" z="8" spawntime="60"/>
     <monster name="catapult l" x="-2" y="-3" z="8" spawntime="3600"/>
@@ -10163,18 +10169,15 @@
     <monster name="Stone Wall" x="1" y="4" z="8" spawntime="3600"/>
     <monster name="Stone Wall" x="2" y="4" z="8" spawntime="3600"/>
   </spawn>
-  <spawn centerx="2477" centery="1650" centerz="8" radius="1">
-    <npc name="battleground.magic2" x="0" y="0" z="8" spawntime="60"/>
-  </spawn>
   <spawn centerx="1410" centery="1653" centerz="8" radius="1"/>
   <spawn centerx="1405" centery="1658" centerz="8" radius="1"/>
   <spawn centerx="1414" centery="1660" centerz="8" radius="1"/>
+  <spawn centerx="2358" centery="1663" centerz="8" radius="1">
+    <npc name="battleground.magic1" x="0" y="0" z="8" spawntime="60"/>
+  </spawn>
   <spawn centerx="1404" centery="1667" centerz="8" radius="1"/>
   <spawn centerx="1451" centery="1669" centerz="8" radius="1">
     <monster name="Dragon Lord" x="1" y="1" z="8" spawntime="60"/>
-  </spawn>
-  <spawn centerx="2352" centery="1670" centerz="8" radius="1">
-    <npc name="battleground.magic1" x="0" y="0" z="8" spawntime="60"/>
   </spawn>
   <spawn centerx="1437" centery="1671" centerz="8" radius="1">
     <monster name="Dragon Lord" x="0" y="1" z="8" spawntime="60"/>
