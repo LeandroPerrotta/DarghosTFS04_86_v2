@@ -206,7 +206,7 @@ function changePlayerBattlegroundHonor(cid, honorChange)
 	elseif(newHonor > BATTLEGROUND_HONOR_LIMIT) then
 		setPlayerBattlegroundHonor(cid, BATTLEGROUND_HONOR_LIMIT)
 	else
-		setPlayerBattlegroundHonor(cid, newHonor * getConfigValue('rateLoot'))
+		setPlayerBattlegroundHonor(cid, newHonor)
 	end
 end
 
@@ -214,7 +214,7 @@ function pvpBattleground.doUpdateHonor(cid)
 
 	local storage = getPlayerStorageValue(cid, sid.BATTLEGROUND_TEMP_HONOR)
 	local gainHonor = (storage >= 0) and storage or 0
-	changePlayerBattlegroundHonor(cid, gainHonor)
+	changePlayerBattlegroundHonor(cid, gainHonor * getConfigValue('rateLoot'))
 	return gainHonor
 end
 
