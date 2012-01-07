@@ -143,7 +143,7 @@ end
 
 function pvpBattleground.getExpGainRate(cid)
 
-	local rate = BG_EXP_RATE
+	local rate = BG_EXP_RATE * darghos_exp_multipler
 	local bonus = pvpBattleground.getBonus()
 	if(bonus > 0) then
 		rate = rate + (bonus * (BG_EACH_BONUS_PERCENT / 100))
@@ -206,7 +206,7 @@ function changePlayerBattlegroundHonor(cid, honorChange)
 	elseif(newHonor > BATTLEGROUND_HONOR_LIMIT) then
 		setPlayerBattlegroundHonor(cid, BATTLEGROUND_HONOR_LIMIT)
 	else
-		setPlayerBattlegroundHonor(cid, newHonor)
+		setPlayerBattlegroundHonor(cid, newHonor * getConfigValue('rateLoot'))
 	end
 end
 
