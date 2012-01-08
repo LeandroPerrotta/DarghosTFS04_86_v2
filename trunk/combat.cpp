@@ -1137,7 +1137,21 @@ void ValueCallback::getMinMaxValues(Player* player, int32_t& min, int32_t& max, 
 				if(useCharges && weapon->hasCharges() && g_config.getBool(ConfigManager::REMOVE_WEAPON_CHARGES))
 					g_game.transformItem(weapon, weapon->getID(), std::max(0, weapon->getCharges() - 1));
 
+#ifdef __DARGHOS_CUSTOM__
+                int32_t attackAdd = 0;
+                if(weapon->getAmmoType() != AMMO_NONE)
+                {
+                    Item* mainWeapon = player->getWeapon(true);
+
+                    attackAdd += mainWeapon->getAttack();
+                    attackAdd += mainWeapon->getExtraAttack();
+                }
+
+                lua_pushnumber(L, attackAdd + weapon->getAttack() + weapon->getExtraAttack());
+#else
+
 				lua_pushnumber(L, weapon->getAttack() + weapon->getExtraAttack());
+#endif
 			}
 			else
 			{

@@ -432,6 +432,9 @@ int32_t Player::getWeaponSkill(const Item* item) const
 			return getSkill(SKILL_FIST, SKILL_LEVEL);
 
 		case WEAPON_DIST:
+#ifdef __DARGHOS_CUSTOM__
+		case WEAPON_AMMO:
+#endif
 			return getSkill(SKILL_DIST, SKILL_LEVEL);
 
 		default:
