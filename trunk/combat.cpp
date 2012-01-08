@@ -1142,9 +1142,11 @@ void ValueCallback::getMinMaxValues(Player* player, int32_t& min, int32_t& max, 
                 if(weapon->getAmmoType() != AMMO_NONE)
                 {
                     Item* mainWeapon = player->getWeapon(true);
-
-                    attackAdd += mainWeapon->getAttack();
-                    attackAdd += mainWeapon->getExtraAttack();
+                    if(mainWeapon)
+                    {
+                        attackAdd += mainWeapon->getAttack();
+                        attackAdd += mainWeapon->getExtraAttack();
+                    }
                 }
 
                 lua_pushnumber(L, attackAdd + weapon->getAttack() + weapon->getExtraAttack());
