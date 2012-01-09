@@ -924,6 +924,10 @@ bool ConditionDamage::setParam(ConditionParam_t param, int32_t value)
 			periodDamage = value;
 			break;
 
+		case CONDITIONPARAM_FIELD:
+			field = value;
+			break;
+
 		default:
 			break;
 	}
@@ -1163,7 +1167,8 @@ bool ConditionDamage::doDamage(Creature* creature, int32_t damage)
 
 	CombatType_t combatType = Combat::ConditionToDamageType(conditionType);
 	Creature* attacker = g_game.getCreatureByID(owner);
-	if(g_game.combatBlockHit(combatType, attacker, creature, damage, false, false))
+
+	if(g_game.combatBlockHit(combatType, attacker, creature, damage, false, false, field))
 		return false;
 
 	return g_game.combatChangeHealth(combatType, attacker, creature, damage);

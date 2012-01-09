@@ -4310,7 +4310,7 @@ void Game::changeLight(const Creature* creature)
 }
 
 bool Game::combatBlockHit(CombatType_t combatType, Creature* attacker, Creature* target,
-	int32_t& healthChange, bool checkDefense, bool checkArmor)
+	int32_t& healthChange, bool checkDefense, bool checkArmor, bool isField)
 {
 	if(healthChange > 0)
 		return false;
@@ -4324,7 +4324,7 @@ bool Game::combatBlockHit(CombatType_t combatType, Creature* attacker, Creature*
 	}
 
 	int32_t damage = -healthChange;
-	BlockType_t blockType = target->blockHit(attacker, combatType, damage, checkDefense, checkArmor);
+	BlockType_t blockType = target->blockHit(attacker, combatType, damage, checkDefense, checkArmor, !isField, isField);
 
 	healthChange = -damage;
 	if(blockType == BLOCK_DEFENSE)

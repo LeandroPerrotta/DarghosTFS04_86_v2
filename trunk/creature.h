@@ -292,7 +292,7 @@ class Creature : public AutoId, virtual public Thing
 		Creature* getAttackedCreature() {return attackedCreature;}
 		virtual bool setAttackedCreature(Creature* creature);
 		virtual BlockType_t blockHit(Creature* attacker, CombatType_t combatType, int32_t& damage,
-			bool checkDefense = false, bool checkArmor = false, bool reflect = true);
+			bool checkDefense = false, bool checkArmor = false, bool reflect = true, bool isField = false);
 
 		void setMaster(Creature* creature) {master = creature;}
 		Creature* getMaster() {return master;}

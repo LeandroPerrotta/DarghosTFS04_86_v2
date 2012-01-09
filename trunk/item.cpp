@@ -1211,6 +1211,24 @@ std::string Item::getDescription(const ItemType& it, int32_t lookDistance, const
 			s << "protection all " << std::showpos << show << std::noshowpos << "%";
 		}
 
+#ifdef __DARGHOS_CUSTOM__
+        if(it.abilities.fieldAbsorb.size() > 0)
+        {
+            for(Absorb_t::const_iterator tmp_it = it.abilities.fieldAbsorb.begin(); tmp_it != it.abilities.fieldAbsorb.end(); tmp_it++)
+            {
+                if(begin)
+                {
+                    begin = false;
+                    s << " (";
+                }
+                else
+                    s << ", ";
+
+                s << "protection " << getCombatName((*tmp_it).first) << " field: " << (*tmp_it).second << "%";
+            }
+        }
+#endif
+
 		// TODO: same case as absorbs...
 		show = it.abilities.reflect[REFLECT_CHANCE][COMBAT_FIRST];
 		for(int32_t i = (COMBAT_FIRST + 1); i <= COMBAT_LAST; i++)

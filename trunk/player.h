@@ -464,8 +464,10 @@ class Player : public Creature, public Cylinder
 		bool isPzLocked() const {return pzLocked;}
 		void setPzLocked(bool v) {pzLocked = v;}
 
+
 		virtual BlockType_t blockHit(Creature* attacker, CombatType_t combatType, int32_t& damage,
-			bool checkDefense = false, bool checkArmor = false, bool reflect = true);
+			bool checkDefense = false, bool checkArmor = false, bool reflect = true, bool isField = false);
+
 		virtual void doAttacking(uint32_t interval);
 		virtual bool hasExtraSwing() {return lastAttack > 0 && ((OTSYS_TIME() - lastAttack) >= getAttackSpeed());}
 		int32_t getShootRange() const {return shootRange;}

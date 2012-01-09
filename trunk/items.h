@@ -76,6 +76,7 @@ enum FloorChange_t
 	CHANGE_LAST = CHANGE_NONE
 };
 
+typedef std::map<CombatType_t, int32_t> Absorb_t;
 struct Abilities
 {
 	Abilities()
@@ -97,6 +98,10 @@ struct Abilities
 
 	bool manaShield, invisible, regeneration, preventLoss, preventDrop;
 	CombatType_t elementType;
+
+#ifdef __DARGHOS_CUSTOM__
+    Absorb_t fieldAbsorb;
+#endif
 
 	int16_t elementDamage, absorb[COMBAT_LAST + 1], increment[INCREMENT_LAST + 1], reflect[REFLECT_LAST + 1][COMBAT_LAST + 1];
 	int32_t skills[SKILL_LAST + 1], skillsPercent[SKILL_LAST + 1], stats[STAT_LAST + 1], statsPercent[STAT_LAST + 1],

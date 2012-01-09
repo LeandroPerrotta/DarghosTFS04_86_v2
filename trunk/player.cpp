@@ -2153,9 +2153,9 @@ bool Player::hasShield() const
 }
 
 BlockType_t Player::blockHit(Creature* attacker, CombatType_t combatType, int32_t& damage,
-	bool checkDefense/* = false*/, bool checkArmor/* = false*/, bool reflect/* = true*/)
+	bool checkDefense/* = false*/, bool checkArmor/* = false*/, bool reflect/* = true*/, bool isField/* = false*/)
 {
-	BlockType_t blockType = Creature::blockHit(attacker, combatType, damage, checkDefense, checkArmor);
+	BlockType_t blockType = Creature::blockHit(attacker, combatType, damage, checkDefense, checkArmor, isField);
 	if(attacker)
 	{
 		int16_t color = g_config.getNumber(ConfigManager::SQUARE_COLOR);
@@ -2194,6 +2194,15 @@ BlockType_t Player::blockHit(Creature* attacker, CombatType_t combatType, int32_
 			if(item->hasCharges())
 				g_game.transformItem(item, item->getID(), std::max((int32_t)0, (int32_t)item->getCharges() - 1));
 		}
+#ifdef __DARGHOS_CUSTOM__
+        Absorb_t::const_iterator fit = it.abilities.fieldAbsorb.find(combatType);
+		if(isField && fit != it.abilities.fieldAbsorb.end())
+		{
+			blocked += (int32_t)std::ceil((double)(damage * (*fit).second) / 100.);
+			if(item->hasCharges())
+				g_game.transformItem(item, item->getID(), std::max((int32_t)0, (int32_t)item->getCharges() - 1));
+		}
+#endif
 
 		if(!reflect)
 			continue;
