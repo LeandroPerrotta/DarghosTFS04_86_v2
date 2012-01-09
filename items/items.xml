@@ -673,7 +673,6 @@
 			<attribute key="damage" value="20" />
 			<attribute key="ticks" value="10000" />
 			<attribute key="count" value="7" />
-			<attribute key="damage" value="10" />
 		</attribute>
 	</item>
 	<item id="1501" article="a" name="fire field">
@@ -16156,7 +16155,7 @@
 		<attribute key="weight" value="950" />
 		<attribute key="armor" value="2" />
 		<attribute key="slotType" value="feet" />
-		<attribute key="absorbPercentFire" value="90" />
+		<attribute key="fieldAbsorbPercentFire" value="90" />
 		<attribute key="decayTo" value="10022" />
 		<attribute key="transformDeEquipTo" value="9933" />
 		<attribute key="duration" value="3600" />
