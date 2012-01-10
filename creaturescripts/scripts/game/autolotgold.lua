@@ -99,8 +99,10 @@ function autoloot(cid, target, pos)
 end
 
 function onKill(cid, target, lastHit)
-    if not isPlayer(target) then
+    --[[
+	if not isPlayer(target) then
         addEvent(autoloot, 150, cid, getCreatureName(target), getCreaturePosition(target))
     end
+	]]--
     return true
 end
