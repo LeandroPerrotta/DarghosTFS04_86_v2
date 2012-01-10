@@ -1136,7 +1136,7 @@ bool Game::playerMoveCreature(uint32_t playerId, uint32_t movingCreatureId,
 		if(!player->hasFlag(PlayerFlag_CanPushAllCreatures))
 		{
 #ifndef __DARGHOS_CUSTOM__
-			if(!creatures->empty())
+			if(toTile->getCreatures() && !toTile->getCreatures()->empty())
 			{
 				player->sendCancelMessage(RET_NOTPOSSIBLE);
 				return false;
@@ -1160,29 +1160,34 @@ bool Game::playerMoveCreature(uint32_t playerId, uint32_t movingCreatureId,
                 pacifico    pacifico    true
             */
 
-            for(CreatureVector::iterator it = creatures->begin(); it != creatures->end(); it++)
+            if(creatures && !creatures->empty())
             {
-                Creature* temp_creature = (*it);
+                Creature* temp_creature = NULL;
                 Player* temp_player = NULL;
-                if(!(temp_player = temp_creature->getPlayer()))
+                for(CreatureVector::iterator it = creatures->begin(); it != creatures->end(); ++it)
                 {
-                    success = false;
-                    break;
-                }
+                    temp_creature = (it*);
 
-                if((movingPlayer->isPvpEnabled() && !temp_player->isPvpEnabled())
-                   || (!movingPlayer->isPvpEnabled() && temp_player->isPvpEnabled())
-                   || (!movingPlayer->isPvpEnabled() && !temp_player->isPvpEnabled())
-                   )
-                {
-                    continue;
-                }
-                else
-                {
-                    success = false;
-                    break;
-                }
+                    if(!(temp_player = temp_creature->getPlayer()))
+                    {
+                        success = false;
+                        break;
+                    }
 
+                    if((movingPlayer->isPvpEnabled() && !temp_player->isPvpEnabled())
+                       || (!movingPlayer->isPvpEnabled() && temp_player->isPvpEnabled())
+                       || (!movingPlayer->isPvpEnabled() && !temp_player->isPvpEnabled())
+                       )
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        success = false;
+                        break;
+                    }
+
+                }
             }
 
 			if(!success)
