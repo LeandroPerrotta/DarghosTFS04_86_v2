@@ -1174,6 +1174,9 @@ bool Game::playerMoveCreature(uint32_t playerId, uint32_t movingCreatureId,
                         break;
                     }
 
+                    if(!movingPlayer)
+                        continue;
+
                     if((movingPlayer->isPvpEnabled() && !temp_player->isPvpEnabled())
                        || (!movingPlayer->isPvpEnabled() && temp_player->isPvpEnabled())
                        || (!movingPlayer->isPvpEnabled() && !temp_player->isPvpEnabled())
