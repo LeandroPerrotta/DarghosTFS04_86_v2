@@ -1166,7 +1166,7 @@ bool Game::playerMoveCreature(uint32_t playerId, uint32_t movingCreatureId,
                 Player* temp_player = NULL;
                 for(CreatureVector::iterator it = creatures->begin(); it != creatures->end(); ++it)
                 {
-                    temp_creature = (it*);
+                    temp_creature = (*it);
 
                     if(!(temp_player = temp_creature->getPlayer()))
                     {
