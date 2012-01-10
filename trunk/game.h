@@ -457,7 +457,7 @@ class Game
 		bool playerMoveThing(uint32_t playerId, const Position& fromPos, uint16_t spriteId,
 			int16_t fromStackpos, const Position& toPos, uint8_t count);
 		bool playerMoveCreature(uint32_t playerId, uint32_t movingCreatureId,
-			const Position& movingCreatureOrigPos, const Position& toPos);
+			const Position& movingCreatureOrigPos, const Position& toPos, uint32_t delay);
 		bool playerMoveItem(uint32_t playerId, const Position& fromPos,
 			uint16_t spriteId, int16_t fromStackpos, const Position& toPos, uint8_t count);
 		bool playerMove(uint32_t playerId, Direction dir);

@@ -1039,18 +1039,7 @@ bool Game::playerMoveThing(uint32_t playerId, const Position& fromPos,
 	}
 
 	if(Creature* movingCreature = thing->getCreature())
-	{
-		uint32_t delay = g_config.getNumber(ConfigManager::PUSH_CREATURE_DELAY);
-		if(Position::areInRange<1,1,0>(movingCreature->getPosition(), player->getPosition()) && delay > 0
-			&& !player->hasCustomFlag(PlayerCustomFlag_CanThrowAnywhere))
-		{
-			SchedulerTask* task = createSchedulerTask(delay, boost::bind(&Game::playerMoveCreature, this,
-				player->getID(), movingCreature->getID(), movingCreature->getPosition(), toCylinder->getPosition()));
-			player->setNextActionTask(task);
-		}
-		else
-			playerMoveCreature(playerId, movingCreature->getID(), movingCreature->getPosition(), toCylinder->getPosition());
-	}
+        playerMoveCreature(playerId, movingCreature->getID(), movingCreature->getPosition(), toCylinder->getPosition(), g_config.getNumber(ConfigManager::PUSH_CREATURE_DELAY));
 	else if(thing->getItem())
 		playerMoveItem(playerId, fromPos, spriteId, fromStackpos, toPos, count);
 
@@ -1058,7 +1047,7 @@ bool Game::playerMoveThing(uint32_t playerId, const Position& fromPos,
 }
 
 bool Game::playerMoveCreature(uint32_t playerId, uint32_t movingCreatureId,
-	const Position& movingCreaturePos, const Position& toPos)
+	const Position& movingCreaturePos, const Position& toPos, uint32_t delay)
 {
 	Player* player = getPlayerByID(playerId);
 	if(!player || player->isRemoved() || player->hasFlag(PlayerFlag_CannotMoveCreatures))
@@ -1068,7 +1057,7 @@ bool Game::playerMoveCreature(uint32_t playerId, uint32_t movingCreatureId,
 	{
 		uint32_t delay = player->getNextActionTime();
 		SchedulerTask* task = createSchedulerTask(delay, boost::bind(&Game::playerMoveCreature,
-			this, playerId, movingCreatureId, movingCreaturePos, toPos));
+			this, playerId, movingCreatureId, movingCreaturePos, toPos, delay));
 
 		player->setNextActionTask(task);
 		return false;
@@ -1088,7 +1077,7 @@ bool Game::playerMoveCreature(uint32_t playerId, uint32_t movingCreatureId,
 			Dispatcher::getInstance().addTask(createTask(boost::bind(&Game::playerAutoWalk,
 				this, player->getID(), listDir)));
 			SchedulerTask* task = createSchedulerTask(std::max((int32_t)SCHEDULER_MINTICKS, player->getStepDuration()),
-				boost::bind(&Game::playerMoveCreature, this, playerId, movingCreatureId, movingCreaturePos, toPos));
+				boost::bind(&Game::playerMoveCreature, this, playerId, movingCreatureId, movingCreaturePos, toPos, g_config.getNumber(ConfigManager::PUSH_CREATURE_DISTANCE_DELAY)));
 
 			player->setNextWalkActionTask(task);
 			return true;
@@ -1096,6 +1085,13 @@ bool Game::playerMoveCreature(uint32_t playerId, uint32_t movingCreatureId,
 
 		player->sendCancelMessage(RET_THEREISNOWAY);
 		return false;
+	}
+	else if(delay > 0)
+	{
+        SchedulerTask* task = createSchedulerTask(delay,
+            boost::bind(&Game::playerMoveCreature, this, playerId, movingCreatureId, movingCreaturePos, toPos, 0));
+        player->setNextActionTask(task);
+        return true;
 	}
 
 	Tile* toTile = map->getTile(toPos);
@@ -1139,24 +1135,72 @@ bool Game::playerMoveCreature(uint32_t playerId, uint32_t movingCreatureId,
 
 		if(!player->hasFlag(PlayerFlag_CanPushAllCreatures))
 		{
-			if(toTile->getCreatures() && !toTile->getCreatures()->empty())
+#ifndef __DARGHOS_CUSTOM__
+			if(!creatures->empty())
+			{
+				player->sendCancelMessage(RET_NOTPOSSIBLE);
+				return false;
+			}
+#endif
+
+			uint32_t protectionLevel = g_config.getNumber(ConfigManager::PROTECTION_LEVEL);
+#ifdef __DARGHOS_CUSTOM__
+
+            //vamos permitir que se puxe um player em cima de outro desde que ou o puxado ou o destino sejam pacificos
+            CreatureVector* creatures = toTile->getCreatures();
+            Player* movingPlayer = movingCreature->getPlayer();
+
+            bool success = true;
+
+            /*
+                PUXANDO     DESTINO     RESULTADO
+                agressivo   agressivo   false
+                agressivo   pacifico    true
+                pacifico    agressivo   true
+                pacifico    pacifico    true
+            */
+
+            for(CreatureVector::iterator it = creatures->begin(); it != creatures->end(); it++)
+            {
+                Creature* temp_creature = (*it);
+                Player* temp_player = NULL;
+                if(!(temp_player = temp_creature->getPlayer()))
+                {
+                    success = false;
+                    break;
+                }
+
+                if((movingPlayer->isPvpEnabled() && !temp_player->isPvpEnabled())
+                   || (!movingPlayer->isPvpEnabled() && temp_player->isPvpEnabled())
+                   || (!movingPlayer->isPvpEnabled() && !temp_player->isPvpEnabled())
+                   )
+                {
+                    continue;
+                }
+                else
+                {
+                    success = false;
+                    break;
+                }
+
+            }
+
+			if(!success)
 			{
 				player->sendCancelMessage(RET_NOTPOSSIBLE);
 				return false;
 			}
 
-			uint32_t protectionLevel = g_config.getNumber(ConfigManager::PROTECTION_LEVEL);
-#ifdef __DARGHOS_CUSTOM__
 			if(!player->isInBattleground() && (!player->isPvpEnabled() || (player->getLevel() < protectionLevel && player->getVocation()->isAttackable())))
 #else
 			if(player->getLevel() < protectionLevel && player->getVocation()->isAttackable())
 #endif
 			{
-				Player* movingPlayer = movingCreature->getPlayer();
 #ifdef __DARGHOS_CUSTOM__
 				if(movingPlayer && (movingPlayer->isPvpEnabled() || (movingPlayer->getLevel() >= protectionLevel
 					&& movingPlayer->getVocation()->isAttackable())))
 #else
+                Player* movingPlayer = movingCreature->getPlayer();
 				if(movingPlayer && movingPlayer->getLevel() >= protectionLevel
 					&& movingPlayer->getVocation()->isAttackable())
 #endif
