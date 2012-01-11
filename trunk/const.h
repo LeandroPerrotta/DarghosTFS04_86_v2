@@ -457,6 +457,12 @@ enum item_t
 	ITEM_WATERBALL		= 7956,
 
 	ITEM_HOUSE_TRANSFER	= 1968 //read-only
+
+#ifdef __DARGHOS_CUSTOM__
+    ,ITEM_GOLD_COIN = 2148
+    ,ITEM_PLATINUM_COIN = 2152
+    ,ITEM_CRYSTAL_COIN = 2160
+#endif
 };
 
 enum PlayerFlags

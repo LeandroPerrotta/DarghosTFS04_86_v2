@@ -178,6 +178,7 @@ class ConfigManager
 			#ifdef __DARGHOS_CUSTOM__
 			DEATH_FRAGGERS,
 			USE_BLESSING_AS_PVP,
+			RATE_GOLD_LOOT,
 			#endif
 
 			#ifdef __DARGHOS_PVP_SYSTEM__

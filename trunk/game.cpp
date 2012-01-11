@@ -1189,7 +1189,6 @@ bool Game::playerMoveCreature(uint32_t playerId, uint32_t movingCreatureId,
                         success = false;
                         break;
                     }
-
                 }
             }
 

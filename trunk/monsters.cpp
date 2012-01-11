@@ -94,13 +94,26 @@ uint16_t Monsters::getLootRandom()
 void MonsterType::dropLoot(Container* corpse)
 {
 	Item* tmpItem = NULL;
+
+#ifdef __DARGHOS_CUSTOM__
+	uint64_t gold = 0;
+#endif
+
 	for(LootItems::const_iterator it = lootItems.begin(); it != lootItems.end() && !corpse->full(); ++it)
 	{
-		if((tmpItem = createLoot(*it)))
+#ifdef __DARGHOS_CUSTOM__
+		if((tmpItem = createLoot(*it, gold)))
+#else
+        if((tmpItem = createLoot(*it)))
+#endif
 		{
 			if(Container* container = tmpItem->getContainer())
 			{
-				if(createChildLoot(container, (*it)))
+#ifdef __DARGHOS_CUSTOM__
+				if(createChildLoot(container, (*it), gold))
+#else
+                if(createChildLoot(container, (*it)))
+#endif
 					corpse->__internalAddThing(tmpItem);
 				else
 					delete container;
@@ -128,13 +141,32 @@ void MonsterType::dropLoot(Container* corpse)
 
 	std::stringstream ss;
 	ss << "Loot of " << nameDescription << ": " << corpse->getContentDescription() << ".";
+
+	#ifdef __DARGHOS_CUSTOM__
+    if(owner->isPremium())
+    {
+        gold *= g_config.getNumber(ConfigManager::RATE_GOLD_LOOT);
+        ss << "\nTodo o ouro encontrado no " << nameDescription << " derrotado (" << gold << " gps, com premium extra-bonus x" << g_config.getNumber(ConfigManager::RATE_GOLD_LOOT) << ") foi enviado ao seu inventário.";
+    }
+    else
+        ss << "\nTodo o ouro encontrado no " << nameDescription << " derrotado (" << gold << " gps) foi enviado ao seu inventário.";
+
+    uint64_t oldMoney = g_game.getMoney(owner);
+    g_game.removeMoney(owner, oldMoney);
+    g_game.addMoney(owner, oldMoney + gold);
+	#endif
+
 	if(owner->getParty() && message > LOOTMSG_PLAYER)
 		owner->getParty()->broadcastMessage((MessageClasses)g_config.getNumber(ConfigManager::LOOT_MESSAGE_TYPE), ss.str());
 	else if(message == LOOTMSG_PLAYER || message == LOOTMSG_BOTH)
 		owner->sendTextMessage((MessageClasses)g_config.getNumber(ConfigManager::LOOT_MESSAGE_TYPE), ss.str());
 }
 
+#ifdef __DARGHOS_CUSTOM__
+Item* MonsterType::createLoot(const LootBlock& lootBlock, uint64_t &gold)
+#else
 Item* MonsterType::createLoot(const LootBlock& lootBlock)
+#endif
 {
 	uint16_t item = lootBlock.ids[0], random = Monsters::getLootRandom();
 	if(lootBlock.ids.size() > 1)
@@ -152,6 +184,22 @@ Item* MonsterType::createLoot(const LootBlock& lootBlock)
 	if(!tmpItem)
 		return NULL;
 
+#ifdef __DARGHOS_CUSTOM__
+	std::map<uint32_t, uint32_t> goldList;
+
+	goldList[ITEM_GOLD_COIN] = 1;
+	goldList[ITEM_PLATINUM_COIN] = 100;
+	goldList[ITEM_CRYSTAL_COIN] = 10000;
+
+	std::map<uint32_t, uint32_t>::iterator it = goldList.find(tmpItem->getID());
+    if(it != goldList.end())
+    {
+        gold += it->second * tmpItem->getItemCount();
+        delete tmpItem;
+        return NULL;
+    }
+#endif
+
 	if(lootBlock.subType != -1)
 		tmpItem->setSubType(lootBlock.subType);
 
@@ -167,7 +215,11 @@ Item* MonsterType::createLoot(const LootBlock& lootBlock)
 	return tmpItem;
 }
 
+#ifdef __DARGHOS_CUSTOM__
+bool MonsterType::createChildLoot(Container* parent, const LootBlock& lootBlock, uint64_t &gold)
+#else
 bool MonsterType::createChildLoot(Container* parent, const LootBlock& lootBlock)
+#endif
 {
 	LootItems::const_iterator it = lootBlock.childLoot.begin();
 	if(it == lootBlock.childLoot.end())
@@ -176,11 +228,19 @@ bool MonsterType::createChildLoot(Container* parent, const LootBlock& lootBlock)
 	Item* tmpItem = NULL;
 	for(; it != lootBlock.childLoot.end() && !parent->full(); ++it)
 	{
-		if((tmpItem = createLoot(*it)))
+#ifdef __DARGHOS_CUSTOM__
+		if((tmpItem = createLoot(*it, gold)))
+#else
+        if((tmpItem = createLoot(*it)))
+#endif
 		{
 			if(Container* container = tmpItem->getContainer())
 			{
-				if(createChildLoot(container, (*it)))
+#ifdef __DARGHOS_CUSTOM__
+				if(createChildLoot(container, (*it), gold))
+#else
+                if(createChildLoot(container, (*it)))
+#endif
 					parent->__internalAddThing(container);
 				else
 					delete container;

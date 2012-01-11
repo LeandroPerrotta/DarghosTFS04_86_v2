@@ -319,6 +319,7 @@ bool ConfigManager::load()
 	m_confNumber[DEATH_FRAGGERS] = getGlobalNumber("deathFraggersCount", 1);
 	m_confNumber[USE_BLESSING_AS_PVP] = getGlobalNumber("useBlessingAsPvp", 6);
 	m_confBool[UNFAIR_FIGHT] = getGlobalBool("unfairFightEnabled", false);
+	m_confNumber[RATE_GOLD_LOOT] = getGlobalNumber("rateGoldLoot", 1);
 #endif
 
 #ifdef __DARGHOS_PVP_SYSTEM__
