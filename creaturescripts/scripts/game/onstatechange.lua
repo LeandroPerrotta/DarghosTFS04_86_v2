@@ -51,8 +51,9 @@ function onStatsChange(cid, attacker, type, combat, value)
 	if(isPlayer(attacker) and doPlayerIsInBattleground(attacker)) then
 		if(type == STATSCHANGE_MANALOSS or type == STATSCHANGE_HEALTHLOSS) then
 			pvpBattleground.onDealDamage(attacker, value)
-		elseif(type == STATSCHANGE_HEALTHGAIN) then
-			pvpBattleground.onDealHeal(attacker, value)
+		elseif(type == STATSCHANGE_HEALTHGAIN and getCreatureHealth(cid) < getCreatureMaxHealth(cid)) then
+			local healed = math.min(getCreatureMaxHealth(cid) - getCreatureHealth(cid), value)
+			pvpBattleground.onDealHeal(attacker, healed)
 		end
 	end
 	
