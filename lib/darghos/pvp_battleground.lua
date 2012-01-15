@@ -562,7 +562,7 @@ function pvpBattleground.storePlayerParticipation(cid, team, deserting, expGain,
 	params["expGain"] = expGain
 	params["ratingChange"] = ratingChange
 	params["honorGain"] = honorGain
-	params["highStamina"] = tonumber(highStamina)
+	params["highStamina"] = (highStamina and 1 or 0)
 	
 	local json = require("json")
 	
