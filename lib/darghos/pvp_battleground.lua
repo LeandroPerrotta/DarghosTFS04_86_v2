@@ -6,7 +6,7 @@ BG_EXP_RATE = 2
 BG_EACH_BONUS_PERCENT = 50
 BG_BONUS_INTERVAL = 60 * 60
 
-BG_CONFIG_TEAMSIZE = 6
+BG_CONFIG_TEAMSIZE = 8
 BG_CONFIG_WINPOINTS = 50
 BG_CONFIG_DURATION = 60 * 15
 
@@ -723,6 +723,7 @@ function pvpBattleground.addObjects()
 			-- o wall já está lá... so iremos "topar" a sua vida
 			doCreatureAddHealth(creature.uid, getCreatureMaxHealth(creature.uid) - getCreatureHealth(creature.uid))
 		else
+			doCleanTile(pos)
 			local temp_monster = doSummonCreature("bg_wall", pos)
 			doSetStorage(gid_creatures[i], temp_monster)
 			registerCreatureEvent(temp_monster, "onStateChange")
@@ -732,9 +733,8 @@ function pvpBattleground.addObjects()
 	-- static items walls
 	for i = uid.BATTLEGROUND_WALLS_START, uid.BATTLEGROUND_WALLS_END do
 		local pos = getThingPos(i)
-		if(getTileItemById(pos, ITEM_GATE).uid == 0) then
-			doCreateItem(ITEM_GATE, pos)
-		end
+		doCleanTile(pos)
+		doCreateItem(ITEM_GATE, pos)
 	end	
 	
 	-- flags
@@ -745,9 +745,8 @@ function pvpBattleground.addObjects()
 	
 	for k,v in pairs(ITEM_FLAGS) do
 		local pos = getThingPos(k)
-		if(getTileItemById(pos, v).uid == 0) then
-			doCreateItem(v, pos)
-		end
+		doCleanTile(pos)
+		doCreateItem(v, pos)
 	end
 end
 
