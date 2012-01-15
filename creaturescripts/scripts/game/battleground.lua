@@ -44,6 +44,7 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration, initIn)
 			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, msg)	
 			doPlayerAddMoney(cid, gold)			
 			
+			pvpBattleground.storePlayerParticipation(cid, getPlayerBattlegroundTeam(cid), false, 0, -removedRating, gainHonor)
 			playerHistory.logBattlegroundLost(cid, newRating)
 		end
 	
@@ -78,7 +79,7 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration, initIn)
 		
 			if(winnerTeam == BATTLEGROUND_TEAM_NONE) then
 			
-				staminaChange = math.floor(newStamina / 2)
+				staminaChange = math.floor(staminaChange / 2)
 				expGain = math.floor(expGain / 2)
 				msg = "Você adquiriu " .. expGain .. " pontos de experiencia e " .. gainHonor .. " pontos de honra pela sua participação neste empate!"
 				
@@ -88,6 +89,8 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration, initIn)
 			else
 				playerHistory.logBattlegroundWin(cid, currentRating + changeRating)
 			end		
+			
+			pvpBattleground.storePlayerParticipation(cid, getPlayerBattlegroundTeam(cid), false, expGain, changeRating, gainHonor, getPlayerStamina(cid) > 40 * 60)
 			
 			if(not playerHistory.hasAchievBattlegroundGet1500Rating(cid)
 				and currentRating < 1500

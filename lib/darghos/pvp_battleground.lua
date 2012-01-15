@@ -548,6 +548,36 @@ function pvpBattleground.onDealHeal(cid, heal)
 	setPlayerStorageValue(cid, sid.BATTLEGROUND_MATCH_HEALING_DONE, currHeal + heal)
 end
 
+function pvpBattleground.storePlayerParticipation(cid, team, deserting, expGain, ratingChange, honorGain, highStamina)
+	
+	expGain = expGain or 0
+	ratingChange = ratingChange or 0
+	honorGain = honorGain or 0
+	highStamina = highStamina or false
+	
+	local params = {}
+	
+	params["damage"] = pvpBattleground.getDamageDone(cid)
+	params["heal"] = pvpBattleground.getHealDone(cid)
+	params["expGain"] = expGain
+	params["ratingChange"] = ratingChange
+	params["honorGain"] = honorGain
+	params["highStamina"] = tonumber(highStamina)
+	
+	local json = require("json")
+	
+	local query = "INSERT INTO `battleground_teamplayers` "
+	query = query .. "(`player_id`, `battleground_id`, `team_id`, `deserter`, `ip_address`, `params`) VALUES " 
+	query = query .. "(" .. getPlayerGUID(cid)  .. ", "
+	query = query .. getBattlegroundId() .. ", "
+	query = query .. team .. ", "
+	query = query .. (deserting and 1 or 0) .. ", "
+	query = query .. getPlayerIp(cid) .. ", "
+	query = query .. "'" .. json.encode(params) .. "');"
+	
+	db.executeQuery(query)
+end
+
 function pvpBattleground.onEnter(cid)
 
 	if(not isPlayer(cid)) then
@@ -792,6 +822,7 @@ function pvpBattleground.onExit(cid, idle)
 		return false
 	end
 
+	local team = getPlayerBattlegroundTeam(cid)
 	local ret = doPlayerLeaveBattleground(cid)
 
 	if(ret == BG_RET_NO_ERROR) then
@@ -805,6 +836,8 @@ function pvpBattleground.onExit(cid, idle)
 		
 		local removedRating = pvpBattleground.removePlayerRating(cid, BG_CONFIG_DURATION, BG_CONFIG_DURATION, true)
 		doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Você piorou a sua classificação (rating) em " .. removedRating .. " pontos por seu abandono da Battleground.")
+		
+		pvpBattleground.storePlayerParticipation(cid, team, true, 0, -removedRating, 0)
 		
 		return true
 	end
