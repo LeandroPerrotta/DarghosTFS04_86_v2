@@ -78,6 +78,7 @@ class Battleground
 		void finish(Bg_Teams_t teamWinner);
 		void finish();
 
+        uint32_t getLastId() { return lastID; }
 		uint32_t getWaitlistSize(){ return waitlist.size(); }
 		BattlegroundStatus getStatus() { return status; }
 
@@ -151,8 +152,6 @@ class Battleground
 
 		bool storeNew();
 		bool storeFinish(time_t end, uint32_t finishBy, uint32_t team1_points, uint32_t team2_points);
-		bool storePlayerJoin(uint32_t player_id, Bg_Teams_t team_id, uint32_t ip_address);
-		bool storePlayerDeserter(uint32_t player_id);
 
 		bool storePlayerKill(uint32_t player_id, bool lasthit);
 		bool storePlayerDeath(uint32_t player_id);

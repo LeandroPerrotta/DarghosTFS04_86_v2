@@ -278,9 +278,6 @@ void Battleground::start()
 				continue;
 			}
 
-			if(player)
-				storePlayerJoin(player->getGUID(), player->getBattlegroundTeam(), player->getIP());
-
 			it_players->second.join_in = time(NULL);
 		}
 	}
@@ -364,9 +361,6 @@ void Battleground::putInside(Player* player)
 	g_game.changeSpeed(player, 0);
 
 	playerInfo->areInside = true;
-
-	if(status == STARTED)
-		storePlayerJoin(player->getGUID(), team_id, player->getIP());
 }
 
 BattlegrondRetValue Battleground::onPlayerJoin(Player* player)
@@ -458,7 +452,6 @@ BattlegrondRetValue Battleground::kickPlayer(Player* player, bool force)
 			std::stringstream ss;
 			ss << (time(NULL) + 60 * 20);
 			player->setStorage(DARGHOS_STORAGE_BATTLEGROUND_DESERTER_UNTIL, ss.str());
-			storePlayerDeserter(player->getID());
 		}
 
 		player->setBattlegroundTeam(BATTLEGROUND_TEAM_NONE);
@@ -752,34 +745,6 @@ bool Battleground::storeFinish(time_t end, uint32_t finishBy, uint32_t team1_poi
 	DBQuery query;
 
 	query << "UPDATE `battlegrounds` SET `end` = " << end << ", `finishBy` = " << finishBy << ", `team1_points` = " << team1_points << ", team2_points = " << team2_points << " WHERE `id` = " << lastID;
-	if(!db->query(query.str()))
-		return false;
-
-	return true;
-}
-
-bool Battleground::storePlayerJoin(uint32_t player_id, Bg_Teams_t team_id, uint32_t ip_address)
-{
-	Database* db = Database::getInstance();
-	DBQuery query;
-
-	query << "INSERT INTO `battleground_teamplayers` (`player_id`, `battleground_id`, `team_id`, `deserter`, `ip_address`) VALUES (" << player_id << ", " << lastID << ", " << team_id << ", 0, " << ip_address << ")";
-	if(!db->query(query.str()))
-		return false;
-
-	return true;
-}
-
-bool Battleground::storePlayerDeserter(uint32_t player_id)
-{
-	Database* db = Database::getInstance();
-	DBQuery query;
-
-	Player* player = g_game.getPlayerByID(player_id);
-	if(!player)
-		return false;
-
-	query << "UPDATE `battleground_teamplayers` SET `deserter` = 1 WHERE `player_id` = " << player->getGUID() << " AND `battleground_id` = " << lastID;
 	if(!db->query(query.str()))
 		return false;
 

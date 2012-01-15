@@ -2518,6 +2518,9 @@ void LuaInterface::registerFunctions()
 	//getBattlegroundStatus()
 	lua_register(m_luaState, "getBattlegroundStatus", LuaInterface::luaGetBattlegroundStatus);
 
+	//getBattlegroundId()
+	lua_register(m_luaState, "getBattlegroundId", LuaInterface::luaGetBattlegroundId);
+
 	//getBattlegroundPlayersByTeam()
 	lua_register(m_luaState, "getBattlegroundPlayersByTeam", LuaInterface::luaGetBattlegroundPlayersByTeam);
 
@@ -10749,6 +10752,13 @@ int32_t LuaInterface::luaGetBattlegroundStatus(lua_State* L)
 {
 	//getBattlegroundStatus()
 	lua_pushnumber(L, g_battleground.getStatus());
+	return 1;
+}
+
+int32_t LuaInterface::luaGetBattlegroundId(lua_State* L)
+{
+	//getBattlegroundId()
+	lua_pushnumber(L, g_battleground.getLastId());
 	return 1;
 }
 
