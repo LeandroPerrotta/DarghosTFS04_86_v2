@@ -1146,6 +1146,14 @@ bool Game::playerMoveCreature(uint32_t playerId, uint32_t movingCreatureId,
 			uint32_t protectionLevel = g_config.getNumber(ConfigManager::PROTECTION_LEVEL);
 #ifdef __DARGHOS_CUSTOM__
 
+
+            if((toTile->ground && Item::items[toTile->ground->getID()].walkStack)
+               || (movingCreature->getTile() && movingCreature->getTile()->ground && Item::items[movingCreature->getTile()->ground->getID()].walkStack))
+            {
+				player->sendCancelMessage(RET_NOTPOSSIBLE);
+				return false;
+            }
+
             //vamos permitir que se puxe um player em cima de outro desde que ou o puxado ou o destino sejam pacificos
             CreatureVector* creatures = toTile->getCreatures();
             Player* movingPlayer = movingCreature->getPlayer();
