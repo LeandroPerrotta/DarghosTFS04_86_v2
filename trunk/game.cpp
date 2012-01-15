@@ -1147,8 +1147,8 @@ bool Game::playerMoveCreature(uint32_t playerId, uint32_t movingCreatureId,
 #ifdef __DARGHOS_CUSTOM__
 
 
-            if((toTile->ground && Item::items[toTile->ground->getID()].walkStack)
-               || (movingCreature->getTile() && movingCreature->getTile()->ground && Item::items[movingCreature->getTile()->ground->getID()].walkStack))
+            if((toTile->ground && !Item::items[toTile->ground->getID()].walkStack)
+               || (movingCreature->getTile() && movingCreature->getTile()->ground && !Item::items[movingCreature->getTile()->ground->getID()].walkStack))
             {
 				player->sendCancelMessage(RET_NOTPOSSIBLE);
 				return false;
