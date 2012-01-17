@@ -2,7 +2,7 @@ BG_ENABLED = true
 BG_ENABLED_GAINS = true
 
 FREE_GAINS_PERCENT = 30
-BG_EXP_RATE = 2
+BG_EXP_RATE = 1
 BG_EACH_BONUS_PERCENT = 50
 BG_BONUS_INTERVAL = 60 * 60
 
@@ -67,8 +67,25 @@ BATTLEGROUND_HIGH_RATE = 1601
 BATTLEGROUND_LOW_RATE = 501
 
 --[[
-	RATING AREA
+	RATING & EXP AREA
 ]]--
+
+battlegroundExpToLevelGain = {
+	{to = 125, multipler = 2.30},
+	{from = 126, to = 150, multipler = 1.70},
+	{from = 151, to = 175, multipler = 1.40},
+	{from = 176, to = 200, multipler = 0.90},
+	{from = 201, to = 225, multipler = 0.60},
+	{from = 226, to = 250, multipler = 0.40},
+	{from = 251, to = 275, multipler = 0.30},
+	{from = 276, to = 300, multipler = 0.25},
+	{from = 301, to = 325, multipler = 0.20},
+	{from = 326, to = 350, multipler = 0.18},
+	{from = 351, to = 400, multipler = 0.14},
+	{from = 401, to = 450, multipler = 0.11},
+	{from = 451, to = 500, multipler = 0.07},
+	{from = 501, to = 600, multipler = 0.05}
+}
 
 battlegrondRatingTable = {
 
@@ -141,6 +158,32 @@ end
 	GAIN EXP AREA
 ]]--
 
+function pvpBattleground.getExpMultipler(level)
+
+	for k,v in pairs(battlegroundExpToLevelGain) do
+		local from = v.from or 0	
+		local isLast = (v.to == nil) and true or false
+		
+		if(not isLast) then
+			if(level >= from and level <= v.to) then
+				return v.multipler
+			end
+		else
+			return v.multipler
+		end
+	end
+	
+	return nil
+end
+
+function pvpBattleground.getExperienceGain(cid)
+	local multipler = pvpBattleground.getExpMultipler(getPlayerLevel(cid))
+	local rate = pvpBattleground.getExpGainRate(cid)
+	local nextLevelExp = getExperienceForLevel(getPlayerLevel(cid) + 1) - getExperienceForLevel(getPlayerLevel(cid))
+	
+	return math.floor((nextLevelExp * multipler) * rate)
+end
+
 function pvpBattleground.getExpGainRate(cid)
 
 	local rate = BG_EXP_RATE * darghos_exp_multipler
@@ -182,6 +225,11 @@ function pvpBattleground.onGainHonor(cid, honorGain, showEffect)
 	local storage = getPlayerStorageValue(cid, sid.BATTLEGROUND_TEMP_HONOR)
 	local current = (storage >= 0) and storage or 0
 	current = current + honorGain
+	
+	if(not isPremium(cid)) then
+		current = math.ceil(current * (FREE_GAINS_PERCENT / 100))
+	end
+	
 	setPlayerStorageValue(cid, sid.BATTLEGROUND_TEMP_HONOR, current)
 	
 	if(showEffect) then
@@ -300,6 +348,37 @@ function pvpBattleground.hasGain(time)
 	return ((date.hour >= BG_GAIN_START_HOUR and date.hour <= 23)
 		or (date.hour >= 0 and date.hour < BG_GAIN_END_HOUR)
 		or isInArray(BG_GAIN_EVERYHOUR_DAYS, date.wday))
+end
+
+function pvpBattleground.getTeamFragPoints(team_id)
+
+	local playersTeam = getBattlegroundPlayersByTeam(team_id)
+	
+	local totalFrags = 0
+	
+	for _,cid in pairs(playersTeam) do
+		if(isCreature(cid)) then
+			local playerInfo = getPlayerBattlegroundInfo(cid)
+			totalFrags = totalFrags + playerInfo.kills
+		end
+	end
+	
+	return totalFrags
+end
+
+function pvpBattleground.getTeamHealDone(team_id)
+	
+	local playersTeam = getBattlegroundPlayersByTeam(team_id)
+	
+	local healDone = 0
+	
+	for _,cid in pairs(playersTeam) do
+		if(isCreature(cid)) then
+			healDone = healDone + pvpBattleground.getHealDone(cid)
+		end
+	end
+	
+	return healDone	
 end
 
 function pvpBattleground.drawRank()
@@ -467,10 +546,6 @@ function pvpBattleground.sendPlayerChannelMessage(cid, msg, type)
 
 	type = (type ~= nil) and type or TALKTYPE_TYPES["channel-white"]
 	doPlayerSendChannelMessage(cid, "", msg, type, CUSTOM_CHANNEL_PVP)
-end
-
-function pvpBattleground.getExperienceGain(cid)
-	return math.floor(getPlayerExperience(cid) * 0.0005 * getPlayerMultiple(cid, STAGES_EXPERIENCE) * pvpBattleground.getExpGainRate(cid))
 end
 
 function pvpBattleground.playerSpeakTeam(cid, message)

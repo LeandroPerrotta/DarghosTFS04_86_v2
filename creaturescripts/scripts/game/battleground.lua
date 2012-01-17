@@ -64,10 +64,20 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration, initIn)
 			
 			-- iremos reduzir o ganho de exp conforme o player se afasta da m?dia de kills definida para o grupo at? um limite de 50% de redu??o
 			local playerInfo = getPlayerBattlegroundInfo(cid)
-			local killsAvg = math.ceil(points[getPlayerBattlegroundTeam(cid)] / BG_CONFIG_TEAMSIZE)
+			local killsAvg = math.ceil(pvpBattleground.getTeamFragPoints(getPlayerBattlegroundTeam(cid)) / BG_CONFIG_TEAMSIZE)
 			local killsRate = math.random(math.min(killsAvg, playerInfo.kills) * 100, killsAvg * 100) / (killsAvg * 100)
 			
-			expGain = math.ceil(expGain * (math.max(0.5, killsRate)))
+			local diminush = math.max(0.5, killsRate)
+			
+			-- Para que Druids não sejam prejudicados, vamos incluir o Heal na conta
+			-- baseando na representação em % do heal que o jogador causou com o total
+			-- de heal do time
+			local teamHeal = pvpBattleground.getTeamHealDone(getPlayerBattlegroundTeam(cid))
+			if(teamHeal > 0) then
+				diminush = math.min((((pvpBattleground.getHealDone(cid) * 100) / teamHeal) / 100) + diminush, 1.0)	
+			end
+
+			expGain = math.ceil(expGain * diminush)
 		
 			local gainHonor = pvpBattleground.doUpdateHonor(cid)
 			
