@@ -10641,9 +10641,20 @@ int32_t LuaInterface::luaGetPlayerBattlegroundInfo(lua_State* L)
 
 		lua_newtable(L);
 
-		setField(L, "kills", infos->statistics->kills.size());
-		setField(L, "assists", infos->statistics->assists.size());
-		setField(L, "deaths", infos->statistics->deaths.size());
+        uint32_t kills = 0;
+        uint32_t assists = 0;
+        uint32_t deaths = 0;
+
+        if(infos->statistics && infos->statistics->kills && infos->statistics->assists && infos->statistics->deaths)
+        {
+            kills = infos->statistics->kills.size();
+            assists = infos->statistics->assists.size();
+            deaths = infos->statistics->deaths.size();
+        }
+
+		setField(L, "kills", kills);
+		setField(L, "assists", assists);
+		setField(L, "deaths", deaths);
 		setField(L, "join_in", infos->join_in);
 	}
 	else
