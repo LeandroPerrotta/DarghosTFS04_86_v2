@@ -10647,17 +10647,9 @@ int32_t LuaInterface::luaGetPlayerBattlegroundInfo(lua_State* L)
 
         if(infos->statistics)
         {
-            if(!infos->statistics->kills || !infos->statistics->assists || !infos->statistics->deaths)
-            {
-                //??
-            }
-            else
-            {
-                kills = infos->statistics->kills.size();
-                assists = infos->statistics->assists.size();
-                deaths = infos->statistics->deaths.size();
-            }
-
+            kills = infos->statistics->kills.size();
+            assists = infos->statistics->assists.size();
+            deaths = infos->statistics->deaths.size();
         }
 
 		setField(L, "kills", kills);
