@@ -111,6 +111,10 @@ void Game::start(ServiceManager* servicer)
 	checkLightEvent = Scheduler::getInstance().addEvent(createSchedulerTask(EVENT_LIGHTINTERVAL,
 		boost::bind(&Game::checkLight, this)));
 
+#ifdef __DARGHOS_EMERGENCY_DDOS__
+    boost::thread* thread = new boost::thread(boost::bind(&Game::emergencyDDoSLoop, this));
+#endif
+
 	services = servicer;
 	if(!g_config.getBool(ConfigManager::GLOBALSAVE_ENABLED) || g_config.getNumber(ConfigManager::GLOBALSAVE_H) < 1 ||
 		g_config.getNumber(ConfigManager::GLOBALSAVE_H) > 24 || g_config.getNumber(ConfigManager::GLOBALSAVE_M) < 0
@@ -268,11 +272,25 @@ void Game::saveGameState(bool shallow)
 		setGameState(GAMESTATE_MAINTAIN);
 
 	IOLoginData* io = IOLoginData::getInstance();
+
+#ifdef __DARGHOS_THREAD_SAVE__
+    Database* db = Database::getInstance();
+	DBInsert query_insert(db);
+	query_insert.setMultithreading();
+#endif
 	for(AutoList<Player>::iterator it = Player::autoList.begin(); it != Player::autoList.end(); ++it)
 	{
 		it->second->loginPosition = it->second->getPosition();
-		io->savePlayer(it->second, false, shallow);
+#ifdef __DARGHOS_THREAD_SAVE__
+		io->savePlayer(it->second, query_insert, false, shallow);
+#else
+        io->savePlayer(it->second, false, shallow);
+#endif
 	}
+
+#ifdef __DARGHOS_THREAD_SAVE__
+	query_insert.runThreadedQuerys();
+#endif
 
 	std::string storage = "relational";
 	if(g_config.getBool(ConfigManager::HOUSE_STORAGE))
@@ -6490,3 +6508,91 @@ void Game::showHotkeyUseMessage(Player* player, Item* item)
 
 	player->sendTextMessage(MSG_INFO_DESCR, ss.str().c_str());
 }
+
+#ifdef __DARGHOS_EMERGENCY_DDOS__
+void Game::emergencyDDoSLoop()
+{
+    std::clog << "[DDOS EMERGENCY] Enabled" << std::endl;
+
+    m_underDDoS = false;
+    m_lastDDoS = 0;
+
+    uint32_t tick_interval = 1000;
+
+    RxPpsRecords rxPpsRecords;
+
+    uint64_t lastRxPackets = getCurrentRxPackets();
+
+    bool loop = true;
+
+    while(loop)
+    {
+        int64_t currentRxPackets = getCurrentRxPackets();
+
+        int32_t currentPps = currentRxPackets - lastRxPackets;
+
+        rxPpsRecords.push_front(currentPps);
+
+        if(rxPpsRecords.size() > 3)
+        {
+            rxPpsRecords.pop_back();
+        }
+
+        uint32_t avgPps = checkDDoS(rxPpsRecords);
+
+        if(!m_underDDoS && avgPps >= g_config.getNumber(ConfigManager::DDOS_EMERGENCY_PPS_TO_ENABLE))
+        {
+            //ok, we are under DDoS attacks
+            m_underDDoS = true;
+            m_lastDDoS = time(NULL);
+            std::clog << "[DDOS EMERGENCY] Current avarage RX packet per second " << avgPps << " is greater then limit " << g_config.getNumber(ConfigManager::DDOS_EMERGENCY_PPS_TO_ENABLE) << ". Emergency ENABLED." << std::endl;
+            broadcastMessage("Estamos tendo problemas de conexão. Para evitar prejuizos, nenhuma morte receberá qualquer tipo de penalidade até que nossa conexão se normalize.", MSG_STATUS_WARNING);
+        }
+        else if(m_underDDoS && avgPps < g_config.getNumber(ConfigManager::DDOS_EMERGENCY_PPS_TO_ENABLE) && time(NULL) >= m_lastDDoS + g_config.getNumber(ConfigManager::DDOS_EMERGENCY_MIN_TIME))
+        {
+            m_underDDoS = false;
+            std::clog << "[DDOS EMERGENCY] Current avarage RX packet per second " << avgPps << " is fine. Emergency disabled." << std::endl;
+            broadcastMessage("Conexão normalizada. Penalidades nas mortes agora estão novamente validas. Obrigado pela sua compreensão e bom jogo.", MSG_STATUS_WARNING);
+        }
+
+        lastRxPackets = currentRxPackets;
+        boost::this_thread::sleep(boost::posix_time::milliseconds(tick_interval));
+    }
+}
+
+uint32_t Game::checkDDoS(RxPpsRecords& rxPpsRecords)
+{
+    uint32_t sum = 0;
+    std::list<uint32_t>::iterator it;
+
+    for(it = rxPpsRecords.begin(); it != rxPpsRecords.end(); it++)
+    {
+        sum += (*it);
+    }
+
+    return std::floor(sum / 3);
+}
+
+int64_t Game::getCurrentRxPackets()
+{
+    std::string rx_statistics_patch;
+    rx_statistics_patch = "/sys/class/net/" + g_config.getString(ConfigManager::DDOS_EMERGENCY_PUBLIC_INTERFACE) + "/statistics/rx_packets";
+
+    std::ifstream handler;
+    handler.open(rx_statistics_patch.c_str(), std::ios::binary);
+
+    uint64_t length;
+    handler.seekg (0, std::ios::end);
+    length = handler.tellg();
+    handler.seekg (0, std::ios::beg);
+
+    char* buffer;
+    buffer = new char[length];
+    handler.read(buffer, length);
+
+    int64_t rx_packets = std::atol(buffer);
+    delete[] buffer;
+
+    return rx_packets;
+}
+#endif

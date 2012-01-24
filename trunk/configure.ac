@@ -12,13 +12,13 @@ OPTIONAL_FLAGS="-D__WAR_SYSTEM__ -D__NO_CRYPTOPP__ -D__TFS_NEWEST_REVS_FIXIES__ 
 # verifica se vamos ativar as "Darghos Features"
 darghosFeatures=no
 AC_ARG_ENABLE(darghos, [  --enable-darghos		enable darghos stable features],
-	[OPTIONAL_FLAGS="$OPTIONAL_FLAGS -D__DARGHOS_PVP_SYSTEM__ -D__DARGHOS_CUSTOM__ -D__DARGHOS_SPOOF__"]
+	[OPTIONAL_FLAGS="$OPTIONAL_FLAGS -D__DARGHOS_PVP_SYSTEM__ -D__DARGHOS_CUSTOM__ -D__DARGHOS_SPOOF__ -D__DARGHOS_EMERGENCY_DDOS__ -D__DARGHOS_CUSTOM_SPELLS__"]
 	darghosFeatures=yes
 )
 
 darghosBetaFeatures=no
 AC_ARG_ENABLE(darghos-beta, [  --enable-darghos-beta		enable darghos beta (unstable) features],
-	[OPTIONAL_FLAGS="$OPTIONAL_FLAGS -D__DARGHOS_CUSTOM_SPELLS__"]
+	[OPTIONAL_FLAGS="$OPTIONAL_FLAGS"]
 	darghosBetaFeatures=yes
 )
 

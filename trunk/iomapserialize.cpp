@@ -506,6 +506,7 @@ bool IOMapSerialize::saveMapBinary(Map*)
  	}
 
 	query.str("");
+
 	if(!stmt.execute())
 		return false;
 

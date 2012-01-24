@@ -78,6 +78,10 @@ DBInsert::DBInsert(Database* db)
 	m_rows = 0;
 	// checks if current database engine supports multiline INSERTs
 	m_multiLine = m_db->getParam(DBPARAM_MULTIINSERT);
+
+#ifdef __DARGHOS_THREAD_SAVE__
+    useMultithreading = false;
+#endif
 }
 
 void DBInsert::setQuery(const std::string& query)
@@ -87,10 +91,142 @@ void DBInsert::setQuery(const std::string& query)
 	m_rows = 0;
 }
 
+#ifdef __DARGHOS_THREAD_SAVE__
+bool DBInsert::storeQuery(QueryWeight_t queryWeight/* = QUERY_WEIGHT_NORMAL*/)
+{
+	if(!m_multiLine || m_buf.length() < 1 || !m_rows) // INSERTs were executed on-fly or there's no rows to execute
+		return true;
+
+    switch(queryWeight)
+    {
+        case QUERY_WEIGHT_NORMAL:
+        {
+            normalQuerys.push_back(m_query + m_buf);
+            break;
+        }
+
+        case QUERY_WEIGHT_HEAVY:
+        {
+            heavyQuerys.push_back(m_query + m_buf);
+            break;
+        }
+
+
+        case QUERY_WEIGHT_LIGHT:
+        {
+            lightQuerys.push_back(m_query + m_buf);
+            break;
+        }
+
+        default:
+        {
+            return false;
+        }
+    }
+
+    m_rows = 0;
+    m_buf = "";
+
+    return true;
+}
+
+void DBInsert::runQueryList(QueryList& list)
+{
+    Database db;
+
+    if(list.size() > 0)
+    {
+        QueryList::iterator it = list.begin();
+        while(it != list.end())
+        {
+            if(!db.query(*it))
+            {
+                //std::clog << "Cannot execute threaded query: " << (*it) << std::endl;
+            }
+
+            it++;
+        }
+
+        list.clear();
+    }
+}
+
+void DBInsert::runQuerys(QueryWeight_t queryWeight)
+{
+    switch(queryWeight)
+    {
+        case QUERY_WEIGHT_NORMAL:
+        {
+            runQueryList(normalQuerys);
+            break;
+        }
+
+        case QUERY_WEIGHT_LIGHT:
+        {
+            runQueryList(lightQuerys);
+            break;
+        }
+
+        case QUERY_WEIGHT_HEAVY:
+        {
+            runQueryList(heavyQuerys);
+            break;
+        }
+    }
+
+    boost::this_thread::at_thread_exit(boost::bind(&DBInsert::onThreadExit, this));
+}
+
+void DBInsert::onThreadExit()
+{
+    for(std::list<boost::thread*>::iterator it = threads.begin(); it != threads.end();)
+    {
+        if((*it)->get_id() == boost::this_thread::get_id())
+        {
+            threads.erase(it);
+            delete (*it);
+
+            break;
+        }
+
+        it++;
+    }
+}
+
+void DBInsert::runThreadedQuerys()
+{
+    std::clog << "Running " << normalQuerys.size() << " normal querys, " << lightQuerys.size() << " light querys and " << heavyQuerys.size() << " heavy querys..." << std::endl;
+
+    boost::thread* thread = new boost::thread(boost::bind(&DBInsert::runQuerys, this, QUERY_WEIGHT_NORMAL));
+    threads.push_back(thread);
+
+    thread = new boost::thread(boost::bind(&DBInsert::runQuerys, this, QUERY_WEIGHT_LIGHT));
+    threads.push_back(thread);
+
+    thread = new boost::thread(boost::bind(&DBInsert::runQuerys, this, QUERY_WEIGHT_HEAVY));
+    threads.push_back(thread);
+}
+#endif
+
 bool DBInsert::addRow(const std::string& row)
 {
-	if(!m_multiLine) // executes INSERT for current row
+
+#ifdef __DARGHOS_THREAD_SAVE__
+    if(!m_multiLine) // executes INSERT for current row
+    {
+        if(useMultithreading)
+        {
+            m_buf = "(" + row + ")";
+            return storeQuery();
+        }
+        else
+            return m_db->query(m_query + "(" + row + ")");
+
+    }
+#else
+    if(!m_multiLine) // executes INSERT for current row
 		return m_db->query(m_query + "(" + row + ")");
+#endif
 
 	m_rows++;
 	int32_t size = m_buf.length();
@@ -100,12 +236,14 @@ bool DBInsert::addRow(const std::string& row)
 	else if(size > 8192)
 	{
 		if(!execute())
-			return false;
+            return false;
 
 		m_buf = "(" + row + ")";
 	}
 	else
 		m_buf += ",(" + row + ")";
+
+
 
 	return true;
 }
@@ -121,6 +259,13 @@ bool DBInsert::execute()
 {
 	if(!m_multiLine || m_buf.length() < 1 || !m_rows) // INSERTs were executed on-fly or there's no rows to execute
 		return true;
+
+#ifdef __DARGHOS_THREAD_SAVE__
+    if(useMultithreading)
+    {
+        return storeQuery();
+    }
+#endif
 
 	m_rows = 0;
 	// executes buffer

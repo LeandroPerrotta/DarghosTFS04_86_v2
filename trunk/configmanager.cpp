@@ -322,6 +322,12 @@ bool ConfigManager::load()
 	m_confNumber[RATE_GOLD_LOOT] = getGlobalNumber("rateGoldLoot", 1);
 #endif
 
+#ifdef __DARGHOS_EMERGENCY_DDOS__
+    m_confString[DDOS_EMERGENCY_PUBLIC_INTERFACE] = getGlobalString("ddosEmergencyPublicIface", "eth1");
+    m_confNumber[DDOS_EMERGENCY_PPS_TO_ENABLE] = getGlobalNumber("ddosEmergencyPpsToEnable", 120000);
+    m_confNumber[DDOS_EMERGENCY_MIN_TIME] = getGlobalNumber("ddosEmergencyMinTime", 30);
+#endif
+
 #ifdef __DARGHOS_PVP_SYSTEM__
 	m_confNumber[BATTLEGROUND_PZ_LOCKED] = getGlobalNumber("battlegroundPzLocked", 10 * 1000);
 	m_confDouble[BATTLEGROUND_DAMAGE_RATE] = getGlobalDouble("battlegroundDamageRate", 0.5);

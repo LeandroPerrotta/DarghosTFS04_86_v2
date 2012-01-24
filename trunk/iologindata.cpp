@@ -765,7 +765,19 @@ void IOLoginData::loadItems(ItemMap& itemMap, DBResult* result)
 	while(result->next());
 }
 
+#ifndef __DARGHOS_THREAD_SAVE__
 bool IOLoginData::savePlayer(Player* player, bool preSave/* = true*/, bool shallow/* = false*/)
+#else
+bool IOLoginData::savePlayer(Player* player, bool preSave/* = true*/, bool shallow/* = false*/)
+{
+    Database* db = Database::getInstance();
+    DBInsert query_insert(db);
+
+    return savePlayer(player, query_insert, preSave, shallow);
+}
+
+bool IOLoginData::savePlayer(Player* player, DBInsert& query_insert, bool preSave/* = true*/, bool shallow/* = false*/)
+#endif
 {
 	if(preSave && player->health <= 0)
 	{
@@ -781,7 +793,7 @@ bool IOLoginData::savePlayer(Player* player, bool preSave/* = true*/, bool shall
 		}
 	}
 
-	Database* db = Database::getInstance();
+    Database* db = Database::getInstance();
 	DBQuery query;
 	query << "SELECT `save` FROM `players` WHERE `id` = " << player->getGUID() << " LIMIT 1";
 
@@ -792,7 +804,7 @@ bool IOLoginData::savePlayer(Player* player, bool preSave/* = true*/, bool shall
 	const bool save = result->getDataInt("save");
 	result->free();
 
-	DBTransaction trans(db);
+    DBTransaction trans(db);
 	if(!trans.begin())
 		return false;
 
@@ -917,7 +929,10 @@ bool IOLoginData::savePlayer(Player* player, bool preSave/* = true*/, bool shall
 		return false;
 
 	char buffer[280];
+
+#ifndef __DARGHOS_THREAD_SAVE__
 	DBInsert query_insert(db);
+#endif
 
 	query_insert.setQuery("INSERT INTO `player_spells` (`player_id`, `name`) VALUES ");
 	for(LearnedInstantSpellList::const_iterator it = player->learnedInstantSpellList.begin(); it != player->learnedInstantSpellList.end(); ++it)
@@ -1023,6 +1038,33 @@ bool IOLoginData::savePlayer(Player* player, bool preSave/* = true*/, bool shall
 	if(!db->query(query.str()))
 		return false;
 
+#ifdef __DARGHOS_THREAD_SAVE__
+    //isto pode crashar o server entao iremos fazer um HACK para o save da VIPList ser padrão, sem threads
+
+    DBInsert temp_query_insert(db);
+
+	if(!g_config.getBool(ConfigManager::VIPLIST_PER_PLAYER))
+		temp_query_insert.setQuery("INSERT INTO `account_viplist` (`account_id`, `world_id`, `player_id`) VALUES ");
+	else
+		temp_query_insert.setQuery("INSERT INTO `player_viplist` (`player_id`, `vip_id`) VALUES ");
+
+	for(VIPSet::iterator it = player->VIPList.begin(); it != player->VIPList.end(); it++)
+	{
+		if(!playerExists(*it, false, false))
+			continue;
+
+		if(!g_config.getBool(ConfigManager::VIPLIST_PER_PLAYER))
+			sprintf(buffer, "%d, %d, %d", player->getAccount(), g_config.getNumber(ConfigManager::WORLD_ID), *it);
+		else
+			sprintf(buffer, "%d, %d", player->getGUID(), *it);
+
+		if(!temp_query_insert.addRow(buffer))
+			return false;
+	}
+
+	if(!temp_query_insert.execute())
+		return false;
+#else
 	if(!g_config.getBool(ConfigManager::VIPLIST_PER_PLAYER))
 		query_insert.setQuery("INSERT INTO `account_viplist` (`account_id`, `world_id`, `player_id`) VALUES ");
 	else
@@ -1044,6 +1086,7 @@ bool IOLoginData::savePlayer(Player* player, bool preSave/* = true*/, bool shall
 
 	if(!query_insert.execute())
 		return false;
+#endif
 
 	//End the transaction
 	return trans.commit();
@@ -1096,12 +1139,18 @@ bool IOLoginData::saveItems(const Player* player, const ItemBlockList& itemList,
 			const char* attributes = propWriteStream.getStream(attributesSize);
 			std::stringstream ss;
 			ss << player->getGUID() << ", " << stack.second << ", " << runningId << ", " << item->getID() << ", " << (int32_t)item->getSubType() << ", " << db->escapeBlob(attributes, attributesSize).c_str();
-			if(!query_insert.addRow(ss.str().c_str()))
+			if(!query_insert.addRow(ss.str()))
 				return false;
 		}
 	}
 
-	return query_insert.execute();
+#ifdef __DARGHOS_THREAD_SAVE__
+    if(query_insert.isMultithreading())
+        return query_insert.storeQuery(QUERY_WEIGHT_HEAVY);
+    else
+#endif
+    return query_insert.execute();
+
 }
 
 bool IOLoginData::playerDeath(Player* _player, const DeathList& dl)

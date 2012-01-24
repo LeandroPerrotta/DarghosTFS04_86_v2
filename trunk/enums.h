@@ -25,6 +25,15 @@
 #pragma warning(disable:4244)
 #endif
 
+#ifdef __DARGHOS_THREAD_SAVE__
+enum QueryWeight_t
+{
+    QUERY_WEIGHT_NORMAL = 0,
+    QUERY_WEIGHT_LIGHT = 1,
+    QUERY_WEIGHT_HEAVY = 2
+};
+#endif
+
 enum DatabaseEngine_t
 {
 	DATABASE_ENGINE_NONE = 0,

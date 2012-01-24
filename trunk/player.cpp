@@ -2281,11 +2281,20 @@ bool Player::onDeath()
 		setDropLoot(LOOT_DROP_NONE);
 		setLossSkill(false);
 	}
+#ifdef __DARGHOS_EMERGENCY_DDOS__
+    else if(g_game.isUnderDDoS())
+    {
+        setLossSkill(false);
+        setDropLoot(LOOT_DROP_NONE);
+        sendTextMessage(MSG_EVENT_ADVANCE, "Você morreu enquanto o servidor estava sofrendo ataques DDoS, nenhuma penalidade foi aplicada a sua morte e você será apenas levado ao templo, desculpe pelo transtorno.");
+    }
+#endif
 	else if(skull < SKULL_RED)
 	{
 		Item* item = NULL;
 
 #ifdef __DARGHOS_CUSTOM__
+
         if(!ignoreLoss)
         {
 #endif
@@ -2325,7 +2334,8 @@ bool Player::onDeath()
 	bool usePVPBlessing = false;
 	uint32_t totalDamage = 0, pvpDamage = 0, pvpLevelSum = 0;
 
-	if(!ignoreLoss)
+
+    if(!ignoreLoss && skillLoss)
 	{
         for(CountMap::iterator it = damageMap.begin(); it != damageMap.end(); ++it)
         {
@@ -2469,7 +2479,8 @@ bool Player::onDeath()
 		setLossSkill(true);
 
 #ifdef __DARGHOS_CUSTOM__
-		if(preventLoss || ignoreLoss)
+
+        if(preventLoss || ignoreLoss)
 		{
 		    if(ignoreLoss)
                 removeCondition(CONDITION_IGNORE_DEATH_LOSS);

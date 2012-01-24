@@ -64,6 +64,9 @@ class ConfigManager
 			ADMIN_PASSWORD,
 			ADMIN_ENCRYPTION,
 			ADMIN_ENCRYPTION_DATA,
+#ifdef __DARGHOS_EMERGENCY_DDOS__
+            DDOS_EMERGENCY_PUBLIC_INTERFACE,
+#endif
 			LAST_STRING_CONFIG /* this must be the last one */
 		};
 
@@ -175,15 +178,20 @@ class ConfigManager
 			STAMINA_DESTROY_LOOT,
 			FIST_BASE_ATTACK,
 
-			#ifdef __DARGHOS_CUSTOM__
+#ifdef __DARGHOS_CUSTOM__
 			DEATH_FRAGGERS,
 			USE_BLESSING_AS_PVP,
 			RATE_GOLD_LOOT,
-			#endif
+#endif
 
-			#ifdef __DARGHOS_PVP_SYSTEM__
+#ifdef __DARGHOS_EMERGENCY_DDOS__
+            DDOS_EMERGENCY_PPS_TO_ENABLE,
+            DDOS_EMERGENCY_MIN_TIME,
+#endif
+
+#ifdef __DARGHOS_PVP_SYSTEM__
 			BATTLEGROUND_PZ_LOCKED,
-			#endif
+#endif
 
 			LAST_NUMBER_CONFIG /* this must be the last one */
 		};

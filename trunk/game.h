@@ -133,6 +133,10 @@ typedef std::vector< std::pair<std::string, uint32_t> > Highscore;
 typedef std::list<Position> Trash;
 typedef std::map<int32_t, float> StageList;
 
+#ifdef __DARGHOS_EMERGENCY_DDOS__
+typedef std::list<uint32_t> RxPpsRecords;
+#endif
+
 #define EVENT_LIGHTINTERVAL 10000
 #define EVENT_DECAYINTERVAL 1000
 #define EVENT_DECAYBUCKETS 16
@@ -605,6 +609,13 @@ class Game
 #ifdef __DARGHOS_CUSTOM__
         void addRandomMagicEffect(const Position& pos, uint8_t effect, uint16_t randomArea = 0);
 #endif
+
+#ifdef __DARGHOS_EMERGENCY_DDOS__
+        void emergencyDDoSLoop();
+        uint32_t checkDDoS(RxPpsRecords& rxPpsRecords);
+        int64_t getCurrentRxPackets();
+        bool isUnderDDoS() { return m_underDDoS; }
+#endif
 		void addMagicEffect(const Position& pos, uint8_t effect, bool ghostMode = false);
 		void addMagicEffect(const SpectatorVec& list, const Position& pos, uint8_t effect, bool ghostMode = false);
 		void addDistanceEffect(const SpectatorVec& list, const Position& fromPos, const Position& toPos, uint8_t effect);
@@ -691,5 +702,10 @@ class Game
 
 		Highscore highscoreStorage[9];
 		time_t lastHighscoreCheck;
+
+#ifdef __DARGHOS_EMERGENCY_DDOS__
+        bool m_underDDoS;
+        time_t m_lastDDoS;
+#endif
 };
 #endif

@@ -61,6 +61,10 @@ class PgSQLResult;
 typedef DATABASE_CLASS Database;
 typedef RESULT_CLASS DBResult;
 
+#ifdef __DARGHOS_THREAD_SAVE__
+typedef std::list<std::string> QueryList;
+#endif
+
 enum DBParam_t
 {
 	DBPARAM_MULTIINSERT = 1
@@ -275,6 +279,21 @@ class DBInsert
 		*/
 		void setQuery(const std::string& query);
 
+#ifdef __DARGHOS_THREAD_SAVE__
+        void setMultithreading(bool v = true){
+            if(v)
+                std::clog << "Using multi-thread for processing querys..." << std::endl;
+
+            useMultithreading = v;
+        }
+        bool isMultithreading(){ return useMultithreading; }
+        bool storeQuery(QueryWeight_t queryWeight = QUERY_WEIGHT_NORMAL);
+        void runQueryList(QueryList& list);
+        void runQuerys(QueryWeight_t queryWeight);
+        void onThreadExit();
+        void runThreadedQuerys();
+#endif
+
 		/**
 		* Adds new row to INSERT statement.
 		*
@@ -299,6 +318,14 @@ class DBInsert
 
 		uint32_t m_rows;
 		std::string m_query, m_buf;
+
+#ifdef __DARGHOS_THREAD_SAVE__
+        bool useMultithreading;
+        std::list<boost::thread*> threads;
+        QueryList heavyQuerys;
+        QueryList normalQuerys;
+        QueryList lightQuerys;
+#endif
 };
 
 
