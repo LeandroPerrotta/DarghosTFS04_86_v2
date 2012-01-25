@@ -357,7 +357,7 @@ function pvpBattleground.getTeamFragPoints(team_id)
 	local totalFrags = 0
 	
 	for _,cid in pairs(playersTeam) do
-		if(isCreature(cid)) then
+		if(isCreature(cid) and isPlayer(cid) and doPlayerIsInBattleground(cid)) then
 			local playerInfo = getPlayerBattlegroundInfo(cid)
 			totalFrags = totalFrags + playerInfo.kills
 		end
