@@ -1051,7 +1051,7 @@ function pvpBattleground.addPlayerBan(account_id, value, type, reason, by)
 			pvpBattleground.onExit(pid)
 		end
 		
-		pvpBattleground.sendPvpChannelMessage("[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") foi banido da battleground por quebrar as regras! Leia as regras e não as quebre -> !bg regras", PVPCHANNEL_MSGMODE_BROADCAST)		
+		pvpBattleground.sendPvpChannelMessage("[Battleground] " .. getPlayerName(pid).. " (" .. getPlayerLevel(pid) .. ") foi banido da battleground por quebrar as regras! Leia as regras e não as quebre -> !bg regras", PVPCHANNEL_MSGMODE_BROADCAST)		
 	end
 	
 	if(banArgs.resetRating) then
