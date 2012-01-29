@@ -1046,11 +1046,13 @@ function pvpBattleground.addPlayerBan(account_id, value, type, reason, by)
 	db.executeQuery("INSERT INTO `battleground_bans` (`type`, `account_id`, `value`, `added`, `ends`, `reason`, `by`) VALUES (" .. type .. ", " .. account_id .. ", " .. value .. ", " .. os.time() .. ", " .. ends .. ", '" .. reason .. "', " .. getPlayerGUID(by) .. ");")
 
 	local pid = getPlayerByGUID(value)
-	if(doPlayerIsInBattleground(pid)) then
-		pvpBattleground.onExit(pid)
+	if(pid) then
+		if(doPlayerIsInBattleground(pid)) then
+			pvpBattleground.onExit(pid)
+		end
+		
+		pvpBattleground.sendPvpChannelMessage("[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") foi banido da battleground por quebrar as regras! Leia as regras e não as quebre -> !bg regras", PVPCHANNEL_MSGMODE_BROADCAST)		
 	end
-	
-	pvpBattleground.sendPvpChannelMessage("[Battleground] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") foi banido da battleground por quebrar as regras! Leia as regras e não as quebre -> !bg regras", PVPCHANNEL_MSGMODE_BROADCAST)		
 	
 	if(banArgs.resetRating) then
 		if(pid) then
@@ -1059,6 +1061,7 @@ function pvpBattleground.addPlayerBan(account_id, value, type, reason, by)
 			db.executeQuery("UPDATE `players` SET `battleground_rating` = 0 WHERE `id` = " .. value .. ";")
 		end
 	end
+	
 end
 
 --[[
