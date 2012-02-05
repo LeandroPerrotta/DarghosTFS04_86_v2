@@ -1,5 +1,6 @@
 local config = {
-	showGamemasters = getBooleanFromString(getConfigValue('displayGamemastersWithOnlineCommand'))
+	showGamemasters = getBooleanFromString(getConfigValue('displayGamemastersWithOnlineCommand')),
+	world_id = getConfigValue('worldId')
 }
 
 UPDATE_LIST_INTERVAL = 1000
@@ -9,7 +10,7 @@ function updateOnlineList()
 
 	onlineList = {}
 
-	local result = db.getResult("SELECT `name`, `level` FROM `players` WHERE `online` = '1' ORDER BY `name`");
+	local result = db.getResult("SELECT `name`, `level` FROM `players` WHERE `online` = '1' AND `world_id` = ".. config.world_id .. " ORDER BY `name`");
 	
 	if(result:getID() ~= -1) then
 		repeat
@@ -22,7 +23,7 @@ end
 
 function onSay(cid, words, param, channel)
 	
-	local lastWhoIsOnline = getGlobalStorageValue(gid.LAST_WHO_IS_ONLINE)
+	local lastWhoIsOnline = getGlobalStorageValue(5000)
 	
 	if(lastWhoIsOnline == STORAGE_NULL or (lastWhoIsOnline + UPDATE_LIST_INTERVAL) <= os.time() or onlineList == nil) then
 		updateOnlineList()
