@@ -85,7 +85,7 @@ function onLogin(cid)
 			doPlayerAddItemEx(cid, item_backpack, FALSE, CONST_SLOT_BACKPACK)
 		end
 		setPlayerStorageValue(cid, sid.GIVE_ITEMS_AFTER_DEATH, -1)
-	end			
+	end
 	
 	setPlayerStorageValue(cid, sid.TRAINING_SHIELD, 0)
 	setPlayerStorageValue(cid, sid.TELEPORT_RUNE_STATE, STORAGE_NULL)

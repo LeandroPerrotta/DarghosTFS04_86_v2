@@ -55,7 +55,7 @@ function saySpecialPermission(cid, message, keywords, parameters, node)
 	 	npcHandler:say("FEITO! Você abriu mão de " .. darghos_change_pvp_premdays_cost .. " dias de sua conta premium em troca de minha permissão especial! Agora você pode falar com o funcionário do templo e ele não irá negar seu pedido de mudança de PvP!!", cid)
      end
 
-	npcHandler:resetNpc(cid)		
+	npcHandler:resetNpc(cid)
 	return true 
 end
 

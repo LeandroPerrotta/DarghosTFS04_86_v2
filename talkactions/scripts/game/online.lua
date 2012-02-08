@@ -3,8 +3,10 @@ local config = {
 	world_id = getConfigValue('worldId')
 }
 
-UPDATE_LIST_INTERVAL = 1000
+MESSAGE_LIMIT = 240
+UPDATE_LIST_INTERVAL = 1000 * 30
 onlineList = {}
+onlineStrings = {}
 
 function updateOnlineList()
 
@@ -19,19 +21,9 @@ function updateOnlineList()
 			table.insert(onlineList, player)
 		until not(result:next())
 	end
-end
-
-function onSay(cid, words, param, channel)
 	
-	local lastWhoIsOnline = getGlobalStorageValue(5000)
-	
-	if(lastWhoIsOnline == STORAGE_NULL or (lastWhoIsOnline + UPDATE_LIST_INTERVAL) <= os.time() or onlineList == nil) then
-		updateOnlineList()
-	end
-
-	doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, (#onlineList) .. " player" .. (#onlineList > 1 and "s" or "") .. " online:")
-	
-	local str, i, pos = "", 1, 1;
+	local str, first = "", true
+	local size = table.size(onlineList)
 	
 	for _, info in ipairs(onlineList) do
 	
@@ -45,29 +37,41 @@ function onSay(cid, words, param, channel)
 			end
 		end
 	
-		if(canAdd) then
-			if(pos < 20) then
-				str = str .. info.name .. " [" .. info.level .. "]"
-				pos = pos + 1
-			else
-				doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, str)
-				
-				str = info.name .. " [" .. info.level .. "]"
-				pos = 1
-			end		
-			
-			if(i == #onlineList) then
+		if(canAdd) then			
+			local tmp = info.name .. " [" .. info.level .. "]"
+			if(string.len(str) + string.len(tmp) > MESSAGE_LIMIT) then
 				str = str .. "."
+				table.insert(onlineStrings, str)
+				str = tmp
 			else
-				str = str .. ", "
-			end				
-		end		
-		
-		i = i + 1
+				if(first) then
+					first = false
+				else
+					str = str .. ", "
+				end
+				
+				str = str .. tmp
+			end
+		end
 	end
 
-	if(pos > 1) then
-		doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, str)
+	str = str .. "."
+	table.insert(onlineStrings, str)
+	addEvent(updateOnlineList, UPDATE_LIST_INTERVAL)
+end
+
+function onSay(cid, words, param, channel)
+	
+	if(#onlineStrings == 0) then
+		updateOnlineList()
+	end
+
+	doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, (#onlineList) .. " player" .. (#onlineList > 1 and "s" or "") .. " online:")
+
+	if(#onlineStrings > 0) then
+		for k,v in pairs(onlineStrings) do
+			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, v)
+		end
 	end
 	
 	return true
