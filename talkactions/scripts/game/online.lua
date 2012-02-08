@@ -24,6 +24,7 @@ function updateOnlineList()
 	
 	local str, first = "", true
 	local size = table.size(onlineList)
+	onlineStrings = {}
 	
 	for _, info in ipairs(onlineList) do
 	
