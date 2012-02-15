@@ -426,7 +426,7 @@ function raidLog(raidname)
 	
 	local date = os.date("*t")
 	local fileStr = date.day .. "-" .. date.month .. ".log"
-	local patch = getDataDir() .. "logs/raids/"
+	local patch = getConfigValue("logsDirectory") .. "raids/"
 	local file = io.open(patch .. fileStr, "a+")
 	
 	file:write(out .. "\n")
@@ -625,7 +625,7 @@ function consoleLog(type, npcname, caller, string, params)
 	
 		local date = os.date("*t")
 		local fileStr = npcname .. "_" .. date.day .. "-" .. date.month .. ".log"
-		local patch = getDataDir() .. "logs/npc/"
+		local patch = getConfigValue("logsDirectory") .. "npc/"
 		local file = io.open(patch .. fileStr, "a+")
 		
 		file:write(out .. "\n")

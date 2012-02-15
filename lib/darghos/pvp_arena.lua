@@ -628,7 +628,7 @@ function pvpArena.log(type, caller, string, params)
 	
 		local date = os.date("*t")
 		local fileStr = date.day .. "-" .. date.month .. ".log"
-		local patch = getDataDir() .. "logs/arenas/"
+		local patch = getConfigValue("logsDirectory") .. "arenas/"
 		local file = io.open(patch .. fileStr, "a+")
 		
 		file:write(out .. "\n")

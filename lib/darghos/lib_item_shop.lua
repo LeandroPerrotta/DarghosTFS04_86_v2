@@ -26,7 +26,7 @@ function itemShop:log(msg, log_id)
 	
 	local date = os.date("*t")
 	local fileStr = date.day .. "-" .. date.month .. ".log"
-	local patch = getDataDir() .. "logs/itemshop/"
+	local patch = getConfigValue("logsDirectory") .. "itemshop/"
 	local file = io.open(patch .. fileStr, "a+")
 	
 	file:write(out .. "\n")
