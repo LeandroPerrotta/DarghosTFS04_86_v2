@@ -820,6 +820,9 @@ if(Modules == nil) then
 		noText = '',
 		maxCount = 100,
 		amount = 0
+		-- DARGHOS_CUSTOM --
+		,changePriceCallback = nil
+		-- END --
 	}
 
 	-- Add it to the parseable module list.
@@ -833,6 +836,12 @@ if(Modules == nil) then
 		return obj
 	end
 
+	-- DARGHOS_CUSTOM --
+	function ShopModule:addChangePriceCallback(callback)
+		self.changePriceCallback = callback
+	end
+	-- END --
+	
 	-- Parses all known parameters.
 	function ShopModule:parseParameters()
 		local ret = NpcSystem.getParameter('shop_buyable')
@@ -1254,7 +1263,18 @@ if(Modules == nil) then
 	-- Callback onSell() function. If you wish, you can change certain Npc to use your onSell().
 	function ShopModule:callbackOnSell(cid, itemid, subType, amount, ignoreCap)
 		local shopItem = nil
+		
+		-- DARGHOS_CUSTOM --
+		local shopItems = table.copy(self.npcHandler.shopItems)
+		
+		if(self.changePriceCallback ~= nil) then
+			shopItems = self.changePriceCallback(cid, SHOPMODULE_SELL_ITEM, shopItems)
+		end
+		
+		for _, item in ipairs(shopItems) do
+		--[[ ELSE 
 		for _, item in ipairs(self.npcHandler.shopItems) do
+		END ]]
 			if(item.id == itemid) then
 				shopItem = item
 				break
@@ -1324,7 +1344,21 @@ if(Modules == nil) then
 
 		local parseInfo = { [TAG_PLAYERNAME] = getPlayerName(cid) }
 		local msg = module.npcHandler:parseMessage(module.npcHandler:getMessage(MESSAGE_SENDTRADE), parseInfo)
+		
+		-- DARGHOS_CUSTOM --
+		local tempItems = table.copy(module.npcHandler.shopItems)
+		local tempItems2 = table.copy(tempItems)
+		
+		--tempItems2 = {}
+		
+		if(module.changePriceCallback ~= nil) then
+			tempItems = module.changePriceCallback(cid, SHOPMODULE_SELL_ITEM, tempItems)
+		end
+		
+		addEvent(openShopWindow, 500, cid, tempItems,
+		--[[ ELSE 
 		addEvent(openShopWindow, 500, cid, module.npcHandler.shopItems,
+		END ]]	
 			function(cid, itemid, subType, amount, ignoreCap, inBackpacks)
 				module.npcHandler:onBuy(cid, itemid, subType, amount, ignoreCap, inBackpacks)
 			end,
@@ -1332,7 +1366,7 @@ if(Modules == nil) then
 				module.npcHandler:onSell(cid, itemid, subType, amount, ignoreCap, inBackpacks)
 			end
 		)
-
+		
 		module.npcHandler:say(msg, cid)
 		return true
 	end

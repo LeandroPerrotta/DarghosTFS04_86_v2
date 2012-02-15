@@ -322,6 +322,10 @@ function D_CustomNpcModules.addTradeList(shopModule, tradelist_name)
 			end
 		end
 	end
+	
+	if(changeItemsPriceCallback[tradelist_name] ~= nil) then
+		shopModule:addChangePriceCallback(changeItemsPriceCallback[tradelist_name])
+	end
 end
 
 function D_CustomNpcModules.parseCustomParameters(keywordHandler, npcHandler)

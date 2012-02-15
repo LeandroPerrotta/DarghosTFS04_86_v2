@@ -593,3 +593,29 @@ trade_lists = {
 		{ name = "potted flower", itemtype = 2104, sell_for = 5 },
 	}
 }
+
+changeItemsPriceCallback = {
+	["rashid"] = 
+		function (cid, type, itemList)
+			
+			if(type ~= SHOPMODULE_SELL_ITEM) then
+				return false
+			end
+			
+			local change = 0
+			
+			if(playerHistory.hasAchievBattlegroundRankLegend(cid)) then
+				change = 1.70
+			elseif(playerHistory.hasAchievBattlegroundRankVeteran(cid)) then
+				change = 1.40
+			elseif(playerHistory.hasAchievBattlegroundRankBrave(cid)) then
+				change = 1.20
+			end
+			
+			for k,v in pairs(itemList) do
+				itemList[k].sell = math.floor(v.sell * change)				
+			end
+			
+			return itemList
+		end
+}

@@ -101,17 +101,23 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration, initIn)
 			end		
 			
 			pvpBattleground.storePlayerParticipation(cid, getPlayerBattlegroundTeam(cid), false, expGain, changeRating, gainHonor, getPlayerStamina(cid) > 40 * 60)
+	
+			if(not playerHistory.hasAchievBattlegroundRankBrave(cid)
+				and currentRating < 1000
+				and currentRating + changeRating >= 1000) then
+				playerHistory.achievBattlegroundRankBrave(cid)
+			end			
 			
-			if(not playerHistory.hasAchievBattlegroundGet1500Rating(cid)
+			if(not playerHistory.hasAchievBattlegroundRankVeteran(cid)
 				and currentRating < 1500
 				and currentRating + changeRating >= 1500) then
-				playerHistory.achievBattlegroundGet1500Rating(cid)
+				playerHistory.achievBattlegroundRankVeteran(cid)
 			end
 			
-			if(not playerHistory.hasAchievBattlegroundGet2000Rating(cid)
+			if(not playerHistory.hasAchievBattlegroundRankLegend(cid)
 				and currentRating < 2000
 				and currentRating + changeRating >= 2000) then
-				playerHistory.achievBattlegroundGet2000Rating(cid)
+				playerHistory.achievBattlegroundRankLegend(cid)
 			end				
 			
 			doPlayerSetStamina(cid, staminaMinutes - staminaChange)

@@ -2,10 +2,11 @@ PH_LOG_BATTLEGROUND_WIN = 1
 PH_LOG_BATTLEGROUND_LOST = 2
 PH_LOG_BATTLEGROUND_DRAW = 3
 
-PH_ACH_BATTLEGROUND_GET_1500_RATING = 1
-PH_ACH_BATTLEGROUND_GET_2000_RATING = 2
+PH_ACH_BATTLEGROUND_RANK_VETERAN = 1
+PH_ACH_BATTLEGROUND_RANK_LEGEND = 2
 PH_ACH_BATTLEGROUND_INSANE_KILLER = 3
 PH_ACH_BATTLEGROUND_PERFECT = 4
+PH_ACH_BATTLEGROUND_RANK_BRAVE = 5
 
 PH_TYPE_LOG = 1
 PH_TYPE_ACHIEVEMENT = 2
@@ -74,22 +75,31 @@ end
 	ACHIEVEMENTS
 ]]--
 
-function playerHistory.achievBattlegroundGet1500Rating(cid)
-	playerHistory.notifyAchievement(cid, "[Façanha alcançada] Conquistar 1.500 pontos (rating) de classificação em Battlegrounds!")
-	playerHistory.addAchievement(cid, PH_ACH_BATTLEGROUND_GET_1500_RATING)
+function playerHistory.achievBattlegroundRankBrave(cid)
+	playerHistory.notifyAchievement(cid, "[Façanha alcançada] Rank - Bravo: Conquistou 1.000 pontos (rating) de classificação em Battlegrounds!")
+	playerHistory.addAchievement(cid, PH_ACH_BATTLEGROUND_RANK_BRAVE)
 end
 
-function playerHistory.hasAchievBattlegroundGet1500Rating(cid)
-	return playerHistory.hasAchievement(cid, PH_ACH_BATTLEGROUND_GET_1500_RATING)
+function playerHistory.hasAchievBattlegroundRankBrave(cid)
+	return playerHistory.hasAchievement(cid, PH_ACH_BATTLEGROUND_RANK_BRAVE)
 end
 
-function playerHistory.achievBattlegroundGet2000Rating(cid)
-	playerHistory.notifyAchievement(cid, "[Façanha alcançada] Conquistar 2.000 pontos (rating) de classificação em Battlegrounds!")
-	playerHistory.addAchievement(cid, PH_ACH_BATTLEGROUND_GET_2000_RATING)
+function playerHistory.achievBattlegroundRankVeteran(cid)
+	playerHistory.notifyAchievement(cid, "[Façanha alcançada] Rank - Veterano: Conquistou 1.500 pontos (rating) de classificação em Battlegrounds!")
+	playerHistory.addAchievement(cid, PH_ACH_BATTLEGROUND_RANK_VETERAN)
 end
 
-function playerHistory.hasAchievBattlegroundGet2000Rating(cid)
-	return playerHistory.hasAchievement(cid, PH_ACH_BATTLEGROUND_GET_2000_RATING)
+function playerHistory.hasAchievBattlegroundRankVeteran(cid)
+	return playerHistory.hasAchievement(cid, PH_ACH_BATTLEGROUND_RANK_VETERAN)
+end
+
+function playerHistory.achievBattlegroundRankLegend(cid)
+	playerHistory.notifyAchievement(cid, "[Façanha alcançada] Rank - Lenda: Conquistou 2.000 pontos (rating) de classificação em Battlegrounds!")
+	playerHistory.addAchievement(cid, PH_ACH_BATTLEGROUND_RANK_LEGEND)
+end
+
+function playerHistory.hasAchievBattlegroundRankLegend(cid)
+	return playerHistory.hasAchievement(cid, PH_ACH_BATTLEGROUND_RANK_LEGEND)
 end
 
 function playerHistory.achievBattlegroundInsaneKiller(cid)

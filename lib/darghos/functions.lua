@@ -1199,10 +1199,14 @@ function getWeekday()
 	return getGlobalStorageValue(gid.START_SERVER_WEEKDAY)
 end
 
-function table.copy(table)
+function table.copy(table_to_copy)
 	local _copy = {}
-	for k,v in pairs(table) do
-		_copy[k] = v
+	for k,v in pairs(table_to_copy) do
+		if(type(v) == "table") then
+			_copy[k] = table.copy(v)
+		else
+			_copy[k] = v
+		end
 	end
 	
 	return _copy
