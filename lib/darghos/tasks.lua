@@ -1,12 +1,17 @@
-local STORAGE_RANGE = 100
-local STORAGE_START = 52100
-local EXPERIENCE_RATE = 2
+STORAGE_RANGE = 100
+STORAGE_START = 52100
+
+if(getConfigInfo("worldId") == WORLD_AARAGON) then
+	EXPERIENCE_RATE = 1
+else
+	EXPERIENCE_RATE = 2
+end
 
 defaultDialogs = {
 	STARTED_TASK = "Perfeito,faça seu trabalho e volte aqui quando ele estiver concluido... Boa sorte!",
 	COMPLETED_TASK_INIT = "Oh! Vejo que não demorou tanto tempo para terminar a tarefa! Esta a sua recomensa:",
 	COMPLETED_TASK_END = "Espero que fique satisfeito! Muito obrigado!",
-	TELEPORTING = "Certo, você será teleportado em alguns instantes..."
+	TELEPORTING = "Certo, você será teletransportado em alguns instantes..."
 }
 
 destinations = {

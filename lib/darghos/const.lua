@@ -14,6 +14,9 @@
 	
 	DISTROS_OPENTIBIA			= "opentibia"
 	DISTROS_TFS					= "tfs"
+	
+	WORLD_ORDON = 0
+	WORLD_AARAGON = 1
 
 	T_LOG_ALL = "ALL"
 	T_LOG_NOTIFY = "NOTIFY"

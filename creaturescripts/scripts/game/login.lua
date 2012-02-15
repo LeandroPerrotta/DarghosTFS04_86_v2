@@ -23,8 +23,6 @@ function onLogin(cid)
 	registerCreatureEvent(cid, "onLeaveChannel")
 	registerCreatureEvent(cid, "onPush")
 	
-	setStagesOnLogin(cid)
-	
 	playerRecord()
 	runPremiumSystem(cid)
 	OnKillCreatureMission(cid)
@@ -34,6 +32,18 @@ function onLogin(cid)
 	onLoginNotify(cid)
 	--playerAutoEat(cid)
 	--customStaminaUpdate(cid)
+	
+	if(getPlayerTown(cid) ~= towns.ISLAND_OF_PEACE) then
+		if(getPlayerStorageValue(cid, sid.FIRSTLOGIN_ITEMS) ~= 1) then
+			defineFirstItems(cid)
+		end
+		
+		doPlayerEnablePvp(cid)
+	else
+		doPlayerDisablePvp(cid)
+	end
+	
+	setStagesOnLogin(cid)
 	
 	local itemShop = itemShop:new()
 	itemShop:onLogin(cid)

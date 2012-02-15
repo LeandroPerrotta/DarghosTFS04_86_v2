@@ -1,7 +1,7 @@
 -- INCLUDES
-dofile(getDataDir() .. "lib/darghos/stages.lua")
 dofile(getDataDir() .. "lib/darghos/const.lua")
 dofile(getDataDir() .. "lib/darghos/configs.lua")
+dofile(getDataDir() .. "lib/darghos/stages.lua")
 dofile(getDataDir() .. "lib/darghos/compat.lua")
 dofile(getDataDir() .. "lib/darghos/aids.lua")
 dofile(getDataDir() .. "lib/darghos/sids.lua")

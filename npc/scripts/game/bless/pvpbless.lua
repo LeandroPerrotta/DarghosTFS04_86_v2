@@ -16,6 +16,12 @@ function process(cid, message, keywords, parameters, node)
         return false
     end 
 
+	if(getConfigInfo("worldId") == WORLD_AARAGON) then
+    	npcHandler:say("Você não pode efetuar uma mudança de PvP neste mundo...", cid)
+		npcHandler:resetNpc(cid)
+		return false		
+	end
+	
     if(hasCondition(cid, CONDITION_INFIGHT)) then
     	npcHandler:say("Ohh por Deus! Você está muito agressivo! Volte quando estiver mais calmo...", cid)
 		npcHandler:resetNpc(cid)		
@@ -25,7 +31,7 @@ function process(cid, message, keywords, parameters, node)
     local nonPermitedSkulls = { SKULL_RED, SKULL_BLACK }
     local skull = getCreatureSkullType(cid)
     if(isInArray(nonPermitedSkulls, skull)) then
-    	npcHandler:say("Você é sujo! Parece ter matado várias pessoas injustificadamente! Não lhe darei este beneficio! Volte quando estiver limpo!", cid)
+    	npcHandler:say("Você é sujo! Não teve nenhuma compaixão por suas vitimas! Para você não darei este beneficio!", cid)
 		npcHandler:resetNpc(cid)		
 		return false    
     end
@@ -90,7 +96,7 @@ function process(cid, message, keywords, parameters, node)
     		doPlayerDisablePvp(cid)
     	else
     		npcHandler:say("ESTÁ FEITO!! Seu PvP agora está ATIVO!! Espero que não se arrependa de sua decisão...", cid)
-    		doPlayerEnablePvp(cid)			
+    		doPlayerEnablePvp(cid)
     	end
     	
     	setPlayerStorageValue(cid, sid.LAST_CHANGE_PVP, os.time())

@@ -42,5 +42,9 @@ darghos_spoof_start_in = getConfigInfo('spoofPlayersStarts')
 -- Define se é necessario comer para recuperar life/mana
 darghos_need_eat = false
 
--- Define se jogadores em area non-pvp usarão um estagio de exp diferenciado do normal
-darghos_use_secure_stages = false
+-- Define se jogadores em area non-pvp/pacificos usarão um estagio de exp diferenciado do normal
+if(getConfigValue("worldId") == WORLD_AARAGON) then
+	darghos_use_protected_stages = true
+else
+	darghos_use_protected_stages = false
+end

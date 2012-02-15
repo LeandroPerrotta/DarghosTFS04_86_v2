@@ -37,7 +37,12 @@ BATTLEGROUND_STATUS_PREPARING = 1
 BATTLEGROUND_STATUS_STARTED = 2
 BATTLEGROUND_STATUS_FINISHED = 3
 
-BATTLEGROUND_MIN_LEVEL = 100
+if(getConfigValue("worldId") == WORLD_ORDON) then
+	BATTLEGROUND_MIN_LEVEL = 100
+else
+	BATTLEGROUND_MIN_LEVEL = 60
+end	
+	
 BATTLEGROUND_CAN_NON_PVP = true
 
 BATTLEGROUND_FLAG_BONUS_POINTS = 30
@@ -71,20 +76,33 @@ BATTLEGROUND_LOW_RATE = 501
 ]]--
 
 battlegroundExpToLevelGain = {
-	{to = 125, multipler = 2.30},
-	{from = 126, to = 150, multipler = 1.70},
-	{from = 151, to = 175, multipler = 1.40},
-	{from = 176, to = 200, multipler = 0.90},
-	{from = 201, to = 225, multipler = 0.60},
-	{from = 226, to = 250, multipler = 0.40},
-	{from = 251, to = 275, multipler = 0.30},
-	{from = 276, to = 300, multipler = 0.25},
-	{from = 301, to = 325, multipler = 0.20},
-	{from = 326, to = 350, multipler = 0.18},
-	{from = 351, to = 400, multipler = 0.14},
-	{from = 401, to = 450, multipler = 0.11},
-	{from = 451, to = 500, multipler = 0.07},
-	{from = 501, to = 600, multipler = 0.05}
+	[WORLD_ORDON] = {
+		{to = 125, multipler = 2.30},
+		{from = 126, to = 150, multipler = 1.70},
+		{from = 151, to = 175, multipler = 1.40},
+		{from = 176, to = 200, multipler = 0.90},
+		{from = 201, to = 225, multipler = 0.60},
+		{from = 226, to = 250, multipler = 0.40},
+		{from = 251, to = 275, multipler = 0.30},
+		{from = 276, to = 300, multipler = 0.25},
+		{from = 301, to = 325, multipler = 0.20},
+		{from = 326, to = 350, multipler = 0.18},
+		{from = 351, to = 400, multipler = 0.14},
+		{from = 401, to = 450, multipler = 0.11},
+		{from = 451, to = 500, multipler = 0.07},
+		{from = 501, to = 600, multipler = 0.05}
+	},
+	[WORLD_AARAGON] = {
+		{to = 79, multipler = 1.40},
+		{from = 80, to = 99, multipler = 0.70},
+		{from = 100, to = 119, multipler = 0.55},
+		{from = 120, to = 139, multipler = 0.40},
+		{from = 140, to = 159, multipler = 0.25},
+		{from = 160, to = 179, multipler = 0.16},
+		{from = 180, to = 199, multipler = 0.11},
+		{from = 200, to = 239, multipler = 0.06},
+		{from = 240, to = 500, multipler = 0.03},
+	}
 }
 
 battlegrondRatingTable = {
@@ -160,7 +178,7 @@ end
 
 function pvpBattleground.getExpMultipler(level)
 
-	for k,v in pairs(battlegroundExpToLevelGain) do
+	for k,v in pairs(battlegroundExpToLevelGain[getConfigValue("worldId")]) do
 		local from = v.from or 0	
 		local isLast = (v.to == nil) and true or false
 		
