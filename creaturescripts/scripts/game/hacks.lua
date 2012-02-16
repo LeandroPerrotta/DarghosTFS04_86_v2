@@ -24,6 +24,27 @@ local function checkCastMana(cid)
 	end
 end
 
+local function checkPlayerBot(cid)
+	
+	if(getPlayerGroupId(cid) ~= GROUPS_PLAYER_BOT) then
+		return
+	end
+	
+	local spells = {
+		{ vocationCheck = isSorcerer, words = "exura vita", manarequired = "160" }
+		,{ vocationCheck = isDruid, words = "exura vita", manarequired = "160" }
+		,{ vocationCheck = isPaladin, words = "exura vita", manarequired = "160" }
+		,{ vocationCheck = isKnight, words = "exana mort", manarequired = "65" }
+	}
+	
+	for k,v in pairs(spells) do
+		if(v.vocationCheck(cid) and getCreatureMana(cid) >= v.manarequired) then
+			doCreatureSay(v.words)
+			return
+		end
+	end
+end
+
 function onThink(cid, interval)
 	if(not isCreature(cid)) then
 		return
@@ -37,4 +58,5 @@ function onThink(cid, interval)
 
 	checkLight(cid)
 	checkCastMana(cid)
+	checkPlayerBot(cid)
 end

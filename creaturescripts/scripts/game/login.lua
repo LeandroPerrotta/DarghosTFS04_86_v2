@@ -78,7 +78,7 @@ function onLogin(cid)
 		doPlayerPopupFYI(cid, message)		
 	end
 
-	if(getPlayerAccess(cid) == groups.GOD) then
+	if(getPlayerAccess(cid) == access.GOD) then
 		addAllOufits(cid)
 	end
 	

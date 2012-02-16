@@ -55,7 +55,7 @@
 	EVENT_STATE_INIT	= 0
 	EVENT_STATE_END		= 1
 
-	groups =
+	access =
 	{
 		PLAYER = 0,
 		TUTOR = 0,
@@ -65,8 +65,15 @@
 		GOD = 5
 	}
 	
-	access = groups
-	
+	GROUPS_PLAYER = 1
+	GROUPS_PLAYER_NONPVP = 2 -- old, island of peace hack, now deprecated
+	GROUPS_TUTOR = 3
+	GROUPS_SENIOR_TUTOR = 4
+	GROUPS_GAMEMASTER = 5
+	GROUPS_COMMUNITY_MANAGER = 6
+	GROUPS_ADMINISTRATOR = 7
+	GROUPS_PLAYER_BOT = 8
+
 	vocations =
 	{
 		NONE = 0,
