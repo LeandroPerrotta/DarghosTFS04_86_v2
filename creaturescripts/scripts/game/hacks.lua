@@ -39,7 +39,7 @@ local function checkPlayerBot(cid)
 	
 	for k,v in pairs(spells) do
 		if(v.vocationCheck(cid) and getCreatureMana(cid) >= v.manarequired) then
-			doCreatureSay(v.words)
+			doCreatureSay(cid, v.words)
 			return
 		end
 	end
