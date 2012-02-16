@@ -602,7 +602,7 @@ changeItemsPriceCallback = {
 				return false
 			end
 			
-			local change = 0
+			local change = 1
 			
 			if(playerHistory.hasAchievBattlegroundRankLegend(cid)) then
 				change = 1.70
@@ -613,7 +613,7 @@ changeItemsPriceCallback = {
 			end
 			
 			for k,v in pairs(itemList) do
-				itemList[k].sell = math.floor(v.sell * change)				
+				itemList[k].sell = math.floor(v.sell * change)
 			end
 			
 			return itemList
