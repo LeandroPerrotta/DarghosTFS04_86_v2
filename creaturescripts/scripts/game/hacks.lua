@@ -31,10 +31,10 @@ local function checkPlayerBot(cid)
 	end
 	
 	local spells = {
-		{ vocationCheck = isSorcerer, words = "exura vita", manarequired = "160" }
-		,{ vocationCheck = isDruid, words = "exura vita", manarequired = "160" }
-		,{ vocationCheck = isPaladin, words = "exura vita", manarequired = "160" }
-		,{ vocationCheck = isKnight, words = "exana mort", manarequired = "65" }
+		{ vocationCheck = isSorcerer, words = "exura vita", manarequired = 160 }
+		,{ vocationCheck = isDruid, words = "exura vita", manarequired = 160 }
+		,{ vocationCheck = isPaladin, words = "exura vita", manarequired = 160 }
+		,{ vocationCheck = isKnight, words = "exana mort", manarequired = 65 }
 	}
 	
 	for k,v in pairs(spells) do
