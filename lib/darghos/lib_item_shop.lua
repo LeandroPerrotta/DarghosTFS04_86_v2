@@ -43,7 +43,7 @@ function itemShop:notify()
 	
 	if(self.count == #self.receive_list and #self.not_received_list == 0) then
 		msg = msg .. "Todas as suas " .. #self.receive_list .. " compras obtidas no Item Shop foram entregues com sucesso em sua backpack principal!\n\n"
-		msg = msg .. "Tenha um bom jogo!"		
+		msg = msg .. "Tenha um bom jogo!"
 	elseif(#self.not_received_list > 0 and #self.not_received_list < #self.receive_list) then
 		local receivedItems = #self.receive_list - #self.not_received_list
 		msg = msg .. "Parte de suas compras (" .. receivedItems .. ") obtidas no Item Shop foram entregues com sucesso em sua backpack principal!\n\n"

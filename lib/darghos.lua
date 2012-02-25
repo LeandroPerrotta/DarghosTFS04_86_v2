@@ -16,6 +16,7 @@ dofile(getDataDir() .. "lib/darghos/pvp_battleground.lua")
 dofile(getDataDir() .. "lib/darghos/luaGlobal.lua")
 
 dofile(getDataDir() .. "lib/darghos/lib_item_shop.lua")
+dofile(getDataDir() .. "lib/darghos/lib_auctions.lua")
 dofile(getDataDir() .. "lib/darghos/lib_movements.lua")
 dofile(getDataDir() .. "lib/darghos/lib_actions.lua")
 dofile(getDataDir() .. "lib/darghos/lib_playerhistory.lua")
