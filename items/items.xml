@@ -12350,7 +12350,11 @@
 		<attribute key="slotType" value="two-handed" />
 	</item>
 	<item id="7450" article="the" name="hammer of prophecy">
-		<attribute key="weight" value="5500" />
+		<attribute key="weight" value="11000" />
+		<attribute key="defense" value="35" />
+		<attribute key="attack" value="52" />
+		<attribute key="weaponType" value="club" />
+		<attribute key="slotType" value="two-handed" />
 	</item>
 	<item id="7451" article="a" name="shadow sceptre">
 		<attribute key="weight" value="4100" />
@@ -17059,6 +17063,14 @@
 	<item id="10734" article="a" name="thornpeak grass" />
 	<item fromid="10735" toid="10736" article="a" name="pepper root grass" />
 	<item fromid="10741" toid="10743" article="a" name="trollhair plants" />
+	<item id="11754" article="a" name="ferumbras doll">
+		<attribute key="weight" value="1700" />
+	</item>
+	<item id="11755" article="a" name="ferumbras doll">
+		<attribute key="weight" value="1700" />
+		<attribute key="decayTo" value="11754" />
+		<attribute key="duration" value="2" />
+	</item>	
 	<item id="10757" article="a" name="diabolic hedge" />
 	<item fromid="10761" toid="10762" name="wild vine" />
 	<item id="10763" article="a" name="pepper root grass" />
