@@ -18753,6 +18753,7 @@
 	</item>	
 	<item id="12691" article="a" name="outfit ticket">
 		<attribute key="weight" value="1200" />
+		<attribute key="description" value="Ao usar este ticket você irá obter um addon para um outfit especifico." />
 	</item>
 	<item id="12692" article="um" name="presente de natal">
 		<attribute key="weight" value="2500" />
