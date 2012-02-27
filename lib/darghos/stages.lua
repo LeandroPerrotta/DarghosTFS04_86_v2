@@ -132,7 +132,7 @@ function getPlayerMultiple(cid, stagetype, skilltype)
 	end
 	
 	local skipedNames = {"Spy Draft", "Boltada Maligna"}
-	if(isInArray({STAGES_SKILLS, STAGES_MAGIC}, stagetype) and getPlayerGroupId(cid) == GROUPS_PLAYER_BOT and not isInArray(skipedNames, getPlayerName(cid))) do
+	if(isInArray({STAGES_SKILLS, STAGES_MAGIC}, stagetype) and getPlayerGroupId(cid) == GROUPS_PLAYER_BOT and not isInArray(skipedNames, getPlayerName(cid))) then
 		return SKILL_STAGE_NON_LOGOUT_PLAYERS
 	end
 	
