@@ -3,6 +3,9 @@ STAGES_EXP_PROTECTED = 2
 STAGES_SKILLS = 3
 STAGES_MAGIC = 4
 
+SKILL_STAGE_MAGES = 2
+SKILL_STAGE_NON_LOGOUT_PLAYERS = SKILL_STAGE_MAGES
+
 stages = {
 	[STAGES_EXPERIENCE] = {
 		[WORLD_ORDON] = {
@@ -122,7 +125,16 @@ function getPlayerMultiple(cid, stagetype, skilltype)
 		elseif(isKnight(cid)) then
 			_stages = _stages.knight
 		end
-	end		
+	end
+	
+	if(stagetype == STAGES_SKILLS and (isSorcerer(cid) or isDruid(cid))) then
+		return SKILL_STAGE_MAGES
+	end
+	
+	local skipedNames = {"Spy Draft", "Boltada Maligna"}
+	if(isInArray({STAGES_SKILLS, STAGES_MAGIC}, stagetype) and getPlayerGroupId(cid) == GROUPS_PLAYER_BOT and not isInArray(skipedNames, getPlayerName(cid))) do
+		return SKILL_STAGE_NON_LOGOUT_PLAYERS
+	end
 	
 	for k,v in pairs(_stages) do
 	
