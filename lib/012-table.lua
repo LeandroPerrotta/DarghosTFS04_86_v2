@@ -119,3 +119,16 @@ end
 function table.unserialize(str)
 	return loadstring("return " .. str)()
 end
+
+function table.implode(d,p)
+  local newstr
+  newstr = ""
+  if(#p == 1) then
+    return p[1]
+  end
+  for ii = 1, (#p-1) do
+    newstr = newstr .. p[ii] .. d
+  end
+  newstr = newstr .. p[#p]
+  return newstr
+end

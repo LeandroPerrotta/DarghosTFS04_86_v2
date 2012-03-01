@@ -1,3 +1,70 @@
+function getHelpMessage(command, paramTable)
+	local str = "Instruções de uso:\n"
+	str = str .. "Ex: " .. command .. " [arg1] | [arg2] ... \n"
+	str = str .. "\nArgumentos: \n"
+	for k,v in pairs(paramTable) do
+		str = str .. v.key .. " --> " .. v.help .. "\n"
+	end
+	
+	return str
+end
+
+function parseTalkactionParameters(paramTable, str, separator)
+	separator = separator or "|"
+	
+	local params = string.explode(str, separator)
+	
+	if(#params == 0) then
+		params = { str }
+	end
+	
+	local nextProperties = nil
+	
+	for _, param in pairs(params) do
+		
+		param = string.trim(param)		
+		local result = string.explode(param, " ", 1)
+	
+		local _key = result[1]
+		local _value = result[2]
+		
+		if(_key == "-h") then
+			return TALK_PARAMS_CALL_HELP, ""
+		end
+		
+		local knowKey = false
+		
+		for key, props in pairs(paramTable) do
+			if(_key == props.key) then
+				
+				knowKey = true
+				
+				local expectType = "string" 
+				
+				if(props.expectedType == nil) then
+					props.expectedType = expectType
+				end
+				
+				if(props.expectedValues ~= nil and not isInArray(props.expectedValues, _value)) then
+					return TALK_PARAMS_WRONG_EXPECTED_VALUE, "Valor incorreto para o argumento " .. v .. ", era esperado um de: " .. table.implode(", ", props.expectedValues) .. "."
+				end
+				
+				if(props.expectedType == "string") then
+					paramTable[key].value = _value
+				elseif(props.expectedType == "numeric") then
+					paramTable[key].value = tonumber(_value)
+				end
+			end
+		end
+		
+		if(not knowKey) then
+			return TALK_PARAMS_WRONG_PARAMETER, "O parametro " .. _key .. " não é valido. Use o -h para ajuda."
+		end
+	end
+	
+	return TALK_PARAMS_DONE, paramTable
+end
+
 function getPlayerAccountIdByName(name)
 	local result = db.getResult("SELECT `account_id` FROM `players` WHERE `name` = " .. db.escapeString(name) .. " LIMIT 1;")
 	

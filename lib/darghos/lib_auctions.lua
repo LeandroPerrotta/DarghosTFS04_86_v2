@@ -62,28 +62,47 @@ function Auctions.onLogin(cid)
 	local backpack = doCreateItemEx(BACKPACK, 1)
 	
 	if(doAddContainerItemEx(container, backpack) ~= RETURNVALUE_NOERROR) then
-		self:log("Impossivel colocar backpack no main container.")
+		error("Impossivel colocar backpack no main container.")
 		return true
 	end
 	
 	for _,item in pairs(items) do
-		local tmp_item = doCreateItemEx(item["itemtype"], item["count"])
-		
-		if(items.attributes and items.attributes["actionid"] ~= nil) then
-			doItemSetActionId(tmp_item, item["attributes"]["actionid"])
+		if(isItemStackable(item.itemtype)) then
+			local tmp_item = doCreateItemEx(item.itemtype, item.count)
+			
+			if(item.attributes and item.attributes["action_id"] ~= nil) then
+				doItemSetActionId(tmp_item, item.attributes["action_id"])
+			end
+			
+			local ret = doAddContainerItemEx(backpack, tmp_item)
+			if(ret ~= RETURNVALUE_NOERROR) then
+				error("Ret# " .. ret ..  " | Impossivel colocar item na backpack " .. json.encode(item) .. "")
+				return true
+			end			
+		else
+			local i = item.count
+			repeat
+				local tmp_item = doCreateItemEx(item.itemtype)
+				
+				if(item.attributes and item.attributes["action_id"] ~= nil) then
+					doItemSetActionId(tmp_item, item.attributes["action_id"])
+				end
+				
+				local ret = doAddContainerItemEx(backpack, tmp_item)
+				if(ret ~= RETURNVALUE_NOERROR) then
+					error("Ret# " .. ret ..  " | Impossivel colocar item na backpack " .. json.encode(item) .. "")
+					return true
+				end
+					
+				i = i - 1
+			until (i == 0)
 		end
-		
-		local ret = doAddContainerItemEx(backpack, tmp_item)
-		if(ret ~= RETURNVALUE_NOERROR) then
-			self:log("Ret# " .. ret ..  " | Impossivel colocar item na backpack " .. json.encode(item) .. "")
-			return true
-		end		
 	end
 	
 	if(doPlayerAddItemEx(cid, container, false) ~= RETURNVALUE_NOERROR) then
 		error("Falhou a entregar os items do leilão #" .. auction_id)
 		return true
-	end	
+	end		
 	
 	db.executeQuery("UPDATE `wb_auctions` SET `received` = 1 WHERE `id` = " .. auction_id .. ";")
 	
