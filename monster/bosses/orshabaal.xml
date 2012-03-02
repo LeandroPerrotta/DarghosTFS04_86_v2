@@ -109,41 +109,26 @@
     <item id="7590" chance="50000"><!--great mana potion--></item>
     <item id="8472" chance="50000"><!--great spirit potion--></item>    
     
-    <item id="1987" chance="50000">
-      <inside>
-	    <item id="2150" countmax="20" chance="13500"><!--small amethyst--></item>
-	    <item id="2145" countmax="5" chance="9500"><!--small diamond--></item>
-	    <item id="2149" countmax="10" chance="15500"><!--small emerald--></item>
-	    <item id="2146" countmax="10" chance="13500"><!--small sapphire--></item>      
-      	<item id="2151" countmax="7" chance="14000"><!--talon--></item>
-	    <item id="2143" countmax="15" chance="12500"><!--white pearl--></item>
-	    <item id="6500" countmax="5" chance="50000"><!--demonic essence--></item>
-	    <item id="2144" countmax="13" chance="15000"><!--black pearl--></item>
-      </inside>
-      <!--bag-->
-    </item>  
-    
-    <item id="1987" chance="50000">
-      <inside>
-        <item id="2377" chance="20000"><!--two handed sword--></item>
-        <item id="5954" chance="50000"><!--demon horn--></item>
-	    <item id="2171" chance="4500"><!--platinum amulet--></item>
-	    <item id="2200" chance="4500"><!--protection amulet--></item>   
-	    <item id="2033" chance="7500"><!--golden mug--></item>
-	    <item id="2418" chance="4500"><!--golden sickle--></item>	         
-      </inside>
-      <!--bag-->
-    </item>       
-    
-    <item id="1988" chance="20000">
-      <inside>
-		<item id="8890" chance="5000"><!--robe of the underworld--></item>
-		<item id="5808" chance="7000"><!--orshabaal's brain--></item>
-		<item id="2421" chance="13500"><!--thunder hammer--></item>
-		<item id="2197" chance="4000"><!--stone skin amulet--></item>
-		<item id="2472" chance="3000"><!--magic plate armor--></item>
-      </inside>
-      <!--backpack-->
-    </item>      
+	<item id="2150" countmax="20" chance="13500"><!--small amethyst--></item>
+	<item id="2145" countmax="5" chance="9500"><!--small diamond--></item>
+	<item id="2149" countmax="10" chance="15500"><!--small emerald--></item>
+	<item id="2146" countmax="10" chance="13500"><!--small sapphire--></item>      
+	<item id="2151" countmax="7" chance="14000"><!--talon--></item>
+	<item id="2143" countmax="15" chance="12500"><!--white pearl--></item>
+	<item id="6500" countmax="5" chance="50000"><!--demonic essence--></item>
+	<item id="2144" countmax="13" chance="15000"><!--black pearl--></item>	
+	
+	<item id="2377" chance="20000"><!--two handed sword--></item>
+	<item id="5954" chance="50000"><!--demon horn--></item>
+	<item id="2171" chance="4500"><!--platinum amulet--></item>
+	<item id="2200" chance="4500"><!--protection amulet--></item>   
+	<item id="2033" chance="7500"><!--golden mug--></item>
+	<item id="2418" chance="4500"><!--golden sickle--></item>		
+	
+	<item id="8890" chance="5000"><!--robe of the underworld--></item>
+	<item id="5808" chance="7000"><!--orshabaal's brain--></item>
+	<item id="2421" chance="13500"><!--thunder hammer--></item>
+	<item id="2197" chance="4000"><!--stone skin amulet--></item>
+	<item id="2472" chance="3000"><!--magic plate armor--></item>	 
   </loot>
 </monster>

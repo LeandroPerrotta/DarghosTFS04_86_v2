@@ -5170,13 +5170,13 @@
 		<attribute key="corpseType" value="blood" />
 	</item>
 	<item id="2916" article="a" name="slain demon">
-		<attribute key="containerSize" value="10" />
+		<attribute key="containerSize" value="22" />
 		<attribute key="decayTo" value="2917" />
 		<attribute key="duration" value="900" />
 		<attribute key="corpseType" value="blood" />
 	</item>
 	<item id="2917" article="a" name="slain demon">
-		<attribute key="containerSize" value="10" />
+		<attribute key="containerSize" value="22" />
 		<attribute key="decayTo" value="2918" />
 		<attribute key="duration" value="600" />
 		<attribute key="corpseType" value="blood" />
