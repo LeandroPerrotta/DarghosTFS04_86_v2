@@ -8,12 +8,21 @@ function onSay(cid, words, param, channel)
 	local ret = RETURNVALUE_NOERROR
 	local pos = getCreaturePosition(cid)
 
-	local id = tonumber(t[1])
-	if(not id) then
-		id = getItemIdByName(t[1], false)
+	if(t[1] == "teleport") then
+		local id = 1387
+		local orig_pos = getCreatureLookPosition(cid)
+		local dest_pos = { x = tonumber(t[2]), y = tonumber(t[3]), z = tonumber(t[4])}
+		
+		doCreateTeleport(id, dest_pos, orig_pos)
+		return true
+	else
+		local id = tonumber(t[1])
 		if(not id) then
-			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Item wich such name does not exists.")
-			return true
+			id = getItemIdByName(t[1], false)
+			if(not id) then
+				doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Item wich such name does not exists.")
+				return true
+			end
 		end
 	end
 
