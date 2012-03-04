@@ -61,7 +61,51 @@ function updateOnlineList()
 	addEvent(updateOnlineList, UPDATE_LIST_INTERVAL)
 end
 
+function onlinePrivileged(cid, words, param)
+
+	local onlineList = getPlayersOnline()
+	doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Players Online:")
+
+	local str = ""
+	local addStr = ""
+	local j = 0
+	for i, uid in ipairs(onlineList) do
+		
+		addStr = addStr .. "Name: " .. getPlayerName(uid) .. ", "
+		addStr = addStr .. "Level: " .. getPlayerLevel(uid) .. ", "
+		addStr = addStr .. "Ping: " .. getPlayerCurrentPing(uid) .. ", "
+		addStr = addStr .. "Premium: " .. (isPremium(uid) and "S" or "N") .. ", "
+		addStr = addStr .. "Mag: " .. getPlayerMagLevel(uid) .. "\n"
+
+		if string.len(addStr) + string.len(str) > 255 then
+			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, str)
+			str = addStr
+		elseif #onlineList == 1 then
+			str = addStr
+		else
+			str = str .. addStr
+		end
+		j = j + 1
+	end
+
+	if str ~= "" then
+		doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, str)
+	end
+
+	if j <= 1 then
+		doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Total: ".. j .." player online.")
+	else
+		doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Total: " .. j .. " players online.")
+	end
+
+	return FALSE
+end
+
 function onSay(cid, words, param, channel)
+	
+	if(getPlayerAccess(cid) >= access.GOD and param ~= "normal") then
+		return onlinePrivileged(cid, words, param)
+	end
 	
 	if(#onlineStrings == 0) then
 		updateOnlineList()
