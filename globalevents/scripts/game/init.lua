@@ -52,7 +52,7 @@ end
 
 function cleanFreeHouseOwners()
 
-	local result = db.getResult("SELECT `houses`.`id` FROM `houses` LEFT JOIN `players` `p` ON `houses`.`owner` = `p`.`id` LEFT JOIN `accounts` `a` ON `a`.`id` = `p`.`account_id` WHERE `a`.`premdays` = '0'");
+	local result = db.getResult("SELECT `houses`.`id` FROM `houses` LEFT JOIN `players` `p` ON `houses`.`owner` = `p`.`id` LEFT JOIN `accounts` `a` ON `a`.`id` = `p`.`account_id` WHERE `a`.`premdays` = '0' AND `houses`.`world_id` = " .. getConfigValue("worldId") .. ";");
 	if(result:getID() ~= -1) then
 		local cleanedHouses = 0
 		
