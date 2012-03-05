@@ -107,14 +107,17 @@ function doNpcSellItem(cid, itemid, amount, subType, ignoreCap, inBackpacks, bac
 
 	if(isItemStackable(itemid)) then
 		a = amount * math.max(1, subType)
+		-- fix darghos
+		local amountBrought = 1
 		repeat
 			local tmp = math.min(100, a)
 			item = doCreateItemEx(itemid, tmp)
 			if(doPlayerAddItemEx(cid, item, ignoreCap) ~= RETURNVALUE_NOERROR) then
-				return 0, 0
+				return amountBrought, 0
 			end
 
 			a = a - tmp
+			amountBrought = amountBrought + 1
 		until a == 0
 		return amount, 0
 	end
