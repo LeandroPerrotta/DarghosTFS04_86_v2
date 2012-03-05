@@ -133,7 +133,7 @@ function NpcShop:onPlayerConfirmBuyCallback(args)
 	local a, b = doNpcSellItem(cid, itemid, amount, subType, ignoreCap, inBackpacks, 1988)
 	if(a < amount) then
 		local msg = "Libere algum espaço! Você não consegue carregar mais nada!"
-		if(a == 0) then
+		if(a > 0) then
 			msg = "Você pode carregar apénas " .. a .. "x " .. getItemInfo(itemid).name ..". Se desejar carregar mais libere algum espaço e retorne!"
 		end
 		
