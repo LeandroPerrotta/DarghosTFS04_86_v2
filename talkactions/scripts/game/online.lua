@@ -77,7 +77,7 @@ function onlinePrivileged(cid, words, param)
 		addStr = addStr .. "Premium: " .. (isPremium(uid) and "S" or "N") .. ", "
 		addStr = addStr .. "Mag: " .. getPlayerMagLevel(uid) .. "\n"
 
-		if string.len(addStr) + string.len(str) > 255 then
+		if string.len(addStr) + string.len(str) >= 255 then
 			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, str)
 			str = addStr
 		elseif #onlineList == 1 then
@@ -98,7 +98,7 @@ function onlinePrivileged(cid, words, param)
 		doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Total: " .. j .. " players online.")
 	end
 
-	return FALSE
+	return true
 end
 
 function onSay(cid, words, param, channel)

@@ -8409,7 +8409,7 @@
 		<attribute key="fluidSource" value="blood" />
 	</item>
 	<item id="5527" article="a" name="demon dust">
-		<attribute key="containerSize" value="36" />
+		<attribute key="containerSize" value="22" />
 		<attribute key="decayTo" value="5528" />
 		<attribute key="duration" value="900" />
 		<attribute key="corpseType" value="blood" />
@@ -9039,13 +9039,13 @@
 		<attribute key="weight" value="1250" />
 	</item>
 	<item id="5931" name="ferumbras remains">
-		<attribute key="containerSize" value="10" />
+		<attribute key="containerSize" value="22" />
 		<attribute key="decayTo" value="5932" />
 		<attribute key="duration" value="900" />
 		<attribute key="corpseType" value="venom" />
 	</item>
 	<item id="5932" name="ferumbras remains">
-		<attribute key="containerSize" value="10" />
+		<attribute key="containerSize" value="22" />
 		<attribute key="decayTo" value="5933" />
 		<attribute key="duration" value="600" />
 		<attribute key="corpseType" value="venom" />
@@ -9184,7 +9184,7 @@
 		<attribute key="fluidSource" value="blood" />
 	</item>
 	<item id="5965" article="a" name="dead human">
-		<attribute key="containerSize" value="10"/>
+		<attribute key="containerSize" value="22"/>
 		<attribute key="decayTo" value="6082"/>
 		<attribute key="duration" value="300"/>
 		<attribute key="corpseType" value="blood"/>
@@ -9575,7 +9575,7 @@
 		<attribute key="fluidSource" value="slime" />
 	</item>
 	<item id="6022" article="a" name="dead human">
-		<attribute key="containerSize" value="10"/>
+		<attribute key="containerSize" value="22"/>
 		<attribute key="decayTo" value="5965"/>
 		<attribute key="duration" value="300"/>
 		<attribute key="corpseType" value="blood"/>
@@ -9893,7 +9893,7 @@
 		<attribute key="fluidSource" value="blood" />
 	</item>
 	<item id="6068" article="a" name="demon dust">
-		<attribute key="containerSize" value="32" />
+		<attribute key="containerSize" value="22" />
 		<attribute key="decayTo" value="5527" />
 		<attribute key="duration" value="10" />
 		<attribute key="corpseType" value="blood" />
@@ -9959,7 +9959,7 @@
 		<attribute key="fluidSource" value="blood" />
 	</item>
 	<item id="6078" name="ferumbras remains">
-		<attribute key="containerSize" value="10" />
+		<attribute key="containerSize" value="22" />
 		<attribute key="decayTo" value="5931" />
 		<attribute key="duration" value="10" />
 		<attribute key="corpseType" value="undead" />
@@ -9972,35 +9972,35 @@
 		<attribute key="fluidSource" value="blood" />
 	</item>
 	<item id="6080" article="a" name="dead human">
-		<attribute key="containerSize" value="10"/>
+		<attribute key="containerSize" value="22"/>
 		<attribute key="decayTo" value="6022"/>
 		<attribute key="duration" value="10"/>
 		<attribute key="corpseType" value="blood"/>
 		<attribute key="fluidSource" value="blood"/>
 	</item>
 	<item id="6081" article="a" name="dead human">
-		<attribute key="containerSize" value="10"/>
+		<attribute key="containerSize" value="22"/>
 		<attribute key="decayTo" value="6083"/>
 		<attribute key="duration" value="10"/>
 		<attribute key="corpseType" value="blood"/>
 		<attribute key="fluidSource" value="blood"/>
 	</item>
 	<item id="6082" article="a" name="dead human">
-		<attribute key="containerSize" value="10"/>
+		<attribute key="containerSize" value="22"/>
 		<attribute key="decayTo" value="0"/>
 		<attribute key="duration" value="60"/>
 		<attribute key="corpseType" value="blood"/>
 		<attribute key="fluidSource" value="blood"/>
 	</item>
 	<item id="6083" article="a" name="dead human">
-		<attribute key="containerSize" value="10"/>
+		<attribute key="containerSize" value="22"/>
 		<attribute key="decayTo" value="6084"/>
 		<attribute key="duration" value="300"/>
 		<attribute key="corpseType" value="blood"/>
 		<attribute key="fluidSource" value="blood"/>
 	</item>
 	<item id="6084" article="a" name="dead human">
-		<attribute key="containerSize" value="10"/>
+		<attribute key="containerSize" value="22"/>
 		<attribute key="decayTo" value="6082"/>
 		<attribute key="duration" value="300"/>
 		<attribute key="corpseType" value="blood"/>

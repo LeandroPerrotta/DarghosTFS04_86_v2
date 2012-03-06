@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<monster name="Ghazbaran" nameDescription="Ghazbaran" race="UNDEAD" experience="15000" speed="400" manacost="0">
-  <health now="60000" max="60000"/>
-  <look type="12" head="0" body="123" legs="97" feet="94" corpse="6068"/>
-  <targetchange interval="10000" chance="20"/>
-  <strategy attack="70" defense="30"/>
+<?xml version='1.0' encoding='UTF-8'?>
+<monster speed="400" manacost="0" race="UNDEAD" experience="15000" name="Ghazbaran" nameDescription="Ghazbaran">
+  <health max="60000" now="60000"/>
+  <look head="0" body="123" legs="97" type="12" corpse="6068" feet="94"/>
+  <targetchange chance="20" interval="10000"/>
+  <strategy defense="30" attack="70"/>
   <flags>
     <flag summonable="0"/>
     <flag attackable="1"/>
@@ -18,37 +18,37 @@
     <flag runonhealth="3500"/>
   </flags>
   <attacks>
-    <attack name="melee" interval="2000" skill="400" attack="150"/>
-    <attack name="melee" interval="3000" chance="16" range="7" target="1" min="-400" max="-2200">
+    <attack interval="2000" attack="150" skill="400" name="melee"/>
+    <attack target="1" chance="16" interval="3000" range="7" min="-400" name="melee" max="-2200">
       <attribute key="shootEffect" value="whirlwindsword"/>
     </attack>
-    <attack name="speed" interval="4000" chance="30" range="14" radius="5" target="0" duration="30000" speedchange="-800">
+    <attack duration="30000" target="0" chance="30" radius="5" interval="4000" range="14" name="speed" speedchange="-800">
       <attribute key="areaEffect" value="blackspark"/>
     </attack>
-    <attack name="ice" interval="3000" chance="20" range="14" radius="5" target="0" min="-200" max="-480">
+    <attack target="0" chance="20" radius="5" interval="3000" range="14" min="-200" name="ice" max="-480">
       <attribute key="areaEffect" value="teleport"/>
     </attack>
-    <attack name="ice" interval="3000" chance="30" range="14" radius="12" target="0" min="-500" max="-1200">
+    <attack target="0" chance="30" radius="12" interval="3000" range="14" min="-500" name="ice" max="-1200">
       <attribute key="areaEffect" value="bigplants"/>
-    </attack> 
-    <attack name="death" interval="4000" chance="12" length="6" spread="0" target="0" min="-200" max="-400">
+    </attack>
+    <attack target="0" chance="12" spread="0" interval="4000" length="6" min="-200" name="death" max="-400">
       <attribute key="areaEffect" value="mortarea"/>
-    </attack> 
-    <attack name="drowncondition" interval="7000" chance="15" range="7" radius="12" target="0" min="-100" max="-12000" start="-100" tick="1000" >
+    </attack>
+    <attack target="0" chance="15" radius="12" interval="7000" range="7" min="-100" name="drowncondition" max="-12000" start="-100" tick="1000">
       <attribute key="areaEffect" value="yellowspark"/>
     </attack>
-    <attack name="manadrain" interval="4000" chance="33" radius="14" target="0" min="-200" max="-1000">
+    <attack target="0" chance="33" radius="14" interval="4000" min="-200" name="manadrain" max="-1000">
       <attribute key="areaEffect" value="bluebubble"/>
     </attack>
   </attacks>
-  <defenses armor="90" defense="90">
-     <defense name="healing" interval="1000" chance="35" min="400" max="700">
-      <attribute key="areaEffect" value="blueshimmer"/>
-    </defense> 
-    <defense name="healing" interval="4000" chance="20" min="3000" max="7000">
+  <defenses defense="90" armor="90">
+    <defense chance="35" interval="1000" min="400" name="healing" max="700">
       <attribute key="areaEffect" value="blueshimmer"/>
     </defense>
-    <defense name="speed" interval="4000" chance="80" speedchange="440" duration="6000">
+    <defense chance="20" interval="4000" min="3000" name="healing" max="7000">
+      <attribute key="areaEffect" value="blueshimmer"/>
+    </defense>
+    <defense duration="6000" chance="80" interval="4000" name="speed" speedchange="440">
       <attribute key="areaEffect" value="redshimmer"/>
     </defense>
   </defenses>
@@ -63,15 +63,15 @@
     <immunity drunk="1"/>
     <immunity invisible="1"/>
   </immunities>
-	<elements>
-		<element deathPercent="80" />
-		<element physicalPercent="40" />
-		<element holyPercent="-10" />
-	</elements> 
+  <elements>
+    <element deathPercent="80"/>
+    <element physicalPercent="40"/>
+    <element holyPercent="-10"/>
+  </elements>
   <summons maxSummons="4">
-    <summon name="deathslicer" interval="2000" chance="25" max="4"/>
+    <summon chance="25" interval="2000" name="deathslicer" max="4"/>
   </summons>
-  <voices interval="5000" chance="30">
+  <voices chance="30" interval="5000">
     <voice sentence="VENHA PARA A MORTE!"/>
     <voice sentence="VENHÃO E ME DEEM ALGUMA DIVERSÃO!" yell="1"/>
     <voice sentence="ISSO É TUDO QUE VOCÊS CONSEGUEM DARGHONIANOS? PATÉTICO!" yell="1"/>
@@ -79,155 +79,54 @@
     <voice sentence="MINHA VITÓRIA É INCONTESTÁVEL!"/>
   </voices>
   <loot>
-    <item id="2152" chance="100000" countmax="67">
-      <!--crystal coin-->
-    </item>
-    <item id="6500" chance="100000" countmax="100">
-      <!--demonic essence-->
-    </item>
-    <item id="2145" chance="50000" countmax="5">
-      <!--small diamond-->
-    </item> 
-    <item id="5954" chance="50000" countmax="2">
-      <!--demon horn-->
-    </item>
-    <item id="7591" chance="25000">
-      <!--great health potion-->
-    </item>
-    <item id="8472" chance="25000">
-      <!--great spirit potion-->
-    </item>
-    <item id="2214" chance="25000">
-      <!--ring of healing-->
-    </item>            
-    <item id="2143" chance="25000" countmax="8">
-      <!--white pearl-->
-    </item>
-    <item id="2178" chance="25000">
-      <!--mind stone-->
-    </item>
-    <item id="2176" chance="25000">
-      <!--orb-->
-    </item>     
-    <item id="7433" chance="25000">
-      <!--ravenwing-->
-    </item>
-    <item id="8903" chance="25000">
-      <!--spellbook of lost souls-->
-    </item>    
-    <item id="8904" chance="25000">
-      <!--spellscroll of prophecies-->
-    </item>     
-    <item id="8473" chance="25000">
-      <!--ultimate health potion-->
-    </item>     
-    <item id="2150" chance="20000" countmax="17">
-      <!--small amethyst-->
-    </item>      
-    <item id="2146" chance="20000" countmax="10">
-      <!--small sapphire-->
-    </item>   
-    <item id="2144" chance="18000" countmax="14">
-      <!--black pearl-->
-    </item>     
-    <item id="6300" chance="18000">
-      <!--death ring-->
-    </item>
-    <item id="2179" chance="18000">
-      <!--gold ring-->
-    </item>  
-    <item id="8884" chance="18000">
-      <!--oceanborn leviathan armor-->
-    </item>
-    <item id="6553" chance="18000">
-      <!--ruthless axe-->
-    </item>      
-    <item id="7368" chance="13000" countmax="44">
-      <!--assassin star-->
-    </item>  
-    <item id="1984" chance="13000">
-      <!--blue tome-->
-    </item>       
-    <item id="2646" chance="13000">
-      <!--golden boots-->
-    </item>        
-    <item id="2470" chance="13000">
-      <!--golden legs-->
-    </item>    
-    <item id="2033" chance="13000">
-      <!--golden mug-->
-    </item>       
-    <item id="2155" chance="13000">
-      <!--green gem-->
-    </item>   
-    <item id="2177" chance="13000">
-      <!--life crystal-->
-    </item>       
-    <item id="2472" chance="13000">
-      <!--magic plate armor-->
-    </item>      
-    <item id="2164" chance="13000">
-      <!--might ring-->
-    </item>   
-    <item id="8866" chance="13000">
-      <!--robe of the ice queen-->
-    </item>     
-    <item id="8918" chance="13000">
-      <!--spellbook of dark mysteries-->
-    </item>          
-   <item id="8902" chance="13000">
-      <!--spellbook of mind control-->
-    </item>      
-   <item id="8901" chance="13000">
-      <!--spellbook of warding-->
-    </item>    
-   <item id="2165" chance="13000">
-      <!--stealth ring-->
-   </item>   
-   <item id="2112" chance="13000">
-      <!--teddy bear-->
-   </item>      
-   <item id="2158" chance="9000">
-      <!--blue gem-->
-   </item>     
-   <item id="7428" chance="9000">
-      <!--bonebreaker-->
-   </item> 
-   <item id="2520" chance="9000">
-      <!--demon shield-->
-   </item>  
-   <item id="2167" chance="9000">
-      <!--energy ring-->
-   </item>    
-   <item id="8887" chance="9000">
-      <!--frozen plate-->
-   </item> 
-   <item id="9971" chance="9000">
-      <!--gold ingot-->
-   </item>
-   <item id="7590" chance="9000">
-      <!--great mana potion-->
-   </item>
-   <item id="7405" chance="9000">
-      <!--havoc blade-->
-   </item>   
-   <item id="2149" chance="9000" countmax="10">
-      <!--small emerald-->
-   </item>     
-   <item id="7455" chance="9000">
-      <!--mythril axe-->
-   </item>
-   <item id="8878" chance="9000">
-      <!--crystalline armor-->
-   </item> 
-   <item id="2421" chance="6000">
-      <!--thunder hammer-->
-   </item>  
-   <item id="2447" chance="6000">
-      <!--twin axe-->
-   </item>              
-   <item id="5943" chance="1000">
-     <!--Morgaroth's heart-->
-   </item>     
+    <item chance="12500" id="7368" countmax="44"/>
+    <item chance="11111" id="2144" countmax="14"/>
+    <item chance="14285" id="2158"/>
+    <item chance="20000" id="1984"/>
+    <item chance="12500" id="8878"/>
+    <item chance="8333" id="2124"/>
+    <item chance="25000" id="6301"/>
+    <item chance="33333" id="5954" countmax="2"/>
+    <item chance="100000" id="6500" countmax="1"/>
+    <item chance="12500" id="2520"/>
+    <item chance="8333" id="8887"/>
+    <item chance="8333" id="7896"/>
+    <item chance="8333" id="2466"/>
+    <item chance="8333" id="2646"/>
+    <item chance="20000" id="2179"/>
+    <item chance="25000" id="7591"/>
+    <item chance="20000" id="7590"/>
+    <item chance="25000" id="8472"/>
+    <item chance="20000" id="2155"/>
+    <item chance="16666" id="7405"/>
+    <item chance="12500" id="2177"/>
+    <item chance="8333" id="2472"/>
+    <item chance="12500" id="2164"/>
+    <item chance="20000" id="2178"/>
+    <item chance="5555" id="7455"/>
+    <item chance="16666" id="8884"/>
+    <item chance="20000" id="2176"/>
+    <item chance="100000" id="2152" countmax="69"/>
+    <item chance="14285" id="7433"/>
+    <item chance="20000" id="2214"/>
+    <item chance="1428" id="8866"/>
+    <item chance="14285" id="6553"/>
+    <item chance="20000" id="2150"/>
+    <item chance="25000" id="2145" countmax="5"/>
+    <item chance="20000" id="2149" countmax="10"/>
+    <item chance="20000" id="2146" countmax="10"/>
+    <item chance="20000" id="8918"/>
+    <item chance="16666" id="8903"/>
+    <item chance="11111" id="8902"/>
+    <item chance="20000" id="8901"/>
+    <item chance="25000" id="8904"/>
+    <item chance="12500" id="2165"/>
+    <item chance="11111" id="2174"/>
+    <item chance="12500" id="2151" countmax="7"/>
+    <item chance="12500" id="2112"/>
+    <item chance="2222" id="2421"/>
+    <item chance="11111" id="2447"/>
+    <item chance="20000" id="8473"/>
+    <item chance="25000" id="2143" countmax="15"/>
   </loot>
 </monster>
