@@ -7,7 +7,6 @@
 
 	<announce delay="0" type="event" message="Observadores alertam! A Armada Negra marcha na direção de Quendor!"/>
 	
-	<!--
 	<announce delay="180000" type="event" message="Os inimigos se aproximam do portão ao Norte! Quendor precisa reunir todas as forças!"/>
 	
 	<script delay="300000">
@@ -63,68 +62,8 @@
 	summonDarkGeneral()
 	]]>	
 	</script>
-	!-->
 	
-	<announce delay="20000" type="event" message="Os inimigos se aproximam do portão ao Norte! Quendor precisa reunir todas as forças!"/>
-	
-	<script delay="25000">
-	<![CDATA[
-	enableRoyalBlessing()
-	]]>
-	</script>
-	
-	<announce delay="30000" type="event" message="Uma onda de soldados leais a Armada Negra ataca o portão Norte de Quendor! Estamos sob ataque!"/>
-	<announce delay="40000" type="event" message="Atividades ao Oeste! É esperado um poderoso ataque no portão Norte! Organizem-se e preparem para o combate!"/>
-	<announce delay="45000" type="event" message="Foi avistado o estandarde supremo da Armada Negra! O GENERAL está a caminho do portão Norte!!"/>
-	<announce delay="50000" type="event" message="O General está em Quendor, protejam a cidade a  todo custo!"/>
-
-   -- North Gate - 1st wave
-	<areaspawn delay="30000" centerx="2200" centery="1767" centerz="7" radius="4">
-		<monster name="Dark Warrior" minamount="3" maxamount="4"/>
-		<monster name="Dark Archer" minamount="2" maxamount="3"/>
-		<monster name="Dark Priestess" minamount="1" maxamount="1"/>
-	</areaspawn>
-
-	<areaspawn delay="35000" centerx="2209" centery="1751" centerz="7" radius="6">
-		<monster name="Dark Warrior" minamount="3" maxamount="6"/>
-		<monster name="Dark Priestess" minamount="1" maxamount="2"/>
-		<monster name="Dark Archer" minamount="3" maxamount="6"/>
-		<monster name="Dark Summoner" minamount="1" maxamount="4"/>
-		<monster name="Dark Mage" minamount="2" maxamount="6"/>
-	</areaspawn>
-
-    -- East Gate - 2st wave
-	<areaspawn delay="40000" centerx="2121" centery="1833" centerz="7" radius="6">
-		<monster name="Dark Warrior" minamount="6" maxamount="10"/>
-		<monster name="Dark Archer" minamount="6" maxamount="8"/>
-		<monster name="Dark Priestess" minamount="3" maxamount="5"/>
-		<monster name="Dark Summoner" minamount="4" maxamount="6"/>
-		<monster name="Dark Mage" minamount="4" maxamount="8"/>
-	</areaspawn>
-	
-	-- North Gate - 3st wave (General)
-	<areaspawn delay="50000" centerx="2200" centery="1767" centerz="7" radius="6">
-		<monster name="Dark Warrior" minamount="4" maxamount="6"/>
-		<monster name="Dark Archer" minamount="2" maxamount="4"/>
-		<monster name="Dark Mage" minamount="2" maxamount="4"/>
-		<monster name="Dark Priestess" minamount="1" maxamount="1"/>
-	</areaspawn>
-
-	<areaspawn delay="50000" centerx="2209" centery="1751" centerz="7" radius="8">
-		<monster name="Dark Warrior" minamount="6" maxamount="10"/>
-		<monster name="Dark Priestess" minamount="5" maxamount="8"/>
-		<monster name="Dark Archer" minamount="4" maxamount="8"/>
-		<monster name="Dark Summoner" minamount="4" maxamount="6"/>
-		<monster name="Dark Mage" minamount="6" maxamount="8"/>
-	</areaspawn>
-	
-	<script delay="50000">
-	<![CDATA[
-	summonDarkGeneral()
-	]]>	
-	</script>	
-	
-	<script delay="100000">
+	<script delay="9360000">
 	<![CDATA[
 	local general = getCreatureByName("dark general")
 	
