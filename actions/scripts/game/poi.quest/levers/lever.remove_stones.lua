@@ -1,9 +1,11 @@
 local INTERVAL_TO_RESET = 15
+local INTERVAL_NEXT_LEVER_TO_RESET = 30
 local STONE_ID = 1304
 
 local FIRST_LEVER = uid.POI_LEVER_1
 local LAST_LEVER = uid.POI_LEVER_15
 
+local leversEvent = nil
 local lastLevers = 15
 leversState_T = {
 
@@ -24,13 +26,9 @@ leversState_T = {
 	[uid.POI_LEVER_15] = false
 }
 
-local function resetLevers()
+local function resetLevers(onlyLevers)
 
-	local pos_stone_1 = getThingPosition(uid.POI_STONE_1)
-	local pos_stone_2 = getThingPosition(uid.POI_STONE_2)
-
-	pos_stone_1.stackpos = 1
-	pos_stone_2.stackpos = 1
+	onlyLevers = onlyLevers or false
 	
 	for k,v in pairs(leversState_T) do
 	
@@ -48,10 +46,17 @@ local function resetLevers()
 	
 	lastLevers = 15
 	
-	doCreateItem(STONE_ID, 1, pos_stone_1)
-	doCreateItem(STONE_ID, 1, pos_stone_2)
-	doTransformItem(uid.POI_LEVER_MAIN, 1945)
-	
+	if(not onlyLevers) then
+		local pos_stone_1 = getThingPosition(uid.POI_STONE_1)
+		local pos_stone_2 = getThingPosition(uid.POI_STONE_2)
+
+		pos_stone_1.stackpos = 1
+		pos_stone_2.stackpos = 1	
+		
+		doCreateItem(STONE_ID, 1, pos_stone_1)
+		doCreateItem(STONE_ID, 1, pos_stone_2)
+		doTransformItem(uid.POI_LEVER_MAIN, 1945)
+	end
 end
 
 local function finishLevers()
@@ -102,7 +107,11 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 			if(done) then
 				lastLevers = lastLevers - 1
 				leversState_T[item.uid] = true
-				doPlayerSendTextMessage(cid, MESSAGE_EVENT_DEFAULT, "Alavanca ativada com sucesso! " .. ((lastLevers == 0) and "Não resta mais nenhuma alavanca!" or "Restam mais " .. lastLevers .. " alavanca (s)!"))
+				doPlayerSendTextMessage(cid, MESSAGE_EVENT_DEFAULT, "Alavanca ativada com sucesso! " .. ((lastLevers == 0) and "Não resta mais nenhuma alavanca!" or "Você precisa ativar a proxima alavanca nos proximos 30 minutos ou todas alavancas serão reiniciadas. Restam mais " .. lastLevers .. " alavanca (s)!"))
+				
+				if(astLevers ~= 0) then
+					addEvent(resetLevers, INTERVAL_NEXT_LEVER_TO_RESET * 60 * 1000, true)
+				end
 			else
 				wrongSeq = true
 			end
@@ -117,13 +126,8 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 			doPlayerSendCancel(cid, "A passagem já está aberta! Atravesse pois ela irá se fechar em breve!")
 			return true
 		else
-			if(leversState_T[item.uid]) then
-				leversState_T[item.uid] = false
-				lastLevers = lastLevers + 1
-			else
-				error("Alavanca na posição de desativada mas internamente deveria estar ativa e está desativa.")
-				return true
-			end
+			doPlayerSendCancel(cid, "Esta alavanca ja foi ativada, procurem pela proxima alavanca! Sejam rápidos!")
+			return true
 		end
 	end
 	
