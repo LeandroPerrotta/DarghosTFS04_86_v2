@@ -18,7 +18,7 @@ local function bgWallStatChangeCallback(cid, attacker, type, combat, value)
 		end	
 	
 		if(getCreatureHealth(cid) - value > 0) then
-			local lifePercent = math.floor((getCreatureHealth(cid) * 100) / getCreatureMaxHealth(cid))		
+			local lifePercent = math.floor((getCreatureHealth(cid) * 100) / getCreatureMaxHealth(cid))
 			if(not messages[wallStatus[cid]]) then
 				return
 			end

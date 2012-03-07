@@ -1,3 +1,43 @@
+function summonDarkGeneral()
+	local creature = doSummonCreature("Dark General", {x = 2221, y = 1748, z = 7}, true, true)
+	registerCreatureEvent(creature, "monsterDeath")
+end
+
+function onDarkGeneralDie(cid, corpse, deathList)
+	msg = msg or "Rei Ordon anúncia: Guerreiros de Quendor mais uma vez com total bravura se uniram e derrotaram um oponente poderoso! A Armada Negra e o Dark General! Como comemoração pelo feito eu concedo 10% mais experience pelos proximo 3 dias!"
+	doBroadcastMessage(msg, MESSAGE_EVENT_ADVANCE)
+	
+	addEvent(disableRoyalBlessing, 1000 * 20)
+	
+	doSetStorage(gid.EXP_BONUS_KILL_DARK_GENERAL, os.time())
+	local onlineList = getPlayersOnline()
+	for _,uid in pairs(onlineList) do
+		reloadExpStages(uid)
+	end
+end
+
+function enableRoyalBlessing(msg, class)
+	doSetStorage(gid.ROYAL_BLESSING, 1)
+
+	msg = msg or "Rei Ordon anúncia: Por Quendor está concedida a BENÇÃO REAL a todos durante esta ameaça! Lutem por Quendor sem medo!"
+	class = class or MESSAGE_EVENT_ADVANCE
+	doBroadcastMessage(msg, class)
+end
+
+function disableRoyalBlessing(msg, class)
+	doSetStorage(gid.ROYAL_BLESSING, 0)
+
+	msg = msg or "Rei Ordon: Não há mais ameaça, a benção real está ENCERRADA!"
+	if(msg) then
+		class = class or MESSAGE_EVENT_ADVANCE
+		doBroadcastMessage(msg, class)
+	end
+end
+
+function doRoyalBlessIsEnable()
+	return getStorage(gid.ROYAL_BLESSING) == 1
+end
+
 function getHelpMessage(command, paramTable)
 	local str = "Instruções de uso:\n"
 	str = str .. "Ex: " .. command .. " [arg1] | [arg2] ... \n"

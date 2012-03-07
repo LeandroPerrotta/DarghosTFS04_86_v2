@@ -27,6 +27,7 @@
 	<event type="death" name="monsterDeath" event="script" value="game/death.lua"/>
 	<event type="death" name="inquisitionReplaceDemons" event="script" value="game/inquisition/death.lua"/>
 	<event type="death" name="minigameOnBossDeath" event="script" value="game/mini_game.lua"/>
+	<event type="preparedeath" name="PrepareDeath" event="script" value="game/prepare_death.lua"/>
 	<event type="kill" name="Inquisition" event="script" value="game/inquisition.lua"/>
 	<event type="logout" name="CustomPlayerLogout" event="script" value="game/logout.lua"/>
 	<event type="kill" name="CustomBonartesTasks" event="script" value="game/onkillmission.lua"/>

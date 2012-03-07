@@ -5,53 +5,135 @@
 	]]>
 	</script>
 
-	<announce delay="0" type="event" message="Dark Army inicia sua marcha para a Cidade de Quendor!"/>
-	<announce delay="60000" type="event" message="Os gritos da marcha ja podem ser ouvidos na cidade de Quendor! Prepare-se para batalha"/>
-	<announce delay="120000" type="event" message="Quendor esta sitiada, mate os soldados invasores!"/>
-	<announce delay="180000" type="event" message="O General do ataque invade a cidade!"/>
-	<announce delay="200000" type="event" message="Mais soldados chegaram em Quendor, nao ande sozinho!"/>
+	<announce delay="0" type="event" message="Observadores alertam! A Armada Negra marcha na direção de Quendor!"/>
+	
+	<!--
+	<announce delay="180000" type="event" message="Os inimigos se aproximam do portão ao Norte! Quendor precisa reunir todas as forças!"/>
+	
+	<script delay="300000">
+	<![CDATA[
+	enableRoyalBlessing()
+	]]>
+	</script>
+	
+	<announce delay="360000" type="event" message="Uma onda de soldados leais a Armada Negra ataca o portão Norte de Quendor! Estamos sob ataque!"/>
+	<announce delay="1260000" type="event" message="Atividades ao Oeste! É esperado um poderoso ataque no portão Norte! Organizem-se e preparem para o combate!"/>
+	<announce delay="2160000" type="event" message="Foi avistado o estandarde supremo da Armada Negra! O GENERAL está a caminho do portão Norte!!"/>
+	<announce delay="2460000" type="event" message="O General está em Quendor, protejam a cidade a  todo custo!"/>
 
-	<areaspawn delay="120000" centerx="2061" centery="1869" centerz="7" radius="15">
-		<monster name="Dark Warrior" minamount="10" maxamount="13"/>
+	<areaspawn delay="360000" centerx="2200" centery="1767" centerz="7" radius="4">
+		<monster name="Dark Warrior" minamount="3" maxamount="4"/>
+		<monster name="Dark Archer" minamount="2" maxamount="3"/>
+		<monster name="Dark Priestess" minamount="1" maxamount="1"/>
 	</areaspawn>
 
-	<areaspawn delay="120000" centerx="2028" centery="1850" centerz="7" radius="15">
-		<monster name="Dark Warrior" minamount="10" maxamount="14"/>
+	<areaspawn delay="420000" centerx="2209" centery="1751" centerz="7" radius="6">
+		<monster name="Dark Warrior" minamount="3" maxamount="6"/>
+		<monster name="Dark Priestess" minamount="1" maxamount="2"/>
+		<monster name="Dark Archer" minamount="3" maxamount="6"/>
+		<monster name="Dark Summoner" minamount="1" maxamount="4"/>
+		<monster name="Dark Mage" minamount="2" maxamount="6"/>
 	</areaspawn>
 
-	<areaspawn delay="120000" centerx="2042" centery="1884" centerz="7" radius="15">
-		<monster name="Dark Archer" minamount="10" maxamount="20"/>
+	<areaspawn delay="1260000" centerx="2121" centery="1833" centerz="7" radius="6">
+		<monster name="Dark Warrior" minamount="6" maxamount="10"/>
+		<monster name="Dark Archer" minamount="6" maxamount="8"/>
+		<monster name="Dark Priestess" minamount="3" maxamount="5"/>
+		<monster name="Dark Summoner" minamount="4" maxamount="6"/>
+		<monster name="Dark Mage" minamount="4" maxamount="8"/>
 	</areaspawn>
 	
-	<areaspawn delay="120000" centerx="2031" centery="1876" centerz="7" radius="15">
-		<monster name="Dark Archer" minamount="10" maxamount="20"/>
+	<areaspawn delay="1260000" centerx="2200" centery="1767" centerz="7" radius="6">
+		<monster name="Dark Warrior" minamount="4" maxamount="6"/>
+		<monster name="Dark Archer" minamount="2" maxamount="4"/>
+		<monster name="Dark Mage" minamount="2" maxamount="4"/>
+		<monster name="Dark Priestess" minamount="1" maxamount="1"/>
 	</areaspawn>
 
-	<areaspawn delay="180000" centerx="2028" centery="1869" centerz="7" radius="15">
-		<monster name="Dark Warrior" minamount="10" maxamount="14"/>
-	</areaspawn>
-
-	<areaspawn delay="180000" centerx="2035" centery="1873" centerz="7" radius="15">
-		<monster name="Dark Archer" minamount="10" maxamount="20"/>
+	<areaspawn delay="2460000" centerx="2209" centery="1751" centerz="7" radius="8">
+		<monster name="Dark Warrior" minamount="6" maxamount="10"/>
+		<monster name="Dark Priestess" minamount="5" maxamount="8"/>
+		<monster name="Dark Archer" minamount="4" maxamount="8"/>
+		<monster name="Dark Summoner" minamount="4" maxamount="6"/>
+		<monster name="Dark Mage" minamount="6" maxamount="8"/>
 	</areaspawn>
 	
-	<singlespawn delay="180000" name="Dark General" x="2040" y="1869" z="7" />
-	<singlespawn delay="180000" name="Dark General" x="2025" y="1874" z="7" />
+	<script delay="2460000">
+	<![CDATA[
+	summonDarkGeneral()
+	]]>	
+	</script>
+	!-->
+	
+	<announce delay="20000" type="event" message="Os inimigos se aproximam do portão ao Norte! Quendor precisa reunir todas as forças!"/>
+	
+	<script delay="25000">
+	<![CDATA[
+	enableRoyalBlessing()
+	]]>
+	</script>
+	
+	<announce delay="30000" type="event" message="Uma onda de soldados leais a Armada Negra ataca o portão Norte de Quendor! Estamos sob ataque!"/>
+	<announce delay="40000" type="event" message="Atividades ao Oeste! É esperado um poderoso ataque no portão Norte! Organizem-se e preparem para o combate!"/>
+	<announce delay="45000" type="event" message="Foi avistado o estandarde supremo da Armada Negra! O GENERAL está a caminho do portão Norte!!"/>
+	<announce delay="50000" type="event" message="O General está em Quendor, protejam a cidade a  todo custo!"/>
 
-	<areaspawn delay="190000" centerx="2061" centery="1869" centerz="7" radius="15">
-		<monster name="Dark Warrior" minamount="10" maxamount="13"/>
+   -- North Gate - 1st wave
+	<areaspawn delay="30000" centerx="2200" centery="1767" centerz="7" radius="4">
+		<monster name="Dark Warrior" minamount="3" maxamount="4"/>
+		<monster name="Dark Archer" minamount="2" maxamount="3"/>
+		<monster name="Dark Priestess" minamount="1" maxamount="1"/>
 	</areaspawn>
 
-	<areaspawn delay="200000" centerx="2028" centery="1850" centerz="7" radius="15">
-		<monster name="Dark Warrior" minamount="10" maxamount="14"/>
+	<areaspawn delay="35000" centerx="2209" centery="1751" centerz="7" radius="6">
+		<monster name="Dark Warrior" minamount="3" maxamount="6"/>
+		<monster name="Dark Priestess" minamount="1" maxamount="2"/>
+		<monster name="Dark Archer" minamount="3" maxamount="6"/>
+		<monster name="Dark Summoner" minamount="1" maxamount="4"/>
+		<monster name="Dark Mage" minamount="2" maxamount="6"/>
 	</areaspawn>
 
-	<areaspawn delay="220000" centerx="2042" centery="1884" centerz="7" radius="15">
-		<monster name="Dark Archer" minamount="10" maxamount="20"/>
+    -- East Gate - 2st wave
+	<areaspawn delay="40000" centerx="2121" centery="1833" centerz="7" radius="6">
+		<monster name="Dark Warrior" minamount="6" maxamount="10"/>
+		<monster name="Dark Archer" minamount="6" maxamount="8"/>
+		<monster name="Dark Priestess" minamount="3" maxamount="5"/>
+		<monster name="Dark Summoner" minamount="4" maxamount="6"/>
+		<monster name="Dark Mage" minamount="4" maxamount="8"/>
 	</areaspawn>
 	
-	<areaspawn delay="240000" centerx="2031" centery="1876" centerz="7" radius="15">
-		<monster name="Dark Archer" minamount="10" maxamount="20"/>
+	-- North Gate - 3st wave (General)
+	<areaspawn delay="50000" centerx="2200" centery="1767" centerz="7" radius="6">
+		<monster name="Dark Warrior" minamount="4" maxamount="6"/>
+		<monster name="Dark Archer" minamount="2" maxamount="4"/>
+		<monster name="Dark Mage" minamount="2" maxamount="4"/>
+		<monster name="Dark Priestess" minamount="1" maxamount="1"/>
+	</areaspawn>
+
+	<areaspawn delay="50000" centerx="2209" centery="1751" centerz="7" radius="8">
+		<monster name="Dark Warrior" minamount="6" maxamount="10"/>
+		<monster name="Dark Priestess" minamount="5" maxamount="8"/>
+		<monster name="Dark Archer" minamount="4" maxamount="8"/>
+		<monster name="Dark Summoner" minamount="4" maxamount="6"/>
+		<monster name="Dark Mage" minamount="6" maxamount="8"/>
 	</areaspawn>
 	
+	<script delay="50000">
+	<![CDATA[
+	summonDarkGeneral()
+	]]>	
+	</script>	
+	
+	<script delay="100000">
+	<![CDATA[
+	local general = getCreatureByName("dark general")
+	
+	if(general) then
+		doRemoveCreature(general)
+		local msg = "Quendor fracassou na defesa! As Armada Negra concluiu seu objetivo de invadir a cidade e saqueou muitas riquezas. Humilhado por seus inimigos Ordon está furioso."
+		addEvent(doBroadcastMessage, 1000 * 2, msg, MESSAGE_EVENT_ADVANCE)
+		addEvent(disableRoyalBlessing, 1000 * 20)
+	end
+	]]>	
+	</script>	
 </raid>

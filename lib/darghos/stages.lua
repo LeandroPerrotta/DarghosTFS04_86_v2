@@ -185,11 +185,25 @@ function changeStage(cid, skilltype, multiple)
 			changePvpDebuff = round(darghos_change_pvp_debuff_percent / 100, 2)
 		end
 		
-		local expSpecialBonus = 1
+		local expSpecialBonus = 0
+		
+		local lastKillDarkGeneral = getStorage(gid.LAST_KILL_DARK_GENERAL)
+		
+		
+		if(lastKillDarkGeneral > 0 and time() < lastKillDarkGeneral + (darghos_kill_dark_general_exp_bonus_days * 60 * 60 * 24)) then
+			local endEvent = os.date("*t", lastKillDarkGeneral + (darghos_kill_dark_general_exp_bonus_days * 60 * 60 * 24))
+			local now = os.date("*t")
+			if(now.day <= endEvent.day) then
+				expSpecialBonus = expSpecialBonus + (round(darghos_kill_dark_general_exp_bonus_percent / 100, 2))
+			end
+		end	
+		
 		local expSpecialBonusEnd = getPlayerStorageValue(cid, sid.EXP_MOD_ESPECIAL_END)
 		 if(expSpecialBonusEnd ~= -1  and os.time() <= expSpecialBonusEnd) then
-		 	expSpecialBonus = (getPlayerStorageValue(cid, sid.EXP_MOD_ESPECIAL) > 0) and round(getPlayerStorageValue(cid, sid.EXP_MOD_ESPECIAL) / 100, 2) or 1
+		 	expSpecialBonus = expSpecialBonus + (getPlayerStorageValue(cid, sid.EXP_MOD_ESPECIAL) > 0) and round(getPlayerStorageValue(cid, sid.EXP_MOD_ESPECIAL) / 100, 2) or 1
 		 end
+		 
+		 expSpecialBonus = expSpecialBonus + 1
 	
 		setExperienceRate(cid, multiple * darghos_exp_multipler * changePvpDebuff * expSpecialBonus)
 	elseif(isStagedSkill(skilltype, true)) then
@@ -197,6 +211,10 @@ function changeStage(cid, skilltype, multiple)
 	else
 		print("changeStage() | Unknown skilltype " .. skilltype .. " when change the stage for " .. getPlayerName(cid) .. " by " .. multiple .. "x.")
 	end
+end
+
+function reloadExpStages(cid)
+	changeStage(cid, SKILL__LEVEL, getPlayerMultiple(cid, STAGES_EXPERIENCE))
 end
 
 function setStagesOnLogin(cid)
@@ -222,5 +240,5 @@ function setStageOnAdvance(cid, skilltype)
 end
 
 function setStageOnChangePvp(cid)
-	changeStage(cid, SKILL__LEVEL, getPlayerMultiple(cid, STAGES_EXPERIENCE))
+	reloadExpStages(cid)
 end

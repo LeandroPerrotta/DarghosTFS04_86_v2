@@ -42,6 +42,10 @@ darghos_spoof_start_in = getConfigInfo('spoofPlayersStarts')
 -- Define se é necessario comer para recuperar life/mana
 darghos_need_eat = false
 
+-- Special Events
+darghos_kill_dark_general_exp_bonus_days = 3
+darghos_kill_dark_general_exp_bonus_percent = 10
+
 -- Define se jogadores em area non-pvp/pacificos usarão um estagio de exp diferenciado do normal
 if(getConfigValue("worldId") == WORLD_AARAGON) then
 	darghos_use_protected_stages = true

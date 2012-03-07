@@ -13,6 +13,7 @@ function onLogin(cid)
 	registerCreatureEvent(cid, "tradeHandler")
 	registerCreatureEvent(cid, "lookItem")
 	registerCreatureEvent(cid, "onMoveItem")
+	registerCreatureEvent(cid, "PrepareDeath")
 	
 	--if(tasks.hasStartedTask(cid)) then
 		registerCreatureEvent(cid, "CustomTasks")
