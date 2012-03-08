@@ -15,14 +15,14 @@ function onSay(cid, words, param, channel)
 		
 		doCreateTeleport(id, dest_pos, orig_pos)
 		return true
-	else
-		local id = tonumber(t[1])
+	end
+	
+	local id = tonumber(t[1])
+	if(not id) then
+		id = getItemIdByName(t[1], false)
 		if(not id) then
-			id = getItemIdByName(t[1], false)
-			if(not id) then
-				doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Item wich such name does not exists.")
-				return true
-			end
+			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Item wich such name does not exists.")
+			return true
 		end
 	end
 

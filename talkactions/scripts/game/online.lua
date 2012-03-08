@@ -67,7 +67,7 @@ function onlinePrivileged(cid, words, param)
 	doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Players Online:")
 
 	local str = ""
-	local addStr = ""
+	local addStr = "\n"
 	local j = 0
 	for i, uid in ipairs(onlineList) do
 		
@@ -79,6 +79,7 @@ function onlinePrivileged(cid, words, param)
 
 		if string.len(addStr) + string.len(str) >= 255 then
 			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, str)
+			addStr = "\n" .. addStr
 			str = addStr
 		elseif #onlineList == 1 then
 			str = addStr
