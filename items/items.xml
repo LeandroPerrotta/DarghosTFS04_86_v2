@@ -11900,6 +11900,7 @@
 		<attribute key="shootType" value="redstar" />
 		<attribute key="range" value="4" />
 		<attribute key="breakChance" value="33" />
+		<attribute key="maxHitChance" value="90" />
 		<attribute key="ammoAction" value="moveback" />
 	</item>
 	<item id="7369" article="a" name="golden trophy">
