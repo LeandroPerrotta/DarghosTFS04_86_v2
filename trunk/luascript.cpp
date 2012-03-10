@@ -2481,6 +2481,9 @@ void LuaInterface::registerFunctions()
 
 	//doPlayerIsPvpEnable(cid)
 	lua_register(m_luaState, "doPlayerIsPvpEnable", LuaInterface::luaDoPlayerIsPvpEnable);
+
+        //getPlayerCurrentPing(cid)
+        lua_register(m_luaState, "getPlayerCurrentPing", LuaInterface::luaGetPlayerCurrentPing);
 	#endif
 
 	#ifdef __DARGHOS_PVP_SYSTEM__
@@ -10563,6 +10566,23 @@ int32_t LuaInterface::luaDoPlayerIsPvpEnable(lua_State* L)
 	}
 
 	return 1;
+}
+
+int32_t LuaInterface::luaGetPlayerCurrentPing(lua_State* L)
+{
+    //getPlayerCurrentPing(cid)
+    ScriptEnviroment* env = getEnv();
+    if(Player* player = env->getPlayerByUID(popNumber(L)))
+    {
+        lua_pushnumber(L, player->getCurrentPing());
+    }
+    else
+    {
+        errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+        lua_pushboolean(L, false);
+    }
+
+    return 1;
 }
 #endif
 

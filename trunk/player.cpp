@@ -210,7 +210,8 @@ std::string Player::getDescription(int32_t lookDistance) const
             s << ". You are with " << battlegroundRating << " battleground rating points";
         else
 #endif
-        s << ". You are an " << (isPvpEnabled() ? "agressive" : "pacific") << " player";
+        if(g_config.getBool(ConfigManager::ON_LOOK_SHOW_CURRENT_PVP))
+            s << ". You are an " << (isPvpEnabled() ? "agressive" : "pacific") << " player";
 #endif
 	}
 	else
@@ -2332,8 +2333,11 @@ bool Player::onDeath()
 
 	#ifdef __DARGHOS_CUSTOM__
 	bool usePVPBlessing = false;
-	uint32_t totalDamage = 0, pvpDamage = 0, pvpLevelSum = 0;
+    uint32_t totalDamage = 0, pvpDamage = 0, enemiesLevelSum = 0, alliesLevelSum = 0;
+    std::map<Player*, uint32_t> enemiesList, alliesList;
 
+    alliesList.insert(std::pair<Player*, uint32_t>(this, 1));
+    alliesLevelSum += getLevel();
 
     if(!ignoreLoss && skillLoss)
 	{
@@ -2348,8 +2352,31 @@ bool Player::onDeath()
             Creature* creature = g_game.getCreatureByID(it->first);
             if(creature && (creature->getPlayer() || creature->isPlayerSummon()))
             {
-                pvpLevelSum += (creature->isPlayerSummon()) ? 0 : creature->getPlayer()->getLevel();
+                Player* p = (creature->isPlayerSummon()) ? creature->getMaster()->getPlayer() : creature->getPlayer();
+                if(p && enemiesList.count(p) == 0)
+                {
+                    enemiesList.insert(std::pair<Player*, uint32_t>(p, 1));
+                    enemiesLevelSum += p->getLevel();
+                }
                 pvpDamage += it->second.total;
+            }
+        }
+
+        for(CountMap::iterator it = healMap.begin(); it != healMap.end(); ++it)
+        {
+            // its enough when we use IDs range comparison here instead of overheating autoList
+            if(((OTSYS_TIME() - it->second.ticks) / 1000) > 60)
+                continue;
+
+            Creature* creature = g_game.getCreatureByID(it->first);
+            if(creature && (creature->getPlayer() || creature->isPlayerSummon()))
+            {
+                Player* p = (creature->isPlayerSummon()) ? creature->getMaster()->getPlayer() : creature->getPlayer();
+                if(p && alliesList.count(p) == 0)
+                {
+                    alliesList.insert(std::pair<Player*, uint32_t>(p, 1));
+                    alliesLevelSum += p->getLevel();
+                }
             }
         }
 
@@ -2391,16 +2418,26 @@ bool Player::onDeath()
 	removeConditions(CONDITIONEND_DEATH);
 	if(skillLoss)
 	{
+        uint64_t lossExperience = getLostExperience();
+
 #ifdef __DARGHOS_CUSTOM__
-		uint32_t extraReduction = (getLevel() > pvpLevelSum) ? 0 : std::min(std::ceil((double)(pvpLevelSum / getLevel()) * 12.5), 20.);
+        std::stringstream deathStr; deathStr << "Relatórios da morte:\n";
 
-		if(!g_config.getBool(ConfigManager::UNFAIR_FIGHT))
-            extraReduction = 0;
+        float extraReduction = 0.;
 
-		uint64_t lossExperience = getLostExperience(extraReduction);
-#else
-		uint64_t lossExperience = getLostExperience();
+        if(g_config.getBool(ConfigManager::UNFAIR_FIGHT) && alliesLevelSum < enemiesLevelSum)
+        {
+            extraReduction = (float)alliesLevelSum / enemiesLevelSum;
+            if(extraReduction < 0.2)
+                extraReduction = 0.2;
+
+            lossExperience = std::floor(lossExperience * extraReduction);
+            deathStr << "\nRedução extra por combate desleal (unfair fight): " << std::floor(100 - (extraReduction * 100)) << "%";
+        }
+
+        deathStr << "\nExperiencia perdida: " << lossExperience << " pontos.";
 #endif
+
 		removeExperience(lossExperience, false);
 		double percent = 1. - ((double)(experience - lossExperience) / experience);
 
@@ -2454,7 +2491,11 @@ bool Player::onDeath()
 		}
 
 		#ifdef __DARGHOS_CUSTOM__
-		if(!usePVPBlessing)
+        if(usePVPBlessing)
+        {
+            deathStr << "\nVocê morreu em luta contra outros jogadores e perdeu a benção do PvP (twist of fate)! Suas benções regulares estão vuneraveis!";
+        }
+        else
 		#endif
 		blessings = 0;
 		loginPosition = masterPosition;
@@ -2473,6 +2514,10 @@ bool Player::onDeath()
 		g_creatureEvents->playerLogout(this, true);
 		g_game.removeCreature(this, false);
 		sendReLoginWindow();
+
+#ifdef __DARGHOS_CUSTOM__
+        sendTextMessage(MSG_EVENT_ORANGE, deathStr.str());
+#endif
 	}
 	else
 	{
@@ -4538,24 +4583,13 @@ uint16_t Player::getBlessings() const
 	return count;
 }
 
-#ifdef __DARGHOS_CUSTOM__
-uint64_t Player::getLostExperience(uint32_t extraReduction) const
-#else
 uint64_t Player::getLostExperience() const
-#endif
 {
 	if(!skillLoss)
 		return 0;
 
-#ifdef __DARGHOS_CUSTOM__
-	double percent = (double)(lossPercent[LOSS_EXPERIENCE] - extraReduction - vocation->getLessLoss() - (getBlessings() * g_config.getNumber(ConfigManager::BLESS_REDUCTION))) / 100.;
-
-	if(percent <= -0.)
-		percent = 0;
-#else
 	double percent = (double)(lossPercent[LOSS_EXPERIENCE] - vocation->getLessLoss() - (getBlessings() * g_config.getNumber(
 		ConfigManager::BLESS_REDUCTION))) / 100.;
-#endif
 
 	if(level <= 25)
 		return (uint64_t)std::floor((double)(experience * percent) / 10.);

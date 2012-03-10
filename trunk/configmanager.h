@@ -193,6 +193,12 @@ class ConfigManager
 			BATTLEGROUND_PZ_LOCKED,
 #endif
 
+#ifdef __DARGHOS_SPOOF__
+            SPOOF_PLAYERS_COUNT,
+            SPOOF_PLAYERS_STARTS,
+            SPOOF_PLAYERS_ONLINE_STARTS,
+#endif
+
 			LAST_NUMBER_CONFIG /* this must be the last one */
 		};
 
@@ -308,6 +314,11 @@ class ConfigManager
 #endif
 #ifdef __DARGHOS_CUSTOM__
             UNFAIR_FIGHT,
+            ON_LOOK_SHOW_CURRENT_PVP,
+            PLAYERS_CAN_HEAL_MONSTERS,
+#endif
+#ifdef __DARGHOS_SPOOF__
+            SPOOF_PLAYERS_ENABLED,
 #endif
 			LAST_BOOL_CONFIG /* this must be the last one */
 		};

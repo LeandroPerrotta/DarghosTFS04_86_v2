@@ -81,6 +81,13 @@ bool Raids::parseRaidNode(xmlNodePtr raidNode, bool checkDuplicate, FileType_t p
 			std::clog << "[Warning - Raids::parseRaidNode] Unknown reftype \"" << strValue << "\" for raid " << name << std::endl;
 	}
 
+#ifdef __DARGHOS_CUSTOM__
+	bool clearOnEnd = false;
+
+	if(readXMLString(raidNode, "clear", strValue))
+		clearOnEnd = booleanString(strValue);
+#endif
+
 	bool ref = false;
 	if(readXMLString(raidNode, "ref", strValue))
 		ref = booleanString(strValue);
@@ -88,8 +95,11 @@ bool Raids::parseRaidNode(xmlNodePtr raidNode, bool checkDuplicate, FileType_t p
 	bool enabled = true;
 	if(readXMLString(raidNode, "enabled", strValue))
 		enabled = booleanString(strValue);
-
+#ifdef __DARGHOS_CUSTOM__
+	Raid* raid = new Raid(name, interval, margin, refType, ref, enabled, clearOnEnd);
+#else
 	Raid* raid = new Raid(name, interval, margin, refType, ref, enabled);
+#endif
 	if(!raid || !raid->loadFromXml(file))
 	{
 		delete raid;
@@ -205,8 +215,13 @@ Raid* Raids::getRaidByName(const std::string& name)
 	return NULL;
 }
 
+#ifdef __DARGHOS_CUSTOM__
+Raid::Raid(const std::string& _name, uint32_t _interval, uint64_t _margin,
+	RefType_t _refType, bool _ref, bool _enabled, bool _clearOnEnd)
+#else
 Raid::Raid(const std::string& _name, uint32_t _interval, uint64_t _margin,
 	RefType_t _refType, bool _ref, bool _enabled)
+#endif
 {
 	name = _name;
 	interval = _interval;
@@ -214,6 +229,9 @@ Raid::Raid(const std::string& _name, uint32_t _interval, uint64_t _margin,
 	refType = _refType;
 	ref = _ref;
 	enabled = _enabled;
+#ifdef __DARGHOS_CUSTOM__
+	clearOnEnd = _clearOnEnd;
+#endif
 
 	loaded = false;
 	refCount = eventCount = nextEvent = 0;
@@ -222,6 +240,7 @@ Raid::Raid(const std::string& _name, uint32_t _interval, uint64_t _margin,
 Raid::~Raid()
 {
 	stopEvents();
+
 	for(RaidEventVector::iterator it = raidEvents.begin(); it != raidEvents.end(); it++)
 		delete (*it);
 
@@ -307,6 +326,24 @@ bool Raid::startRaid()
 	return true;
 }
 
+#ifdef __DARGHOS_CUSTOM__
+bool Raid::clear()
+{
+    if(m_monsters.size() > 0)
+    {
+        for(MonstersRaid::iterator it = m_monsters.begin(); it != m_monsters.end(); it++)
+        {
+            Creature* c = g_game.getCreatureByID(*it);
+
+            if(c != NULL)
+                g_game.removeCreature(c);
+        }
+    }
+
+    return true;
+}
+#endif
+
 bool Raid::executeRaidEvent(RaidEvent* raidEvent)
 {
 	if(!raidEvent->executeEvent())
@@ -333,6 +370,13 @@ bool Raid::resetRaid(bool checkExecution)
 
 	if(refType != REF_SINGLE || refCount <= 0)
 		eventCount = 0;
+
+#ifdef __DARGHOS_CUSTOM__
+	if(clearOnEnd)
+	{
+	    clear();
+	}
+#endif
 
 	if(Raids::getInstance()->getRunning() == this)
 	{
@@ -693,6 +737,10 @@ bool SingleSpawnEvent::executeEvent() const
 		m_raid->addRef();
 	}
 
+#ifdef __DARGHOS_CUSTOM__
+	m_raid->appendMonster(monster->getID());
+#endif
+
 	return true;
 }
 
@@ -915,6 +963,10 @@ bool AreaSpawnEvent::executeEvent() const
 					monster->setRaid(m_raid);
 					m_raid->addRef();
 				}
+
+#ifdef __DARGHOS_CUSTOM__
+				m_raid->appendMonster(monster->getID());
+#endif
 
 				success = true;
 				break;

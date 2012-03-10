@@ -23,6 +23,10 @@
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
 
+/*#ifdef __DARGHOS_CUSTOM__
+#include "monster.h"
+#endif*/
+
 #include "baseevents.h"
 #include "position.h"
 #include "tools.h"
@@ -42,6 +46,7 @@ struct MonsterSpawn
 
 class Raid;
 class RaidEvent;
+class Monster;
 
 typedef std::list<Raid*> RaidList;
 typedef std::vector<RaidEvent*> RaidEventVector;
@@ -95,17 +100,30 @@ class Raids
 		uint64_t lastRaidEnd;
 };
 
+#ifdef __DARGHOS_CUSTOM__
+typedef std::list<uint32_t> MonstersRaid;
+#endif
+
+
 class Raid
 {
 	public:
+#ifdef __DARGHOS_CUSTOM__
 		Raid(const std::string& _name, uint32_t _interval, uint64_t _margin,
-			RefType_t _refType, bool _ref, bool _enabled);
+			RefType_t _refType, bool _ref, bool _enabled, bool _clearOnEnd);
+#else
+	Raid(const std::string& _name, uint32_t _interval, uint64_t _margin,
+		RefType_t _refType, bool _ref, bool _enabled);
+#endif
 		virtual ~Raid();
 
 		bool loadFromXml(const std::string& _filename);
 
 		bool startRaid();
 		bool resetRaid(bool checkExecution);
+#ifdef __DARGHOS_CUSTOM__
+		bool clear();
+#endif
 
 		bool executeRaidEvent(RaidEvent* raidEvent);
 		void stopEvents();
@@ -125,12 +143,21 @@ class Raid
 		void addRef() {++refCount;}
 		void unRef() {--refCount; if(refCount <= 0) resetRaid(true);}
 
+#ifdef __DARGHOS_CUSTOM__
+		void appendMonster(uint32_t monsterId){ m_monsters.push_back(monsterId); }
+#endif
+
 	private:
 		std::string name;
 		uint32_t interval;
 		uint64_t margin;
 		RefType_t refType;
 		bool ref, enabled;
+
+#ifdef __DARGHOS_CUSTOM__
+		bool clearOnEnd;
+		MonstersRaid m_monsters;
+#endif
 
 		bool loaded;
 		uint32_t refCount, eventCount, nextEvent;

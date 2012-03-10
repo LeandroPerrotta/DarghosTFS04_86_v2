@@ -896,11 +896,7 @@ class Player : public Creature, public Cylinder
 		virtual uint32_t getConditionSuppressions() const {return conditionSuppressions;}
 
 		virtual uint16_t getLookCorpse() const;
-#ifdef __DARGHOS_CUSTOM__
-		virtual uint64_t getLostExperience(uint32_t extraReduction) const;
-#else
 		virtual uint64_t getLostExperience() const;
-#endif
 
 		virtual void getPathSearchParams(const Creature* creature, FindPathParams& fpp) const;
 		static uint32_t getPercentLevel(uint64_t count, uint64_t nextLevelCount);

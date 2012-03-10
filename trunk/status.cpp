@@ -61,8 +61,11 @@ void ProtocolStatus::onRecvFirstMessage(NetworkMessage& msg)
 					{
 						bool sendPlayers = false;
 						#ifndef __DARGHOS_SPOOF__
-						if(msg.size() > msg.position())
-							sendPlayers = msg.get<char>() == 0x01;
+						if(g_config.getBool(ConfigManager::SPOOF_PLAYERS_ENABLED))
+						{
+                            if(msg.size() > msg.position())
+                                sendPlayers = msg.get<char>() == 0x01;
+						}
                         #endif
 
 						output->putString(status->getStatusString(sendPlayers), false);
@@ -139,15 +142,7 @@ std::string Status::getStatusString(bool sendPlayers) const
 
 	p = xmlNewNode(NULL,(const xmlChar*)"players");
 	#ifdef __DARGHOS_SPOOF__
-        int playersSpoofed = 0;
-        uint32_t spoofStartIn = (SPOOF_START_AT > 0) ? SPOOF_START_AT : PLAYERS_TO_SPOOF;
-
-        if(g_game.getPlayersOnline() > spoofStartIn)
-        {
-            playersSpoofed = std::min((uint32_t)((g_game.getPlayersOnline() + (PLAYERS_TO_SPOOF - spoofStartIn)) - PLAYERS_TO_SPOOF), (uint32_t)PLAYERS_TO_SPOOF);
-        }
-
-		sprintf(buffer, "%d", g_game.getPlayersOnline() + playersSpoofed);
+		sprintf(buffer, "%d", g_game.getPlayersOnline(true));
 	#else
         #ifdef __DARGHOS_IGNORE_AFK__
         sprintf(buffer, "%d", Player::afkCount);
@@ -161,13 +156,16 @@ std::string Status::getStatusString(bool sendPlayers) const
 	sprintf(buffer, "%d", g_config.getNumber(ConfigManager::MAX_PLAYERS));
 	xmlSetProp(p, (const xmlChar*)"max", (const xmlChar*)buffer);
 	#ifdef __DARGHOS_SPOOF__
-	sprintf(buffer, "%d", g_game.getPlayersRecord() + (PLAYERS_TO_SPOOF + 1));
+	if(g_config.getBool(ConfigManager::SPOOF_PLAYERS_ENABLED))
+        sprintf(buffer, "%d", g_game.getPlayersRecord() + g_config.getNumber(ConfigManager::SPOOF_PLAYERS_ONLINE_STARTS) + (g_config.getNumber(ConfigManager::SPOOF_PLAYERS_COUNT) + 1));
+    else
+        sprintf(buffer, "%d", g_game.getPlayersRecord());
 	#else
 	sprintf(buffer, "%d", g_game.getPlayersRecord());
 	#endif
 	xmlSetProp(p, (const xmlChar*)"peak", (const xmlChar*)buffer);
 
-	#ifndef __SPOOF_PLAYERS__
+	#ifndef __DARGHOS_SPOOF__
 	if(sendPlayers)
 	{
 		std::stringstream ss;
@@ -262,17 +260,12 @@ void Status::getInfo(uint32_t requestedInfo, OutputMessage_ptr output, NetworkMe
 	{
 		output->put<char>(0x20);
 		#ifdef __DARGHOS_SPOOF__
-        int playersSpoofed = 0;
-        uint32_t spoofStartIn = (SPOOF_START_AT > 0) ? SPOOF_START_AT : PLAYERS_TO_SPOOF;
-
-        if(g_game.getPlayersOnline() > spoofStartIn)
-        {
-            playersSpoofed = std::min((uint32_t)((g_game.getPlayersOnline() + (PLAYERS_TO_SPOOF - spoofStartIn)) - PLAYERS_TO_SPOOF), (uint32_t)PLAYERS_TO_SPOOF);
-        }
-
-		output->put<uint32_t>(g_game.getPlayersOnline() + playersSpoofed);
+		output->put<uint32_t>(g_game.getPlayersOnline(true));
 		output->put<uint32_t>(g_config.getNumber(ConfigManager::MAX_PLAYERS));
-		output->put<uint32_t>(g_game.getPlayersRecord() + (PLAYERS_TO_SPOOF + 1));
+		if(g_config.getBool(ConfigManager::SPOOF_PLAYERS_ENABLED))
+            output->put<uint32_t>(g_game.getPlayersRecord() + g_config.getNumber(ConfigManager::SPOOF_PLAYERS_ONLINE_STARTS) + (g_config.getNumber(ConfigManager::SPOOF_PLAYERS_COUNT + 1)));
+        else
+            output->put<uint32_t>(g_game.getPlayersRecord());
 		#else
             #ifdef __DARGHOS_IGNORE_AFK__
             output->put<uint32_t>(g_game.getPlayersOnline() - Player::afkCount);

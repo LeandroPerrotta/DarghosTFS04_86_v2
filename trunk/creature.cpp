@@ -695,30 +695,30 @@ bool Creature::onDeath()
     DeathList deathList = getKillers();
 
     #ifdef __DARGHOS_PVP_SYSTEM__
-	if(getPlayer() && getPlayer()->isInBattleground())
-	{
-		g_battleground.onPlayerDeath(getPlayer(), deathList);
+    if(getPlayer() && getPlayer()->isInBattleground())
+    {
+            g_battleground.onPlayerDeath(getPlayer(), deathList);
 
-        dropCorpse(deathList);
-        if(master)
-            master->removeSummon(this);
+    dropCorpse(deathList);
+    if(master)
+        master->removeSummon(this);
 
-		return true;
-	}
-	#endif
+            return true;
+    }
+    #endif
 
 
-	bool deny = false;
+    bool deny = false;
 
-	CreatureEventList prepareDeathEvents = getCreatureEvents(CREATURE_EVENT_PREPAREDEATH);
-	for(CreatureEventList::iterator it = prepareDeathEvents.begin(); it != prepareDeathEvents.end(); ++it)
-	{
-		if(!(*it)->executePrepareDeath(this, deathList) && !deny)
-			deny = true;
-	}
+    CreatureEventList prepareDeathEvents = getCreatureEvents(CREATURE_EVENT_PREPAREDEATH);
+    for(CreatureEventList::iterator it = prepareDeathEvents.begin(); it != prepareDeathEvents.end(); ++it)
+    {
+        if(!(*it)->executePrepareDeath(this, deathList) && !deny)
+                deny = true;
+    }
 
-	if(deny)
-		return false;
+    if(deny)
+        return false;
 
     #ifdef __DARGHOS_CUSTOM__
     int32_t i = 0, size = deathList.size(), limit = g_config.getNumber(ConfigManager::DEATH_FRAGGERS) + 1;

@@ -4460,7 +4460,7 @@ bool Game::combatChangeHealth(CombatType_t combatType, Creature* attacker, Creat
 		if(attacker && target && (p_attacker = attacker->getPlayer()))
 		{
 		    //nenhum player pode healar monstros mais...
-		    if(target->getMonster() && !target->isPlayerSummon())
+		    if(!g_config.getBool(ConfigManager::PLAYERS_CAN_HEAL_MONSTERS) && target->getMonster() && !target->isPlayerSummon())
                 return false;
 
 			Player* p_target = NULL;
@@ -6594,5 +6594,35 @@ int64_t Game::getCurrentRxPackets()
     delete[] buffer;
 
     return rx_packets;
+}
+#endif
+
+#ifdef __DARGHOS_SPOOF__
+uint32_t Game::getPlayersOnline(bool spoof/* = false*/)
+{
+    uint32_t onlinePlayers = (uint32_t)Player::autoList.size();
+    uint32_t playersSpoofed = 0;
+
+    if(g_config.getBool(ConfigManager::SPOOF_PLAYERS_ENABLED) && spoof)
+    {
+        uint32_t spoofStartIn = (g_config.getNumber(ConfigManager::SPOOF_PLAYERS_STARTS) > 0) ? g_config.getNumber(ConfigManager::SPOOF_PLAYERS_STARTS) : g_config.getNumber(ConfigManager::SPOOF_PLAYERS_COUNT);
+
+        if(g_config.getNumber(ConfigManager::SPOOF_PLAYERS_ONLINE_STARTS) > 0)
+            playersSpoofed = g_config.getNumber(ConfigManager::SPOOF_PLAYERS_ONLINE_STARTS);
+
+        if(onlinePlayers > spoofStartIn)
+        {
+            if((onlinePlayers - spoofStartIn) > g_config.getNumber(ConfigManager::SPOOF_PLAYERS_COUNT))
+            {
+                playersSpoofed += g_config.getNumber(ConfigManager::SPOOF_PLAYERS_COUNT);
+            }
+            else
+            {
+                playersSpoofed += (onlinePlayers - spoofStartIn);
+            }
+        }
+    }
+
+    return onlinePlayers + playersSpoofed;
 }
 #endif
