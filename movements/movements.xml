@@ -727,6 +727,14 @@
 		<vocation id="7" showInDescription="0"/>
 	</movevent>
 	<movevent type="DeEquip" itemid="12645" slot="head" event="function" value="onDeEquipItem"/>
+		<!-- Cobra Crown -->
+	<movevent type="Equip" itemid="12630" slot="head" event="function" value="onEquipItem">
+		<vocation id="1"/>
+		<vocation id="5" showInDescription="0"/>
+		<vocation id="2"/>
+		<vocation id="6" showInDescription="0"/>
+	</movevent>
+	<movevent type="DeEquip" itemid="12630" slot="head" event="function" value="onDeEquipItem"/>	
 
 
 	<!-- Armors -->

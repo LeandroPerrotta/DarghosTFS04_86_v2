@@ -2,75 +2,25 @@
 	<script delay="0">
 	<![CDATA[
 	raidLog("skeletons (quendor)")
-	]]>
+		]]>
 	</script>
-
-<announce delay="0" type="event" message="The cemetery of Quendor is shaking."/>
-<announce delay="60000" type="event" message="Lots of Skeletons are marching to the City!"/>
-<announce delay="100000" type="event" message="Quendor Under Attack!"/>
-
-<areaspawn delay="100000" centerx="2011" centery="1871" centerz="7" radius="30">
-<monster name="Skeleton" minamount="10" maxamount="20"/>
-</areaspawn>
-
-<areaspawn delay="100000" centerx="1990" centery="1871" centerz="7" radius="15">
-<monster name="Skeleton" minamount="10" maxamount="50"/>
-</areaspawn>
-
-<areaspawn delay="100000" centerx="1986" centery="1861" centerz="7" radius="3">
-<monster name="Skeleton" minamount="12" maxamount="20"/>
-</areaspawn>
-
-<areaspawn delay="90000" centerx="1981" centery="1876" centerz="7" radius="3">
-<monster name="Skeleton" minamount="12" maxamount="20"/>
-</areaspawn>
-
-<areaspawn delay="90000" centerx="2011" centery="1871" centerz="7" radius="30">
-<monster name="Skeleton" minamount="10" maxamount="20"/>
-</areaspawn>
-
-<areaspawn delay="90000" centerx="1990" centery="1871" centerz="7" radius="15">
-<monster name="Skeleton" minamount="10" maxamount="50"/>
-</areaspawn>
-
-<areaspawn delay="90000" centerx="1986" centery="1861" centerz="7" radius="3">
-<monster name="Skeleton" minamount="12" maxamount="20"/>
-</areaspawn>
-
-<areaspawn delay="100000" centerx="1981" centery="1876" centerz="7" radius="3">
-<monster name="Skeleton" minamount="12" maxamount="20"/>
-</areaspawn>
-
-<areaspawn delay="120000" centerx="2011" centery="1871" centerz="7" radius="30">
-<monster name="Skeleton" minamount="10" maxamount="20"/>
-</areaspawn>
-
-<areaspawn delay="125000" centerx="1990" centery="1871" centerz="7" radius="15">
-<monster name="Skeleton" minamount="10" maxamount="50"/>
-</areaspawn>
-
-<areaspawn delay="130000" centerx="1986" centery="1861" centerz="7" radius="3">
-<monster name="Skeleton" minamount="12" maxamount="20"/>
-</areaspawn>
-
-<areaspawn delay="140000" centerx="1981" centery="1876" centerz="7" radius="3">
-<monster name="Skeleton" minamount="12" maxamount="20"/>
-</areaspawn>
-
-<areaspawn delay="145000" centerx="2011" centery="1871" centerz="7" radius="30">
-<monster name="Skeleton" minamount="10" maxamount="20"/>
-</areaspawn>
-
-<areaspawn delay="145000" centerx="1990" centery="1871" centerz="7" radius="15">
-<monster name="Skeleton" minamount="10" maxamount="50"/>
-</areaspawn>
-
-<areaspawn delay="145000" centerx="1986" centery="1861" centerz="7" radius="3">
-<monster name="Skeleton" minamount="12" maxamount="20"/>
-</areaspawn>
-
-<areaspawn delay="145000" centerx="1981" centery="1876" centerz="7" radius="3">
-<monster name="Skeleton" minamount="12" maxamount="20"/>
-</areaspawn>
-
+		
+	<announce delay="0" type="event" message="A terra esta tremendo no cemiterio de Quendor!"/>
+	<announce delay="60000" type="event" message="Exercitos de criaturas feitas de ossos marcham para Quendor!"/>
+	<announce delay="100000" type="event" message="Quendor está sob ataques!"/>
+	
+	<!-- Quendor West Gate -->
+	<areaspawn delay="100000" centerx="2135" centery="1836" centerz="7" radius="30">
+		<monster name="Skeleton" minamount="18" maxamount="32"/>
+		<monster name="Skeleton Warrior" minamount="18" maxamount="32"/>
+		<monster name="Demon Skeleton" minamount="18" maxamount="24"/>
+	</areaspawn>
+	
+	<!-- Quendor North Gate -->
+	<areaspawn delay="100000" centerx="2202" centery="1763" centerz="7" radius="30">
+		<monster name="Skeleton" minamount="18" maxamount="32"/>
+		<monster name="Skeleton Warrior" minamount="18" maxamount="32"/>
+		<monster name="Demon Skeleton" minamount="18" maxamount="24"/>
+	</areaspawn>
+	
 </raid>

@@ -5,27 +5,15 @@
 	]]>
 	</script>
 
-<announce delay="0" type="event" message="For years the streght of the minotaurs ruled the World of Darghos. They want to show us their real power again. Be ready for anything."/>
-<announce delay="100000" type="event" message="The Minotaurs are entering in Quendor north brigde!"/>
+	<announce delay="0" type="event" message="Por anos os Minotauros dominaram o mundo do Darghos. Agora eles querem nos mostrar a sua força novamente. Se preparem para algo!"/>
+	<announce delay="100000" type="event" message="Um exercito de minotauros ataca o portão norte de Quendor!"/>
 
-<areaspawn delay="100000" centerx="1986" centery="1815" centerz="7" radius="20">
-<monster name="Minotaur" minamount="25" maxamount="35"/>
-</areaspawn>
-
-<areaspawn delay="100000" centerx="1986" centery="1814" centerz="7" radius="10">
-<monster name="Minotaur Guard" minamount="20" maxamount="15"/>
-</areaspawn>
-
-<areaspawn delay="100000" centerx="1987" centery="1815" centerz="7" radius="15">
-<monster name="Minotaur Archer" minamount="5" maxamount="10"/>
-</areaspawn>
-
-<areaspawn delay="100000" centerx="1986" centery="1825" centerz="7" radius="20">
-<monster name="Minotaur Guard" minamount="10" maxamount="20"/>
-</areaspawn>
-
-<areaspawn delay="100000" centerx="1987" centery="1826" centerz="7" radius="20">
-<monster name="Minotaur" minamount="20" maxamount="30"/>
-</areaspawn>
+	<!-- Quendor North Gate -->
+	<areaspawn delay="100000" centerx="2202" centery="1763" centerz="7" radius="30">
+		<monster name="Minotaur" minamount="18" maxamount="32"/>
+		<monster name="Minotaur Guard" minamount="18" maxamount="32"/>
+		<monster name="Minotaur Archer" minamount="18" maxamount="32"/>
+		<monster name="Minotaur Mage" minamount="12" maxamount="18"/>
+	</areaspawn>
 
 </raid>
