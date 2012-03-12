@@ -94,6 +94,7 @@ Game::Game()
 	lightState = LIGHT_STATE_DAY;
 
 	lastBucket = checkCreatureLastIndex = checkLightEvent = checkCreatureEvent = checkDecayEvent = saveEvent = 0;
+	checkWarsEvent = 0;
 }
 
 Game::~Game()
@@ -110,10 +111,12 @@ void Game::start(ServiceManager* servicer)
 		boost::bind(&Game::checkCreatures, this)));
 	checkLightEvent = Scheduler::getInstance().addEvent(createSchedulerTask(EVENT_LIGHTINTERVAL,
 		boost::bind(&Game::checkLight, this)));
+	checkWarsEvent = Scheduler::getInstance().addEvent(createSchedulerTask(EVENT_WARSINTERVAL,
+		boost::bind(&Game::checkWars, this)));
 
 #ifdef __DARGHOS_EMERGENCY_DDOS__
     boost::thread* thread = new boost::thread(boost::bind(&Game::emergencyDDoSLoop, this));
-#endif
+#endif		
 
 	services = servicer;
 	if(!g_config.getBool(ConfigManager::GLOBALSAVE_ENABLED) || g_config.getNumber(ConfigManager::GLOBALSAVE_H) < 1 ||
@@ -210,10 +213,11 @@ void Game::setGameState(GameState_t newState)
 				loadGameState();
 				g_globalEvents->startup();
 
-
 				IOBan::getInstance()->clearTemporials();
 				if(g_config.getBool(ConfigManager::INIT_PREMIUM_UPDATE))
 					IOLoginData::getInstance()->updatePremiumDays();
+
+				IOGuild::getInstance()->checkWars();
 				break;
 			}
 
@@ -302,7 +306,8 @@ void Game::saveGameState(bool shallow)
 		setGameState(GAMESTATE_NORMAL);
 
 	std::clog << "> SAVE: Complete in " << (OTSYS_TIME() - start) / (1000.) << " seconds using "
-		<< storage << " house storage." << std::endl;
+		<< asLowerCaseString(g_config.getString(ConfigManager::HOUSE_STORAGE))
+		<< " house storage." << std::endl;
 }
 
 int32_t Game::loadMap(std::string filename)
@@ -973,7 +978,10 @@ ReturnValue Game::placeSummon(Creature* creature, const std::string& name)
 	// Place the monster
 	creature->addSummon(monster);
 	if(placeCreature(monster, creature->getPosition(), true))
+	{
+		addMagicEffect(monster->getPosition(), MAGIC_EFFECT_TELEPORT);
 		return RET_NOERROR;
+	}
 
 	creature->removeSummon(monster);
 	return RET_NOTENOUGHROOM;
@@ -1006,6 +1014,9 @@ bool Game::removeCreature(Creature* creature, bool isLogout /*= true*/)
 	uint32_t i = 0;
 	for(it = list.begin(); it != list.end(); ++it)
 	{
+		if(creature != (*it))
+			(*it)->updateTileCache(tile);
+
 		if(!(player = (*it)->getPlayer()) || !player->canSeeCreature(creature))
 			continue;
 
@@ -1057,7 +1068,18 @@ bool Game::playerMoveThing(uint32_t playerId, const Position& fromPos,
 	}
 
 	if(Creature* movingCreature = thing->getCreature())
-        playerMoveCreature(playerId, movingCreature->getID(), movingCreature->getPosition(), toCylinder->getPosition(), g_config.getNumber(ConfigManager::PUSH_CREATURE_DELAY));
+	{
+		uint32_t delay = g_config.getNumber(ConfigManager::PUSH_CREATURE_DELAY);
+		if(Position::areInRange<1,1,0>(movingCreature->getPosition(), player->getPosition()) && delay > 0
+			&& !player->hasCustomFlag(PlayerCustomFlag_CanThrowAnywhere))
+		{
+			SchedulerTask* task = createSchedulerTask(delay, boost::bind(&Game::playerMoveCreature, this,
+                player->getID(), movingCreature->getID(), movingCreature->getPosition(), toCylinder->getPosition(), g_config.getNumber(ConfigManager::PUSH_CREATURE_DELAY)));
+			player->setNextActionTask(task);
+		}
+		else
+            playerMoveCreature(playerId, movingCreature->getID(), movingCreature->getPosition(), toCylinder->getPosition(), count);
+	}
 	else if(thing->getItem())
 		playerMoveItem(playerId, fromPos, spriteId, fromStackpos, toPos, count);
 
@@ -1150,7 +1172,6 @@ bool Game::playerMoveCreature(uint32_t playerId, uint32_t movingCreatureId,
 			return false;
 		}
 
-
 		if(!player->hasFlag(PlayerFlag_CanPushAllCreatures))
 		{
 #ifndef __DARGHOS_CUSTOM__
@@ -1160,6 +1181,16 @@ bool Game::playerMoveCreature(uint32_t playerId, uint32_t movingCreatureId,
 				return false;
 			}
 #endif
+
+			if(MagicField* field = toTile->getFieldItem())
+			{
+				if(field->isUnstepable() || field->isBlocking(movingCreature)
+					|| !movingCreature->isImmune(field->getCombatType()))
+				{
+					player->sendCancelMessage(RET_NOTPOSSIBLE);
+					return false;
+				}
+			}
 
 			uint32_t protectionLevel = g_config.getNumber(ConfigManager::PROTECTION_LEVEL);
 #ifdef __DARGHOS_CUSTOM__
@@ -1300,7 +1331,7 @@ ReturnValue Game::internalMoveCreature(Creature* creature, Direction direction, 
 			if((!(tmpTile = map->getTile(Position(currentPos.x, currentPos.y, currentPos.z - 1)))
 				|| (!tmpTile->ground && !tmpTile->hasProperty(BLOCKSOLID))) &&
 				(tmpTile = map->getTile(Position(destPos.x, destPos.y, destPos.z - 1)))
-				&& tmpTile->ground && !tmpTile->hasProperty(BLOCKSOLID))
+				&& tmpTile->ground && !tmpTile->hasProperty(BLOCKSOLID) && !tmpTile->hasProperty(FLOORCHANGEDOWN))
 			{
 				flags = flags | FLAG_IGNOREBLOCKITEM | FLAG_IGNOREBLOCKCREATURE;
 				destPos.z--;
@@ -1335,7 +1366,7 @@ ReturnValue Game::internalMoveCreature(Creature* actor, Creature* creature, Cyli
 	Cylinder* toCylinder, uint32_t flags/* = 0*/, bool forceTeleport/* = false*/)
 {
 	//check if we can move the creature to the destination
-	ReturnValue ret = toCylinder->__queryAdd(0, creature, 1, flags);
+	ReturnValue ret = toCylinder->__queryAdd(0, creature, 1, flags, actor);
 	if(ret != RET_NOERROR)
 		return ret;
 
@@ -1564,7 +1595,6 @@ bool Game::playerMoveItem(uint32_t playerId, const Position& fromPos,
 	if(ret == RET_NOERROR)
 		return true;
 #endif
-
 	player->sendCancelMessage(ret);
 	return false;
 }
@@ -1587,8 +1617,8 @@ ReturnValue Game::internalMoveItem(Creature* actor, Cylinder* fromCylinder, Cyli
 	int32_t floor = 0;
 	while((subCylinder = toCylinder->__queryDestination(index, item, &toItem, flags)) != toCylinder)
 	{
-		toCylinder = subCylinder;
 		flags = 0;
+		toCylinder = subCylinder;
 		//to prevent infinite loop
 		if(++floor >= MAP_MAX_LAYERS)
 			break;
@@ -1599,23 +1629,20 @@ ReturnValue Game::internalMoveItem(Creature* actor, Cylinder* fromCylinder, Cyli
 		return RET_NOERROR; //silently ignore move
 
 	//check if we can add this item
-	ReturnValue ret = toCylinder->__queryAdd(index, item, count, flags);
+	ReturnValue ret = toCylinder->__queryAdd(index, item, count, flags, actor);
 	if(ret == RET_NEEDEXCHANGE)
 	{
 		//check if we can add it to source cylinder
 		int32_t fromIndex = fromCylinder->__getIndexOfThing(item);
-
-		ret = fromCylinder->__queryAdd(fromIndex, toItem, toItem->getItemCount(), 0);
-		if(ret == RET_NOERROR)
+		if((ret = fromCylinder->__queryAdd(fromIndex, toItem, toItem->getItemCount(), 0, actor)) == RET_NOERROR)
 		{
 			//check how much we can move
 			uint32_t maxExchangeQueryCount = 0;
 			ReturnValue retExchangeMaxCount = fromCylinder->__queryMaxCount(-1, toItem, toItem->getItemCount(), maxExchangeQueryCount, 0);
-
 			if(retExchangeMaxCount != RET_NOERROR && maxExchangeQueryCount == 0)
 				return retExchangeMaxCount;
 
-			if((toCylinder->__queryRemove(toItem, toItem->getItemCount(), flags) == RET_NOERROR) && ret == RET_NOERROR)
+			if((toCylinder->__queryRemove(toItem, toItem->getItemCount(), flags, actor) == RET_NOERROR) && ret == RET_NOERROR)
 			{
 				int32_t oldToItemIndex = toCylinder->__getIndexOfThing(toItem);
 				toCylinder->__removeThing(toItem, toItem->getItemCount());
@@ -1628,7 +1655,7 @@ ReturnValue Game::internalMoveItem(Creature* actor, Cylinder* fromCylinder, Cyli
 				if(newToItemIndex != -1)
 					fromCylinder->postAddNotification(actor, toItem, toCylinder, newToItemIndex);
 
-				ret = toCylinder->__queryAdd(index, item, count, flags);
+				ret = toCylinder->__queryAdd(index, item, count, flags, actor);
 				toItem = NULL;
 			}
 		}
@@ -1643,25 +1670,24 @@ ReturnValue Game::internalMoveItem(Creature* actor, Cylinder* fromCylinder, Cyli
 	if(retMaxCount != RET_NOERROR && !maxQueryCount)
 		return retMaxCount;
 
-	uint32_t m = maxQueryCount, n = 0;
+	uint32_t m = maxQueryCount;
 	if(item->isStackable())
 		m = std::min((uint32_t)count, m);
 
 	Item* moveItem = item;
 	//check if we can remove this item
-	ret = fromCylinder->__queryRemove(item, m, flags);
-	if(ret != RET_NOERROR)
+	if((fromCylinder->__queryRemove(item, m, flags, actor)) != RET_NOERROR)
 		return ret;
 
 	//remove the item
 	int32_t itemIndex = fromCylinder->__getIndexOfThing(item);
 	fromCylinder->__removeThing(item, m);
-
 	bool isCompleteRemoval = item->isRemoved();
+
 	Item* updateItem = NULL;
-	//update item(s)
 	if(item->isStackable())
 	{
+		uint8_t n = 0;
 		if(toItem && toItem->getID() == item->getID())
 		{
 			n = std::min((uint32_t)100 - toItem->getItemCount(), m);
@@ -1678,8 +1704,7 @@ ReturnValue Game::internalMoveItem(Creature* actor, Cylinder* fromCylinder, Cyli
 			freeThing(item);
 	}
 
-	//add item
-	if(moveItem /*m - n > 0*/)
+	if(moveItem)
 		toCylinder->__addThing(actor, index, moveItem);
 
 	if(itemIndex != -1)
@@ -1715,7 +1740,7 @@ ReturnValue Game::internalMoveItem(Creature* actor, Cylinder* fromCylinder, Cyli
 }
 
 ReturnValue Game::internalAddItem(Creature* actor, Cylinder* toCylinder, Item* item, int32_t index /*= INDEX_WHEREEVER*/,
-	uint32_t flags /*= 0*/, bool test /*= false*/)
+	uint32_t flags/* = 0*/, bool test/* = false*/)
 {
 	uint32_t remainderCount = 0;
 	return internalAddItem(actor, toCylinder, item, index, flags, test, remainderCount);
@@ -1724,16 +1749,23 @@ ReturnValue Game::internalAddItem(Creature* actor, Cylinder* toCylinder, Item* i
 ReturnValue Game::internalAddItem(Creature* actor, Cylinder* toCylinder, Item* item, int32_t index,
 	uint32_t flags, bool test, uint32_t& remainderCount)
 {
+	Item* stackItem = NULL;
+	return internalAddItem(actor, toCylinder, item, index, flags, test, remainderCount, &stackItem);
+}
+
+ReturnValue Game::internalAddItem(Creature* actor, Cylinder* toCylinder, Item* item, int32_t index,
+	uint32_t flags, bool test, uint32_t& remainderCount, Item** stackItem)
+{
+	*stackItem = NULL;
 	remainderCount = 0;
 	if(!toCylinder || !item)
 		return RET_NOTPOSSIBLE;
 
 	Cylinder* destCylinder = toCylinder;
-	Item* toItem = NULL;
-	toCylinder = toCylinder->__queryDestination(index, item, &toItem, flags);
+	toCylinder = toCylinder->__queryDestination(index, item, stackItem, flags);
 
 	//check if we can add this item
-	ReturnValue ret = toCylinder->__queryAdd(index, item, item->getItemCount(), flags);
+	ReturnValue ret = toCylinder->__queryAdd(index, item, item->getItemCount(), flags, actor);
 	if(ret != RET_NOERROR)
 		return ret;
 
@@ -1745,6 +1777,7 @@ ReturnValue Game::internalAddItem(Creature* actor, Cylinder* toCylinder, Item* i
 	if(test)
 		return RET_NOERROR;
 
+	Item* toItem = *stackItem;
 	if(item->isStackable() && toItem)
 	{
 		uint32_t m = std::min((uint32_t)item->getItemCount(), maxQueryCount), n = 0;
@@ -1754,31 +1787,44 @@ ReturnValue Game::internalAddItem(Creature* actor, Cylinder* toCylinder, Item* i
 			toCylinder->__updateThing(toItem, toItem->getID(), toItem->getItemCount() + n);
 		}
 
-		if(m - n > 0)
+		uint32_t count = m - n;
+		if(count > 0)
 		{
-			if(m - n != item->getItemCount())
+			if(item->getItemCount() != count)
 			{
-				Item* remainderItem = Item::CreateItem(item->getID(), m - n);
-				if(internalAddItem(NULL, destCylinder, remainderItem, INDEX_WHEREEVER, flags, false) != RET_NOERROR)
+				Item* remainderItem = Item::CreateItem(item->getID(), count);
+				if((ret = internalAddItem(NULL, toCylinder, remainderItem, INDEX_WHEREEVER, flags, false)) == RET_NOERROR)
 				{
-					freeThing(remainderItem);
-					remainderCount = m - n;
+					if(item->getParent() != VirtualCylinder::virtualCylinder)
+					{
+						item->onRemoved();
+						freeThing(item);
+					}
+
+					return RET_NOERROR;
 				}
+
+				delete remainderItem;
+				remainderCount = count;
+				return ret;
 			}
 		}
-		else if(item->getParent() != VirtualCylinder::virtualCylinder)
+		else
 		{
-			item->onRemoved();
-			freeThing(item);
+			if(item->getParent() != VirtualCylinder::virtualCylinder)
+			{
+				item->onRemoved();
+				freeThing(item);
+			}
+
+			return RET_NOERROR;
 		}
 	}
-	else
-	{
-		toCylinder->__addThing(NULL, index, item);
-		int32_t itemIndex = toCylinder->__getIndexOfThing(item);
-		if(itemIndex != -1)
-			toCylinder->postAddNotification(actor, item, NULL, itemIndex);
-	}
+
+	toCylinder->__addThing(NULL, index, item);
+	int32_t itemIndex = toCylinder->__getIndexOfThing(item);
+	if(itemIndex != -1)
+		toCylinder->postAddNotification(actor, item, NULL, itemIndex);
 
 	return RET_NOERROR;
 }
@@ -1793,7 +1839,7 @@ ReturnValue Game::internalRemoveItem(Creature* actor, Item* item, int32_t count 
 		count = item->getItemCount();
 
 	//check if we can remove this item
-	ReturnValue ret = cylinder->__queryRemove(item, count, flags | FLAG_IGNORENOTMOVEABLE);
+	ReturnValue ret = cylinder->__queryRemove(item, count, flags | FLAG_IGNORENOTMOVEABLE, actor);
 	if(ret != RET_NOERROR)
 		return ret;
 
@@ -1823,18 +1869,28 @@ ReturnValue Game::internalRemoveItem(Creature* actor, Item* item, int32_t count 
 ReturnValue Game::internalPlayerAddItem(Creature* actor, Player* player, Item* item,
 	bool dropOnMap/* = true*/, slots_t slot/* = SLOT_WHEREEVER*/)
 {
-	uint32_t remainderCount = 0;
-	ReturnValue ret = internalAddItem(actor, player, item, (int32_t)slot, 0, false, remainderCount);
-	if(remainderCount > 0)
+	Item* toItem = NULL;
+	uint32_t remainderCount = 0, count = item->getItemCount();
+
+	ReturnValue ret = internalAddItem(actor, player, item, (int32_t)slot, 0, false, remainderCount, &toItem);
+	if(ret == RET_NOERROR)
+		return RET_NOERROR;
+
+	if(dropOnMap)
 	{
+		if(!remainderCount)
+			return internalAddItem(actor, player->getTile(), item, (int32_t)slot, FLAG_NOLIMIT);
+
 		Item* remainderItem = Item::CreateItem(item->getID(), remainderCount);
 		ReturnValue remainderRet = internalAddItem(actor, player->getTile(), remainderItem, INDEX_WHEREEVER, FLAG_NOLIMIT);
-		if(remainderRet != RET_NOERROR)
-			freeThing(remainderItem);
+		if(remainderRet == RET_NOERROR)
+			return RET_NOERROR;
+
+		delete remainderItem;
 	}
 
-	if(ret != RET_NOERROR && dropOnMap)
-		ret = internalAddItem(actor, player->getTile(), item, (int32_t)slot, FLAG_NOLIMIT);
+	if(remainderCount && toItem)
+		transformItem(toItem, toItem->getID(), (toItem->getItemCount() - (count - remainderCount)));
 
 	return ret;
 }
@@ -2108,9 +2164,19 @@ void Game::addMoney(Cylinder* cylinder, int64_t money, uint32_t flags /*= 0*/)
 
 		do
 		{
-			Item* remainItem = Item::CreateItem(it->second, std::min((int64_t)100, tmp));
-			if(internalAddItem(NULL, cylinder, remainItem, INDEX_WHEREEVER, flags) != RET_NOERROR)
-				internalAddItem(NULL, cylinder->getTile(), remainItem, INDEX_WHEREEVER, FLAG_NOLIMIT);
+			uint32_t remainderCount = 0;
+			Item* item = Item::CreateItem(it->second, std::min((int64_t)100, tmp));
+			if(internalAddItem(NULL, cylinder, item, INDEX_WHEREEVER, flags, false, remainderCount) != RET_NOERROR)
+			{
+				if(remainderCount)
+				{
+					delete item;
+					item = Item::CreateItem(it->second, remainderCount);
+				}
+
+				if(internalAddItem(NULL, cylinder->getTile(), item, INDEX_WHEREEVER, FLAG_NOLIMIT) != RET_NOERROR)
+					delete item;
+			}
 
 			tmp -= std::min((int64_t)100, tmp);
 		}
@@ -2141,6 +2207,7 @@ Item* Game::transformItem(Item* item, uint16_t newId, int32_t newCount /*= -1*/)
 
 	const ItemType& curType = Item::items[item->getID()];
 	const ItemType& newType = Item::items[newId];
+
 	if(curType.alwaysOnTop != newType.alwaysOnTop)
 	{
 		//This only occurs when you transform items on tiles from a downItem to a topItem (or vice versa)
@@ -2258,7 +2325,6 @@ ReturnValue Game::internalTeleport(Thing* thing, const Position& newPos, bool fo
 	return RET_NOTPOSSIBLE;
 }
 
-//Implementation of player invoked events
 bool Game::playerMove(uint32_t playerId, Direction dir)
 {
 	Player* player = getPlayerByID(playerId);
@@ -3031,7 +3097,7 @@ bool Game::playerRequestTrade(uint32_t playerId, const Position& pos, int16_t st
 	}
 
 	Container* tradeContainer = tradeItem->getContainer();
-	if(tradeContainer && tradeContainer->getItemHoldingCount() + 1 > 100)
+	if(tradeContainer && tradeContainer->getItemHoldingCount() + 1 > (uint32_t)g_config.getNumber(ConfigManager::TRADE_LIMIT))
 	{
 		player->sendTextMessage(MSG_INFO_DESCR, "You cannot trade more than 100 items.");
 		return false;
@@ -3585,7 +3651,7 @@ bool Game::playerLookAt(uint32_t playerId, const Position& pos, uint16_t spriteI
 #ifdef __DARGHOS_CUSTOM__
 				ss << std::endl << "IP: " << convertIPAddress(destPlayer->getIP()) << ", Ping: " << destPlayer->getCurrentPing() << "ms, Client: " << destPlayer->getClientVersion() << ".";
 #else
-                ss << std::endl << "IP: " << convertIPAddress(destPlayer->getIP()) << ", Client: " << destPlayer->getClientVersion() << ".";
+				ss << std::endl << "IP: " << convertIPAddress(destPlayer->getIP()) << ", Client: " << destPlayer->getClientVersion() << ".";
 #endif
 				if(destPlayer->isGhost())
 					ss << std::endl << "* Ghost mode *";
@@ -3648,8 +3714,8 @@ bool Game::playerSetAttackedCreature(uint32_t playerId, uint32_t creatureId)
 #ifdef __DARGHOS_CUSTOM__
         player->onTargetLost();
 #else
-        player->setAttackedCreature(NULL);
-        player->sendCancelTarget();
+		player->setAttackedCreature(NULL);
+		player->sendCancelTarget();
 #endif
 
 		return true;
@@ -3661,8 +3727,8 @@ bool Game::playerSetAttackedCreature(uint32_t playerId, uint32_t creatureId)
 #ifdef __DARGHOS_CUSTOM__
         player->onTargetLost();
 #else
-        player->setAttackedCreature(NULL);
-        player->sendCancelTarget();
+		player->setAttackedCreature(NULL);
+		player->sendCancelTarget();
 #endif
 
 		return false;
@@ -3677,7 +3743,7 @@ bool Game::playerSetAttackedCreature(uint32_t playerId, uint32_t creatureId)
         player->onTargetLost();
 #else
         player->setAttackedCreature(NULL);
-        player->sendCancelTarget();
+		player->sendCancelTarget();
 #endif
 		return false;
 	}
@@ -4211,8 +4277,8 @@ bool Game::getPathToEx(const Creature* creature, const Position& targetPos,
 }
 
 bool Game::getPathToEx(const Creature* creature, const Position& targetPos, std::list<Direction>& dirList,
-	uint32_t minTargetDist, uint32_t maxTargetDist, bool fullPathSearch /*= true*/,
-	bool clearSight /*= true*/, int32_t maxSearchDist /*= -1*/)
+	uint32_t minTargetDist, uint32_t maxTargetDist, bool fullPathSearch/* = true*/,
+	bool clearSight/* = true*/, int32_t maxSearchDist/* = -1*/)
 {
 	FindPathParams fpp;
 	fpp.fullPathSearch = fullPathSearch;
@@ -4381,13 +4447,13 @@ void Game::changeLight(const Creature* creature)
 	Player* tmpPlayer = NULL;
 	for(SpectatorVec::const_iterator it = list.begin(); it != list.end(); ++it)
 	{
-		if((tmpPlayer = (*it)->getPlayer()))
+		if((tmpPlayer = (*it)->getPlayer()) && !tmpPlayer->hasCustomFlag(PlayerCustomFlag_HasFullLight))
 			tmpPlayer->sendCreatureLight(creature);
 	}
 }
 
 bool Game::combatBlockHit(CombatType_t combatType, Creature* attacker, Creature* target,
-	int32_t& healthChange, bool checkDefense, bool checkArmor, bool isField)
+	int32_t& healthChange, bool checkDefense, bool checkArmor, bool field/* = false*/)
 {
 	if(healthChange > 0)
 		return false;
@@ -4397,24 +4463,30 @@ bool Game::combatBlockHit(CombatType_t combatType, Creature* attacker, Creature*
 	if(!target->isAttackable() || Combat::canDoCombat(attacker, target) != RET_NOERROR)
 	{
 		addMagicEffect(list, targetPos, MAGIC_EFFECT_POFF, target->isGhost());
+
 		return true;
 	}
 
 	int32_t damage = -healthChange;
-	BlockType_t blockType = target->blockHit(attacker, combatType, damage, checkDefense, checkArmor, !isField, isField);
+	BlockType_t blockType = target->blockHit(attacker, combatType,
+		damage, checkDefense, checkArmor, !field, field);
 
 	healthChange = -damage;
 	if(blockType == BLOCK_DEFENSE)
 	{
 		addMagicEffect(list, targetPos, MAGIC_EFFECT_POFF);
+
 		return true;
 	}
-	else if(blockType == BLOCK_ARMOR)
+
+	if(blockType == BLOCK_ARMOR)
 	{
 		addMagicEffect(list, targetPos, MAGIC_EFFECT_BLOCKHIT);
+
 		return true;
 	}
-	else if(blockType != BLOCK_IMMUNITY)
+
+	if(blockType != BLOCK_IMMUNITY)
 		return false;
 
 	MagicEffect_t effect = MAGIC_EFFECT_NONE;
@@ -4470,8 +4542,8 @@ bool Game::combatChangeHealth(CombatType_t combatType, Creature* attacker, Creat
                     p_target = target->getPlayerMaster();
 			}
 
-			//o target é um player, ou um summon de um player e com pvp ativo, e não é ele mesmo
-			//ou está na Battleground, e o target é um inimigo
+			//o target ï¿½ um player, ou um summon de um player e com pvp ativo, e nï¿½o ï¿½ ele mesmo
+			//ou estï¿½ na Battleground, e o target ï¿½ um inimigo
 			if(p_target
                 && ((!p_attacker->isInBattleground() && !p_attacker->isPvpEnabled() && p_target->isPvpEnabled() && p_target != p_attacker)
                 || (p_attacker->isInBattleground() && p_target->getBattlegroundTeam() != p_attacker->getBattlegroundTeam()))
@@ -4842,19 +4914,10 @@ void Game::addMagicEffect(const SpectatorVec& list, const Position& pos, uint8_t
 		return;
 
 	Player* player = NULL;
-	Creature* creature = NULL;
-
 	for(SpectatorVec::const_iterator it = list.begin(); it != list.end(); ++it)
 	{
-	    creature = (*it);
-
-	    if(!creature)
-            continue;
-
-		if(!(player = creature->getPlayer()))
-            continue;
-
-        player->sendMagicEffect(pos, effect);
+		if((player = (*it)->getPlayer()))
+			player->sendMagicEffect(pos, effect);
 	}
 }
 
@@ -5009,8 +5072,18 @@ void Game::checkLight()
 		LightInfo lightInfo;
 		getWorldLightInfo(lightInfo);
 		for(AutoList<Player>::iterator it = Player::autoList.begin(); it != Player::autoList.end(); ++it)
-			it->second->sendWorldLight(lightInfo);
+		{
+			if(!it->second->hasCustomFlag(PlayerCustomFlag_HasFullLight))
+				it->second->sendWorldLight(lightInfo);
+		}
 	}
+}
+
+void Game::checkWars()
+{
+	IOGuild::getInstance()->checkWars();
+	checkWarsEvent = Scheduler::getInstance().addEvent(createSchedulerTask(EVENT_WARSINTERVAL,
+		boost::bind(&Game::checkWars, this)));
 }
 
 void Game::getWorldLightInfo(LightInfo& lightInfo)
@@ -5097,7 +5170,7 @@ void Game::updateCreatureEmblem(Creature* creature)
 	}
 }
 
-void Game::updateCreatureImpassable(Creature* creature)
+void Game::updateCreatureWalkthrough(Creature* creature)
 {
 	const SpectatorVec& list = getSpectators(creature->getPosition());
 
@@ -5106,7 +5179,7 @@ void Game::updateCreatureImpassable(Creature* creature)
 	for(SpectatorVec::const_iterator it = list.begin(); it != list.end(); ++it)
 	{
 		if((tmpPlayer = (*it)->getPlayer()))
-			tmpPlayer->sendCreatureImpassable(creature);
+			tmpPlayer->sendCreatureWalkthrough(creature, (*it)->canWalkthrough(creature));
 	}
 }
 
@@ -6498,16 +6571,19 @@ void Game::freeThing(Thing* thing)
 void Game::showHotkeyUseMessage(Player* player, Item* item)
 {
 	const ItemType& it = Item::items[item->getID()];
-	uint32_t count = player->__getItemTypeCount(item->getID(), -1);
+	uint32_t count = player->__getItemTypeCount(item->getID(), item->isFluidContainer() ? item->getFluidType() : -1);
 
-	std::stringstream ss;
-	if(count == 1)
-		ss << "Using the last " << it.name.c_str() << "...";
+	std::stringstream stream;
+	if(!it.showCount)
+		stream << "Using one of " << it.name << "...";
+	else if(count == 1)
+		stream << "Using the last " << it.name.c_str() << "...";
 	else
-		ss << "Using one of " << count << " " << it.pluralName.c_str() << "...";
+		stream << "Using one of " << count << " " << it.pluralName.c_str() << "...";
 
-	player->sendTextMessage(MSG_INFO_DESCR, ss.str().c_str());
+	player->sendTextMessage(MSG_INFO_DESCR, stream.str().c_str());
 }
+
 
 #ifdef __DARGHOS_EMERGENCY_DDOS__
 void Game::emergencyDDoSLoop()
@@ -6546,13 +6622,13 @@ void Game::emergencyDDoSLoop()
             m_underDDoS = true;
             m_lastDDoS = time(NULL);
             std::clog << "[DDOS EMERGENCY] Current avarage RX packet per second " << avgPps << " is greater then limit " << g_config.getNumber(ConfigManager::DDOS_EMERGENCY_PPS_TO_ENABLE) << ". Emergency ENABLED." << std::endl;
-            broadcastMessage("Estamos tendo problemas de conexão. Para evitar prejuizos, nenhuma morte receberá qualquer tipo de penalidade até que nossa conexão se normalize.", MSG_STATUS_WARNING);
+            broadcastMessage("Estamos tendo problemas de conexï¿½o. Para evitar prejuizos, nenhuma morte receberï¿½ qualquer tipo de penalidade atï¿½ que nossa conexï¿½o se normalize.", MSG_STATUS_WARNING);
         }
         else if(m_underDDoS && avgPps < g_config.getNumber(ConfigManager::DDOS_EMERGENCY_PPS_TO_ENABLE) && time(NULL) >= m_lastDDoS + g_config.getNumber(ConfigManager::DDOS_EMERGENCY_MIN_TIME))
         {
             m_underDDoS = false;
             std::clog << "[DDOS EMERGENCY] Current avarage RX packet per second " << avgPps << " is fine. Emergency disabled." << std::endl;
-            broadcastMessage("Conexão normalizada. Penalidades nas mortes agora estão novamente validas. Obrigado pela sua compreensão e bom jogo.", MSG_STATUS_WARNING);
+            broadcastMessage("Conexï¿½o normalizada. Penalidades nas mortes agora estï¿½o novamente validas. Obrigado pela sua compreensï¿½o e bom jogo.", MSG_STATUS_WARNING);
         }
 
         lastRxPackets = currentRxPackets;

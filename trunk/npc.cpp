@@ -24,7 +24,7 @@
 
 #include "npc.h"
 #include "tools.h"
-
+ 
 #include "luascript.h"
 #include "position.h"
 
@@ -37,7 +37,7 @@
 extern ConfigManager g_config;
 extern Game g_game;
 extern Spells* g_spells;
-
+ 
 AutoList<Npc> Npc::autoList;
 #ifdef __ENABLE_SERVER_DIAGNOSTIC__
 uint32_t Npc::npcCount = 0;
@@ -48,26 +48,26 @@ void Npcs::reload()
 {
 	for(AutoList<Npc>::iterator it = Npc::autoList.begin(); it != Npc::autoList.end(); ++it)
 		it->second->closeAllShopWindows();
-
+ 
 	delete Npc::m_interface;
 	Npc::m_interface = NULL;
 	for(AutoList<Npc>::iterator it = Npc::autoList.begin(); it != Npc::autoList.end(); ++it)
 		it->second->reload();
 }
-
+ 
 Npc* Npc::createNpc(const std::string& name)
 {
 	Npc* npc = new Npc(name);
 	if(!npc)
 		return NULL;
-
+ 
 	if(npc->load())
 		return npc;
 
 	delete npc;
 	return NULL;
 }
-
+ 
 Npc::Npc(const std::string& _name):
 	Creature()
 {
@@ -86,7 +86,7 @@ Npc::Npc(const std::string& _name):
 	loaded = false;
 	reset();
 }
-
+ 
 Npc::~Npc()
 {
 	reset();
@@ -94,12 +94,12 @@ Npc::~Npc()
 	npcCount--;
 #endif
 }
-
+ 
 bool Npc::load()
 {
 	if(isLoaded())
 		return true;
-
+ 
 	reset();
 	if(!m_interface)
 	{
@@ -107,7 +107,7 @@ bool Npc::load()
 		m_interface->loadFile(getFilePath(FILE_TYPE_OTHER, "npc/lib/npc.lua"));
 		m_interface->loadFile(getFilePath(FILE_TYPE_OTHER, "npc/lib/npcsystem/main.lua"));
 	}
-
+ 
 	loaded = loadFromXml(m_filename);
 	return isLoaded();
 }
@@ -135,7 +135,7 @@ void Npc::reset()
 
 	for(StateList::iterator it = stateList.begin(); it != stateList.end(); ++it)
 		delete *it;
-
+ 
 	responseList.clear();
 	stateList.clear();
 	queueList.clear();
@@ -145,7 +145,7 @@ void Npc::reset()
 	shopPlayerList.clear();
 	voiceList.clear();
 }
-
+ 
 void Npc::reload()
 {
 	reset();
@@ -153,7 +153,7 @@ void Npc::reload()
 	//Simulate that the creature is placed on the map again.
 	if(m_npcEventHandler)
 		m_npcEventHandler->onCreatureAppear(this);
-
+ 
 	if(walkTicks > 0)
 		addEventWalk();
 }
@@ -175,12 +175,12 @@ bool Npc::loadFromXml(const std::string& filename)
 		xmlFreeDoc(doc);
 		return false;
 	}
-
+ 
 	int32_t intValue;
 	std::string strValue, scriptfile;
 	if(readXMLString(root, "script", strValue))
 		scriptfile = strValue;
-
+ 
 	if(readXMLString(root, "name", strValue))
 		name = strValue;
 
@@ -190,7 +190,7 @@ bool Npc::loadFromXml(const std::string& filename)
 
 	if(readXMLString(root, "hidename", strValue) || readXMLString(root, "hideName", strValue))
 		hideName = booleanString(strValue);
-
+ 
 	if(readXMLString(root, "hidehealth", strValue) || readXMLString(root, "hideHealth", strValue))
 		hideHealth = booleanString(strValue);
 
@@ -2194,7 +2194,7 @@ const NpcResponse* Npc::getResponse(const ResponseList& list, const Player* play
 		if((*it)->getInteractType() == INTERACT_EVENT)
 		{
 			if((*it)->getInputText() == asLowerCaseString(text))
-                ++matchCount;
+				++matchCount;
 			else
 				matchCount = 0;
 		}
@@ -2210,8 +2210,6 @@ const NpcResponse* Npc::getResponse(const ResponseList& list, const Player* play
 				matchWordCount -= (totalKeywordCount - matchAllCount - matchWordCount);
 				//Total "points" for this response, word matches are worth more
 				matchCount += matchWordCount * 100000;
-				
-				//std::clog << "npc: " << this->getName() << " player: "  << player->getName() << " msg: " << textString << std::endl;
 			}
 			else
 				matchCount = 0;
@@ -2810,11 +2808,7 @@ int32_t NpcScript::luaCloseShopWindow(lua_State* L)
 		return 1;
 	}
 
-	int32_t onBuy, onSell;
-	Npc* merchant = player->getShopOwner(onBuy, onSell);
-	if(merchant == npc)
-		player->closeShopWindow(true, npc, onBuy, onSell);
-
+	player->closeShopWindow();
 	lua_pushboolean(L, true);
 	return 1;
 }
@@ -2947,9 +2941,11 @@ void NpcEvents::onCreatureSay(const Creature* creature, SpeakClasses type, const
 		ScriptEnviroment* env = m_interface->getEnv();
 		lua_State* L = m_interface->getState();
 
-		//#ifdef __DEBUG_LUASCRIPTS__
-		//std::clog << "npc: " << m_npc->getName() << " player: "  << creature->getName() << " msg: " << text.c_str() << std::endl;
-		//#endif
+		#ifdef __DEBUG_LUASCRIPTS__
+		std::stringstream desc;
+		desc << "npc " << m_npc->getName();
+		env->setEvent(desc.str());
+		#endif
 
 		env->setScriptId(m_onCreatureSay, m_interface);
 		env->setRealPos(m_npc->getPosition());

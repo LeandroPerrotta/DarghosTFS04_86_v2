@@ -31,7 +31,8 @@ enum cylinderflags_t
 	FLAG_CHILDISOWNER = 8,			//Used by containers to query capacity of the carrier (player)
 	FLAG_PATHFINDING = 16,			//An additional check is done for floor changing/teleport items
 	FLAG_IGNOREFIELDDAMAGE = 32,	//Bypass field damage checks
-	FLAG_IGNORENOTMOVEABLE = 64		//Bypass check for movability
+	FLAG_IGNORENOTMOVEABLE = 64,	//Bypass check for movability
+	FLAG_IGNOREAUTOSTACK = 128		//__queryDestination will not try to stack items together
 };
 
 enum cylinderlink_t
@@ -69,7 +70,7 @@ class Cylinder
 		  * \returns ReturnValue holds the return value
 		  */
 		virtual ReturnValue __queryAdd(int32_t index, const Thing* Item, uint32_t count,
-			uint32_t flags) const = 0;
+			uint32_t flags, Creature* actor = NULL) const = 0;
 
 		/**
 		  * Query the cylinder how much it can accept
@@ -91,7 +92,7 @@ class Cylinder
 		  * \param flags optional flags to modifiy the default behaviour
 		  * \returns ReturnValue holds the return value
 		  */
-		virtual ReturnValue __queryRemove(const Thing* thing, uint32_t count, uint32_t flags) const = 0;
+		virtual ReturnValue __queryRemove(const Thing* thing, uint32_t count, uint32_t flags, Creature* actor = NULL) const = 0;
 
 		/**
 		  * Query the destination cylinder
@@ -241,11 +242,11 @@ class VirtualCylinder : public Cylinder
 		virtual const Creature* getCreature() const {return NULL;}
 
 		virtual ReturnValue __queryAdd(int32_t, const Thing*, uint32_t,
-			uint32_t) const {return RET_NOTPOSSIBLE;}
+			uint32_t, Creature* = NULL) const {return RET_NOTPOSSIBLE;}
 		virtual ReturnValue __queryMaxCount(int32_t, const Thing*, uint32_t,
 			uint32_t&, uint32_t) const {return RET_NOTPOSSIBLE;}
 		virtual ReturnValue __queryRemove(const Thing* thing, uint32_t,
-			uint32_t) const {return (thing->getParent() == this ? RET_NOERROR : RET_NOTPOSSIBLE);}
+			uint32_t, Creature* = NULL) const {return (thing->getParent() == this ? RET_NOERROR : RET_NOTPOSSIBLE);}
 		virtual Cylinder* __queryDestination(int32_t&, const Thing*, Item**,
 			uint32_t&) {return NULL;}
 

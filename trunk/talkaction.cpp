@@ -139,7 +139,6 @@ bool TalkActions::onPlayerSay(Creature* creature, uint16_t channelId, const std:
 #endif
 {
 	std::string cmd[TALKFILTER_LAST] = words, param[TALKFILTER_LAST] = "";
-
 	std::string::size_type loc = words.find('"', 0);
 	if(loc != std::string::npos)
 	{
@@ -188,7 +187,7 @@ bool TalkActions::onPlayerSay(Creature* creature, uint16_t channelId, const std:
 	Player* player = creature->getPlayer();
 	if(player && talkAction->getChannel() != -1 && talkAction->getChannel() != channelId)
 	{
-		player->sendCancel("Você não pode digitar este comando neste canal.");
+		player->sendCancel("Vocï¿½ nï¿½o pode digitar este comando neste canal.");
 		return true;
 	}
 #endif
@@ -219,7 +218,7 @@ bool TalkActions::onPlayerSay(Creature* creature, uint16_t channelId, const std:
 #ifdef __DARGHOS_CUSTOM__
 		return (talkAction->executeSay(creature, cmd[talkAction->getFilter()], param[talkAction->getFilter()], channelId, type));
 #else
-        return (talkAction->executeSay(creature, cmd[talkAction->getFilter()], param[talkAction->getFilter()], channelId));
+		return talkAction->executeSay(creature, cmd[talkAction->getFilter()], param[talkAction->getFilter()], channelId);
 #endif
 
 	if(TalkFunction* function = talkAction->getFunction())
@@ -349,7 +348,7 @@ int32_t TalkAction::executeSay(Creature* creature, const std::string& words, std
 #ifdef __DARGHOS_CUSTOM__
 	//onSay(cid, words, param, channel, type)
 #else
-    //onSay(cid, words, param, channel)
+	//onSay(cid, words, param, channel)
 #endif
 	if(m_interface->reserveEnv())
 	{
@@ -402,7 +401,7 @@ int32_t TalkAction::executeSay(Creature* creature, const std::string& words, std
 
             bool result = m_interface->callFunction(5);
             #else
-            bool result = m_interface->callFunction(4);
+			bool result = m_interface->callFunction(4);
             #endif
 			m_interface->releaseEnv();
 			return result;
@@ -810,8 +809,8 @@ bool TalkAction::guildCreate(Creature* creature, const std::string&, const std::
 		return true;
 	}
 
-	uint32_t minLength = g_config.getNumber(ConfigManager::MIN_GUILDNAME),
-		maxLength = g_config.getNumber(ConfigManager::MAX_GUILDNAME);
+	const uint32_t minLength = g_config.getNumber(ConfigManager::MIN_GUILDNAME);
+	const uint32_t maxLength = g_config.getNumber(ConfigManager::MAX_GUILDNAME);
 	if(param_.length() < minLength)
 	{
 		player->sendCancel("That guild name is too short, please select a longer name.");
@@ -891,11 +890,11 @@ bool TalkAction::thingProporties(Creature* creature, const std::string&, const s
 		toLowerCaseString(action);
 		if(Item* item = thing->getItem())
 		{
-			if(action == "set")
+			if(action == "set" || action == "add" || action == "new")
 			{
 				std::string type = parseParams(it, tokens.end()), key = parseParams(it,
 					tokens.end()), value = parseParams(it, tokens.end());
-				if(type == "integer" || type == "number" || type == "int")
+				if(type == "integer" || type == "number" || type == "int" || type == "num")
 					item->setAttribute(key, atoi(value.c_str()));
 				else if(type == "float" || type == "double")
 					item->setAttribute(key, (float)atof(value.c_str()));
@@ -904,7 +903,7 @@ bool TalkAction::thingProporties(Creature* creature, const std::string&, const s
 				else
 					item->setAttribute(key, value);
 			}
-			else if(action == "erase" || action == "remove")
+			else if(action == "erase" || action == "remove" || action == "delete")
 				item->eraseAttribute(parseParams(it, tokens.end()));
 			else if(action == "action" || action == "actionid" || action == "aid")
 			{
@@ -952,7 +951,10 @@ bool TalkAction::thingProporties(Creature* creature, const std::string&, const s
 			else if(action == "lossskill")
 				_creature->setLossSkill(booleanString(parseParams(it, tokens.end())));
 			else if(action == "cannotmove")
+			{
 				_creature->setNoMove(booleanString(parseParams(it, tokens.end())));
+				_creature->onWalkAborted();
+			}
 			else if(action == "skull")
 			{
 				_creature->setSkull(getSkulls(parseParams(it, tokens.end())));
@@ -1013,7 +1015,7 @@ bool TalkAction::thingProporties(Creature* creature, const std::string&, const s
 #ifdef __DARGHOS_CUSTOM__
 					g_talkActions->onPlayerSay(_player, atoi(parseParams(it, tokens.end()).c_str()), (SpeakClasses)atoi(parseParams(it, tokens.end()).c_str()),
 #else
-                    g_talkActions->onPlayerSay(_player, atoi(parseParams(it, tokens.end()).c_str()),
+					g_talkActions->onPlayerSay(_player, atoi(parseParams(it, tokens.end()).c_str()),
 #endif
 						parseParams(it, tokens.end()), booleanString(parseParams(it, tokens.end())));
 				else if(action == "saving" || action == "save")

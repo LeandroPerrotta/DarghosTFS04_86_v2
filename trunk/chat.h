@@ -106,6 +106,8 @@ class PrivateChatChannel : public ChatChannel
 
 		void closeChannel();
 
+		const InvitedToGuildsList& getInvitedUsers() {return m_invites;}
+
 	protected:
 		InviteList m_invites;
 		uint32_t m_owner;

@@ -26,7 +26,7 @@
 #include "position.h"
 #include <libxml/parser.h>
 
-#define ITEMS 11500
+#define ITEMS 12660
 #define SLOTP_WHEREEVER 0xFFFFFFFF
 #define SLOTP_HEAD 1 << 0
 #define	SLOTP_NECKLACE 1 << 1
@@ -73,6 +73,7 @@ enum FloorChange_t
 	CHANGE_SOUTH_EX = 7,
 	CHANGE_WEST_EX = 8,
 	CHANGE_NONE = 9,
+	CHANGE_PRE_LAST = 8,
 	CHANGE_LAST = CHANGE_NONE
 };
 

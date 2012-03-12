@@ -95,6 +95,7 @@ bool Raids::parseRaidNode(xmlNodePtr raidNode, bool checkDuplicate, FileType_t p
 	bool enabled = true;
 	if(readXMLString(raidNode, "enabled", strValue))
 		enabled = booleanString(strValue);
+
 #ifdef __DARGHOS_CUSTOM__
 	Raid* raid = new Raid(name, interval, margin, refType, ref, enabled, clearOnEnd);
 #else

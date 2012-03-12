@@ -177,9 +177,9 @@ int32_t Items::loadFromOtb(std::string file)
 		std::clog << "[Error - Items::loadFromOtb] New version detected, an older version of items.otb is required." << std::endl;
 		return ERROR_INVALID_FORMAT;
 	}
-	else if(Items::dwMinorVersion != CLIENT_VERSION_860)
+	else if(!g_config.getBool(ConfigManager::SKIP_ITEMS_VERSION) && Items::dwMinorVersion != CLIENT_VERSION_860)
 	{
-		std::clog << "[Error - Items::loadFromOtb] The (client) version " << Items::dwMinorVersion << " of your items.otb are invalid. Another version is required." << std::endl;
+		std::clog << "[Error - Items::loadFromOtb] Another (client) version of items.otb is required." << std::endl;
 		return ERROR_INVALID_FORMAT;
 	}
 
@@ -1100,7 +1100,6 @@ void Items::parseItemNode(xmlNodePtr itemNode, uint32_t id)
 			if(readXMLInteger(itemAttributesNode, "value", intValue))
 				it.abilities.increment[HEALING_PERCENT] = intValue;
 		}
-#ifdef __DARGHOS_CUSTOM__
 		else if(tmpStrValue == "fieldabsorbpercentenergy")
 		{
 			if(readXMLInteger(itemAttributesNode, "value", intValue))
@@ -1116,7 +1115,6 @@ void Items::parseItemNode(xmlNodePtr itemNode, uint32_t id)
 			if(readXMLInteger(itemAttributesNode, "value", intValue))
 				it.abilities.fieldAbsorb[COMBAT_EARTHDAMAGE] += intValue;
 		}
-#endif
 		else if(tmpStrValue == "absorbpercentall")
 		{
 			if(readXMLInteger(itemAttributesNode, "value", intValue))

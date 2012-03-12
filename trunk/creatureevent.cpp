@@ -117,7 +117,7 @@ bool CreatureEvents::playerLogin(Player* player)
 bool CreatureEvents::playerLogout(Player* player, bool forceLogout)
 {
 	#ifdef __DARGHOS_PVP__
-	// em teoria um player nunca conseguiria deslogar dentro de uma battleground, mas.. vai saber se por acidente alguem dá um /closeserver nao é verdade?
+	// em teoria um player nunca conseguiria deslogar dentro de uma battleground, mas.. vai saber se por acidente alguem dï¿½ um /closeserver nao ï¿½ verdade?
 	if(player->isInBattleground())
 	{
 		g_battleground.kickPlayer(player, true);
@@ -358,11 +358,7 @@ std::string CreatureEvent::getScriptEventParams() const
 		case CREATURE_EVENT_CAST:
 			return "cid, target";
 		case CREATURE_EVENT_KILL:
-#ifndef __WAR_SYSTEM__
-			return "cid, target, damage, flags";
-#else
 			return "cid, target, damage, flags, war";
-#endif
 		case CREATURE_EVENT_DEATH:
 			return "cid, corpse, deathList";
 		case CREATURE_EVENT_PREPAREDEATH:
@@ -1464,9 +1460,7 @@ uint32_t CreatureEvent::executeKill(Creature* creature, Creature* target, const 
 			scriptstream << "local target = " << env->addThing(target) << std::endl;
 			scriptstream << "local damage = " << entry.getDamage() << std::endl;
 			scriptstream << "local flags = " << flags << std::endl;
-#ifdef __WAR_SYSTEM__
 			scriptstream << "local war = " << entry.getWar().war << std::endl;
-#endif
 
 			scriptstream << m_scriptData;
 			bool result = true;
@@ -1498,14 +1492,9 @@ uint32_t CreatureEvent::executeKill(Creature* creature, Creature* target, const 
 
 			lua_pushnumber(L, entry.getDamage());
 			lua_pushnumber(L, flags);
-#ifndef __WAR_SYSTEM__
-
-			bool result = m_interface->callFunction(4);
-#else
 			lua_pushnumber(L, entry.getWar().war);
 
 			bool result = m_interface->callFunction(5);
-#endif
 			m_interface->releaseEnv();
 			return result;
 		}

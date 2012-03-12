@@ -224,7 +224,7 @@ bool DBInsert::addRow(const std::string& row)
 
     }
 #else
-    if(!m_multiLine) // executes INSERT for current row
+	if(!m_multiLine) // executes INSERT for current row
 		return m_db->query(m_query + "(" + row + ")");
 #endif
 
@@ -236,14 +236,12 @@ bool DBInsert::addRow(const std::string& row)
 	else if(size > 8192)
 	{
 		if(!execute())
-            return false;
+			return false;
 
 		m_buf = "(" + row + ")";
 	}
 	else
 		m_buf += ",(" + row + ")";
-
-
 
 	return true;
 }

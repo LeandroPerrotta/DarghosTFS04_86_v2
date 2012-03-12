@@ -21,6 +21,7 @@
 
 #define __OTPCH__
 #if defined WINDOWS
+#include <boost/asio/detail/socket_types.hpp>
 #include <winerror.h>
 #endif
 

@@ -35,7 +35,7 @@ class Npcs
 		void reload();
 };
 
-struct NpcState;
+class NpcState;
 class NpcScript : public LuaInterface
 {
 	public:

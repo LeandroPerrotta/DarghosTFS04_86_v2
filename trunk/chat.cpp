@@ -567,9 +567,8 @@ bool Chat::talkToChannel(Player* player, SpeakClasses type, const std::string& t
 	{
 		if(player->getGuildLevel() == GUILDLEVEL_LEADER)
 		{
-			uint32_t guildId = player->getGuildId();
+			IOGuild::getInstance()->disbandGuild(player->getGuildId());
 			channel->talk(player, SPEAK_CHANNEL_W, "The guild has been disbanded.");
-			IOGuild::getInstance()->disbandGuild(guildId);
 		}
 		else
 			player->sendCancel("You are not the leader of your guild.");
@@ -582,6 +581,7 @@ bool Chat::talkToChannel(Player* player, SpeakClasses type, const std::string& t
 			{
 				std::string param = text.substr(8);
 				trimString(param);
+
 				Player* paramPlayer = NULL;
 				if(g_game.getPlayerByNameWildcard(param, paramPlayer) == RET_NOERROR)
 				{
@@ -591,6 +591,7 @@ bool Chat::talkToChannel(Player* player, SpeakClasses type, const std::string& t
 						{
 							sprintf(buffer, "%s has invited you to join the guild, %s. You may join this guild by writing: !joinguild %s", player->getName().c_str(), player->getGuildName().c_str(), player->getGuildName().c_str());
 							paramPlayer->sendTextMessage(MSG_INFO_DESCR, buffer);
+
 							sprintf(buffer, "%s has invited %s to the guild.", player->getName().c_str(), paramPlayer->getName().c_str());
 							channel->talk(player, SPEAK_CHANNEL_W, buffer);
 							paramPlayer->invitedToGuildsList.push_back(player->getGuildId());
@@ -637,18 +638,14 @@ bool Chat::talkToChannel(Player* player, SpeakClasses type, const std::string& t
 	{
 		if(player->getGuildLevel() < GUILDLEVEL_LEADER)
 		{
-#ifdef __WAR_SYSTEM__
 			if(!player->hasEnemy())
 			{
-#endif
 				sprintf(buffer, "%s has left the guild.", player->getName().c_str());
 				channel->talk(player, SPEAK_CHANNEL_W, buffer);
 				player->leaveGuild();
-#ifdef __WAR_SYSTEM__
 			}
 			else
 				player->sendCancel("Your guild is currently at war, you cannot leave it right now.");
-#endif
 		}
 		else
 			player->sendCancel("You cannot leave your guild because you are the leader of it, you have to pass the leadership to another member of your guild or disband the guild.");
@@ -661,6 +658,7 @@ bool Chat::talkToChannel(Player* player, SpeakClasses type, const std::string& t
 			{
 				std::string param = text.substr(8);
 				trimString(param);
+
 				Player* paramPlayer = NULL;
 				if(g_game.getPlayerByNameWildcard(param, paramPlayer) == RET_NOERROR)
 				{
@@ -671,6 +669,7 @@ bool Chat::talkToChannel(Player* player, SpeakClasses type, const std::string& t
 						{
 							sprintf(buffer, "%s has revoked your invite to %s guild.", player->getName().c_str(), (player->getSex(false) ? "his" : "her"));
 							paramPlayer->sendTextMessage(MSG_INFO_DESCR, buffer);
+
 							sprintf(buffer, "%s has revoked the guildinvite of %s.", player->getName().c_str(), paramPlayer->getName().c_str());
 							channel->talk(player, SPEAK_CHANNEL_W, buffer);
 							paramPlayer->invitedToGuildsList.erase(it);
@@ -732,6 +731,7 @@ bool Chat::talkToChannel(Player* player, SpeakClasses type, const std::string& t
 
 			param = text.substr(length);
 			trimString(param);
+
 			Player* paramPlayer = NULL;
 			if(g_game.getPlayerByNameWildcard(param, paramPlayer) == RET_NOERROR)
 			{
@@ -777,6 +777,7 @@ bool Chat::talkToChannel(Player* player, SpeakClasses type, const std::string& t
 									{
 										paramPlayer->setGuildLevel(GUILDLEVEL_LEADER);
 										player->setGuildLevel(GUILDLEVEL_VICE);
+
 										IOGuild::getInstance()->updateOwnerId(paramPlayer->getGuildId(), paramPlayer->getGUID());
 										sprintf(buffer, "%s has passed the guild leadership to %s.", player->getName().c_str(), paramPlayer->getName().c_str());
 										channel->talk(player, SPEAK_CHANNEL_W, buffer);
@@ -794,18 +795,14 @@ bool Chat::talkToChannel(Player* player, SpeakClasses type, const std::string& t
 							{
 								if(player->getGuildLevel() > paramPlayer->getGuildLevel())
 								{
-#ifdef __WAR_SYSTEM__
 									if(!player->hasEnemy())
 									{
-#endif
 										sprintf(buffer, "%s has been kicked from the guild by %s.", paramPlayer->getName().c_str(), player->getName().c_str());
 										channel->talk(player, SPEAK_CHANNEL_W, buffer);
 										paramPlayer->leaveGuild();
-#ifdef __WAR_SYSTEM__
 									}
 									else
 										player->sendCancel("Your guild is currently at war, you cannot kick right now.");
-#endif
 								}
 								else
 									player->sendCancel("You may only kick players with a guild rank below your.");
@@ -864,6 +861,7 @@ bool Chat::talkToChannel(Player* player, SpeakClasses type, const std::string& t
 								{
 									IOGuild::getInstance()->setGuildLevel(guid, GUILDLEVEL_LEADER);
 									player->setGuildLevel(GUILDLEVEL_VICE);
+
 									sprintf(buffer, "%s has passed the guild leadership to %s.", player->getName().c_str(), param.c_str());
 									channel->talk(player, SPEAK_CHANNEL_W, buffer);
 								}
@@ -901,6 +899,7 @@ bool Chat::talkToChannel(Player* player, SpeakClasses type, const std::string& t
 			std::string param1 = params[0], param2 = params[1];
 			trimString(param1);
 			trimString(param2);
+
 			Player* paramPlayer = NULL;
 			if(g_game.getPlayerByNameWildcard(param1, paramPlayer) == RET_NOERROR)
 			{
@@ -1003,6 +1002,7 @@ bool Chat::talkToChannel(Player* player, SpeakClasses type, const std::string& t
 			std::string param1 = params[0], param2 = params[1];
 			trimString(param1);
 			trimString(param2);
+
 			if(player->getGuildLevel() == GUILDLEVEL_LEADER)
 			{
 				if(param2.length() > 2)

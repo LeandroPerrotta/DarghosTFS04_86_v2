@@ -318,7 +318,7 @@ bool MoveEvents::registerEvent(Event* event, xmlNodePtr p, bool override)
 			std::clog << "[Warning - MoveEvents::registerEvent] Malformed entry (from unique: \"" << strValue << "\", to unique: \"" << endStrValue << "\")" << std::endl;
 	}
 
-	if(readXMLString(p, "actionid", strValue))
+	if(readXMLString(p, "actionid", strValue) || readXMLString(p, "aid", strValue))
 	{
 		strVector = explodeString(strValue, ";");
 		for(StringVec::iterator it = strVector.begin(); it != strVector.end(); ++it)

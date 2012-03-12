@@ -35,9 +35,9 @@
 
 #define VERSION_CHECK "http://forgottenserver.otland.net/version.xml"
 #define VERSION_PATCH 0
-#define VERSION_TIMESTAMP 1306168107
+#define VERSION_TIMESTAMP 1318041256
 #define VERSION_BUILD 0
-#define VERSION_DATABASE 25
+#define VERSION_DATABASE 28
 
 #undef MULTI_SQL_DRIVERS
 #define SQL_DRIVERS __USE_SQLITE__+__USE_MYSQL__+__USE_PGSQL__
@@ -54,6 +54,7 @@
 #define CRYPTOPP_DEFAULT_NO_DLL
 
 #define BOOST_ASIO_ENABLE_CANCELIO 1
+#define BOOST_FILESYSTEM_VERSION 2
 #ifdef _MSC_VER
 	#define __PRETTY_FUNCTION__ __FUNCDNAME__
 	#ifndef NOMINMAX
@@ -90,7 +91,7 @@
 
 	#pragma warning(disable:4786) // msvc too long debug names in stl
 	#pragma warning(disable:4250) // 'class1' : inherits 'class2::member' via dominance
-	//#pragma warning(disable:4244)
+	#pragma warning(disable:4244)
 	#pragma warning(disable:4267)
 	#pragma warning(disable:4018)
 	#pragma warning(disable:4309)

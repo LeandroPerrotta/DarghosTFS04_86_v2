@@ -180,13 +180,13 @@ int32_t getch()
 	struct termios oldt;
 	tcgetattr(STDIN_FILENO, &oldt);
 
-	struct termios newt = oldt;
-	newt.c_lflag &= ~(ICANON | ECHO);
-	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+	struct termios newt = oldt; 
+	newt.c_lflag &= ~(ICANON | ECHO);  
+	tcsetattr(STDIN_FILENO, TCSANOW, &newt); 
 
-	int32_t ch = getchar();
-	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-	return ch;
+	int32_t ch = getchar();  
+	tcsetattr(STDIN_FILENO, TCSANOW, &oldt); 
+	return ch; 
 }
 
 void signalHandler(int32_t sig)
@@ -487,6 +487,7 @@ void otserv(StringVec, ServiceManager* services)
 		boost::this_thread::sleep(boost::posix_time::seconds(30));
 	}
 
+    /*
 	std::clog << ">> Checking software version...";
 	if(xmlDocPtr doc = xmlParseFile(VERSION_CHECK))
 	{
@@ -548,6 +549,8 @@ void otserv(StringVec, ServiceManager* services)
 	}
 	else
 		std::clog << "failed - could not parse remote file (are you connected to any network?)" << std::endl;
+
+    */
 
 	std::clog << ">> Loading RSA key" << std::endl;
 

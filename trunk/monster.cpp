@@ -295,10 +295,7 @@ bool Monster::isFriend(const Creature* creature)
 
 	const Player* masterPlayer = master->getPlayer();
 	return tmpPlayer && (tmpPlayer == masterPlayer || masterPlayer->isPartner(tmpPlayer)
-#ifdef __WAR_SYSTEM__
-		|| masterPlayer->isAlly(tmpPlayer)
-#endif
-		);
+		|| masterPlayer->isAlly(tmpPlayer));
 }
 
 bool Monster::isOpponent(const Creature* creature)
@@ -465,9 +462,9 @@ void Monster::onFollowCreatureComplete(const Creature* creature)
 }
 
 BlockType_t Monster::blockHit(Creature* attacker, CombatType_t combatType, int32_t& damage,
-	bool checkDefense/* = false*/, bool checkArmor/* = false*/, bool /*reflect = true*/, bool isField /*= false*/)
+	bool checkDefense/* = false*/, bool checkArmor/* = false*/, bool/* reflect = true*/, bool/* field = false*/)
 {
-	BlockType_t blockType = Creature::blockHit(attacker, combatType, damage, checkDefense, checkArmor, isField);
+	BlockType_t blockType = Creature::blockHit(attacker, combatType, damage, checkDefense, checkArmor);
 	if(!damage)
 		return blockType;
 
@@ -623,7 +620,7 @@ void Monster::doAttacking(uint32_t interval)
 	if(!attackedCreature || (isSummon() && attackedCreature == this))
 		return;
 
-	bool updateLook = true/*, outOfRange = true*/;
+	bool updateLook = true, outOfRange = true;
 	resetTicks = interval;
 	attackTicks += interval;
 
@@ -661,6 +658,7 @@ void Monster::doAttacking(uint32_t interval)
 				if(it->isMelee)
 					extraMeleeAttack = false;
 #ifdef __DEBUG__
+
 				static uint64_t prevTicks = OTSYS_TIME();
 				std::clog << "doAttacking ticks: " << OTSYS_TIME() - prevTicks << std::endl;
 				prevTicks = OTSYS_TIME();
@@ -669,10 +667,7 @@ void Monster::doAttacking(uint32_t interval)
 		}
 
 		if(inRange)
-		{
-			/*outOfRange = false;*/
-			/* nothing to do? */
-        }
+			outOfRange = false;
 		else if(it->isMelee) //melee swing out of reach
 			extraMeleeAttack = true;
 	}
@@ -820,7 +815,10 @@ void Monster::onThinkDefense(uint32_t interval)
 					{
 						addSummon(summon);
 						if(g_game.placeCreature(summon, getPosition()))
+						{
 							g_game.addMagicEffect(getPosition(), MAGIC_EFFECT_WRAPS_BLUE);
+							g_game.addMagicEffect(summon->getPosition(), MAGIC_EFFECT_TELEPORT);
+						}
 						else
 							removeSummon(summon);
 					}
@@ -1320,7 +1318,7 @@ bool Monster::isImmune(CombatType_t type) const
 	return it->second >= 100;
 }
 
-void Monster::setNormalCreatureLight()
+void Monster::resetLight()
 {
 	internalLight.level = mType->lightLevel;
 	internalLight.color = mType->lightColor;

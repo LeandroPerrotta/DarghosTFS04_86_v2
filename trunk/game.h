@@ -32,6 +32,7 @@
 #include "npc.h"
 #include "monster.h"
 
+class ServiceManager;
 class Creature;
 class Player;
 class Monster;
@@ -141,6 +142,7 @@ typedef std::list<uint32_t> RxPpsRecords;
 #define EVENT_DECAYINTERVAL 1000
 #define EVENT_DECAYBUCKETS 16
 #define STATE_DELAY 1000
+#define EVENT_WARSINTERVAL 900000
 
 /**
   * Main Game class.
@@ -361,6 +363,8 @@ class Game
 			uint32_t flags = 0, bool test = false);
 		ReturnValue internalAddItem(Creature* actor, Cylinder* toCylinder, Item* item, int32_t index,
 			uint32_t flags, bool test, uint32_t& remainderCount);
+		ReturnValue internalAddItem(Creature* actor, Cylinder* toCylinder, Item* item, int32_t index,
+			uint32_t flags, bool test, uint32_t& remainderCount, Item** stackItem);
 		ReturnValue internalRemoveItem(Creature* actor, Item* item, int32_t count = -1,  bool test = false, uint32_t flags = 0);
 
 		ReturnValue internalPlayerAddItem(Creature* actor, Player* player, Item* item,
@@ -571,7 +575,7 @@ class Game
 		void updateCreatureSkull(Creature* creature);
 		void updateCreatureShield(Creature* creature);
 		void updateCreatureEmblem(Creature* creature);
-		void updateCreatureImpassable(Creature* creature);
+		void updateCreatureWalkthrough(Creature* creature);
 
 		GameState_t getGameState() const {return gameState;}
 		void setGameState(GameState_t newState);
@@ -594,9 +598,10 @@ class Game
 		void checkCreatureAttack(uint32_t creatureId);
 		void checkCreatures();
 		void checkLight();
+		void checkWars();
 
 		bool combatBlockHit(CombatType_t combatType, Creature* attacker, Creature* target,
-			int32_t& healthChange, bool checkDefense, bool checkArmor, bool isField = false);
+			int32_t& healthChange, bool checkDefense, bool checkArmor, bool field = false);
 
 		bool combatChangeHealth(CombatType_t combatType, Creature* attacker, Creature* target, int32_t healthChange,
 			MagicEffect_t hitEffect = MAGIC_EFFECT_UNKNOWN, Color_t hitColor = COLOR_UNKNOWN, bool force = false);
@@ -696,6 +701,7 @@ class Game
 		int32_t lastMotdId;
 		uint32_t playersRecord;
 		uint32_t checkLightEvent, checkCreatureEvent, checkDecayEvent, saveEvent;
+		uint32_t checkWarsEvent;
 		bool globalSaveMessage[2];
 
 		RefreshTiles refreshTiles;

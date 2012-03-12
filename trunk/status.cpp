@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ////////////////////////////////////////////////////////////////////////
-
 #include "otpch.h"
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
@@ -63,8 +62,8 @@ void ProtocolStatus::onRecvFirstMessage(NetworkMessage& msg)
 						#ifndef __DARGHOS_SPOOF__
 						if(g_config.getBool(ConfigManager::SPOOF_PLAYERS_ENABLED))
 						{
-                            if(msg.size() > msg.position())
-                                sendPlayers = msg.get<char>() == 0x01;
+						if(msg.size() > msg.position())
+							sendPlayers = msg.get<char>() == 0x01;
 						}
                         #endif
 
@@ -149,7 +148,7 @@ std::string Status::getStatusString(bool sendPlayers) const
         xmlSetProp(p, (const xmlChar*)"afk", (const xmlChar*)buffer);
         sprintf(buffer, "%d", g_game.getPlayersOnline() - Player::afkCount);
         #else
-        sprintf(buffer, "%d", g_game.getPlayersOnline());
+	sprintf(buffer, "%d", g_game.getPlayersOnline());
         #endif
     #endif
 	xmlSetProp(p, (const xmlChar*)"online", (const xmlChar*)buffer);
@@ -273,9 +272,9 @@ void Status::getInfo(uint32_t requestedInfo, OutputMessage_ptr output, NetworkMe
             output->put<uint32_t>(g_game.getPlayersRecord());
             output->put<uint32_t>(Player::afkCount);
             #else
-            output->put<uint32_t>(g_game.getPlayersOnline());
-            output->put<uint32_t>(g_config.getNumber(ConfigManager::MAX_PLAYERS));
-            output->put<uint32_t>(g_game.getPlayersRecord());
+		output->put<uint32_t>(g_game.getPlayersOnline());
+		output->put<uint32_t>(g_config.getNumber(ConfigManager::MAX_PLAYERS));
+		output->put<uint32_t>(g_game.getPlayersRecord());
             #endif
         #endif
 	}

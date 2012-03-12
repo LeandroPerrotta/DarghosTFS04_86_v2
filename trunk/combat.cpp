@@ -284,9 +284,7 @@ ReturnValue Combat::canDoCombat(const Creature* attacker, const Creature* target
 		{
 			checkZones = true;
 			if((g_game.getWorldType() == WORLDTYPE_OPTIONAL && !Combat::isInPvpZone(attacker, target)
-#ifdef __WAR_SYSTEM__
 				&& !attackerPlayer->isEnemy(targetPlayer, true)
-#endif
 				) || isProtected(const_cast<Player*>(attackerPlayer), const_cast<Player*>(targetPlayer))
 				|| (g_config.getBool(ConfigManager::CANNOT_ATTACK_SAME_LOOKFEET)
 				&& attackerPlayer->getDefaultOutfit().lookFeet == targetPlayer->getDefaultOutfit().lookFeet)
@@ -309,16 +307,13 @@ ReturnValue Combat::canDoCombat(const Creature* attacker, const Creature* target
 			{
 				checkZones = true;
 				if(g_game.getWorldType() == WORLDTYPE_OPTIONAL && !Combat::isInPvpZone(attacker, target)
-#ifdef __WAR_SYSTEM__
-					&& !attackerPlayer->isEnemy(target->getPlayerMaster(), true)
-#endif
-				)
+					&& !attackerPlayer->isEnemy(target->getPlayerMaster(), true))
 					return RET_YOUMAYNOTATTACKTHISCREATURE;
 
 #ifdef __DARGHOS_CUSTOM__
                 if(!attackerPlayer->isPvpEnabled() && !attackerPlayer->isInBattleground() && !Combat::isInPvpZone(attacker, target))
                     return RET_YOUMAYNOTATTACKTHISCREATURE;
-#endif
+#endif				
 			}
 		}
 	}
@@ -740,8 +735,19 @@ bool Combat::CombatConditionFunc(Creature* caster, Creature* target, const Comba
 
 bool Combat::CombatDispelFunc(Creature* caster, Creature* target, const CombatParams& params, void*)
 {
-	if(!target->hasCondition(params.dispelType))
+	if(!target->hasCondition(params.dispelType, -1, false))
 		return false;
+
+	if(params.dispelType == CONDITION_INVISIBLE)
+	{
+		if(Player* player = target->getPlayer())
+		{
+			Item* item = player->getEquippedItem(SLOT_RING);
+			if(item && item->getID() == ITEM_STEALTH_RING && (g_game.getWorldType() == WORLDTYPE_HARDCORE
+				|| player->getTile()->hasFlag(TILESTATE_HARDCOREZONE)) && random_range(1, 100) <= 10)
+				g_game.internalRemoveItem(NULL, item);
+		}
+	}
 
 	target->removeCondition(caster, params.dispelType);
 	return true;
@@ -777,7 +783,6 @@ void Combat::combatTileEffects(const SpectatorVec& list, Creature* caster, Tile*
 #else
 				TILESTATE_HARDCOREZONE)) || tile->hasFlag(TILESTATE_OPTIONALZONE))
 #endif
-
 			{
 				switch(itemId)
 				{
@@ -1539,12 +1544,11 @@ void CombatArea::setupExtArea(const std::list<uint32_t>& list, uint32_t rows)
 
 bool MagicField::isBlocking(const Creature* creature) const
 {
-	if(id != ITEM_MAGICWALL_SAFE && id != ITEM_WILDGROWTH_SAFE)
+	if(!isUnstepable())
 		return Item::isBlocking(creature);
 
 	if(!creature || !creature->getPlayer())
 		return true;
-#ifdef __WAR_SYSTEM__
 
 	uint32_t ownerId = getOwner();
 	if(!ownerId)
@@ -1552,14 +1556,13 @@ bool MagicField::isBlocking(const Creature* creature) const
 
 	if(Creature* owner = g_game.getCreatureByID(ownerId))
 		return creature->getPlayer()->getGuildEmblem(owner) != EMBLEM_NONE;
-#endif
 
 	return false;
 }
 
 void MagicField::onStepInField(Creature* creature, bool purposeful/* = true*/)
 {
-	if(id == ITEM_MAGICWALL_SAFE || id == ITEM_WILDGROWTH_SAFE || isBlocking(creature))
+	if(isUnstepable() || isBlocking(creature))
 	{
 		if(!creature->isGhost())
 			g_game.internalRemoveItem(creature, this, 1);
@@ -1567,7 +1570,7 @@ void MagicField::onStepInField(Creature* creature, bool purposeful/* = true*/)
 		return;
 	}
 
-	if(!purposeful)
+	if(!purposeful || !creature->isAttackable())
 		return;
 
 	const ItemType& it = items[id];
@@ -1575,18 +1578,23 @@ void MagicField::onStepInField(Creature* creature, bool purposeful/* = true*/)
 		return;
 
 	uint32_t ownerId = getOwner();
+	Tile* tile = getTile();
+
 	Condition* condition = it.condition->clone();
-	if(ownerId && !getTile()->hasFlag(TILESTATE_HARDCOREZONE))
+	if(ownerId && !tile->hasFlag(TILESTATE_HARDCOREZONE))
 	{
 		if(Creature* owner = g_game.getCreatureByID(ownerId))
 		{
+			Player* ownerPlayer = owner->getPlayer();
+			if(!ownerPlayer && owner->isPlayerSummon())
+				ownerPlayer = owner->getPlayerMaster();
+
 			bool harmful = true;
-			if((g_game.getWorldType() == WORLDTYPE_OPTIONAL || getTile()->hasFlag(TILESTATE_OPTIONALZONE))
-				&& (owner->getPlayer() || owner->isPlayerSummon()))
+			if((g_game.getWorldType() == WORLDTYPE_OPTIONAL || tile->hasFlag(TILESTATE_OPTIONALZONE)) && ownerPlayer)
 				harmful = false;
-			else if(Player* targetPlayer = creature->getPlayer())
+			else if(Player* player = creature->getPlayer())
 			{
-				if(owner->getPlayer() && Combat::isProtected(owner->getPlayer(), targetPlayer))
+				if(ownerPlayer && Combat::isProtected(ownerPlayer, player))
 					harmful = false;
 			}
 

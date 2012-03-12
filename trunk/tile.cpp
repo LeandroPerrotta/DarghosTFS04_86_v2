@@ -145,7 +145,7 @@ uint32_t Tile::getTopItemCount() const
 
 uint32_t Tile::getDownItemCount() const
 {
-	if(const TileItemVector* items =getItemList())
+	if(const TileItemVector* items = getItemList())
 		return items->getDownItemCount();
 
 	return 0;
@@ -394,7 +394,7 @@ void Tile::onUpdateTileItem(Item* oldItem, const ItemType& oldType, Item* newIte
 		(*it)->onUpdateTileItem(this, cylinderMapPos, oldItem, oldType, newItem, newType);
 }
 
-void Tile::onRemoveTileItem(const SpectatorVec& list, std::vector<uint32_t>& oldStackposVector, Item* item)
+void Tile::onRemoveTileItem(const SpectatorVec& list, std::vector<int32_t>& oldStackposVector, Item* item)
 {
 	updateTileFlags(item, true);
 	const Position& cylinderMapPos = pos;
@@ -450,7 +450,7 @@ void Tile::moveCreature(Creature* actor, Creature* creature, Cylinder* toCylinde
 	if(forceTeleport || !newTile->ground || !Position::areInRange<1,1,0>(pos, newPos))
 		teleport = true;
 
-	std::vector<uint32_t> oldStackposVector;
+	std::vector<int32_t> oldStackposVector;
 	Player* tmpPlayer = NULL;
 	for(it = list.begin(); it != list.end(); ++it)
 	{
@@ -487,7 +487,7 @@ void Tile::moveCreature(Creature* actor, Creature* creature, Cylinder* toCylinde
 	int32_t i = 0;
 	for(it = list.begin(); it != list.end(); ++it)
 	{
-		if((tmpPlayer = (*it)->getPlayer()) && tmpPlayer->canSeeCreature(creature))
+		if((tmpPlayer = (*it)->getPlayer()))
 			tmpPlayer->sendCreatureMove(creature, newTile, newPos, this, pos, oldStackposVector[i++], teleport);
 	}
 
@@ -500,7 +500,7 @@ void Tile::moveCreature(Creature* actor, Creature* creature, Cylinder* toCylinde
 }
 
 ReturnValue Tile::__queryAdd(int32_t, const Thing* thing, uint32_t,
-	uint32_t flags) const
+	uint32_t flags, Creature*) const
 {
 	const CreatureVector* creatures = getCreatures();
 	const TileItemVector* items = getItemList();
@@ -731,7 +731,7 @@ ReturnValue Tile::__queryMaxCount(int32_t, const Thing*, uint32_t count, uint32_
 	return RET_NOERROR;
 }
 
-ReturnValue Tile::__queryRemove(const Thing* thing, uint32_t count, uint32_t flags) const
+ReturnValue Tile::__queryRemove(const Thing* thing, uint32_t count, uint32_t flags, Creature*) const
 {
 	int32_t index = __getIndexOfThing(thing);
 	if(index == -1)
@@ -1189,7 +1189,7 @@ void Tile::__removeThing(Thing* thing, uint32_t count)
 	if(item == ground)
 	{
 		const SpectatorVec& list = g_game.getSpectators(pos);
-		std::vector<uint32_t> oldStackposVector;
+		std::vector<int32_t> oldStackposVector;
 
 		Player* tmpPlayer = NULL;
 		for(SpectatorVec::const_iterator it = list.begin(); it != list.end(); ++it)
@@ -1218,7 +1218,7 @@ void Tile::__removeThing(Thing* thing, uint32_t count)
 				continue;
 
 			const SpectatorVec& list = g_game.getSpectators(pos);
-			std::vector<uint32_t> oldStackposVector;
+			std::vector<int32_t> oldStackposVector;
 
 			Player* tmpPlayer = NULL;
 			for(SpectatorVec::const_iterator iit = list.begin(); iit != list.end(); ++iit)
@@ -1256,7 +1256,7 @@ void Tile::__removeThing(Thing* thing, uint32_t count)
 			else
 			{
 				const SpectatorVec& list = g_game.getSpectators(pos);
-				std::vector<uint32_t> oldStackposVector;
+				std::vector<int32_t> oldStackposVector;
 
 				Player* tmpPlayer = NULL;
 				for(SpectatorVec::const_iterator iit = list.begin(); iit != list.end(); ++iit)
@@ -1392,18 +1392,15 @@ int32_t Tile::__getIndexOfThing(const Thing* thing) const
 
 uint32_t Tile::__getItemTypeCount(uint16_t itemId, int32_t subType /*= -1*/) const
 {
-	uint32_t count = 0;
-	Thing* thing = NULL;
-	for(uint32_t i = 0; i < getThingCount(); ++i)
-	{
-		if(!(thing = __getThing(i)))
-			continue;
+	const TileItemVector* items = getItemList();
+	if(!items)
+		return 0;
 
-		if(const Item* item = thing->getItem())
-		{
-			if(item->getID() == itemId)
-				count += Item::countByType(item, subType);
-		}
+	uint32_t count = 0;
+	for(ItemVector::const_iterator it = items->begin(); it != items->end(); ++it)
+	{
+		if((*it)->getID() == itemId)
+			count += Item::countByType(*it, subType);
 	}
 
 	return count;
@@ -1476,7 +1473,7 @@ void Tile::postAddNotification(Creature* actor, Thing* thing, const Cylinder* ol
 			if(!g_moveEvents->onCreatureMove(actor, creature, fromTile, this, true))
                 done = false;
 #else
-            g_moveEvents->onCreatureMove(actor, creature, fromTile, this, true);
+			g_moveEvents->onCreatureMove(actor, creature, fromTile, this, true);
 #endif
 		}
 		else if(Item* item = thing->getItem())
@@ -1493,7 +1490,7 @@ void Tile::postAddNotification(Creature* actor, Thing* thing, const Cylinder* ol
 #ifdef __DARGHOS_CUSTOM__
 		if(hasFlag(TILESTATE_TELEPORT) && done)
 #else
-        if(hasFlag(TILESTATE_TELEPORT))
+		if(hasFlag(TILESTATE_TELEPORT))
 #endif
 		{
 			if(Teleport* teleport = getTeleportItem())

@@ -2407,14 +2407,15 @@ void LuaInterface::registerFunctions()
 
 	//doRefreshMap()
 	lua_register(m_luaState, "doRefreshMap", LuaInterface::luaDoRefreshMap);
-#ifdef __WAR_SYSTEM__
+
+	//doPlayerSetWalkthrough(cid, uid, walkthrough)
+	lua_register(m_luaState, "doPlayerSetWalkthrough", LuaInterface::luaDoPlayerSetWalkthrough);
 
 	//doGuildAddEnemy(guild, enemy, war, type)
 	lua_register(m_luaState, "doGuildAddEnemy", LuaInterface::luaDoGuildAddEnemy);
 
 	//doGuildRemoveEnemy(guild, enemy)
 	lua_register(m_luaState, "doGuildRemoveEnemy", LuaInterface::luaDoGuildRemoveEnemy);
-#endif
 
 	//doUpdateHouseAuctions()
 	lua_register(m_luaState, "doUpdateHouseAuctions", LuaInterface::luaDoUpdateHouseAuctions);
@@ -4214,15 +4215,15 @@ int32_t LuaInterface::luaDoSendCreatureSquare(lua_State* L)
 			list.push_back(creature);
 	}
 
-        uint8_t color = popNumber(L);
+	uint8_t color = popNumber(L);
 	if(Creature* creature = env->getCreatureByUID(popNumber(L)))
 	{
-	        if(!list.empty())
-        	        g_game.addCreatureSquare(list, creature, color);
-	        else
-        	        g_game.addCreatureSquare(creature, color);
+		if(!list.empty())
+			g_game.addCreatureSquare(list, creature, color);
+		else
+			g_game.addCreatureSquare(creature, color);
 
-	        lua_pushboolean(L, true);
+		lua_pushboolean(L, true);
 	}
 	else
 	{
@@ -4230,7 +4231,7 @@ int32_t LuaInterface::luaDoSendCreatureSquare(lua_State* L)
 		lua_pushboolean(L, false);
 	}
 
-        return 1;
+	return 1;
 }
 
 int32_t LuaInterface::luaDoSendAnimatedText(lua_State* L)
@@ -7698,7 +7699,6 @@ int32_t LuaInterface::luaGetContainerItem(lua_State* L)
 {
 	//getContainerItem(uid, slot)
 	uint32_t slot = popNumber(L);
-
 	ScriptEnviroment* env = getEnv();
 	if(Container* container = env->getContainerByUID(popNumber(L)))
 	{
@@ -7714,7 +7714,6 @@ int32_t LuaInterface::luaGetContainerItem(lua_State* L)
 	}
 
 	return 1;
-
 }
 
 int32_t LuaInterface::luaDoAddContainerItemEx(lua_State* L)
@@ -8103,7 +8102,7 @@ int32_t LuaInterface::luaDoPlayerAddPremiumDays(lua_State* L)
 			Account account = IOLoginData::getInstance()->loadAccount(player->getAccount());
 			if(days < 0)
 			{
-				account.premiumDays = std::max((uint32_t)0, account.premiumDays + days);
+				account.premiumDays = std::max((uint32_t)0, uint32_t(account.premiumDays + (int32_t)days));
 				player->premiumDays = std::max((uint32_t)0, uint32_t(player->premiumDays + (int32_t)days));
 			}
 			else
@@ -8625,7 +8624,7 @@ int32_t LuaInterface::luaGetCreatureCondition(lua_State* L)
 
 int32_t LuaInterface::luaGetPlayerBlessing(lua_State* L)
 {
-	//getPlayerBlessing(cid, blessing)
+	//getPlayerBlessings(cid, blessing)
 	int16_t blessing = popNumber(L) - 1;
 
 	ScriptEnviroment* env = getEnv();
@@ -9354,11 +9353,15 @@ int32_t LuaInterface::luaGetTownName(lua_State* L)
 int32_t LuaInterface::luaGetTownTemplePosition(lua_State* L)
 {
 	//getTownTemplePosition(townId)
+	bool displayError = true;
+	if(lua_gettop(L) >= 2)
+		displayError = popNumber(L);
+
 	uint32_t townId = popNumber(L);
 	if(Town* town = Towns::getInstance()->getTown(townId))
 		pushPosition(L, town->getPosition(), 255);
 	else
-	    lua_pushboolean(L, false);
+		lua_pushboolean(L, false);
 
 	return 1;
 }
@@ -10367,6 +10370,40 @@ int32_t LuaInterface::luaGetLogsDir(lua_State* L)
 	return 1;
 }
 
+int32_t LuaInterface::luaDoPlayerSetWalkthrough(lua_State* L)
+{
+	//doPlayerSetWalkthrough(cid, uid, walkthrough)
+	bool walkthrough = popBoolean(L);
+	uint32_t uid = popNumber(L);
+
+	ScriptEnviroment* env = getEnv();
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if(!player)
+	{
+		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	Creature* creature = env->getCreatureByUID(uid);
+	if(!creature)
+	{
+		errorEx(getError(LUA_ERROR_CREATURE_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	if(player != creature)
+	{
+		player->setWalkthrough(creature, walkthrough);
+		lua_pushboolean(L, true);
+	}
+	else
+		lua_pushboolean(L, false);
+
+	return 1;
+}
+
 int32_t LuaInterface::luaGetConfigFile(lua_State* L)
 {
 	//getConfigFile()
@@ -10865,8 +10902,6 @@ int32_t LuaInterface::luaGetBattlegroundWaitlistSize(lua_State* L)
 }
 #endif
 
-#ifdef __WAR_SYSTEM__
-
 int32_t LuaInterface::luaDoGuildAddEnemy(lua_State* L)
 {
 	//doGuildAddEnemy(guild, enemy, war, type)
@@ -10906,7 +10941,6 @@ int32_t LuaInterface::luaDoGuildRemoveEnemy(lua_State* L)
 	lua_pushnumber(L, count);
 	return 1;
 }
-#endif
 
 int32_t LuaInterface::luaGetConfigValue(lua_State* L)
 {

@@ -75,9 +75,7 @@ class IOLoginData
 #ifdef __DARGHOS_THREAD_SAVE__
         bool savePlayer(Player* player, DBInsert& query_insert, bool preSave = true, bool shallow = false);
 #endif
-        bool savePlayer(Player* player, bool preSave = true, bool shallow = false);
-
-
+		bool savePlayer(Player* player, bool preSave = true, bool shallow = false);
 
 		bool playerDeath(Player* player, const DeathList& dl);
 		bool playerMail(Creature* actor, std::string name, uint32_t townId, Item* item);

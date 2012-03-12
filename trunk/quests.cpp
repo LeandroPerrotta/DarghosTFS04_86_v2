@@ -18,12 +18,12 @@
 
 #include "quests.h"
 #include "tools.h"
- 
+
 bool Mission::isStarted(Player* player)
 {
 	if(!player)
 		return false;
-
+ 
 	std::string value;
 	player->getStorage(storageId, value);
 	return atoi(value.c_str()) >= startValue;
@@ -33,12 +33,12 @@ bool Mission::isCompleted(Player* player)
 {
 	if(!player)
 		return false;
- 
+
 	std::string value;
 	player->getStorage(storageId, value);
 	return atoi(value.c_str()) >= endValue;
 }
- 
+
 std::string Mission::getDescription(Player* player)
 {
 	std::string value;
@@ -49,7 +49,7 @@ std::string Mission::getDescription(Player* player)
 		replaceString(ret, "|STATE|", value);
 		return ret;
 	}
-
+ 
 	if(atoi(value.c_str()) >= endValue)
 	{
 		std::string ret = states.rbegin()->second;
@@ -62,16 +62,16 @@ std::string Mission::getDescription(Player* player)
 		player->getStorage(storageId, value);
 		if(atoi(value.c_str()) != i)
 			continue;
-
+ 
 		std::string ret = states[i - startValue];
 		replaceString(ret, "|STATE|", value);
 		return ret;
  
 	}
-
+ 
 	return "Couldn't retrieve any mission description, please report to a gamemaster.";
 }
- 
+
 Quest::~Quest()
 {
 	for(MissionList::iterator it = missions.begin(); it != missions.end(); it++)

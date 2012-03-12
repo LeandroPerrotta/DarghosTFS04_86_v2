@@ -88,10 +88,9 @@ struct DeathEntry
 
 		bool isCreatureKill() const {return data.type() == typeid(Creature*);}
 		bool isNameKill() const {return !isCreatureKill();}
-#ifdef __WAR_SYSTEM__
+
 		void setWar(War_t v) {war = v;}
 		War_t getWar() const {return war;}
-#endif
 
 		void setLast() {last = true;}
 		bool isLast() const {return last;}
@@ -113,9 +112,7 @@ struct DeathEntry
 
 		boost::any data;
 		int32_t damage;
-#ifdef __WAR_SYSTEM__
 		War_t war;
-#endif
 
 		bool last;
 		bool justify;
@@ -292,7 +289,7 @@ class Creature : public AutoId, virtual public Thing
 		Creature* getAttackedCreature() {return attackedCreature;}
 		virtual bool setAttackedCreature(Creature* creature);
 		virtual BlockType_t blockHit(Creature* attacker, CombatType_t combatType, int32_t& damage,
-			bool checkDefense = false, bool checkArmor = false, bool reflect = true, bool isField = false);
+			bool checkDefense = false, bool checkArmor = false, bool reflect = true, bool field = false);
 
 		void setMaster(Creature* creature) {master = creature;}
 		Creature* getMaster() {return master;}
@@ -383,7 +380,7 @@ class Creature : public AutoId, virtual public Thing
 		virtual void onIdleStatus();
 
 		virtual void getCreatureLight(LightInfo& light) const;
-		virtual void setNormalCreatureLight();
+		virtual void resetLight();
 		void setCreatureLight(LightInfo& light) {internalLight = light;}
 
 		virtual void onThink(uint32_t interval);
@@ -398,7 +395,7 @@ class Creature : public AutoId, virtual public Thing
 		virtual void onUpdateTile(const Tile*, const Position&) {}
 
 		virtual void onCreatureAppear(const Creature* creature);
-		virtual void onCreatureDisappear(const Creature* creature, bool isLogout);
+		virtual void onCreatureDisappear(const Creature* creature, bool) {internalCreatureDisappear(creature, true);}
 		virtual void onCreatureMove(const Creature* creature, const Tile* newTile, const Position& newPos,
 			const Tile* oldTile, const Position& oldPos, bool teleport);
 
@@ -547,6 +544,8 @@ class Creature : public AutoId, virtual public Thing
 		void updateTileCache(const Tile* tile, int32_t dx, int32_t dy);
 		void updateTileCache(const Tile* tile, const Position& pos);
 
+		void internalCreatureDisappear(const Creature* creature, bool isLogout);
+
 		virtual bool hasExtraSwing() {return false;}
 
 		virtual uint16_t getLookCorpse() const {return 0;}
@@ -561,7 +560,6 @@ class Creature : public AutoId, virtual public Thing
 		virtual void dropCorpse(DeathList deathList);
 
 		virtual void doAttacking(uint32_t) {}
-		void internalCreatureDisappear(const Creature* creature, bool isLogout);
 
 		friend class Game;
 		friend class Map;

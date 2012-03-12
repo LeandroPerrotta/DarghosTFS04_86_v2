@@ -93,7 +93,7 @@ class Weapon : public Event
 
 		bool executeUseWeapon(Player* player, const LuaVariant& var) const;
 
-		bool internalUseWeapon(Player* player, Item* item, Creature* target, int32_t damageModifier) const;
+		bool internalUseWeapon(Player* player, Item* item, Creature* target, int32_t modifier) const;
 		bool internalUseWeapon(Player* player, Item* item, Tile* tile) const;
 
 		virtual void onUsedWeapon(Player* player, Item* item, Tile* destTile) const;

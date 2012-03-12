@@ -35,8 +35,10 @@ class ContainerIterator
 		ContainerIterator& operator=(const ContainerIterator& rhs);
 		bool operator==(const ContainerIterator& rhs);
 		bool operator!=(const ContainerIterator& rhs);
+
 		ContainerIterator& operator++();
 		ContainerIterator operator++(int32_t);
+
 		Item* operator*();
 		Item* operator->();
 
@@ -77,7 +79,7 @@ class Container : public Item, public Cylinder
 			if(maxSize)
 				return itemlist.size() >= maxSize;
 
-			return true;
+			return 255;
 		}
 		bool empty() const {return itemlist.empty();}
 
@@ -110,10 +112,10 @@ class Container : public Item, public Cylinder
 		virtual const Creature* getCreature() const {return NULL;}
 
 		virtual ReturnValue __queryAdd(int32_t index, const Thing* thing, uint32_t count,
-			uint32_t flags) const;
+			uint32_t flags, Creature* actor = NULL) const;
 		virtual ReturnValue __queryMaxCount(int32_t index, const Thing* thing, uint32_t count, uint32_t& maxQueryCount,
 			uint32_t flags) const;
-		virtual ReturnValue __queryRemove(const Thing* thing, uint32_t count, uint32_t flags) const;
+		virtual ReturnValue __queryRemove(const Thing* thing, uint32_t count, uint32_t flags, Creature* actor = NULL) const;
 		virtual Cylinder* __queryDestination(int32_t& index, const Thing* thing, Item** destItem,
 			uint32_t& flags);
 

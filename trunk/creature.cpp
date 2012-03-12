@@ -391,12 +391,6 @@ void Creature::validateMapCache()
 }
 #endif
 
-void Creature::updateTileCache(const Tile* tile)
-{
-	if(isMapLoaded && tile->getPosition().z == getPosition().z)
-		updateTileCache(tile, tile->getPosition());
-}
-
 void Creature::updateTileCache(const Tile* tile, int32_t dx, int32_t dy)
 {
 	if((std::abs(dx) <= (mapWalkWidth - 1) / 2) && (std::abs(dy) <= (mapWalkHeight - 1) / 2))
@@ -416,6 +410,12 @@ void Creature::updateTileCache(const Tile* tile, const Position& pos)
 	const Position& myPos = getPosition();
 	if(pos.z == myPos.z)
 		updateTileCache(tile, pos.x - myPos.x, pos.y - myPos.y);
+}
+
+void Creature::updateTileCache(const Tile* tile)
+{
+	if(isMapLoaded && tile->getPosition().z == getPosition().z)
+		updateTileCache(tile, tile->getPosition());
 }
 
 int32_t Creature::getWalkCache(const Position& pos) const
@@ -489,11 +489,6 @@ void Creature::onCreatureAppear(const Creature* creature)
 	}
 	else if(isMapLoaded && creature->getPosition().z == getPosition().z)
 		updateTileCache(creature->getTile(), creature->getPosition());
-}
-
-void Creature::onCreatureDisappear(const Creature* creature, bool)
-{
-	internalCreatureDisappear(creature, true);
 }
 
 void Creature::onRemovedCreature()
@@ -692,7 +687,7 @@ void Creature::onCreatureMove(const Creature* creature, const Tile* newTile, con
 
 bool Creature::onDeath()
 {
-    DeathList deathList = getKillers();
+	DeathList deathList = getKillers();
 
     #ifdef __DARGHOS_PVP_SYSTEM__
     if(getPlayer() && getPlayer()->isInBattleground())
@@ -707,18 +702,17 @@ bool Creature::onDeath()
     }
     #endif
 
+	bool deny = false;
 
-    bool deny = false;
+	CreatureEventList prepareDeathEvents = getCreatureEvents(CREATURE_EVENT_PREPAREDEATH);
+	for(CreatureEventList::iterator it = prepareDeathEvents.begin(); it != prepareDeathEvents.end(); ++it)
+	{
+		if(!(*it)->executePrepareDeath(this, deathList) && !deny)
+			deny = true;
+	}
 
-    CreatureEventList prepareDeathEvents = getCreatureEvents(CREATURE_EVENT_PREPAREDEATH);
-    for(CreatureEventList::iterator it = prepareDeathEvents.begin(); it != prepareDeathEvents.end(); ++it)
-    {
-        if(!(*it)->executePrepareDeath(this, deathList) && !deny)
-                deny = true;
-    }
-
-    if(deny)
-        return false;
+	if(deny)
+		return false;
 
     #ifdef __DARGHOS_CUSTOM__
     int32_t i = 0, size = deathList.size(), limit = g_config.getNumber(ConfigManager::DEATH_FRAGGERS) + 1;
@@ -980,7 +974,7 @@ void Creature::drainMana(Creature* attacker, CombatType_t combatType, int32_t da
 }
 
 BlockType_t Creature::blockHit(Creature* attacker, CombatType_t combatType, int32_t& damage,
-	bool checkDefense/* = false*/, bool checkArmor/* = false*/, bool reflect /*= true*/, bool isField /*= false*/)
+	bool checkDefense/* = false*/, bool checkArmor/* = false*/, bool/* reflect = true*/, bool/* field = false*/)
 {
 	BlockType_t blockType = BLOCK_NONE;
 	if(isImmune(combatType))
@@ -1224,6 +1218,15 @@ void Creature::onTickCondition(ConditionType_t type, int32_t, bool& _remove)
 				break;
 			case CONDITION_POISON:
 				_remove = field->getCombatType() != COMBAT_EARTHDAMAGE;
+				break;
+			case CONDITION_FREEZING:
+				_remove = field->getCombatType() != COMBAT_ICEDAMAGE;
+				break;
+			case CONDITION_DAZZLED:
+				_remove = field->getCombatType() != COMBAT_HOLYDAMAGE;
+				break;
+			case CONDITION_CURSED:
+				_remove = field->getCombatType() != COMBAT_DEATHDAMAGE;
 				break;
 			case CONDITION_DROWN:
 				_remove = field->getCombatType() != COMBAT_DROWNDAMAGE;
@@ -1547,6 +1550,12 @@ bool Creature::hasCondition(ConditionType_t type, int32_t subId/* = 0*/, bool ch
             if(!checkTime || !condition->getEndTime() || condition->getEndTime() >= OTSYS_TIME())
                 return true;
         }
+#else
+		if((*it)->getType() != type || (subId != -1 && (*it)->getSubId() != (uint32_t)subId))
+			continue;
+
+		if(!checkTime || !(*it)->getEndTime() || (*it)->getEndTime() >= OTSYS_TIME())
+			return true;
 #endif
 	}
 
@@ -1614,7 +1623,7 @@ void Creature::getCreatureLight(LightInfo& light) const
 	light = internalLight;
 }
 
-void Creature::setNormalCreatureLight()
+void Creature::resetLight()
 {
 	internalLight.level = internalLight.color = 0;
 }

@@ -703,11 +703,11 @@ void Player::addSkillAdvance(skills_t skill, uint32_t count, bool useMultiplier/
 
 	//update percent
 	uint32_t newPercent = Player::getPercentLevel(skills[skill][SKILL_TRIES], nextReqTries);
- 	if(skills[skill][SKILL_PERCENT] != newPercent)
+	if(skills[skill][SKILL_PERCENT] != newPercent)
 	{
 		skills[skill][SKILL_PERCENT] = newPercent;
 		sendSkills();
- 	}
+	}
 	else if(!s.str().empty())
 		sendSkills();
 }
@@ -924,13 +924,9 @@ bool Player::canSeeCreature(const Creature* creature) const
 
 bool Player::canWalkthrough(const Creature* creature) const
 {
-	if(!creature)
-		return true;
-
-	if(creature == this)
-		return false;
-
-	if(hasCustomFlag(PlayerCustomFlag_CanWalkthrough) || creature->isWalkable())
+    if(creature == this || hasCustomFlag(PlayerCustomFlag_IsWalkable) || creature->isWalkable() ||
+		std::find(forceWalkthrough.begin(), forceWalkthrough.end(), creature->getID()) != forceWalkthrough.end()
+			|| (creature->getMaster() && creature->getMaster() != this && canWalkthrough(creature->getMaster())))
 		return true;
 
 #ifdef __DARGHOS_CUSTOM__
@@ -950,9 +946,7 @@ bool Player::canWalkthrough(const Creature* creature) const
 #endif
 
 	if((((g_game.getWorldType() == WORLDTYPE_OPTIONAL &&
-#ifdef __WAR_SYSTEM__
 		!player->isEnemy(this, true) &&
-#endif
 #ifdef __DARGHOS_CUSTOM__
 		player->getVocation()->isAttackable())
 		|| (!isPvpEnabled() && getTile() && getTile()->getZone() != ZONE_HARDCORE)
@@ -969,6 +963,26 @@ bool Player::canWalkthrough(const Creature* creature) const
 
 	return (player->isGhost() && getGhostAccess() < player->getGhostAccess())
 		|| (isGhost() && getGhostAccess() > player->getGhostAccess());
+}
+
+void Player::setWalkthrough(const Creature* creature, bool walkthrough)
+{
+	std::vector<uint32_t>::iterator it = std::find(forceWalkthrough.begin(),
+		forceWalkthrough.end(), creature->getID());
+	bool update = false;
+	if(walkthrough && it == forceWalkthrough.end())
+	{
+		forceWalkthrough.push_back(creature->getID());
+		update = true;
+	}
+	else if(!walkthrough && it != forceWalkthrough.end())
+	{
+		forceWalkthrough.erase(it);
+		update = true;
+	}
+
+	if(update)
+		sendCreatureWalkthrough(creature, !walkthrough ? canWalkthrough(creature) : walkthrough);
 }
 
 Depot* Player::getDepot(uint32_t depotId, bool autoCreateDepot)
@@ -1475,9 +1489,9 @@ void Player::onCreatureAppear(const Creature* creature)
 void Player::onAttackedCreatureDisappear(bool isLogout)
 {
 #ifdef __DARGHOS_CUSTOM__
-        onTargetLost(false);
+    onTargetLost(false);
 #else
-        sendCancelTarget();
+	sendCancelTarget();
 #endif
 	if(!isLogout)
 		sendTextMessage(MSG_STATUS_SMALL, "Target lost.");
@@ -1488,7 +1502,7 @@ void Player::onFollowCreatureDisappear(bool isLogout)
 #ifdef __DARGHOS_CUSTOM__
     onTargetLost(false);
 #else
-    sendCancelTarget();
+	sendCancelTarget();
 #endif
 	if(!isLogout)
 		sendTextMessage(MSG_STATUS_SMALL, "Target lost.");
@@ -1496,15 +1510,17 @@ void Player::onFollowCreatureDisappear(bool isLogout)
 
 void Player::onChangeZone(ZoneType_t zone)
 {
-	if(attackedCreature && zone == ZONE_PROTECTION && !hasFlag(PlayerFlag_IgnoreProtectionZone))
+	if(zone == ZONE_PROTECTION)
 	{
-		setAttackedCreature(NULL);
-		onAttackedCreatureDisappear(false);
+		if(attackedCreature && !hasFlag(PlayerFlag_IgnoreProtectionZone))
+		{
+			setAttackedCreature(NULL);
+			onAttackedCreatureDisappear(false);
+		}
 	}
+
+	g_game.updateCreatureWalkthrough(this);
 	sendIcons();
-#ifdef __DARGHOS_CUSTOM__
-	g_game.updateCreatureImpassable(getCreature());
-#endif
 }
 
 void Player::onAttackedCreatureChangeZone(ZoneType_t zone)
@@ -1520,10 +1536,7 @@ void Player::onAttackedCreatureChangeZone(ZoneType_t zone)
 		onAttackedCreatureDisappear(false);
 	}
 	else if(zone == ZONE_OPEN && g_game.getWorldType() == WORLDTYPE_OPTIONAL && attackedCreature->getPlayer()
-#ifdef __WAR_SYSTEM__
-		&& !attackedCreature->getPlayer()->isEnemy(this, true)
-#endif
-		)
+		&& !attackedCreature->getPlayer()->isEnemy(this, true))
 	{
 		//attackedCreature can leave a pvp zone if not pzlocked
 		setAttackedCreature(NULL);
@@ -1605,9 +1618,10 @@ void Player::openShopWindow()
 	sendGoods();
 }
 
-void Player::closeShopWindow(bool send/* = true*/, Npc* npc/* = NULL*/, int32_t onBuy/* = -1*/, int32_t onSell/* = -1*/)
+void Player::closeShopWindow(bool send/* = true*/)
 {
-	if(npc || (npc = getShopOwner(onBuy, onSell)))
+	int32_t onBuy = -1, onSell = -1;
+	if(Npc* npc = getShopOwner(onBuy, onSell))
 		npc->onPlayerEndTrade(this, onBuy, onSell);
 
 	if(shopOwner)
@@ -1676,13 +1690,14 @@ void Player::onCreatureMove(const Creature* creature, const Tile* newTile, const
 		else
 		{
 #endif
-			int32_t ticks = g_config.getNumber(ConfigManager::STAIRHOP_DELAY);
-			if(ticks > 0)
-			{
-				addExhaust(ticks, EXHAUST_COMBAT);
-				if(Condition* condition = Condition::createCondition(CONDITIONID_DEFAULT, CONDITION_PACIFIED, ticks))
-					addCondition(condition);
-			}
+		int32_t ticks = g_config.getNumber(ConfigManager::STAIRHOP_DELAY);
+		if(ticks > 0)
+		{
+			addExhaust(ticks, EXHAUST_HEALING);
+			addExhaust(ticks, EXHAUST_COMBAT);
+			if(Condition* condition = Condition::createCondition(CONDITIONID_DEFAULT, CONDITION_PACIFIED, ticks))
+				addCondition(condition);
+		}
 #ifdef __DARGHOS_CUSTOM__
 		}
 #endif
@@ -1841,7 +1856,6 @@ void Player::onThink(uint32_t interval)
 {
 	Creature::onThink(interval);
 	int64_t timeNow = OTSYS_TIME();
-
 	if(timeNow - lastPing >= 5000)
 	{
 		lastPing = timeNow;
@@ -1855,14 +1869,13 @@ void Player::onThink(uint32_t interval)
 			setAttackedCreature(NULL);
 	}
 
-#ifdef __DARGHOS_CUSTOM__
+
 	if((timeNow - lastPong) >= 60000 && !getTile()->hasFlag(TILESTATE_NOLOGOUT)
 		&& !isConnecting && !pzLocked && !hasCondition(CONDITION_INFIGHT)
-		&& !hasCustomFlag(PlayerCustomFlag_ContinueOnlineWhenExit))
-#else
-	if((timeNow - lastPong) >= 60000 && !getTile()->hasFlag(TILESTATE_NOLOGOUT)
-		&& !isConnecting && !pzLocked && !hasCondition(CONDITION_INFIGHT))
+#ifdef __DARGHOS_CUSTOM__
+        && !hasCustomFlag(PlayerCustomFlag_ContinueOnlineWhenExit)
 #endif
+    )
 	{
 		if(client)
 			client->logout(true, true);
@@ -1876,6 +1889,9 @@ void Player::onThink(uint32_t interval)
 		messageTicks = 0;
 		addMessageBuffer();
 	}
+
+	if(lastMail && lastMail < (uint64_t)(OTSYS_TIME() + g_config.getNumber(ConfigManager::MAIL_ATTEMPTS_FADE)))
+		mailAttempts = lastMail = 0;
 }
 
 bool Player::isMuted(uint16_t channelId, SpeakClasses type, uint32_t& time)
@@ -2032,6 +2048,11 @@ void Player::addExperience(uint64_t exp)
 	{
 		updateBaseSpeed();
 		g_game.changeSpeed(this, 0);
+		if(g_config.getBool(ConfigManager::HEAL_PLAYER_ON_LEVEL))
+		{
+			health = healthMax;
+			mana = manaMax;
+		}
 
 		g_game.addCreatureHealth(this);
 		if(party)
@@ -2154,9 +2175,9 @@ bool Player::hasShield() const
 }
 
 BlockType_t Player::blockHit(Creature* attacker, CombatType_t combatType, int32_t& damage,
-	bool checkDefense/* = false*/, bool checkArmor/* = false*/, bool reflect/* = true*/, bool isField/* = false*/)
+	bool checkDefense/* = false*/, bool checkArmor/* = false*/, bool reflect/* = true*/, bool field/* = false*/)
 {
-	BlockType_t blockType = Creature::blockHit(attacker, combatType, damage, checkDefense, checkArmor, isField);
+	BlockType_t blockType = Creature::blockHit(attacker, combatType, damage, checkDefense, checkArmor, reflect, field);
 	if(attacker)
 	{
 		int16_t color = g_config.getNumber(ConfigManager::SQUARE_COLOR);
@@ -2169,9 +2190,8 @@ BlockType_t Player::blockHit(Creature* attacker, CombatType_t combatType, int32_
 	if(blockType != BLOCK_NONE)
 		return blockType;
 
-	if(vocation->getMultiplier(MULTIPLIER_MAGICDEFENSE) != 1.0 && combatType != COMBAT_NONE &&
-		combatType != COMBAT_PHYSICALDAMAGE && combatType != COMBAT_UNDEFINEDDAMAGE &&
-		combatType != COMBAT_DROWNDAMAGE)
+	if(vocation->getMultiplier(MULTIPLIER_MAGICDEFENSE) != 1.0 && combatType != COMBAT_PHYSICALDAMAGE &&
+		combatType != COMBAT_NONE && combatType != COMBAT_UNDEFINEDDAMAGE && combatType != COMBAT_DROWNDAMAGE)
 		damage -= (int32_t)std::ceil((double)(damage * vocation->getMultiplier(MULTIPLIER_MAGICDEFENSE)) / 100.);
 
 	if(damage <= 0)
@@ -2185,7 +2205,7 @@ BlockType_t Player::blockHit(Creature* attacker, CombatType_t combatType, int32_
 	for(int32_t slot = SLOT_FIRST; slot < SLOT_LAST; ++slot)
 	{
 		if(!(item = getInventoryItem((slots_t)slot)) || item->isRemoved() ||
-			(g_moveEvents->hasEquipEvent(item) && !isItemAbilityEnabled((slots_t)slot)))
+				(g_moveEvents->hasEquipEvent(item) && !isItemAbilityEnabled((slots_t)slot)))
 			continue;
 
 		const ItemType& it = Item::items[item->getID()];
@@ -2195,9 +2215,10 @@ BlockType_t Player::blockHit(Creature* attacker, CombatType_t combatType, int32_
 			if(item->hasCharges())
 				g_game.transformItem(item, item->getID(), std::max((int32_t)0, (int32_t)item->getCharges() - 1));
 		}
+
 #ifdef __DARGHOS_CUSTOM__
         Absorb_t::const_iterator fit = it.abilities.fieldAbsorb.find(combatType);
-		if(isField && fit != it.abilities.fieldAbsorb.end())
+        if(field && fit != it.abilities.fieldAbsorb.end())
 		{
 			blocked += (int32_t)std::ceil((double)(damage * (*fit).second) / 100.);
 			if(item->hasCharges())
@@ -2287,7 +2308,7 @@ bool Player::onDeath()
     {
         setLossSkill(false);
         setDropLoot(LOOT_DROP_NONE);
-        sendTextMessage(MSG_EVENT_ADVANCE, "Você morreu enquanto o servidor estava sofrendo ataques DDoS, nenhuma penalidade foi aplicada a sua morte e você será apenas levado ao templo, desculpe pelo transtorno.");
+        sendTextMessage(MSG_EVENT_ADVANCE, "Vocï¿½ morreu enquanto o servidor estava sofrendo ataques DDoS, nenhuma penalidade foi aplicada a sua morte e vocï¿½ serï¿½ apenas levado ao templo, desculpe pelo transtorno.");
     }
 #endif
 	else if(skull < SKULL_RED)
@@ -2418,10 +2439,10 @@ bool Player::onDeath()
 	removeConditions(CONDITIONEND_DEATH);
 	if(skillLoss)
 	{
-        uint64_t lossExperience = getLostExperience();
+		uint64_t lossExperience = getLostExperience();
 
 #ifdef __DARGHOS_CUSTOM__
-        std::stringstream deathStr; deathStr << "Relatórios da morte:\n";
+        std::stringstream deathStr; deathStr << "Relatï¿½rios da morte:\n";
 
         float extraReduction = 0.;
 
@@ -2432,7 +2453,7 @@ bool Player::onDeath()
                 extraReduction = 0.2;
 
             lossExperience = std::floor(lossExperience * extraReduction);
-            deathStr << "\nRedução extra por combate desleal (unfair fight): " << std::floor(100 - (extraReduction * 100)) << "%";
+            deathStr << "\nReduï¿½ï¿½o extra por combate desleal (unfair fight): " << std::floor(100 - (extraReduction * 100)) << "%";
         }
 
         deathStr << "\nExperiencia perdida: " << lossExperience << " pontos.";
@@ -2493,7 +2514,7 @@ bool Player::onDeath()
 		#ifdef __DARGHOS_CUSTOM__
         if(usePVPBlessing)
         {
-            deathStr << "\nVocê morreu em luta contra outros jogadores e perdeu a benção do PvP (twist of fate)! Suas benções regulares estão vuneraveis!";
+            deathStr << "\nVocï¿½ morreu em luta contra outros jogadores e perdeu a benï¿½ï¿½o do PvP (twist of fate)! Suas benï¿½ï¿½es regulares estï¿½o vuneraveis!";
         }
         else
 		#endif
@@ -2530,8 +2551,8 @@ bool Player::onDeath()
 		    if(ignoreLoss)
                 removeCondition(CONDITION_IGNORE_DEATH_LOSS);
 #else
-        if(preventLoss)
-        {
+		if(preventLoss)
+		{
 #endif
 			loginPosition = masterPosition;
 			g_creatureEvents->playerLogout(this, true);
@@ -2551,6 +2572,7 @@ void Player::dropCorpse(DeathList deathList)
 		if(health <= 0)
 		{
 			health = healthMax;
+			if(getZone() != ZONE_HARDCORE || g_config.getBool(ConfigManager::PVPZONE_ADDMANASPENT))
 			mana = manaMax;
 		}
 
@@ -2634,7 +2656,7 @@ void Player::addInFightTicks(bool pzLock, int32_t ticks/* = 0*/)
 #ifdef __DARGHOS_PVP_SYSTEM__
 		ticks = (isInBattleground()) ? g_config.getNumber(ConfigManager::BATTLEGROUND_PZ_LOCKED) : g_config.getNumber(ConfigManager::PZ_LOCKED);
 #else
-        ticks = g_config.getNumber(ConfigManager::PZ_LOCKED);
+		ticks = g_config.getNumber(ConfigManager::PZ_LOCKED);
 #endif
 	else
 		ticks = std::max(-1, ticks);
@@ -2825,7 +2847,7 @@ bool Player::hasCapacity(const Item* item, uint32_t count) const
 	return (itemWeight < getFreeCapacity());
 }
 
-ReturnValue Player::__queryAdd(int32_t index, const Thing* thing, uint32_t count, uint32_t flags) const
+ReturnValue Player::__queryAdd(int32_t index, const Thing* thing, uint32_t count, uint32_t flags, Creature*) const
 {
 	const Item* item = thing->getItem();
 	if(!item)
@@ -3048,7 +3070,7 @@ ReturnValue Player::__queryMaxCount(int32_t index, const Thing* thing, uint32_t 
 			else
 				maxQueryCount = 0;
 		}
-		else if(__queryAdd(index, item, item->getItemCount(), flags) == RET_NOERROR)
+		else if(__queryAdd(index, item, count, flags) == RET_NOERROR)
 		{
 			if(item->isStackable())
 				maxQueryCount = 100;
@@ -3065,7 +3087,7 @@ ReturnValue Player::__queryMaxCount(int32_t index, const Thing* thing, uint32_t 
 	return RET_NOERROR;
 }
 
-ReturnValue Player::__queryRemove(const Thing* thing, uint32_t count, uint32_t flags) const
+ReturnValue Player::__queryRemove(const Thing* thing, uint32_t count, uint32_t flags, Creature*) const
 {
 	int32_t index = __getIndexOfThing(thing);
 	if(index == -1)
@@ -3094,80 +3116,120 @@ Cylinder* Player::__queryDestination(int32_t& index, const Thing* thing, Item** 
 		if(!item)
 			return this;
 
-		//find an appropiate slot
-		std::list<std::pair<Item*, int32_t> > itemList;
+		std::list<std::pair<Container*, int32_t> > containers;
+		std::list<std::pair<Cylinder*, int32_t> > freeSlots;
+
+		bool autoStack = !((flags & FLAG_IGNOREAUTOSTACK) == FLAG_IGNOREAUTOSTACK);
 		for(int32_t i = SLOT_FIRST; i < SLOT_LAST; ++i)
 		{
-			if(Item* inventoryItem = inventory[i])
+			if(Item* invItem = inventory[i])
 			{
-				if(inventoryItem != tradeItem)
-					itemList.push_back(std::make_pair(inventoryItem, i));
-			}
-			else if(__queryAdd(i, item, item->getItemCount(), 0) == RET_NOERROR)
-			{
-				index = i;
-				return this;
-			}
-		}
-
-		//try containers
-		std::list<std::pair<Container*, int32_t> > deepList;
-		for(std::list<std::pair<Item*, int32_t> >::iterator it = itemList.begin(); it != itemList.end(); ++it)
-		{
-			//try find an already existing item to stack with
-			if((*it).first != item && item->isStackable() && (*it).first->getID() == item->getID() && (*it).first->getItemCount() < 100)
-			{
-				*destItem = (*it).first;
-				index = (*it).second;
-				return this;
-			}
-			//check sub-containers
-			else if(Container* container = (*it).first->getContainer())
-			{
-				int32_t tmpIndex = INDEX_WHEREEVER;
-				Item* tmpDestItem = NULL;
-
-				Cylinder* tmpCylinder = container->__queryDestination(tmpIndex, item, &tmpDestItem, flags);
-				if(tmpCylinder && tmpCylinder->__queryAdd(tmpIndex, item, item->getItemCount(), flags) == RET_NOERROR)
-				{
-					index = tmpIndex;
-					*destItem = tmpDestItem;
-					return tmpCylinder;
-				}
-
-				deepList.push_back(std::make_pair(container, 0));
-			}
-		}
-
-		//check deeper in the containers
-		int32_t deepness = g_config.getNumber(ConfigManager::PLAYER_DEEPNESS);
-		for(std::list<std::pair<Container*, int32_t> >::iterator dit = deepList.begin(); dit != deepList.end(); ++dit)
-		{
-			Container* c = (*dit).first;
-			if(!c)
-				continue;
-
-			int32_t level = (*dit).second;
-			for(ItemList::const_iterator it = c->getItems(); it != c->getEnd(); ++it)
-			{
-				if((*it) == tradeItem)
+				if(invItem == item || invItem == tradeItem)
 					continue;
 
-				if(Container* subContainer = dynamic_cast<Container*>(*it))
+				if(autoStack && item->isStackable() && __queryAdd(i, item, item->getItemCount(), 0)
+					== RET_NOERROR && invItem->getID() == item->getID() && invItem->getItemCount() < 100)
 				{
-					int32_t tmpIndex = INDEX_WHEREEVER;
-					Item* tmpDestItem = NULL;
+					*destItem = invItem;
+					index = i;
+					return this;
+				}
 
-					Cylinder* tmpCylinder = subContainer->__queryDestination(tmpIndex, item, &tmpDestItem, flags);
-					if(tmpCylinder && tmpCylinder->__queryAdd(tmpIndex, item, item->getItemCount(), flags) == RET_NOERROR)
+				if(Container* container = invItem->getContainer())
+				{
+					if(!autoStack && container->__queryAdd(INDEX_WHEREEVER,
+						item, item->getItemCount(), flags) == RET_NOERROR)
 					{
-						index = tmpIndex;
-						*destItem = tmpDestItem;
-						return tmpCylinder;
+						index = INDEX_WHEREEVER;
+						return container;
 					}
 
-					if(deepness < 0 || level < deepness)
-						deepList.push_back(std::make_pair(subContainer, (level + 1)));
+					containers.push_back(std::make_pair(container, 0));
+				}
+			}
+			else if(!autoStack)
+			{
+				if(__queryAdd(i, item, item->getItemCount(), 0) == RET_NOERROR)
+				{
+					index = i;
+					return this;
+				}
+			}
+			else
+				freeSlots.push_back(std::make_pair(this, i));
+		}
+
+		int32_t deepness = g_config.getNumber(ConfigManager::PLAYER_DEEPNESS);
+		while(!containers.empty())
+		{
+			Container* tmpContainer = containers.front().first;
+			int32_t level = containers.front().second;
+
+			containers.pop_front();
+			if(!tmpContainer)
+				continue;
+
+			for(uint32_t n = 0; n < tmpContainer->capacity(); ++n)
+			{
+				if(Item* tmpItem = tmpContainer->getItem(n))
+				{
+					if(tmpItem == item || tmpItem == tradeItem)
+						continue;
+
+					if(autoStack && item->isStackable() && tmpContainer->__queryAdd(n, item, item->getItemCount(),
+						0) == RET_NOERROR && tmpItem->getID() == item->getID() && tmpItem->getItemCount() < 100)
+					{
+						index = n;
+						*destItem = tmpItem;
+						return tmpContainer;
+					}
+
+					if(Container* container = tmpItem->getContainer())
+					{
+						if(!autoStack && container->__queryAdd(INDEX_WHEREEVER,
+							item, item->getItemCount(), flags) == RET_NOERROR)
+						{
+							index = INDEX_WHEREEVER;
+							return container;
+						}
+
+						if(deepness < 0 || level < deepness)
+							containers.push_back(std::make_pair(container, level + 1));
+					}
+				}
+				else
+				{
+					if(!autoStack)
+					{
+						if(tmpContainer->__queryAdd(n, item, item->getItemCount(), 0) == RET_NOERROR)
+						{
+							index = n;
+							return tmpContainer;
+						}
+					}
+					else
+						freeSlots.push_back(std::make_pair(tmpContainer, n));
+
+					break; // one slot to check is definitely enough.
+				}
+			}
+		}
+
+		if(autoStack)
+		{
+			while(!freeSlots.empty())
+			{
+				Cylinder* tmpCylinder = freeSlots.front().first;
+				int32_t i = freeSlots.front().second;
+
+				freeSlots.pop_front();
+				if(!tmpCylinder)
+					continue;
+
+				if(tmpCylinder->__queryAdd(i, item, item->getItemCount(), flags) == RET_NOERROR)
+				{
+					index = i;
+					return tmpCylinder;
 				}
 			}
 		}
@@ -3600,7 +3662,7 @@ bool Player::setFollowCreature(Creature* creature, bool fullPathSearch /*= false
 	setFollowCreature(NULL);
 
 #ifndef __DARGHOS_CUSTOM__
-    setAttackedCreature(NULL);
+	setAttackedCreature(NULL);
 #endif
 
 	if(!deny)
@@ -3609,7 +3671,7 @@ bool Player::setFollowCreature(Creature* creature, bool fullPathSearch /*= false
 #ifdef __DARGHOS_CUSTOM__
     onTargetLost();
 #else
-    sendCancelTarget();
+	sendCancelTarget();
 #endif
 
 	cancelNextWalk = true;
@@ -3781,7 +3843,7 @@ void Player::updateItemsLight(bool internal/* = false*/)
 			maxLight = curLight;
 	}
 
-	if(itemsLight.level != maxLight.level || itemsLight.color != maxLight.color)
+	if(maxLight.level > itemsLight.level || (maxLight.level == itemsLight.level && maxLight.color != itemsLight.color))
 	{
 		itemsLight = maxLight;
 		if(!internal)
@@ -3931,16 +3993,10 @@ void Player::onAttackedCreature(Creature* target)
 		sendIcons();
 	}
 	#endif
-
-	if(Combat::isInPvpZone(this, targetPlayer) || isPartner(targetPlayer) ||
-#ifdef __WAR_SYSTEM__
-		isAlly(targetPlayer) ||
-#endif
+	
+	if(Combat::isInPvpZone(this, targetPlayer) || isPartner(targetPlayer) || isAlly(targetPlayer) ||
 		(g_config.getBool(ConfigManager::ALLOW_FIGHTBACK) && targetPlayer->hasAttacked(this)
-#ifdef __WAR_SYSTEM__
-		&& !targetPlayer->isEnemy(this, false)
-#endif
-		))
+			&& !targetPlayer->isEnemy(this, false)))
 		return;
 
 	if(!pzLocked)
@@ -3949,11 +4005,7 @@ void Player::onAttackedCreature(Creature* target)
 		sendIcons();
 	}
 
-	if(getZone() != target->getZone() || skull != SKULL_NONE
-#ifdef __WAR_SYSTEM__
-		|| targetPlayer->isEnemy(this, true)
-#endif
-		)
+	if(getZone() != target->getZone() || skull != SKULL_NONE || targetPlayer->isEnemy(this, true))
 		return;
 
 	if(targetPlayer->getSkull() != SKULL_NONE)
@@ -4033,17 +4085,15 @@ void Player::onTargetCreatureGainHealth(Creature* target, int32_t points)
 			party->addPlayerHealedMember(this, points);
 	}
 }
-#ifdef __WAR_SYSTEM__
 
 GuildEmblems_t Player::getGuildEmblem(const Creature* creature) const
 {
 	const Player* player = creature->getPlayer();
-
+	
 	#ifndef __DARGHOS_PVP_SYSTEM__
 	if(!player || !player->hasEnemy())
 		return Creature::getGuildEmblem(creature);
 	#else
-
 	if(player && player->isInBattleground())
 	{
 		if(!isInBattleground())
@@ -4056,7 +4106,7 @@ GuildEmblems_t Player::getGuildEmblem(const Creature* creature) const
 	{
 		return Creature::getGuildEmblem(creature);
 	}
-	#endif
+	#endif	
 
 	if(player->isEnemy(this, false))
 		return EMBLEM_RED;
@@ -4099,7 +4149,6 @@ bool Player::isAlly(const Player* player) const
 {
 	return !warMap.empty() && player && player->getGuildId() == guildId;
 }
-#endif
 
 bool Player::onKilledCreature(Creature* target, DeathEntry& entry)
 {
@@ -4120,30 +4169,17 @@ bool Player::onKilledCreature(Creature* target, DeathEntry& entry)
 
 	Player* targetPlayer = target->getPlayer();
 	if(!targetPlayer || Combat::isInPvpZone(this, targetPlayer) || isPartner(targetPlayer)
-#ifdef __WAR_SYSTEM__
-		|| isAlly(targetPlayer)
-#endif
-		)
+			|| isAlly(targetPlayer))
 		return true;
-#ifdef __WAR_SYSTEM__
 
 	War_t enemy;
-	if(targetPlayer->getEnemy(this, enemy) && (!entry.isLast() || IOGuild::getInstance()->war(enemy)))
+	if(targetPlayer->getEnemy(this, enemy) && (!entry.isLast() || IOGuild::getInstance()->updateWar(enemy)))
 		entry.setWar(enemy);
-
-#endif
 
 	if(!entry.isJustify() || !hasCondition(CONDITION_INFIGHT))
 		return true;
 
-	if(!targetPlayer->hasAttacked(this) && target->getSkull() == SKULL_NONE && targetPlayer != this
-		&& (addUnjustifiedKill(targetPlayer,
-#ifndef __WAR_SYSTEM__
-		true
-#else
-		!enemy.war
-#endif
-		) || entry.isLast()))
+	if(!targetPlayer->hasAttacked(this) && target->getSkull() == SKULL_NONE && targetPlayer != this && (addUnjustifiedKill(targetPlayer, !enemy.war) || entry.isLast()))
 		entry.setUnjustified();
 
 	addInFightTicks(true, g_config.getNumber(ConfigManager::WHITE_SKULL_TIME));
@@ -4188,7 +4224,7 @@ bool Player::rateExperience(double& gainExp, bool fromMonster)
 		int32_t minutes = getStaminaMinutes();
 		if(minutes >= g_config.getNumber(ConfigManager::STAMINA_LIMIT_TOP))
 		{
-			if(isPremium() || !g_config.getNumber(ConfigManager::STAMINA_BONUS_PREMIUM))
+			if(isPremium() || !g_config.getBool(ConfigManager::STAMINA_BONUS_PREMIUM))
 				gainExp *= g_config.getDouble(ConfigManager::RATE_STAMINA_ABOVE);
 		}
 		else if(minutes < (g_config.getNumber(ConfigManager::STAMINA_LIMIT_BOTTOM)) && minutes > 0)
@@ -4196,7 +4232,7 @@ bool Player::rateExperience(double& gainExp, bool fromMonster)
 		else if(minutes <= 0)
 			gainExp = 0;
 	}
-	else if(isPremium() || !g_config.getNumber(ConfigManager::STAMINA_BONUS_PREMIUM))
+	else if(isPremium() || !g_config.getBool(ConfigManager::STAMINA_BONUS_PREMIUM))
 		gainExp *= g_config.getDouble(ConfigManager::RATE_STAMINA_ABOVE);
 
 	return true;
@@ -4383,20 +4419,10 @@ Skulls_t Player::getSkullType(const Creature* creature) const
 		if(g_game.getWorldType() != WORLDTYPE_OPEN)
 			return SKULL_NONE;
 
-		if((player == this || (skull != SKULL_NONE && player->getSkull() < SKULL_RED)) && player->hasAttacked(this)
-#ifdef __WAR_SYSTEM__
-			&& !player->isEnemy(this, false)
-#endif
-			)
+		if((player == this || (skull != SKULL_NONE && player->getSkull() < SKULL_RED)) && player->hasAttacked(this) && !player->isEnemy(this, false))
 			return SKULL_YELLOW;
 
-		if(player->getSkull() == SKULL_NONE &&
-#ifndef __WAR_SYSTEM__
-			isPartner(player) &&
-#else
-			(isPartner(player) || isAlly(player)) &&
-#endif
-			g_game.getWorldType() != WORLDTYPE_OPTIONAL)
+		if(player->getSkull() == SKULL_NONE && (isPartner(player) || isAlly(player)) && g_game.getWorldType() != WORLDTYPE_OPTIONAL)
 			return SKULL_GREEN;
 	}
 
@@ -5199,11 +5225,9 @@ bool Player::isGuildInvited(uint32_t guildId) const
 void Player::leaveGuild()
 {
 	sendClosePrivate(CHANNEL_GUILD);
-#ifdef __WAR_SYSTEM__
 	warMap.clear();
 	g_game.updateCreatureEmblem(this);
 
-#endif
 	guildLevel = GUILDLEVEL_NONE;
 	guildId = rankId = 0;
 	guildName = rankName = guildNick = std::string();
@@ -5214,7 +5238,7 @@ bool Player::isPremium() const
 	if(g_config.getBool(ConfigManager::FREE_PREMIUM) || hasFlag(PlayerFlag_IsAlwaysPremium))
 		return true;
 
-	return (premiumDays != 0);
+	return premiumDays;
 }
 
 bool Player::setGuildLevel(GuildLevel_t newLevel, uint32_t rank/* = 0*/)
@@ -5378,7 +5402,7 @@ void Player::increaseCombatValues(int32_t& min, int32_t& max, bool useCharges, b
 	for(; i < SLOT_LAST; ++i)
 	{
 		if(!(item = getInventoryItem((slots_t)i)) || item->isRemoved() ||
-			(g_moveEvents->hasEquipEvent(item) && !isItemAbilityEnabled((slots_t)i)))
+				(g_moveEvents->hasEquipEvent(item) && !isItemAbilityEnabled((slots_t)i)))
 			continue;
 
 		const ItemType& it = Item::items[item->getID()];
@@ -5449,7 +5473,7 @@ bool Player::transferMoneyTo(const std::string& name, uint64_t amount)
 void Player::sendCritical() const
 {
 	if(g_config.getBool(ConfigManager::DISPLAY_CRITICAL_HIT))
-		g_game.addAnimatedText(getPosition(), COLOR_DARKRED, "CRITICAL!");
+		g_game.addAnimatedText(getPosition(), COLOR_DARKRED, "You strike a critical hit!");
 }
 
 #ifdef __DARGHOS_IGNORE_AFK__

@@ -46,7 +46,7 @@ class TalkActions : public BaseEvents
 #ifdef __DARGHOS_CUSTOM__
 		bool onPlayerSay(Creature* creature, uint16_t channelId, SpeakClasses type, const std::string& words, bool ignoreAccess);
 #else
-        bool onPlayerSay(Creature* creature, uint16_t channelId, const std::string& words, bool ignoreAccess);
+		bool onPlayerSay(Creature* creature, uint16_t channelId, const std::string& words, bool ignoreAccess);
 #endif
 
 		inline TalkActionsMap::const_iterator getFirstTalk() const {return talksMap.begin();}
@@ -80,7 +80,7 @@ class TalkAction : public Event
 #ifdef __DARGHOS_CUSTOM__
 		int32_t executeSay(Creature* creature, const std::string& words, std::string param, uint16_t channel, SpeakClasses type);
 #else
-        int32_t executeSay(Creature* creature, const std::string& words, std::string param, uint16_t channel);
+		int32_t executeSay(Creature* creature, const std::string& words, std::string param, uint16_t channel);
 #endif
 
 		std::string getFunctionName() const {return m_functionName;}

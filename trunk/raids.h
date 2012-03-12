@@ -112,8 +112,8 @@ class Raid
 		Raid(const std::string& _name, uint32_t _interval, uint64_t _margin,
 			RefType_t _refType, bool _ref, bool _enabled, bool _clearOnEnd);
 #else
-	Raid(const std::string& _name, uint32_t _interval, uint64_t _margin,
-		RefType_t _refType, bool _ref, bool _enabled);
+		Raid(const std::string& _name, uint32_t _interval, uint64_t _margin,
+			RefType_t _refType, bool _ref, bool _enabled);
 #endif
 		virtual ~Raid();
 

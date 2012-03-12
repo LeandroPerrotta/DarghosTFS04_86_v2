@@ -23,6 +23,7 @@
 
 #include "scheduler.h"
 #include "configmanager.h"
+#include "tools.h"
 
 extern ConfigManager g_config;
 
@@ -46,9 +47,13 @@ DatabaseMySQL::DatabaseMySQL() :
 
 	my_bool reconnect = true;
 	mysql_options(&m_handle, MYSQL_OPT_RECONNECT, &reconnect);
-	if(!mysql_real_connect(&m_handle, g_config.getString(ConfigManager::SQL_HOST).c_str(), g_config.getString(
-		ConfigManager::SQL_USER).c_str(), g_config.getString(ConfigManager::SQL_PASS).c_str(), g_config.getString(
-		ConfigManager::SQL_DB).c_str(), g_config.getNumber(ConfigManager::SQL_PORT), NULL, 0))
+	if(!mysql_real_connect(&m_handle,
+			g_config.getString(ConfigManager::SQL_HOST).c_str(),
+			g_config.getString(ConfigManager::SQL_USER).c_str(),
+			g_config.getString(ConfigManager::SQL_PASS).c_str(),
+			g_config.getString(ConfigManager::SQL_DB).c_str(),
+			g_config.getNumber(ConfigManager::SQL_PORT),
+		NULL, 0))
 	{
 		std::clog << "Failed connecting to database - MYSQL ERROR: " << mysql_error(&m_handle) << " (" << mysql_errno(&m_handle) << ")" << std::endl;
 		return;
@@ -58,6 +63,7 @@ DatabaseMySQL::DatabaseMySQL() :
 	if(mysql_get_client_version() <= 50019)
 		//MySQL servers <= 5.0.19 have a bug where MYSQL_OPT_RECONNECT option is reset by mysql_real_connect calls.
 		//Read this http://dev.mysql.com/doc/refman/5.0/en/mysql-options.html for more information.
+		mysql_options(&m_handle, MYSQL_OPT_RECONNECT, &reconnect);
 		std::clog << std::endl << "> WARNING: Outdated MySQL server detected, consider upgrading to a newer version." << std::endl;
 
 	timeout = g_config.getNumber(ConfigManager::SQL_KEEPALIVE) * 1000;
@@ -65,7 +71,7 @@ DatabaseMySQL::DatabaseMySQL() :
 		m_timeoutTask = Scheduler::getInstance().addEvent(createSchedulerTask(timeout,
 			boost::bind(&DatabaseMySQL::keepAlive, this)));
 
-	if(!g_config.getBool(ConfigManager::HOUSE_STORAGE))
+	if(asLowerCaseString(g_config.getString(ConfigManager::HOUSE_STORAGE)) == "relational")
 		return;
 
 	//we cannot lock mutex here :)
@@ -82,9 +88,64 @@ DatabaseMySQL::DatabaseMySQL() :
 
 DatabaseMySQL::~DatabaseMySQL()
 {
-	mysql_close(&m_handle);
+	if(&m_handle)
+		mysql_close(&m_handle);
+
 	if(m_timeoutTask != 0)
 		Scheduler::getInstance().stopEvent(m_timeoutTask);
+}
+
+bool DatabaseMySQL::connect(bool _reconnect)
+{
+	if(_reconnect)
+	{
+		uint32_t attempts = g_config.getNumber(ConfigManager::MYSQL_RECONNECTION_ATTEMPTS);
+		if(attempts && m_attempts > attempts)
+			return false;
+
+		std::clog << "WARNING: MYSQL Lost connection, attempting to reconnect..." << std::endl;
+		if(m_connected)
+			mysql_close(&m_handle);
+
+		++m_attempts;
+		if(attempts && m_attempts > attempts)
+		{
+			std::clog << "Failed connection to database - maximum reconnect attempts passed." << std::endl;
+			return false;
+		}
+	}
+
+	/*m_connected = false;
+	if(!(m_handle = mysql_init(NULL)))
+	{
+		std::clog << "Failed to initialize MySQL connection handler." << std::endl;
+		return false;
+	}*/
+
+	int32_t timeout = g_config.getNumber(ConfigManager::MYSQL_READ_TIMEOUT);
+	if(timeout)
+		mysql_options(&m_handle, MYSQL_OPT_READ_TIMEOUT, (const char*)&timeout);
+
+	timeout = g_config.getNumber(ConfigManager::MYSQL_WRITE_TIMEOUT);
+	if(timeout)
+		mysql_options(&m_handle, MYSQL_OPT_WRITE_TIMEOUT, (const char*)&timeout);
+
+	if(mysql_real_connect(&m_handle,
+			g_config.getString(ConfigManager::SQL_HOST).c_str(),
+			g_config.getString(ConfigManager::SQL_USER).c_str(),
+			g_config.getString(ConfigManager::SQL_PASS).c_str(),
+			g_config.getString(ConfigManager::SQL_DB).c_str(),
+			g_config.getNumber(ConfigManager::SQL_PORT),
+		NULL, 0))
+	{
+		m_connected = true;
+		m_attempts = 0;
+		return true;
+	}
+
+	std::clog << "Failed connecting to database - MYSQL ERROR: " << mysql_error(&m_handle) << " (" << mysql_errno(&m_handle) << ")" << std::endl;
+	mysql_close(&m_handle);
+	return false;
 }
 
 bool DatabaseMySQL::getParam(DBParam_t param)
@@ -142,7 +203,7 @@ bool DatabaseMySQL::query(const std::string &query)
 		if(error == CR_SERVER_LOST || error == CR_SERVER_GONE_ERROR)
 			m_connected = false;
 
-		std::clog << "mysql_real_query(): " << query.c_str() << " - MYSQL ERROR: " << mysql_error(&m_handle) << " (" << error << ")" << std::endl;
+		std::clog << "mysql_real_query(): " << query << " - MYSQL ERROR: " << mysql_error(&m_handle) << " (" << error << ")" << std::endl;
 		return false;
 	}
 
@@ -191,7 +252,7 @@ DBResult* DatabaseMySQL::storeQuery(const std::string &query)
 
 std::string DatabaseMySQL::escapeBlob(const char* s, uint32_t length)
 {
-	if(!s /*|| !strlen(s)*/)
+	if(!s || !strlen(s))
 		return "''";
 
 	char* output = new char[length * 2 + 1];

@@ -139,9 +139,7 @@ typedef std::map<uint32_t, uint32_t> MuteCountMap;
 typedef std::list<std::string> LearnedInstantSpellList;
 typedef std::list<uint32_t> InvitedToGuildsList;
 typedef std::list<Party*> PartyList;
-#ifdef __WAR_SYSTEM__
 typedef std::map<uint32_t, War_t> WarMap;
-#endif
 
 #define SPEED_MAX 1500
 #define SPEED_MIN 10
@@ -254,7 +252,7 @@ class Player : public Creature, public Cylinder
 		uint32_t getClientVersion() const {return clientVersion;}
 		void setClientVersion(uint32_t version) {clientVersion = version;}
 
-		bool hasClient() const {return (client != NULL);}
+		bool hasClient() const {return client;}
 		bool isVirtual() const {return (getID() == 0);}
 		void disconnect() {if(client) client->disconnect();}
 		uint32_t getIP() const;
@@ -288,7 +286,7 @@ class Player : public Creature, public Cylinder
 		void setIdleTime(uint32_t amount) {idleTime = amount;}
 
 		bool checkLoginDelay(uint32_t playerId) const;
-		bool isTrading() const {return (tradePartner != NULL);}
+		bool isTrading() const {return tradePartner;}
 
 		uint32_t getAccount() const {return accountId;}
 		std::string getAccountName() const {return account;}
@@ -302,7 +300,6 @@ class Player : public Creature, public Cylinder
 
 		bool isPremium() const;
 		int32_t getPremiumDays() const {return premiumDays;}
-#ifdef __WAR_SYSTEM__
 
 		bool hasEnemy() const {return !warMap.empty();}
 		bool getEnemy(const Player* player, War_t& data) const;
@@ -313,7 +310,6 @@ class Player : public Creature, public Cylinder
 		void addEnemy(uint32_t guild, War_t war)
 			{warMap[guild] = war;}
 		void removeEnemy(uint32_t guild) {warMap.erase(guild);}
-#endif
 
 		uint32_t getVocationId() const {return vocationId;}
 		void setVocation(uint32_t id);
@@ -387,6 +383,7 @@ class Player : public Creature, public Cylinder
 		virtual bool canSee(const Position& pos) const;
 		virtual bool canSeeCreature(const Creature* creature) const;
 		virtual bool canWalkthrough(const Creature* creature) const;
+		void setWalkthrough(const Creature* creature, bool walkthrough);
 
 		virtual bool canSeeInvisibility() const {return hasFlag(PlayerFlag_CanSenseInvisibility);}
 
@@ -440,7 +437,7 @@ class Player : public Creature, public Cylinder
 
 		void stopWalk() {cancelNextWalk = true;}
 		void openShopWindow();
-		void closeShopWindow(bool send = true, Npc* npc = NULL, int32_t onBuy = -1, int32_t onSell = -1);
+		void closeShopWindow(bool send = true);
 		bool canShopItem(uint16_t itemId, uint8_t subType, ShopEvent_t event);
 
 		chaseMode_t getChaseMode() const {return chaseMode;}
@@ -464,9 +461,8 @@ class Player : public Creature, public Cylinder
 		bool isPzLocked() const {return pzLocked;}
 		void setPzLocked(bool v) {pzLocked = v;}
 
-
 		virtual BlockType_t blockHit(Creature* attacker, CombatType_t combatType, int32_t& damage,
-			bool checkDefense = false, bool checkArmor = false, bool reflect = true, bool isField = false);
+			bool checkDefense = false, bool checkArmor = false, bool reflect = true, bool field = false);
 
 		virtual void doAttacking(uint32_t interval);
 		virtual bool hasExtraSwing() {return lastAttack > 0 && ((OTSYS_TIME() - lastAttack) >= getAttackSpeed());}
@@ -528,9 +524,7 @@ class Player : public Creature, public Cylinder
 
 		Skulls_t getSkullType(const Creature* creature) const;
 		PartyShields_t getPartyShield(const Creature* creature) const;
-#ifdef __WAR_SYSTEM__
 		GuildEmblems_t getGuildEmblem(const Creature* creature) const;
-#endif
 
 		bool hasAttacked(const Player* attacked) const;
 		void addAttacked(const Player* attacked);
@@ -582,8 +576,8 @@ class Player : public Creature, public Cylinder
 			{if(client) client->sendCreatureShield(creature);}
 		void sendCreatureEmblem(const Creature* creature)
 			{if(client) client->sendCreatureEmblem(creature);}
-		void sendCreatureImpassable(const Creature* creature)
-			{if(client) client->sendCreatureImpassable(creature);}
+		void sendCreatureWalkthrough(const Creature* creature, bool walkthrough)
+			{if(client) client->sendCreatureWalkthrough(creature, walkthrough);}
 
 		//container
 		void sendAddContainerItem(const Container* container, const Item* item);
@@ -648,8 +642,7 @@ class Player : public Creature, public Cylinder
 			{if(client) client->sendCancel(msg);}
 		void sendCancelMessage(ReturnValue message) const;
 		void sendCancelTarget() const
-        { if(client) client->sendCancelTarget(); }
-
+			{if(client) client->sendCancelTarget();}
 		void sendCancelWalk() const
 			{if(client) client->sendCancelWalk();}
 		void sendChangeSpeed(const Creature* creature, uint32_t newSpeed) const
@@ -728,11 +721,15 @@ class Player : public Creature, public Cylinder
 		void receivePing();
         uint32_t getCurrentPing() const;
 #else
-        void receivePing() {lastPong = OTSYS_TIME();}
+		void receivePing() {lastPong = OTSYS_TIME();}
 #endif
 
 		virtual void onThink(uint32_t interval);
 		uint32_t getAttackSpeed() const;
+
+		void setLastMail(uint64_t v) {lastMail = v;}
+		uint16_t getMailAttempts() const {return mailAttempts;}
+		void addMailAttempt() {++mailAttempts;}
 
 		virtual void postAddNotification(Creature* actor, Thing* thing, const Cylinder* oldParent,
 			int32_t index, cylinderlink_t link = LINK_OWNER);
@@ -854,10 +851,10 @@ class Player : public Creature, public Cylinder
 
 		//cylinder implementations
 		virtual ReturnValue __queryAdd(int32_t index, const Thing* thing, uint32_t count,
-			uint32_t flags) const;
+			uint32_t flags, Creature* actor = NULL) const;
 		virtual ReturnValue __queryMaxCount(int32_t index, const Thing* thing, uint32_t count, uint32_t& maxQueryCount,
 			uint32_t flags) const;
-		virtual ReturnValue __queryRemove(const Thing* thing, uint32_t count, uint32_t flags) const;
+		virtual ReturnValue __queryRemove(const Thing* thing, uint32_t count, uint32_t flags, Creature* actor = NULL) const;
 		virtual Cylinder* __queryDestination(int32_t& index, const Thing* thing, Item** destItem,
 			uint32_t& flags);
 
@@ -946,6 +943,8 @@ class Player : public Creature, public Cylinder
 		uint16_t maxWriteLen;
 		uint16_t sex;
 
+		uint16_t mailAttempts;
+
 		int32_t premiumDays;
 		int32_t soul;
 		int32_t soulMax;
@@ -999,6 +998,8 @@ class Player : public Creature, public Cylinder
 		uint64_t manaSpent;
 		uint64_t lastAttack;
 
+		uint64_t lastMail;
+
 		double inventoryWeight;
 		double capacity;
 		char managerChar[100];
@@ -1024,15 +1025,15 @@ class Player : public Creature, public Cylinder
 		Npc* shopOwner;
 		Item* weapon;
 
+		std::vector<uint32_t> forceWalkthrough;
+
 		typedef std::set<uint32_t> AttackedSet;
 		AttackedSet attackedSet;
 		ShopInfoList shopOffer;
 		PartyList invitePartyList;
 		OutfitMap outfits;
 		LearnedInstantSpellList learnedInstantSpellList;
-#ifdef __WAR_SYSTEM__
 		WarMap warMap;
-#endif
 
 #ifdef __DARGHOS_PVP_SYSTEM__
         friend class Battleground;

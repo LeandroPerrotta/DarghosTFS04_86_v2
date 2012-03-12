@@ -46,7 +46,7 @@ class ProtocolGame : public Protocol
 			protocolGameCount++;
 #endif
 			player = NULL;
-			m_eventConnect = 0;
+			m_eventConnect = m_maxSizeCount = 0;
 			m_debugAssertSent = m_acceptPackets = false;
 		}
 
@@ -158,9 +158,13 @@ class ProtocolGame : public Protocol
 		void parseOpenPriv(NetworkMessage& msg);
 		void parseCloseChannel(NetworkMessage& msg);
 		void parseCloseNpc(NetworkMessage& msg);
+
+		//rule violation system
 		void parseProcessRuleViolation(NetworkMessage& msg);
 		void parseCloseRuleViolation(NetworkMessage& msg);
 		void parseCancelRuleViolation(NetworkMessage& msg);
+		void parseViolationWindow(NetworkMessage& msg);
+		void parseViolationReport(NetworkMessage& msg);
 
 		//Send functions
 		void sendChannelMessage(std::string author, std::string text, SpeakClasses type, uint8_t channel);
@@ -201,7 +205,7 @@ class ProtocolGame : public Protocol
 		void sendCreatureSkull(const Creature* creature);
 		void sendCreatureShield(const Creature* creature);
 		void sendCreatureEmblem(const Creature* creature);
-		void sendCreatureImpassable(const Creature* creature);
+		void sendCreatureWalkthrough(const Creature* creature, bool walkthrough);
 
 		void sendShop(const ShopInfoList& shop);
 		void sendCloseShop();
@@ -250,16 +254,14 @@ class ProtocolGame : public Protocol
 		void sendUpdateInventoryItem(slots_t slot, const Item* item);
 		void sendRemoveInventoryItem(slots_t slot);
 
-		//Help functions
-
-		// translate a tile to clientreadable format
+		//translate a tile to clientreadable format
 		void GetTileDescription(const Tile* tile, NetworkMessage_ptr msg);
 
-		// translate a floor to clientreadable format
+		//translate a floor to clientreadable format
 		void GetFloorDescription(NetworkMessage_ptr msg, int32_t x, int32_t y, int32_t z,
 			int32_t width, int32_t height, int32_t offset, int32_t& skip);
 
-		// translate a map area to clientreadable format
+		//translate a map area to clientreadable format
 		void GetMapDescription(int32_t x, int32_t y, int32_t z,
 			int32_t width, int32_t height, NetworkMessage_ptr msg);
 
@@ -299,9 +301,6 @@ class ProtocolGame : public Protocol
 		void UpdateInventoryItem(NetworkMessage_ptr msg, slots_t slot, const Item* item);
 		void RemoveInventoryItem(NetworkMessage_ptr msg, slots_t slot);
 
-		//rule violation window
-		void parseViolationWindow(NetworkMessage& msg);
-
 		//shop
 		void AddShopItem(NetworkMessage_ptr msg, const ShopInfo& item);
 
@@ -313,7 +312,7 @@ class ProtocolGame : public Protocol
 		friend class Player;
 		Player* player;
 
-		uint32_t m_eventConnect;
+		uint32_t m_eventConnect, m_maxSizeCount;
 		bool m_debugAssertSent, m_acceptPackets;
 
 		#ifdef __DARGHOS_CUSTOM__

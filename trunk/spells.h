@@ -131,6 +131,7 @@ class Spell : public BaseSpell
 		int32_t getMana() const {return mana;}
 		int32_t getManaPercent() const {return manaPercent;}
 		uint32_t getExhaustion() const {return exhaustion;}
+
 		bool isEnabled() const {return enabled;}
 		bool isPremium() const {return premium;}
 #ifdef __DARGHOS_CUSTOM_SPELLS__
@@ -152,6 +153,8 @@ class Spell : public BaseSpell
 
 		int32_t level;
 		int32_t magLevel;
+
+		uint8_t speedId;
 		bool premium;
 		bool learnable;
 		bool enabled;
@@ -200,7 +203,6 @@ class InstantSpell : public TalkAction, public Spell
 
 		virtual bool castSpell(Creature* creature);
 		virtual bool castSpell(Creature* creature, Creature* target);
-
 
 		//scripting
 		bool executeCastSpell(Creature* creature, const LuaVariant& var);
@@ -257,7 +259,7 @@ class ConjureSpell : public InstantSpell
 		virtual std::string getScriptEventParams() const {return "cid, var";}
 
 		static ReturnValue internalConjureItem(Player* player, uint32_t conjureId, uint32_t conjureCount,
-			bool transform = false, uint32_t reagentId = 0, slots_t slot = SLOT_WHEREEVER, bool test = false);
+			bool transform = false, uint32_t reagentId = 0);
 
 		static ConjureSpellFunction ConjureItem;
 
@@ -291,7 +293,6 @@ class RuneSpell : public Action, public Spell
 
 		//scripting
 		bool executeCastSpell(Creature* creature, const LuaVariant& var);
-
 		virtual bool isInstant() const {return false;}
 		uint32_t getRuneItemId(){return runeId;}
 
@@ -301,6 +302,7 @@ class RuneSpell : public Action, public Spell
 
 		static RuneSpellFunction Illusion;
 		static RuneSpellFunction Convince;
+		static RuneSpellFunction Soulfire;
 
 		bool internalCastSpell(Creature* creature, const LuaVariant& var);
 

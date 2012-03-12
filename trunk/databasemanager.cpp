@@ -1133,6 +1133,96 @@ uint32_t DatabaseManager::updateDatabase()
 			return 26;
 		}
 
+		case 26:
+		{
+			std::clog << "> Updating database to version 27..." << std::endl;
+			switch(db->getDatabaseEngine())
+			{
+				case DATABASE_ENGINE_SQLITE:
+				{
+					query << "CREATE TABLE IF NOT EXISTS `tile_store` ( `house_id` INTEGER NOT NULL, `world_id` INTEGER NOT NULL DEFAULT 0, `data` LONGBLOB NOT NULL, FOREIGN KEY (`house_id`) REFERENCES `houses` (`id`) );";
+					db->query(query.str());
+					break;
+				}
+
+				case DATABASE_ENGINE_MYSQL:
+				{
+					query << "CREATE TABLE IF NOT EXISTS `tile_store` ( `house_id` INT UNSIGNED NOT NULL, `world_id` TINYINT(4) UNSIGNED NOT NULL DEFAULT 0, `data` LONGBLOB NOT NULL, FOREIGN KEY (`house_id`) REFERENCES `houses` (`id`) ON DELETE CASCADE ) ENGINE = InnoDB;";
+					db->query(query.str());
+					break;
+				}
+
+				default:
+					break;
+			}
+
+			db->query(query.str());
+			query.str("");
+
+			registerDatabaseConfig("db_version", 27);
+			return 27;
+		}
+
+		case 27:
+		{
+			std::clog << "> Updating database to version 28..." << std::endl;
+			switch(db->getDatabaseEngine())
+			{
+				case DATABASE_ENGINE_MYSQL:
+				{
+					query << "CREATE TABLE IF NOT EXISTS `guild_wars`\
+(\
+	`id` INT NOT NULL AUTO_INCREMENT,\
+	`guild_id` INT NOT NULL,\
+	`enemy_id` INT NOT NULL,\
+	`begin` BIGINT NOT NULL DEFAULT 0,\
+	`end` BIGINT NOT NULL DEFAULT 0,\
+	`frags` INT UNSIGNED NOT NULL DEFAULT 0,\
+	`payment` BIGINT UNSIGNED NOT NULL DEFAULT 0,\
+	`guild_kills` INT UNSIGNED NOT NULL DEFAULT 0,\
+	`enemy_kills` INT UNSIGNED NOT NULL DEFAULT 0,\
+	`status` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,\
+	PRIMARY KEY (`id`), KEY `status` (`status`),\
+	KEY `guild_id` (`guild_id`), KEY `enemy_id` (`enemy_id`),\
+	FOREIGN KEY (`guild_id`) REFERENCES `guilds`(`id`) ON DELETE CASCADE,\
+	FOREIGN KEY (`enemy_id`) REFERENCES `guilds`(`id`) ON DELETE CASCADE\
+) ENGINE=InnoDB;";
+					db->query(query.str());
+					break;
+
+					query << "CREATE TABLE IF NOT EXISTS `guild_kills`\
+(\
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\
+	`guild_id` INT NOT NULL,\
+	`war_id` INT NOT NULL,\
+	`death_id` INT NOT NULL,\
+	FOREIGN KEY (`guild_id`) REFERENCES `guilds`(`id`) ON DELETE CASCADE,\
+	FOREIGN KEY (`war_id`) REFERENCES `guild_wars`(`id`) ON DELETE CASCADE,\
+	FOREIGN KEY (`death_id`) REFERENCES `player_deaths`(`id`) ON DELETE CASCADE\
+) ENGINE = InnoDB;";
+					db->query(query.str());
+					break;
+
+					query << "ALTER TABLE `killers` ADD `war` INT NOT NULL DEFAULT 0;";
+					db->query(query.str());
+					break;
+
+					query << "ALTER TABLE `guilds` ADD `balance` INT UNSIGNED NOT NULL DEFAULT 0;";
+					db->query(query.str());
+					break;
+				}
+
+				default:
+					break;
+			}
+
+			db->query(query.str());
+			query.str("");
+
+			registerDatabaseConfig("db_version", 28);
+			return 28;
+		}
+
 		default:
 			break;
 	}

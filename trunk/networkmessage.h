@@ -113,8 +113,8 @@ class NetworkMessage
 		virtual void clearTrack() {}
 #endif
 
-		// message data
-		uint8_t m_buffer[NETWORK_MAX_SIZE];
+        // message data
+        uint8_t m_buffer[NETWORK_MAX_SIZE];
 
 	protected:
 		// used to check available space while writing

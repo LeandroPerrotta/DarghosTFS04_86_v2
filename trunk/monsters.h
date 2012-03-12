@@ -87,12 +87,12 @@ class MonsterType
 		void reset();
 
 		void dropLoot(Container* corpse);
-#ifdef __DARGHOS_CUSTOM__
-		Item* createLoot(const LootBlock& lootBlock, uint64_t &gold);
+#ifdef __DARGHOS_CUSTOM__		
+		ItemList createLoot(const LootBlock& lootBlock, uint64_t &gold);
 		bool createChildLoot(Container* parent, const LootBlock& lootBlock, uint64_t &gold);
 #else
-        Item* createLoot(const LootBlock& lootBlock);
-        bool createChildLoot(Container* parent, const LootBlock& lootBlock);
+		ItemList createLoot(const LootBlock& lootBlock);
+		bool createChildLoot(Container* parent, const LootBlock& lootBlock);
 #endif
 
 		bool isSummonable, isIllusionable, isConvinceable, isAttackable, isHostile, isLureable,

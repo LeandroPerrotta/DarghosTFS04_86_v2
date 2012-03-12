@@ -46,7 +46,7 @@ bool Condition::setParam(ConditionParam_t param, int32_t value)
 			return true;
 
 		case CONDITIONPARAM_BUFF:
-			buff = (value != 0);
+			buff = value;
 			return true;
 
 		case CONDITIONPARAM_SUBID:
@@ -112,7 +112,7 @@ bool Condition::unserializeProp(ConditionAttr_t attr, PropStream& propStream)
 			if(!propStream.getType(value))
 				return false;
 
-			buff = value != 0;
+			buff = value;
 			return true;
 		}
 
@@ -1164,10 +1164,10 @@ bool ConditionDamage::doDamage(Creature* creature, int32_t damage)
 {
 	if(creature->isSuppress(getType()))
 		return true;
-
+		
 	CombatType_t combatType = Combat::ConditionToDamageType(conditionType);
 	Creature* attacker = g_game.getCreatureByID(owner);
-
+	
 	if(g_game.combatBlockHit(combatType, attacker, creature, damage, false, false, field))
 		return false;
 
@@ -1601,7 +1601,7 @@ bool ConditionLight::executeCondition(Creature* creature, int32_t interval)
 
 void ConditionLight::endCondition(Creature* creature, ConditionEnd_t)
 {
-	creature->setNormalCreatureLight();
+    creature->resetLight();
 	g_game.changeLight(creature);
 }
 
