@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <monster speed="280" manacost="0" race="blood" skull="red" experience="1000" name="dark archer" nameDescription="an archer of dark forces">
-  <health max="8500" now="8500"/>
+  <health max="12650" now="12650"/>
   <look head="79" body="95" addons="3" legs="19" type="129" corpse="6080" feet="95"/>
   <targetchange chance="20" interval="5000"/>
   <strategy defense="0" attack="100"/>
@@ -59,19 +59,20 @@
   <loot>
     <item chance="100000" id="7365" countmax="100"/>
     <item chance="100000" id="5944"/>
-    <item chance="50000" id="20043" countmax="10"/>
+    <item chance="50000" id="8472" countmax="10"/>
     <item chance="50000" id="7368" countmax="100"/>
-    <item chance="33333" id="7443"/>
+    <item chance="6666" id="7443"/>
     <item chance="33333" id="6529" countmax="100"/>
     <item chance="33333" id="2152" countmax="29"/>
-    <item chance="25000" id="7368" countmax="100"/>
-    <item chance="10000" id="11304"/>
-    <item chance="6666" id="11301"/>
-    <item chance="5000" id="12646"/>
-    <item chance="5000" id="11302"/>
-    <item chance="2857" id="12607"/>
-    <item chance="2500" id="8852"/>
-    <item chance="2000" id="8856"/>
-    <item chance="2000" id="9777"/>
+    <item chance="25000" id="7368" countmax="100"/>	
+    <item chance="2400" id="11304"/>
+    <item chance="2400" id="11301"/>
+    <item chance="641" id="12646"/>
+    <item chance="961" id="11302"/>
+    <item chance="480" id="12607"/>
+    <item chance="312" id="8852"/>
+    <item chance="160" id="8856"/>
+    <item chance="2400" id="9777"/>
+	<item chance="641" id="8851"/>
   </loot>
 </monster>

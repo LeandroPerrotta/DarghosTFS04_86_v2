@@ -39,11 +39,12 @@
   <elements>
     <element icePercent="-10"/>
     <element holyPercent="-15"/>
-    <element physicalPercent="40"/>
+    <element physicalPercent="50"/>
+	<element deathPercent="35"/>
     <element energyPercent="10"/>
   </elements>
   <summons maxSummons="6">
-    <summon chance="5" interval="1000" name="dark priestess"/>
+    <summon chance="7" interval="1000" name="dark priestess"/>
   </summons>
   <voices chance="50" interval="5000">
     <voice sentence="O esforço de vocês Quendorianos é inutil!"/>
@@ -57,15 +58,15 @@
     <item chance="50000" id="6500" countmax="5"/>
     <item chance="50000" id="11240"/>
     <item chance="50000" id="11302"/>
-    <item chance="50000" id="12642"/>
+    <item chance="33333" id="12642"/>
     <item chance="50000" id="7439" countmax="5"/>
     <item chance="50000" id="11305"/>
     <item chance="50000" id="2160" countmax="5"/>
-    <item chance="33333" id="2646"/>
+    <item chance="16666" id="2646"/>
     <item chance="33333" id="12649"/>
-    <item chance="33333" id="2522"/>
-    <item chance="25000" id="8932"/>
-    <item chance="4000" id="2408"/>
-    <item chance="4000" id="2523"/>
+    <item chance="12500" id="2522"/>
+    <item chance="16666" id="8932"/>
+    <item chance="3000" id="2408"/>
+    <item chance="2083" id="2523"/>
   </loot>
 </monster>

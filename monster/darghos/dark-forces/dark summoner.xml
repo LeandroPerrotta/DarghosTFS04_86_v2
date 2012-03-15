@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <monster speed="210" manacost="0" race="blood" skull="red" experience="17000" name="dark summoner" nameDescription="a summoner of dark forces">
-  <health max="5100" now="5100"/>
+  <health max="8700" now="8700"/>
   <look head="79" body="114" addons="3" legs="114" type="133" corpse="6080" feet="94"/>
   <targetchange chance="8" interval="5000"/>
   <strategy defense="0" attack="100"/>
@@ -65,12 +65,12 @@
     <item chance="100000" id="2152" countmax="37"/>
     <item chance="50000" id="2150" countmax="39"/>
     <item chance="33333" id="7589" countmax="16"/>
-    <item chance="33333" id="10220"/>
+    <item chance="10000" id="10220"/>
     <item chance="25000" id="8904"/>
-    <item chance="20000" id="7896"/>
-    <item chance="16666" id="7440"/>
-    <item chance="6666" id="11356"/>
-    <item chance="2500" id="11117"/>
-    <item chance="2000" id="9778"/>
+    <item chance="33333" id="7896"/>
+    <item chance="3333" id="7440"/>
+    <item chance="1562" id="11356"/>
+    <item chance="980" id="11117"/>
+    <item chance="3000" id="9778"/>
   </loot>
 </monster>

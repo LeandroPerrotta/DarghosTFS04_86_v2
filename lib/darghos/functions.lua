@@ -1,5 +1,14 @@
 function summonDarkGeneral()
-	local creature = doSummonCreature("Dark General", {x = 2221, y = 1748, z = 7}, true, true)
+
+	local POSITIONS = {
+		{pos = {x = 2221, y = 1748, z = 7}, message = "Foi avistado o estandarde supremo da Armada Negra! O GENERAL ataca o portão norte de Quendor!! Protejam a cidade!"} -- quendor north gate
+		,{pos = {x = 2080, y = 1835, z = 7}, message = "Foi avistado o estandarde supremo da Armada Negra! O GENERAL ataca o portão oeste de Quendor!! Protejam a cidade!"} -- quendor west gate
+	}
+	
+	local summonPos = POSITIONS[math.random(1, #POSITIONS)]
+
+	doBroadcastMessage(summonPos.message, MESSAGE_EVENT_ADVANCE)
+	local creature = doSummonCreature("Dark General", summonPos.pos, true, true)
 	registerCreatureEvent(creature, "monsterDeath")
 end
 

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <monster speed="260" race="blood" skull="red" experience="17000" name="dark mage" nameDescription="an mage of dark forces">
-  <health max="6200" now="6200"/>
+  <health max="10200" now="10200"/>
   <look head="113" body="114" addons="1" legs="114" type="145" corpse="6080" feet="79"/>
   <targetchange chance="10" interval="5000"/>
   <strategy defense="0" attack="100"/>
@@ -74,14 +74,14 @@
     <item chance="25000" id="2150" countmax="39"/>
     <item chance="20000" id="7891"/>
     <item chance="20000" id="2146" countmax="25"/>
-    <item chance="16666" id="7440"/>
+    <item chance="3333" id="7440"/>
     <item chance="12500" id="2147" countmax="14"/>
     <item chance="12500" id="7900"/>
     <item chance="10000" id="7894"/>
-    <item chance="6666" id="11356"/>
-    <item chance="6666" id="11355"/>
-    <item chance="5000" id="8918"/>
-    <item chance="4000" id="9933"/>
+    <item chance="1562" id="11356"/>
+    <item chance="1562" id="11355"/>
+    <item chance="584" id="8918"/>
+    <item chance="3846" id="9933"/>
     <item chance="2000" id="12643"/>
   </loot>
 </monster>
