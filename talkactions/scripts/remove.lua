@@ -41,8 +41,8 @@ function onSay(cid, words, param, channel)
 		return true
 	end
 
-	for i = 5, 1, -1 do
-		toPos.stackpos = i
+	repeat
+		toPos.stackpos = 1
 		tmp = getThingFromPos(toPos)
 		if(tmp.uid ~= 0) then
 			if(isCreature(tmp.uid)) then
@@ -54,7 +54,7 @@ function onSay(cid, words, param, channel)
 			doSendMagicEffect(toPos, CONST_ME_MAGIC_RED)
 			return true
 		end
-	end
+	until (tmp == 0)
 
 	doSendMagicEffect(getCreaturePosition(cid), CONST_ME_POFF)
 	return true
