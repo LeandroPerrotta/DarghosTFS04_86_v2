@@ -44,12 +44,12 @@
 		<formula meleeDamage="1.0" distDamage="1.0" wandDamage="1.1" magDamage="1.1" magHealingDamage="1.0" defense="1.0" magDefense="1.0" armor="1.0"/>
 		<skill fist="1.5" club="1.8" sword="1.8" axe="1.8" distance="1.8" shielding="1.5" fishing="1.1" experience="1.0"/>
 	</vocation>
-	<vocation id="11" name="Holy Paladin" description="a holy paladin" needpremium="1" criticalchancepercent="5" gaincap="20" gainhp="10" gainmana="15" gainhpticks="6" gainhpamount="30" gainmanaticks="3" gainmanaamount="60" manamultiplier="1.4" attackspeed="1500" soulmax="200" gainsoulticks="15" fromvoc="7" lessloss="30">
-		<formula meleeDamage="1.0" distDamage="1.1" wandDamage="1.0" magDamage="1.0" magHealingDamage="1.0" defense="1.0" magDefense="1.0" armor="1.0"/>
+	<vocation id="11" name="Holy Paladin" description="a holy paladin" needpremium="1" criticalchancepercent="5" gaincap="20" gainhp="10" gainmana="15" gainhpticks="6" gainhpamount="30" gainmanaticks="3" gainmanaamount="60" manamultiplier="1.4" attackspeed="1200" soulmax="200" gainsoulticks="15" fromvoc="7" lessloss="30">
+		<formula meleeDamage="1.0" distDamage="1.0" wandDamage="1.0" magDamage="1.0" magHealingDamage="1.0" defense="1.0" magDefense="1.0" armor="1.0"/>
 		<skill fist="1.2" club="1.2" sword="1.2" axe="1.2" distance="1.1" shielding="1.1" fishing="1.1" experience="1.0"/>
 	</vocation>
-	<vocation id="12" name="Berserk Knight" description="an berserk knight" needpremium="1" criticalchancepercent="5" gaincap="25" gainhp="15" gainmana="5" gainhpticks="4" gainhpamount="30" gainmanaticks="6" gainmanaamount="60" manamultiplier="3.0" attackspeed="1500" soulmax="200" gainsoulticks="15" fromvoc="8" lessloss="30">
-		<formula meleeDamage="1.1" distDamage="1.0" wandDamage="1.0" magDamage="1.0" magHealingDamage="1.0" defense="1.0" magDefense="1.0" armor="1.0"/>
+	<vocation id="12" name="Berserk Knight" description="an berserk knight" needpremium="1" criticalchancepercent="5" gaincap="25" gainhp="15" gainmana="5" gainhpticks="4" gainhpamount="30" gainmanaticks="6" gainmanaamount="60" manamultiplier="3.0" attackspeed="1200" soulmax="200" gainsoulticks="15" fromvoc="8" lessloss="30">
+		<formula meleeDamage="1.0" distDamage="1.0" wandDamage="1.0" magDamage="1.0" magHealingDamage="1.0" defense="1.0" magDefense="1.0" armor="1.0"/>
 		<skill fist="1.1" club="1.1" sword="1.1" axe="1.1" distance="1.4" shielding="1.1" fishing="1.1" experience="1.0"/>
 	</vocation>
 </vocations>
