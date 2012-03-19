@@ -17,7 +17,7 @@ function defaultActions(cid, item, fromPosition, itemEx, toPosition)
 		ret = teleportRune.onUse(cid, item, fromPosition, itemEx, toPosition)
 	elseif(item_id == CUSTOM_ITEMS.UNHOLY_SWORD) then
 		ret = unholySword.onUse(cid, item, fromPosition, itemEx, toPosition)
-	elseif(item_id == CUSTOM_ITEMS.PREMIUM_SCROLL) then
+	elseif(item_id == CUSTOM_ITEMS.PREMIUM_SCROLL_MONTLY or item_id == CUSTOM_ITEMS.PREMIUM_SCROLL_WEEKLY) then
 		ret = premiumScroll.onUse(cid, item, fromPosition, itemEx, toPosition)
 	elseif(item_id == CUSTOM_ITEMS.OUTFIT_TICKET) then
 		ret = outfitTicket.onUse(cid, item, fromPosition, itemEx, toPosition)
@@ -320,9 +320,9 @@ end
 
 premiumScroll = {}
 
-premiumScroll.PREMIUM_DAYS_TO_ADD = 30
-
 function premiumScroll.onUse(cid, item, frompos, item2, topos)
+	
+	premiumScroll.DAYS = { [CUSTOM_ITEMS.PREMIUM_SCROLL_MONTLY] = 30, [CUSTOM_ITEMS.PREMIUM_SCROLL_WEEKLY] = 7}
 	
 	local log_id = getItemAttribute(item.uid, "itemShopLogId")
 	
@@ -331,8 +331,8 @@ function premiumScroll.onUse(cid, item, frompos, item2, topos)
 		return true
 	end
 	
-	doPlayerAddPremiumDays(cid, premiumScroll.PREMIUM_DAYS_TO_ADD)
-	doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_ORANGE, "You have earned " .. premiumScroll.PREMIUM_DAYS_TO_ADD .. " days of premium time with this premium scroll! Good luck!")
+	doPlayerAddPremiumDays(cid, premiumScroll.DAYS[item.itemid])
+	doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_ORANGE, "You get " .. premiumScroll.DAYS[item.itemid] .. " days of premium time with this premium ticket! Good luck!")
 	doRemoveItem(item.uid)	
 	
 	return true

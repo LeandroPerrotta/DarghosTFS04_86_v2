@@ -382,6 +382,12 @@
 	<distance id="8854" level="80" unproperly="1" event="function" value="default"> <!-- Warsinger Bow -->
 		<vocation id="3"/>
 		<vocation id="7" showInDescription="0"/>
+	</distance>	
+	
+	<!-- CUSTOM -->
+	<distance id="12697" unproperly="1" event="function" value="default"> <!-- Agile Poisoned Longbow -->
+		<vocation id="3"/>
+		<vocation id="7" showInDescription="0"/>
 	</distance>
 
  	<!-- Ammunition -->

@@ -101,9 +101,7 @@ local node4 = keywordHandler:addKeyword({'punição', 'punicao'}, StdModule.say, {
 				node4:addChildKeyword({'sim', 'yes'}, sayPunishment, {npcHandler = npcHandler, onlyFocus = true})
 				node4:addChildKeyword({'não', 'nao', 'no'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = "Ok, em que mais posso lhe ajudar?", reset = true})
 
-local node5 = keywordHandler:addKeyword({'promotion'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'I can promote you for 20000 gold coins. Do you want me to promote you?'})
-        node5:addChildKeyword({'yes'}, StdModule.promotePlayer, {npcHandler = npcHandler, premium = true, cost = 20000, level = 20, promotion = 1, text = 'Congratulations! You are now promoted.'})
-        node5:addChildKeyword({'no'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'Alright then, come back when you are ready.', reset = true})
+D_CustomNpcModules.addPromotionHandler(keywordHandler, npcHandler)
 
 keywordHandler:addKeyword({'ajuda', 'ajudar'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'A jogadores que já tiverem atingido level 20 e possuirem uma Conta Premium eu posso conceder a {promoção}! Também foi me dado alguns poderes especiais para auxiliar jogadores pacificos ou agressivos que mudaram o {pvp}.'})
 keywordHandler:addKeyword({'pvp'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'Se você tiver mudado o seu PvP e tiver se arrependido, eu posso lhe conceder a {permissão especial}, com ela, os funcionarios dos templos não irão recusar uma nova mudança de pvp. Apos uma mudança os jogadores ficam sob efeito de {punição}, que eu também posso cancelar.'})

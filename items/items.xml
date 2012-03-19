@@ -2989,6 +2989,7 @@
 		<attribute key="weight" value="4300" />
 		<attribute key="defense" value="40" />
 		<attribute key="attack" value="55" />
+		<attribute key="criticalChance" value="8" />
 		<attribute key="weaponType" value="sword" />
 		<attribute key="slotType" value="two-handed" />
 	</item>
@@ -3116,6 +3117,7 @@
 		<attribute key="weight" value="6400" />
 		<attribute key="defense" value="38" />
 		<attribute key="attack" value="53" />
+		<attribute key="criticalChance" value="6" />
 		<attribute key="weaponType" value="sword" />
 		<attribute key="slotType" value="two-handed" />
 	</item>
@@ -3170,6 +3172,7 @@
 		<attribute key="weight" value="9000" />
 		<attribute key="defense" value="22" />
 		<attribute key="attack" value="52" />
+		<attribute key="criticalChance" value="5" />
 		<attribute key="weaponType" value="axe" />
 		<attribute key="slotType" value="two-handed" />
 	</item>
@@ -3361,6 +3364,7 @@
 		<attribute key="weight" value="5250" />
 		<attribute key="defense" value="14" />
 		<attribute key="attack" value="49" />
+		<attribute key="criticalChance" value="2" />
 		<attribute key="weaponType" value="axe" />
 		<attribute key="slotType" value="two-handed" />
 	</item>
@@ -3368,6 +3372,7 @@
 		<attribute key="weight" value="7000" />
 		<attribute key="defense" value="12" />
 		<attribute key="attack" value="48" />
+		<attribute key="criticalChance" value="1" />
 		<attribute key="weaponType" value="club" />
 	</item>
 	<item id="2445" article="a" name="crystal mace">
@@ -3419,6 +3424,7 @@
 		<attribute key="weight" value="11000" />
 		<attribute key="defense" value="15" />
 		<attribute key="attack" value="49" />
+		<attribute key="criticalChance" value="2" />
 		<attribute key="weaponType" value="club" />
 		<attribute key="slotType" value="two-handed" />
 	</item>
@@ -3426,6 +3432,7 @@
 		<attribute key="weight" value="4000" />
 		<attribute key="defense" value="30" />
 		<attribute key="attack" value="50" />
+		<attribute key="criticalChance" value="3" />
 		<attribute key="weaponType" value="club" />
 		<attribute key="slotType" value="two-handed" />
 	</item>
@@ -3433,6 +3440,7 @@
 		<attribute key="weight" value="6150" />
 		<attribute key="defense" value="10" />
 		<attribute key="attack" value="48" />
+		<attribute key="criticalChance" value="1" />
 		<attribute key="weaponType" value="axe" />
 		<attribute key="slotType" value="two-handed" />
 	</item>
@@ -8806,6 +8814,7 @@
 		<attribute key="weight" value="9500" />
 		<attribute key="weaponType" value="distance" />
 		<attribute key="slotType" value="two-handed" />
+		<attribute key="criticalChance" value="1" />
 		<attribute key="ammoType" value="bolt" />
 		<attribute key="range" value="6" />
 	</item>
@@ -10955,6 +10964,7 @@
 		<attribute key="weight" value="6400" />
 		<attribute key="defense" value="38" />
 		<attribute key="attack" value="50" />
+		<attribute key="criticalChance" value="2" />
 		<attribute key="weaponType" value="sword" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="description" value="This holy blade was forged of shattered dreams." />
@@ -11043,6 +11053,7 @@
 		<attribute key="defense" value="15" />
 		<attribute key="attack" value="50" />
 		<attribute key="weaponType" value="axe" />
+		<attribute key="criticalChance" value="3" />
 		<attribute key="slotType" value="two-handed" />
 	</item>
 	<item fromid="6556" toid="6557" article="a" name="tic-tac-toe token">
@@ -12060,6 +12071,7 @@
 		<attribute key="weight" value="13000" />
 		<attribute key="defense" value="21" />
 		<attribute key="attack" value="48" />
+		<attribute key="criticalChance" value="1" />
 		<attribute key="weaponType" value="sword" />
 		<attribute key="slotType" value="two-handed" />
 	</item>
@@ -12074,6 +12086,7 @@
 		<attribute key="weight" value="7200" />
 		<attribute key="defense" value="34" />
 		<attribute key="attack" value="49" />
+		<attribute key="criticalChance" value="2" />
 		<attribute key="weaponType" value="sword" />
 		<attribute key="slotType" value="two-handed" />
 	</item>
@@ -12198,6 +12211,7 @@
 		<attribute key="weight" value="12000" />
 		<attribute key="defense" value="20" />
 		<attribute key="attack" value="51" />
+		<attribute key="criticalChance" value="4" />
 		<attribute key="weaponType" value="club" />
 		<attribute key="slotType" value="two-handed" />
 	</item>
@@ -12354,6 +12368,7 @@
 		<attribute key="weight" value="11000" />
 		<attribute key="defense" value="35" />
 		<attribute key="attack" value="52" />
+		<attribute key="criticalChance" value="5" />
 		<attribute key="weaponType" value="club" />
 		<attribute key="slotType" value="two-handed" />
 	</item>
@@ -12374,6 +12389,7 @@
 		<attribute key="weight" value="9900" />
 		<attribute key="defense" value="20" />
 		<attribute key="attack" value="51" />
+		<attribute key="criticalChance" value="4" />
 		<attribute key="weaponType" value="axe" />
 		<attribute key="slotType" value="two-handed" />
 	</item>
@@ -12973,6 +12989,7 @@
 		<attribute key="weight" value="6150" />
 		<attribute key="defense" value="10" />
 		<attribute key="attack" value="48" />
+		<attribute key="criticalChance" value="1" />
 		<attribute key="weaponType" value="axe" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="elementFire" value="10" />
@@ -13148,6 +13165,7 @@
 		<attribute key="weight" value="6150" />
 		<attribute key="defense" value="10" />
 		<attribute key="attack" value="48" />
+		<attribute key="criticalChance" value="1" />
 		<attribute key="weaponType" value="axe" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="elementIce" value="10" />
@@ -13625,6 +13643,7 @@
 		<attribute key="weight" value="6150" />
 		<attribute key="defense" value="10" />
 		<attribute key="attack" value="48" />
+		<attribute key="criticalChance" value="1" />
 		<attribute key="weaponType" value="axe" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="elementEarth" value="11" />
@@ -13788,6 +13807,7 @@
 		<attribute key="weight" value="6150" />
 		<attribute key="defense" value="10" />
 		<attribute key="attack" value="48" />
+		<attribute key="criticalChance" value="1" />
 		<attribute key="weaponType" value="axe" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="elementEnergy" value="10" />
@@ -14831,6 +14851,7 @@
 		<attribute key="weaponType" value="distance" />
 		<attribute key="ammoType" value="bolt" />
 		<attribute key="attackSpeed" value="1400" />
+		<attribute key="criticalChance" value="3" />
 		<attribute key="range" value="6" />
 		<attribute key="hitChance" value="3" />
 		<attribute key="attack" value="5" />
@@ -14840,6 +14861,7 @@
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="weaponType" value="distance" />
 		<attribute key="ammoType" value="bolt" />
+		<attribute key="criticalChance" value="6" />
 		<attribute key="range" value="6" />
 		<attribute key="hitChance" value="-20" />
 		<attribute key="attack" value="20" />
@@ -14849,6 +14871,7 @@
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="weaponType" value="distance" />
 		<attribute key="ammoType" value="bolt" />
+		<attribute key="criticalChance" value="2" />
 		<attribute key="range" value="5" />
 		<attribute key="attack" value="4" />
 	</item>
@@ -14858,6 +14881,7 @@
 		<attribute key="weaponType" value="distance" />
 		<attribute key="ammoType" value="arrow" />
 		<attribute key="range" value="7" />
+		<attribute key="criticalChance" value="4" />
 		<attribute key="hitChance" value="5" />
 		<attribute key="attack" value="3" />
 	</item>
@@ -14875,6 +14899,7 @@
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="weaponType" value="distance" />
 		<attribute key="ammoType" value="arrow" />
+		<attribute key="criticalChance" value="4" />
 		<attribute key="range" value="7" />
 		<attribute key="hitChance" value="7" />
 	</item>
@@ -15119,6 +15144,7 @@
 		<attribute key="description" value="It shows your spells and can also shield against attack when worn." />
 		<attribute key="weight" value="2850" />
 		<attribute key="magiclevelpoints" value="3" />
+		<attribute key="criticalChance" value="1" />
 		<attribute key="defense" value="12" />
 		<attribute key="weaponType" value="shield" />
 	</item>
@@ -15189,6 +15215,7 @@
 		<attribute key="description" value="It shows your spells and can also shield against attack when worn." />
 		<attribute key="weight" value="2850" />
 		<attribute key="magiclevelpoints" value="3" />
+		<attribute key="criticalChance" value="1" />
 		<attribute key="defense" value="16" />
 		<attribute key="weaponType" value="shield" />
 	</item>
@@ -15239,6 +15266,7 @@
 		<attribute key="weight" value="12000" />
 		<attribute key="defense" value="20" />
 		<attribute key="attack" value="53" />
+		<attribute key="criticalChance" value="6" />
 		<attribute key="weaponType" value="axe" />
 		<attribute key="slotType" value="two-handed" />
 	</item>
@@ -15260,6 +15288,7 @@
 		<attribute key="weight" value="11500" />
 		<attribute key="defense" value="20" />
 		<attribute key="attack" value="51" />
+		<attribute key="criticalChance" value="4" />
 		<attribute key="weaponType" value="club" />
 		<attribute key="slotType" value="two-handed" />
 	</item>
@@ -15281,6 +15310,7 @@
 		<attribute key="weight" value="6800" />
 		<attribute key="defense" value="35" />
 		<attribute key="attack" value="51" />
+		<attribute key="criticalChance" value="4" />
 		<attribute key="weaponType" value="sword" />
 		<attribute key="slotType" value="two-handed" />
 	</item>
@@ -18508,6 +18538,7 @@
 		<attribute key="weight" value="2800"/>
 		<attribute key="magicpoints" value="3"/>
 		<attribute key="defense" value="14"/>
+		<attribute key="criticalChance" value="2" />
 		<attribute key="weaponType" value="shield"/>
 	</item>
 	<item id="12649" article="a" name="blade of corruption">
@@ -18748,9 +18779,9 @@
 		<attribute key="duration" value="25200" />
 		<attribute key="showduration" value="1" />
 	</item>	
-	<item id="12690" article="a" name="premium scroll">
+	<item id="12690" article="a" name="bilhete de premium - mensal">
 		<attribute key="weight" value="120" />
-		<attribute key="description" value="Use it to earn premium time for 30 days." />
+		<attribute key="description" value="Use isto para ganhar um mês de premium em sua conta. (30 days)." />
 	</item>	
 	<item id="12691" article="a" name="outfit ticket">
 		<attribute key="weight" value="1200" />
@@ -18776,6 +18807,24 @@
 		<attribute key="containerSize" value="10" />
 		<attribute key="description" value="Abra para saber qual presente sortido você ganhou no Darghos! Mas somente no dia de Natal!" />
 	</item>	
+	<item id="12696" article="a" name="bilhete de premium - semanal">
+		<attribute key="weight" value="120" />
+		<attribute key="description" value="Use isto para ganhar uma semana de premium em sua conta  (7 dias)." />
+	</item>
+	<item id="12697" article="a" name="agile poisoned longbow">
+		<attribute key="weight" value="2200" />
+		<attribute key="slotType" value="two-handed" />
+		<attribute key="weaponType" value="distance" />
+		<attribute key="ammoType" value="arrow" />
+		<attribute key="range" value="7" />
+		<attribute key="hitChance" value="5" />
+		<attribute key="criticalChance" value="10" />
+		<attribute key="attackSpeed" value="1200" />
+		<attribute key="skillDist" value="5" />
+		<attribute key="attack" value="9" />
+	</item>	
+	
+	<!-- Modified Items -->
 	<item id="2270" article="a" name="holy rune">
 		<!-- <attribute key="runeSpellName" value="holy rune" /> -->
 		<attribute key="type" value="rune" />

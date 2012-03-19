@@ -79,7 +79,7 @@ function onTradeAccept(cid, target, item, targetItem)
 	]]--
 	
 	if(doPlayerIsPvpEnable(cid) and not doPlayerIsPvpEnable(target) and hasCondition(cid, CONDITION_INFIGHT)) then
-		doPlayerSendCancel(cid, "VocÃª nÃ£o pode trocar um item com um jogador Pacifico enquanto estiver em combate.")
+		doPlayerSendCancel(cid, "Você não pode trocar um item com um jogador Pacifico enquanto estiver em combate.")
 		return false
 	end	
 	
@@ -89,7 +89,7 @@ function onTradeAccept(cid, target, item, targetItem)
 	
 	if(foundItems > 0) then
 	
-		local msg = "VocÃª ou seu parceiro de troca colocou um item nÃ£o trocavel. Remova itens nÃ£o trocaveis e tente novamente."
+		local msg = "ATENÇÃO: Você ou seu parceiro de troca colocou um item irregular, desativado e fora de funcionamento! Remova este(s) items e tente novamente."
 	
 		doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, msg)
 		doPlayerSendTextMessage(target, MESSAGE_INFO_DESCR, msg)
@@ -99,3 +99,34 @@ function onTradeAccept(cid, target, item, targetItem)
 	
 	return true
 end
+
+function onTradeRequest(cid, target, item)
+	
+	local sameLookItems = {
+		[CUSTOM_ITEMS.PREMIUM_SCROLL_MONTLY] = {}
+		,[CUSTOM_ITEMS.PREMIUM_SCROLL_WEEKLY] = {}
+		,[CUSTOM_ITEMS.OUTFIT_TICKET] = {}
+	}
+	
+	local warning = false
+	
+	if(not isContainer(item.uid) and sameLookItems[item.itemid] ~= nil) then
+		warning = true
+	end
+	
+	if(isContainer(item.uid)) then
+		local result = {}
+		searchItemDepthContainer(item, sameLookItems, result)
+		
+		if(#result > 0) then
+			warning = true
+		end
+	end
+	
+	if(warning) then
+		doPlayerPopupFYI(target, "ALERTA:\n\nO jogador " .. getPlayerName(target) .. " quer trocar alguns items com você no trade,\nentretanto, alguns dos items colocado usam graficos visuais identicos\n a outros items no Darghos.\n\nTome cuidado para não ser enganado! Sempre dê look nos items a trocar\n para saber se o item colocado possui o nome do item esperado.")	
+	end
+	
+	return true
+end 
+

@@ -1,3 +1,104 @@
+function getPlayerBaseVocation(cid)
+
+	if(isSorcerer(cid)) then
+		return 1
+	elseif(isDruid(cid)) then
+		return 2
+	elseif(isPaladin(cid)) then
+		return 3
+	elseif(isKnight(cid)) then
+		return 4
+	end
+	
+	return 0
+end
+
+function searchItemDepthContainer(container, itemlist, result, recursively)
+
+	recursively = recursively or true
+	
+	if(not isContainer(container.uid)) then
+		return false
+	end
+	
+	local foundItems = {}
+	
+	function tryAddItemToResult(item, attributes, result)
+		if(attributes.actionid ~= nil and item.aid ~= attributes.aid) then
+			return false
+		end
+		
+		print("Blabla")
+		table.insert(result, tmp)
+		return true
+	end
+	
+    for k = (getContainerSize(container.uid) - 1), 0, -1 do
+        local tmp = getContainerItem(container.uid, k)
+        
+		local iList = itemlist[tmp.itemid]
+        if (iList ~= nil) then
+			tryAddItemToResult(item, iList, result)
+        elseif (isContainer(tmp.uid) and recursively) then
+        	searchItemDepthContainer(tmp.uid, itemlist, result)
+        end
+    end	
+	return true
+end
+
+function lookingOutfitTicket(cid, thing)
+
+	local outfitId = thing.actionid or 0
+	local outfitName = {
+		[1] = "Citizen",
+		[2] = "Hunter",
+		[3] = "Mage",
+		[4] = "Knight",
+		[5] = "Noble",
+		[6] = "Summoner",
+		[7] = "Warrior",
+		[8] = "Barbarian",
+		[9] = "Druid",
+		[10] = "Wizard",
+		[11] = "Oriental",
+		[12] = "Pirate",
+		[13] = "Assassin",
+		[14] = "Beggar",
+		[15] = "Shaman",
+		[16] = "Norse",
+		[17] = "Nightmare",
+		[18] = "Jester",
+		[19] = "Brotherhood",
+		[20] = "Demonhunter",
+		[21] = "Yalaharian",
+		[22] = "Warmaster",
+		[23] = "Wayfarer"
+	}
+
+	local tempName = "Unkwnown"
+
+	if(outfitName[outfitId] ~= nil) then
+		tempName = outfitName[outfitId]
+	end
+	
+	local desc = ""
+	
+	if(not canPlayerWearOutfitId(cid, outfitId, 0)) then
+		desc = "Use este bilhete para ganhar o outfit " .. tempName .. "."
+	else
+		if(canPlayerWearOutfitId(cid, outfitId, 2)) then
+			desc = "Você já possui todos addons para o outfit" .. tempName .. ". Mas outras pessoas ainda podem usar-lo."
+		elseif(canPlayerWearOutfitId(cid, outfitId, 1)) then
+			desc = "Use este bilhete para ganhar o segundo addon para o outfit " .. tempName .. "."
+		else
+			desc = "Use este bilhete para ganhar o primeiro addon  para o outfit " .. tempName .. "."
+		end		
+	end	
+
+	doItemSetAttribute(thing.uid, "name", string.lower(tempName) .. " outfit ticket")
+	doItemSetAttribute(thing.uid, "description", desc)
+end
+
 function summonDarkGeneral()
 
 	local POSITIONS = {

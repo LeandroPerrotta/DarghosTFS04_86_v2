@@ -96,6 +96,11 @@
 	-->
 	
 	*CUSTOM ITEMS
+	
+	<!-- BOWS -->
+	<movevent type="Equip" itemid="12697" slot="hand" event="function" value="onEquipItem"/> <!-- Agile Poisoned Longbow -->
+	<movevent type="DeEquip" itemid="12697" slot="hand" event="function" value="onDeEquipItem"/>	
+	
 	*BOOTS SECTOR
 	<movevent type="Equip" itemid="12673" slot="feet" event="function" value="onEquipItem"/>
 	<movevent type="DeEquip" itemid="12673" slot="feet" event="function" value="onDeEquipItem"/>
