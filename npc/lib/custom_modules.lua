@@ -363,12 +363,12 @@ function D_CustomNpcModules.addPromotionHandler(keywordHandler, npcHandler)
 		end
 		
 		local desc = {
-			[0] = "Os beneficios obtidos ao se promover são: a velocidade que você regenera a sua vida e sua mana serão aumentadas, você também ganhará novas habilidades para usar e também terá pequena chance de causar danos criticos além de possui penalidades nas mortes reduzidas."
-			,[1] = "Os beneficios obtidos ao obter a segunda promoção são: suas habilidades magicas ficarão um pouco mais potentes (classes magicas) ou seus ataques ocorrerão mais rapidamente (classes não magicas), no mais você também terá uma chance maior de causar danos criticos."
+			"Os beneficios obtidos ao se promover são: a velocidade que você regenera a sua vida e sua mana serão aumentadas, você também ganhará novas habilidades para usar e também terá pequena chance de causar danos criticos além de possui penalidades nas mortes reduzidas."
+			,"Os beneficios obtidos ao obter a segunda promoção são: suas habilidades magicas ficarão um pouco mais potentes (classes magicas) ou seus ataques ocorrerão mais rapidamente (classes não magicas), no mais você também terá uma chance maior de causar danos criticos."
 		}
 		
 		if(desc[getPlayerPromotionLevel(cid)] ~= nil) then
-			npcHandler:say(desc[getPlayerPromotionLevel(cid)], cid)
+			npcHandler:say(desc[getPlayerPromotionLevel(cid) + 1], cid)
 		end
 		
 		return true
@@ -387,22 +387,22 @@ function D_CustomNpcModules.callbackPromote(cid, message, keywords, parameters, 
     end
 	
 	local promotionNames = {
-		[1] = { "master sorcerer", "elder druid", "royal paladin", "elite knight" }
-		,[2] = { "warmaster sorcerer", "warden druid", "holy paladin", "berserk knight" }
+		{ "master sorcerer", "elder druid", "royal paladin", "elite knight" }
+		,{ "warmaster sorcerer", "warden druid", "holy paladin", "berserk knight" }
 	}
 	
 	local promotions = {
-		[0] = {
+		{
 			message = "Com uma promoção você se tornaria um " .. promotionNames[1][getPlayerBaseVocation(cid)] .. " e também ganharia alguns {benefícios}. Para isto você deverá sacrificar 20 000 moedas de ouro. Voce quer receber esta promoção?"
 			, params = {npcHandler = npcHandler, premium = false, cost = 20000, level = 20, promotion = 1, text = 'Parabens! Agora você esta promovido!', reset = true}
 		}
-		,[1] = {
+		,{
 			message = "Você ja possui uma promoção, entretanto, se você possuir uma conta premium você pode adquirir uma segunda promoção, assim se tornando um " .. promotionNames[2][getPlayerBaseVocation(cid)] .. " e também ganharia alguns {benefícios}. Para isto você deverá sacrificar 500 000 moedas de ouro. Voce quer receber esta segunda promoção?"
 			, params = {npcHandler = npcHandler, premium = true, cost = 500000, level = 200, promotion = 2, text = 'Parabens! Você recebeu a segunda promoção!', reset = true}			
 		}
 	}
 	
-	local promo = promotions[getPlayerPromotionLevel(cid)]
+	local promo = promotions[getPlayerPromotionLevel(cid) + 1]
 	
 	if(promo == nil) then
 		npcHandler:say("Desculpe, mas você ja possui todas as promoções possiveis...", cid)
