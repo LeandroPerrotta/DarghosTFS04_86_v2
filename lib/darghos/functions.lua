@@ -40,7 +40,7 @@ function searchItemDepthContainer(container, itemlist, result, recursively)
         if (iList ~= nil) then
 			tryAddItemToResult(item, iList, result)
         elseif (isContainer(tmp.uid) and recursively) then
-        	searchItemDepthContainer(tmp.uid, itemlist, result)
+        	searchItemDepthContainer(tmp, itemlist, result)
         end
     end	
 	return true
