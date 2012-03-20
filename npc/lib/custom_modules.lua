@@ -394,11 +394,11 @@ function D_CustomNpcModules.callbackPromote(cid, message, keywords, parameters, 
 	local promotions = {
 		[0] = {
 			message = "Com uma promoção você se tornaria um " .. promotionNames[1][getPlayerBaseVocation(cid)] .. " e também ganharia alguns {benefícios}. Para isto você deverá sacrificar 20 000 moedas de ouro. Voce quer receber esta promoção?"
-			, params = {npcHandler = npcHandler, premium = false, cost = 20000, level = 20, promotion = 1, text = 'Parabens! Agora você esta promovido!'}
+			, params = {npcHandler = npcHandler, premium = false, cost = 20000, level = 20, promotion = 1, text = 'Parabens! Agora você esta promovido!', reset = true}
 		}
 		,[1] = {
 			message = "Você ja possui uma promoção, entretanto, se você possuir uma conta premium você pode adquirir uma segunda promoção, assim se tornando um " .. promotionNames[2][getPlayerBaseVocation(cid)] .. " e também ganharia alguns {benefícios}. Para isto você deverá sacrificar 500 000 moedas de ouro. Voce quer receber esta segunda promoção?"
-			, params = {npcHandler = npcHandler, premium = true, cost = 500000, level = 200, promotion = 2, text = 'Parabens! Você recebeu a segunda promoção!'}			
+			, params = {npcHandler = npcHandler, premium = true, cost = 500000, level = 200, promotion = 2, text = 'Parabens! Você recebeu a segunda promoção!', reset = true}			
 		}
 	}
 	
