@@ -408,6 +408,10 @@ function D_CustomNpcModules.callbackPromote(cid, message, keywords, parameters, 
 		npcHandler:say("Desculpe, mas você ja possui todas as promoções possiveis...", cid)
 	else
 		npcHandler:say(promo.message, cid)
+		
+		-- Precisamos limpar os nodes filhos para não haver conflitos...
+		node:clearChildrenNodes()
+		
 		node:addChildKeyword({'yes', 'sim'}, StdModule.promotePlayer, promo.params)
 		node:addChildKeyword({'no','não','nao'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'Tudo bem, posso lhe ajudar em algo mais?', reset = true})
 	end

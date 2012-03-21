@@ -86,6 +86,11 @@ if(KeywordHandler == nil) then
 		childNode.parent = self
 		return childNode
 	end
+	
+	-- Clear all current children nodes
+	function KeywordNode:clearChildrenNodes()
+		self.children = {}
+	end
 
 	KeywordHandler = {
 		root = nil,
