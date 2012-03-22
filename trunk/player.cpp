@@ -74,6 +74,7 @@ Player::Player(const std::string& _name, ProtocolGame* p):
     doubleDamage = false;
 	pause = false;
 	lastKnowUpdate = time(NULL);
+	m_criticalFactor = g_config.getDouble(ConfigManager::CRITICAL_HIT_MUL);
     #endif
 
     #ifdef __DARGHOS_PVP_SYSTEM__
@@ -5399,6 +5400,11 @@ void Player::increaseCombatValues(int32_t& min, int32_t& max, bool useCharges, b
 
 	Item* item = NULL;
 	int32_t minValue = 0, maxValue = 0, i = SLOT_FIRST;
+
+#ifdef __DARGHOS_CUSTOM__
+	int32_t criticalChance = getVocation()->getCriticalChance();
+#endif
+
 	for(; i < SLOT_LAST; ++i)
 	{
 		if(!(item = getInventoryItem((slots_t)i)) || item->isRemoved() ||
@@ -5432,6 +5438,13 @@ void Player::increaseCombatValues(int32_t& min, int32_t& max, bool useCharges, b
 				max = (int32_t)std::ceil((double)(max * it.abilities.increment[MAGIC_PERCENT]) / 100.);
 		}
 
+#ifdef __DARGHOS_CUSTOM__
+		if(it.m_criticalChance != -1)
+		{
+			criticalChance += it.m_criticalChance;
+		}
+#endif
+
 		bool removeCharges = false;
 		for(int32_t j = INCREMENT_FIRST; j <= INCREMENT_LAST; ++j)
 		{
@@ -5445,6 +5458,15 @@ void Player::increaseCombatValues(int32_t& min, int32_t& max, bool useCharges, b
 		if(useCharges && removeCharges && (countWeapon || item != weapon) && item->hasCharges())
 			g_game.transformItem(item, item->getID(), std::max((int32_t)0, (int32_t)item->getCharges() - 1));
 	}
+
+#ifdef __DARGHOS_CUSTOM__
+	if(min <= 0 && max <= 0 && random_range(1, 100) < criticalChance)
+	{
+		min = int32_t(min * getCriticalFactor());	
+		max = int32_t(max * getCriticalFactor());
+		sendCritical();
+	}
+#endif
 
 	min += minValue;
 	max += maxValue;
@@ -5524,6 +5546,11 @@ bool Player::hasPvpBlessing() const{ return hasBlessing(g_config.getNumber(Confi
 void Player::removePvpBlessing() { removeBlessing(g_config.getNumber(ConfigManager::USE_BLESSING_AS_PVP) - 1); }
 void Player::removeBlessing(int16_t value) { if(hasBlessing(value)) blessings -= (int16_t)1 << value;  }
 
+double Player::getCriticalFactor() const
+{ 
+	return m_criticalFactor; 
+}
+
 void Player::receivePing() {
     lastPong = OTSYS_TIME();
     uint16_t latency = lastPong - lastPing;
@@ -5546,7 +5573,7 @@ uint32_t Player::getCurrentPing() const {
         sum += *it;
     }
 
-    return std::ceil(sum / latencyList.size());
+    return std::ceil((float)(sum / latencyList.size()));
 }
 #endif
 

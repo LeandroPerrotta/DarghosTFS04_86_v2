@@ -84,6 +84,10 @@ ItemType::ItemType()
 	hitChance = maxHitChance = breakChance = -1;
 	shootRange = 1;
 
+#ifdef __DARGHOS_CUSTOM__
+	m_criticalChance = 0;
+#endif
+
 	condition = NULL;
 	combatType = COMBAT_NONE;
 
@@ -933,6 +937,13 @@ void Items::parseItemNode(xmlNodePtr itemNode, uint32_t id)
 					std::clog << "[Warning - Items::loadFromXml] Unknown ammoAction " << strValue << std::endl;
 			}
 		}
+#ifdef __DARGHOS_CUSTOM__
+		else if(tmpStrValue == "criticalchance")
+		{
+			if(readXMLInteger(itemAttributesNode, "value", intValue))
+				it.m_criticalChance = std::max(-100, std::min(100, intValue));
+		}
+#endif
 		else if(tmpStrValue == "hitchance")
 		{
 			if(readXMLInteger(itemAttributesNode, "value", intValue))

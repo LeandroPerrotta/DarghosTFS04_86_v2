@@ -779,7 +779,7 @@ void Combat::combatTileEffects(const SpectatorVec& list, Creature* caster, Tile*
 			bool pzLock = false;
 			if((g_game.getWorldType() == WORLDTYPE_OPTIONAL && !tile->hasFlag(
 #ifdef __DARGHOS_CUSTOM__
-				TILESTATE_HARDCOREZONE)) || tile->hasFlag(TILESTATE_OPTIONALZONE) || !player->isPvpEnabled())
+				TILESTATE_HARDCOREZONE)) || tile->hasFlag(TILESTATE_OPTIONALZONE) || (!player->isPvpEnabled() && !tile->hasFlag(TILESTATE_HARDCOREZONE)))
 #else
 				TILESTATE_HARDCOREZONE)) || tile->hasFlag(TILESTATE_OPTIONALZONE))
 #endif

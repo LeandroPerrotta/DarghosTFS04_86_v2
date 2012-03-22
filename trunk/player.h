@@ -786,6 +786,9 @@ class Player : public Creature, public Cylinder
             if(cancelTarget) setAttackedCreature(NULL);
             sendCancelTarget();
         }
+
+		double getCriticalFactor() const;
+		//uint16_t getCriticalChance() { return m_criticalChance; }
 #endif
 
 #ifdef __DARGHOS_PVP_SYSTEM__
@@ -927,6 +930,9 @@ class Player : public Creature, public Cylinder
         Bg_Teams_t team_id;
         uint32_t battlegroundRating;
         int64_t lastBattlegroundDeath;
+
+		uint16_t m_criticalChance;
+		double m_criticalFactor;
         #endif
 
 		OperatingSystem_t operatingSystem;

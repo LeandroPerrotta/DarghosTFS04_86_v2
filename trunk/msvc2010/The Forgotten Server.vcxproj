@@ -46,7 +46,6 @@
     <ClInclude Include="..\database.h" />
     <ClInclude Include="..\databasemanager.h" />
     <ClInclude Include="..\databasemysql.h" />
-    <ClInclude Include="..\databasesqlite.h" />
     <ClInclude Include="..\definitions.h" />
     <ClInclude Include="..\depot.h" />
     <ClInclude Include="..\dispatcher.h" />
@@ -130,7 +129,6 @@
     <ClCompile Include="..\database.cpp" />
     <ClCompile Include="..\databasemanager.cpp" />
     <ClCompile Include="..\databasemysql.cpp" />
-    <ClCompile Include="..\databasesqlite.cpp" />
     <ClCompile Include="..\depot.cpp" />
     <ClCompile Include="..\dispatcher.cpp" />
     <ClCompile Include="..\exception.cpp" />
@@ -158,14 +156,7 @@
     <ClCompile Include="..\movement.cpp" />
     <ClCompile Include="..\networkmessage.cpp" />
     <ClCompile Include="..\npc.cpp" />
-    <ClCompile Include="..\otpch.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">otpch.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">otpch.h</PrecompiledHeaderFile>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="..\otpch.cpp" />
     <ClCompile Include="..\otserv.cpp" />
     <ClCompile Include="..\outfit.cpp" />
     <ClCompile Include="..\outputmessage.cpp" />
@@ -214,7 +205,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -241,8 +232,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <GenerateManifest>true</GenerateManifest>
-    <IncludePath>C:\dev\boost_1_47_0\;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\dev\boost_1_47_0\stage\lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
+    <IncludePath>D:\MSVC\include\boost\;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\MSVC\lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
     <LinkIncremental>
     </LinkIncremental>
   </PropertyGroup>
@@ -253,36 +244,36 @@
     <LinkIncremental />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\dev\boost_1_47_0\;$(IncludePath)</IncludePath>
+    <IncludePath>D:\MSVC\include\boost;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>C:\dev\boost_1_47_0\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>C:\dev\boost_1_47_0\stage\lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
+    <LibraryPath>$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;D:\MSVC\lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LibraryPath>C:\dev\boost_1_47_0\stage64\lib;$(VCInstallDir)lib\amd64;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib\x64;$(FrameworkSDKDir)\lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\lib\sqlite3\include;..\lib\openssl\include;..\lib\mysql\include;..\lib\luajit\src;..\lib\win32\libxml2\include;..\lib\win32\iconv\include;C:\msvc\tfs\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>..\lib\sqlite3\include;..\lib\openssl\include;..\lib\mysql\include;..\lib\luajit\src;..\lib\win32\libxml2\include;..\lib\win32\iconv\include;D:\MSVC\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>__USE_SQLITE__;__USE_MYSQL__;__ENABLE_SERVER_DIAGNOSTIC__;__EXCEPTION_TRACER__;__WAR_SYSTEM__;__USE_LUALIBRARIES__;__DARGHOS_PVP_SYSTEM__;__DARGHOS_SPOOF__;__DARGHOS_CUSTOM__;__DARGHOS_CUSTOM_SPELLS__;__TFS_NEWEST_REVS_FIXIES__;__NO_CRYPTOPP__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__USE_MYSQL__;__ENABLE_SERVER_DIAGNOSTIC__;__EXCEPTION_TRACER__;__USE_LUALIBRARIES__;__DARGHOS_PVP_SYSTEM__;__DARGHOS_SPOOF__;__DARGHOS_CUSTOM__;__DARGHOS_CUSTOM_SPELLS__;__TFS_NEWEST_REVS_FIXIES__;__NO_CRYPTOPP__;__EXCEPTION_TRACER__;__USE_LUALIBRARIES__;__DARGHOS_PVP_SYSTEM__;__DARGHOS_SPOOF__;__DARGHOS_CUSTOM__;__DARGHOS_CUSTOM_SPELLS__;__TFS_NEWEST_REVS_FIXIES__;__NO_CRYPTOPP__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <MinimalRebuild>false</MinimalRebuild>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderFile>otpch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>lua5.1.lib;mpir.lib;libxml2.lib;dbghelp.lib;libmysql.lib;sqlite.lib;libeay32MT.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lua5.1.lib;mpir.lib;libxml2.lib;dbghelp.lib;libmysql.lib;sqlite.lib;libeay32MT.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <AdditionalLibraryDirectories>..\lib\win32;..\lib\win32\libxml2\lib;..\lib\win32\iconv\lib;C:\msvc\tfs\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\MSVC\lib;..\lib\win32;..\lib\win32\libxml2\lib;..\lib\win32\iconv\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>NotSet</SubSystem>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
@@ -312,26 +303,26 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>__USE_MYSQL__;__ENABLE_SERVER_DIAGNOSTIC__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__USE_MYSQL__;__ENABLE_SERVER_DIAGNOSTIC__;__EXCEPTION_TRACER__;__USE_LUALIBRARIES__;__DARGHOS_PVP_SYSTEM__;__DARGHOS_SPOOF__;__DARGHOS_CUSTOM__;__DARGHOS_CUSTOM_SPELLS__;__TFS_NEWEST_REVS_FIXIES__;__NO_CRYPTOPP__;__EXCEPTION_TRACER__;__USE_LUALIBRARIES__;__DARGHOS_PVP_SYSTEM__;__DARGHOS_SPOOF__;__DARGHOS_CUSTOM__;__DARGHOS_CUSTOM_SPELLS__;__TFS_NEWEST_REVS_FIXIES__;__NO_CRYPTOPP__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>otpch.h</PrecompiledHeaderFile>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>..\lib\sqlite3\include;..\lib\openssl\include;..\lib\mysql\include;..\lib\luajit\src;..\lib\win32\libxml2\include;..\lib\win32\iconv\include;C:\msvc\tfs\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\lib\sqlite3\include;..\lib\openssl\include;..\lib\mysql\include;..\lib\luajit\src;..\lib\win32\libxml2\include;..\lib\win32\iconv\include;D:\MSVC\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>true</MinimalRebuild>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>lua51.lib;mpir.lib;libxml2.lib;dbghelp.lib;libmysql.lib;sqlite.lib;libeay32MT.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lua5.1.lib;mpir.lib;libxml2.lib;dbghelp.lib;libmysql.lib;sqlite.lib;libeay32MT.lib</AdditionalDependencies>
       <SubSystem>NotSet</SubSystem>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <AdditionalLibraryDirectories>..\lib\win32;..\lib\win32\libxml2\lib;..\lib\win32\iconv\lib;C:\msvc\tfs\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\MSVC\lib;..\lib\win32;..\lib\win32\libxml2\lib;..\lib\win32\iconv\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
   </ItemDefinitionGroup>

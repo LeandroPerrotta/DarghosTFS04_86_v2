@@ -60,11 +60,8 @@ void ProtocolStatus::onRecvFirstMessage(NetworkMessage& msg)
 					{
 						bool sendPlayers = false;
 						#ifndef __DARGHOS_SPOOF__
-						if(g_config.getBool(ConfigManager::SPOOF_PLAYERS_ENABLED))
-						{
 						if(msg.size() > msg.position())
 							sendPlayers = msg.get<char>() == 0x01;
-						}
                         #endif
 
 						output->putString(status->getStatusString(sendPlayers), false);

@@ -271,9 +271,6 @@
     <ClInclude Include="..\vocation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\databasesqlite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\darghos_const.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -501,13 +498,10 @@
     <ClCompile Include="..\vocation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\otpch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\databasesqlite.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\darghos_pvp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\otpch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
