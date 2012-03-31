@@ -3,7 +3,7 @@ setCombatParam(combat, COMBAT_PARAM_TYPE, COMBAT_ENERGYDAMAGE)
 setCombatParam(combat, COMBAT_PARAM_EFFECT, CONST_ME_ENERGYAREA)
 
 function onGetFormulaValues(cid, level, maglevel)
-	local min, max = getMinMaxClassicFormula(level, maglevel, 8.0, 14.0)
+	local min, max = getMinMaxClassicFormula(level, maglevel, 5.4, 9.4)
 	return -min, -max
 end
 

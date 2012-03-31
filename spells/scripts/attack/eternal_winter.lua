@@ -3,7 +3,7 @@ setCombatParam(combat, COMBAT_PARAM_TYPE, COMBAT_ICEDAMAGE)
 setCombatParam(combat, COMBAT_PARAM_EFFECT, CONST_ME_ICETORNADO)
 
 function onGetFormulaValues(cid, level, maglevel)
-	local min, max = getMinMaxClassicFormula(level, maglevel, 11.4, 16.2)
+	local min, max = getMinMaxClassicFormula(level, maglevel, 6.6, 9.2)
 	return -min, -max
 end
 
