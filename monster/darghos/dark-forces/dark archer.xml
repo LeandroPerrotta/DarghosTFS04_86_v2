@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <monster speed="280" manacost="0" race="blood" skull="red" experience="1000" name="dark archer" nameDescription="an archer of dark forces">
-  <health max="12650" now="12650"/>
+  <health max="21650" now="21650"/>
   <look head="79" body="95" addons="3" legs="19" type="129" corpse="6080" feet="95"/>
   <targetchange chance="20" interval="5000"/>
   <strategy defense="0" attack="100"/>
@@ -18,14 +18,14 @@
     <flag runonhealth="1500"/>
   </flags>
   <attacks>
-    <attack chance="21" interval="2000" range="7" min="-475" name="physical" max="-700">
+    <attack chance="21" interval="2000" range="7" min="-735" name="physical" max="-1100">
       <attribute key="shootEffect" value="infernalbolt"/>
     </attack>
-    <attack chance="41" interval="2000" range="7" min="-215" name="physical" max="-360">
+    <attack chance="41" interval="2000" range="7" min="-315" name="physical" max="-450">
       <attribute key="shootEffect" value="etherealspear"/>
     </attack>
     <attack target="1" chance="25" inteval="2000" script="monsters/multi_shot.lua"/>
-    <attack chance="100" interval="1500" range="5" min="0" name="physical" max="-380">
+    <attack chance="100" interval="1500" range="5" min="-200" name="physical" max="-630">
       <attribute key="shootEffect" value="redstar"/>
     </attack>
   </attacks>

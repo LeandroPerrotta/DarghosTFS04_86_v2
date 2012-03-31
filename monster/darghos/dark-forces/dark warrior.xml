@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <monster speed="350" race="blood" skull="red" experience="1000" name="dark warrior" nameDescription="a warrior of dark forces">
-  <health max="15700" now="15700"/>
+  <health max="25500" now="25500"/>
   <look head="57" body="132" addons="3" legs="114" type="131" corpse="6080" feet="114"/>
   <targetchange chance="10" interval="15000"/>
   <strategy defense="0" attack="100"/>
@@ -19,10 +19,10 @@
   </flags>
   <attacks>
     <attack interval="2000" attack="60" skill="210" name="melee"/>
-    <attack chance="30" radius="2" interval="2000" min="-260" name="physical" max="-340">
+    <attack chance="30" radius="2" interval="2000" min="-530" name="physical" max="-770">
       <attribute key="areaEffect" value="blackspark"/>
     </attack>
-    <attack chance="10" spread="0" interval="2000" length="5" min="-280" name="physical" max="-450">
+    <attack chance="10" spread="0" interval="2000" length="5" min="-700" name="physical" max="-1200">
       <attribute key="areaEffect" value="mortarea"/>
     </attack>
   </attacks>

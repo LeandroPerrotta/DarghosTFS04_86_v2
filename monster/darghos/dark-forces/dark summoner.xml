@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <monster speed="210" manacost="0" race="blood" skull="red" experience="17000" name="dark summoner" nameDescription="a summoner of dark forces">
-  <health max="8700" now="8700"/>
+  <health max="15900" now="15900"/>
   <look head="79" body="114" addons="3" legs="114" type="133" corpse="6080" feet="94"/>
   <targetchange chance="8" interval="5000"/>
   <strategy defense="0" attack="100"/>
@@ -18,10 +18,10 @@
     <flag runonhealth="0"/>
   </flags>
   <attacks>
-    <attack target="1" chance="17" radius="2" interval="2000" min="-97" name="lifedrain" max="-160">
+    <attack target="1" chance="17" radius="2" interval="2000" min="-138" name="lifedrain" max="-335">
       <attribute key="areaEffect" value="redshimmer"/>
     </attack>
-    <attack target="1" chance="26" radius="3" interval="2000" min="-126" name="manadrain" max="-245">
+    <attack target="1" chance="26" radius="3" interval="2000" min="-263" name="manadrain" max="-430">
       <attribute key="areaEffect" value="blueshimmer"/>
     </attack>
     <attack duration="20000" target="1" chance="21" radius="4" interval="2000" name="speed" speedchange="-700">

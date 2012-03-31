@@ -14,7 +14,7 @@ function onTargetCreature(cid, target)
 		return
 	end
 	
-	local heal = math.random(650, 1050)
+	local heal = math.random(1300, 3350)
 	doCreatureAddHealth(target, heal, CONST_ME_MAGIC_BLUE, COLOR_BLUE)
 end
 

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <monster speed="260" race="blood" skull="red" experience="17000" name="dark mage" nameDescription="an mage of dark forces">
-  <health max="10200" now="10200"/>
+  <health max="17400" now="17400"/>
   <look head="113" body="114" addons="1" legs="114" type="145" corpse="6080" feet="79"/>
   <targetchange chance="10" interval="5000"/>
   <strategy defense="0" attack="100"/>
@@ -18,27 +18,27 @@
     <flag runonhealth="600"/>
   </flags>
   <attacks>
-    <attack target="1" chance="26" radius="2" interval="2000" range="3" min="-120" name="fire" max="-220">
+    <attack target="1" chance="26" radius="2" interval="2000" range="3" min="-340" name="fire" max="-570">
       <attribute key="shootEffect" value="burstarrow"/>
       <attribute key="areaEffect" value="firearea"/>
     </attack>
     <attack target="1" chance="10" radius="2" interval="2000" name="firefield">
       <attribute key="shootEffect" value="burstarrow"/>
     </attack>
-    <attack target="1" chance="27" radius="1" interval="2000" range="3" min="-170" name="energy" max="-365">
+    <attack target="1" chance="35" radius="1" interval="2000" range="3" min="-170" name="energy" max="-430">
       <attribute key="shootEffect" value="flasharrow"/>
       <attribute key="areaEffect" value="energyarea"/>
     </attack>
     <attack target="1" chance="20" radius="1" interval="2000" name="energyfield">
       <attribute key="shootEffect" value="burstarrow"/>
     </attack>
-    <attack chance="100" interval="2000" range="5" min="-260" name="death" max="-350">
+    <attack chance="100" interval="2000" range="5" min="-620" name="death" max="-800">
       <attribute key="shootEffect" value="suddendeath"/>
     </attack>
-    <attack chance="21" spread="3" interval="2000" length="5" min="-320" name="ice" max="-510">
+    <attack chance="21" spread="3" interval="2000" length="5" min="-550" name="ice" max="-695">
       <attribute key="areaEffect" value="icearea"/>
     </attack>
-    <attack target="1" chance="44" radius="4" interval="2000" min="-160" name="earth" max="-245">
+    <attack target="1" chance="44" radius="4" interval="2000" min="-260" name="earth" max="-495">
       <attribute key="areaEffect" value="bigplants"/>
     </attack>
   </attacks>
