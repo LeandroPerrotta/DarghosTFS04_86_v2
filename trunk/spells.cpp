@@ -638,7 +638,11 @@ bool Spell::checkSpell(Player* player) const
 		if(player->hasCondition(CONDITION_EXHAUST, EXHAUST_COMBAT))
 			exhausted = true;
 	}
+#ifdef __DARGHOS_CUSTOM__
+	else if(player->hasCondition(CONDITION_EXHAUST, EXHAUST_COMBAT))
+#else
 	else if(player->hasCondition(CONDITION_EXHAUST, EXHAUST_HEALING))
+#endif
 		exhausted = true;
 
 #ifdef __DARGHOS_CUSTOM_SPELLS__
@@ -1034,8 +1038,12 @@ void Spell::postSpell(Player* player, bool finishedCast /*= true*/, bool payCost
 #ifdef __DARGHOS_CUSTOM_SPELLS__
 		if(!player->isInBattleground())
 		{
-		if(!player->hasFlag(PlayerFlag_HasNoExhaustion) && exhaustion > 0)
-			player->addExhaust(exhaustion, isAggressive ? EXHAUST_COMBAT : EXHAUST_HEALING);
+			if(!player->hasFlag(PlayerFlag_HasNoExhaustion) && exhaustion > 0)
+#ifdef __DARGHOS_CUSTOM_SPELLS__
+				player->addExhaust(exhaustion, EXHAUST_COMBAT);
+#else
+				player->addExhaust(exhaustion, isAggressive ? EXHAUST_COMBAT : EXHAUST_HEALING);
+#endif
 		}
 		else
 		{

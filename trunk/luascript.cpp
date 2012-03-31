@@ -2483,8 +2483,8 @@ void LuaInterface::registerFunctions()
 	//doPlayerIsPvpEnable(cid)
 	lua_register(m_luaState, "doPlayerIsPvpEnable", LuaInterface::luaDoPlayerIsPvpEnable);
 
-        //getPlayerCurrentPing(cid)
-        lua_register(m_luaState, "getPlayerCurrentPing", LuaInterface::luaGetPlayerCurrentPing);
+    //getPlayerCurrentPing(cid)
+    lua_register(m_luaState, "getPlayerCurrentPing", LuaInterface::luaGetPlayerCurrentPing);
 	#endif
 
 	#ifdef __DARGHOS_PVP_SYSTEM__
