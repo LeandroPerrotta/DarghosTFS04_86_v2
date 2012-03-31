@@ -1,3 +1,19 @@
+function getMinMaxClassicFormula(level, maglevel, minFactor, maxFactor, _min, _max)
+	
+	local min = ((level / 3) + (maglevel / 2)) * minFactor
+	local max = ((level / 3) + (maglevel / 2)) * maxFactor
+	
+	if(_min ~= nil and _min > min) then
+		min = _min
+		
+		if(_max ~= nil and _max > max) then
+			max = _max
+		end
+	end
+	
+	return min, max
+end
+
 function getPlayerBaseVocation(cid)
 
 	if(isSorcerer(cid)) then

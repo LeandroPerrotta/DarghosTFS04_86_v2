@@ -8,16 +8,14 @@ setCombatParam(distanceCombat, COMBAT_PARAM_EFFECT, CONST_ME_MORTAREA)
 setCombatParam(distanceCombat, COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_DEATH)
 
 function onGetFormulaValues(cid, level, maglevel)
-	local min = (((level/5)+(maglevel*1.4))+10)
-	local max = (((level/5)+(maglevel*2.1))+20)
+	local min, max = getMinMaxClassicFormula(level, maglevel, 0.7, 2.0)
 	return -min, -max
 end
 
 setCombatCallback(combat, CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")
 
 function onGetFormulaValues(cid, level, maglevel)
-	local min = (((level/5)+(maglevel*1.4))+10)
-	local max = (((level/5)+(maglevel*2.1))+20)
+	local min, max = getMinMaxClassicFormula(level, maglevel, 0.7, 2.0)
 	return -min, -max
 end
 

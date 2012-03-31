@@ -59,6 +59,7 @@ trade_lists = {
 	},
 	
 	["potions"] = {
+		--[[
 		{ name = "small health potion", sell_for = 20 },
 		{ name = "health potion", sell_for = 45 },
 		{ name = "strong health potion", sell_for = 100 },
@@ -70,12 +71,16 @@ trade_lists = {
 		{ name = "great mana potion", sell_for = 120 },
 		
 		{ name = "great spirit potion", sell_for = 190 },
+		]]
+		
+		{ name = "mana fluid", itemtype = 7620, sell_for = 55 },
+		{ name = "life fluid", itemtype = 7618, sell_for = 60 },
 		
 		{ name = "antidote potion", sell_for = 30 },
 		
 		{ name = "empty potion flask (small)", itemtype = 7636, buy_for = 5 },	
 		{ name = "empty potion flask (medium)", itemtype = 7634, buy_for = 7 },	
-		{ name = "empty potion flask (large)", itemtype = 7635, buy_for = 10 },	
+		{ name = "empty potion flask (large)", itemtype = 7635, buy_for = 10 },
 	},
 	
 	["wands"] = {
@@ -225,10 +230,11 @@ trade_lists = {
 		{ name = "bolt", sell_for = 4 },
 		{ name = "piercing bolt", sell_for = 5 },
 		{ name = "power bolt", sell_for = 7 },
+		{ name = "assassin star", sell_for = 20 },
 	},
 	
 	["ammunition_special1"] = {
-		{ name = "assassin star", sell_for = 100 },
+
 	},
 	
 	["containers_free"] = {

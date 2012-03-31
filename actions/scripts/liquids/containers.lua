@@ -38,6 +38,7 @@ setConditionParam(poison, CONDITION_PARAM_TICKINTERVAL, 4000) -- Delay between d
 setConditionParam(poison, CONDITION_PARAM_FORCEUPDATE, true) -- Re-update condition when adding it(ie. min/max value)
 
 local exhaust = createConditionObject(CONDITION_EXHAUST)
+setConditionParam(exhaust, CONDITION_PARAM_SUBID, EXHAUST_COMBAT)
 setConditionParam(exhaust, CONDITION_PARAM_TICKS, (getConfigInfo('timeBetweenExActions') - 100))
 
 function onUse(cid, item, fromPosition, itemEx, toPosition)
@@ -48,7 +49,7 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 		end
 
 		if(item.type == TYPE_MANA_FLUID) then
-			if(hasCondition(cid, CONDITION_EXHAUST_HEAL)) then
+			if(hasCondition(cid, CONDITION_EXHAUST, EXHAUST_COMBAT)) then
 				doPlayerSendDefaultCancel(cid, RETURNVALUE_YOUAREEXHAUSTED)
 				return true
 			end
@@ -61,7 +62,7 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 			doSendMagicEffect(toPosition, CONST_ME_MAGIC_BLUE)
 			doAddCondition(cid, exhaust)
 		elseif(item.type == TYPE_LIFE_FLUID) then
-			if(hasCondition(cid, CONDITION_EXHAUST_HEAL)) then
+			if(hasCondition(cid, CONDITION_EXHAUST, EXHAUST_COMBAT)) then
 				doPlayerSendDefaultCancel(cid, RETURNVALUE_YOUAREEXHAUSTED)
 				return true
 			end

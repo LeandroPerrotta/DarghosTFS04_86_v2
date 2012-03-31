@@ -5,18 +5,9 @@ setCombatParam(combat, COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_ENERGY)
 setCombatParam(combat, COMBAT_PARAM_TARGETCASTERORTOPMOST, TRUE)
 
 function onGetFormulaValues(cid, level, maglevel)
-	local min = ((level/5)+(maglevel*1.2))
-	if min < 20 then
-		min = 20
-	end
-
-	local max = (((level/5)+(maglevel*2))+10)
-	if max < 40 then
-		max = 40
-	end
-
+	local min, max = getMinMaxClassicFormula(level, maglevel, 1.2, 2.4)
 	return -min, -max
-end
+end	
 
 setCombatCallback(combat, CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")
 

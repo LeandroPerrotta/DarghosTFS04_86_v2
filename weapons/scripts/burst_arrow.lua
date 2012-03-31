@@ -4,7 +4,13 @@ setCombatParam(combat, COMBAT_PARAM_BLOCKSHIELD, 1)
 setCombatParam(combat, COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
 setCombatParam(combat, COMBAT_PARAM_EFFECT, CONST_ME_FIREAREA)
 setCombatParam(combat, COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_BURSTARROW)
-setCombatFormula(combat, COMBAT_FORMULA_SKILL, 1, 0, 1, 0)
+
+function onGetFormulaValues(cid, level, maglevel)
+	local min, max = getMinMaxClassicFormula(level, maglevel, 0.6, 2.0)
+	return -min, -max
+end
+
+setCombatCallback(combat, CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")
 
 local area = createCombatArea({
 	{1, 1, 1},

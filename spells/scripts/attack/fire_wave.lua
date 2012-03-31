@@ -3,8 +3,7 @@ setCombatParam(combat, COMBAT_PARAM_TYPE, COMBAT_FIREDAMAGE)
 setCombatParam(combat, COMBAT_PARAM_EFFECT, CONST_ME_HITBYFIRE)
 
 function onGetFormulaValues(cid, level, maglevel)
-	local min = ((level/5)+(maglevel*1.2))
-	local max = (((level/5)+(maglevel*2))+10)
+	local min, max = getMinMaxClassicFormula(level, maglevel, 2.6, 4.6)
 	return -min, -max
 end
 

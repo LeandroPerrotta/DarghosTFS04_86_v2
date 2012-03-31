@@ -3,16 +3,9 @@ setCombatParam(combat, COMBAT_PARAM_TYPE, COMBAT_ENERGYDAMAGE)
 setCombatParam(combat, COMBAT_PARAM_EFFECT, CONST_ME_BIGCLOUDS)
 
 function onGetFormulaValues(cid, level, maglevel)
-	local min = ((level/5)+(maglevel*5))
-	local max = ((level/5)+(maglevel*12))
-	
-	if(doPlayerIsInBattleground(cid)) then
-		min = math.ceil(min * 1.30)
-		max = math.ceil(max * 1.30)
-	end
-	
+	local min, max = getMinMaxClassicFormula(level, maglevel, 9.4, 14.2)
 	return -min, -max
-end
+end	
 
 setCombatCallback(combat, CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")
 

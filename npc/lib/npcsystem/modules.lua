@@ -1177,6 +1177,7 @@ if(Modules == nil) then
 
 	-- Callback onBuy() function. If you wish, you can change certain Npc to use your onBuy().
 	function ShopModule:callbackOnBuy(cid, itemid, subType, amount, ignoreCap, inBackpacks)
+		
 		local shopItem = nil
 		for _, item in ipairs(self.npcHandler.shopItems) do
 			if(item.id == itemid) then

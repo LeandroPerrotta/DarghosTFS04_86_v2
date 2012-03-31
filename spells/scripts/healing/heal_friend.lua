@@ -4,8 +4,8 @@ setCombatParam(combat, COMBAT_PARAM_AGGRESSIVE, FALSE)
 setCombatParam(combat, COMBAT_PARAM_DISPEL, CONDITION_PARALYZE)
 
 function onGetFormulaValues(cid, level, maglevel)
-	local min = ((level/5)+(maglevel*10))
-	local max = ((level/5)+(maglevel*14))
+
+	local min, max = getMinMaxClassicFormula(level, maglevel, 14.5, 18.2)
 	
 	if(doPlayerIsInBattleground(cid)) then
 		min = ((level/5)+(maglevel*6.1))

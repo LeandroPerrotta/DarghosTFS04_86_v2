@@ -4,8 +4,7 @@ setCombatParam(combat, COMBAT_PARAM_EFFECT, CONST_ME_EXPLOSIONAREA)
 setCombatParam(combat, COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_EXPLOSION)
 
 function onGetFormulaValues(cid, level, maglevel)
-	local min = ((level/5))
-	local max = ((level/5)+(maglevel*4.8))
+	local min, max = getMinMaxClassicFormula(level, maglevel, 0.0, 6.0)
 	return -min, -max
 end
 
