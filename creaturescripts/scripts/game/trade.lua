@@ -1,5 +1,5 @@
 function needCheckTradeItem(item_id)
-	return isInArray({CUSTOM_ITEMS.PREMIUM_SCROLL, CUSTOM_ITEMS.OUTFIT_TICKET}, item_id)
+	return isInArray({CUSTOM_ITEMS.PREMIUM_SCROLL_MONTLY, CUSTOM_ITEMS.PREMIUM_SCROLL_WEEKLY, CUSTOM_ITEMS.OUTFIT_TICKET}, item_id)
 end
 
 function searchItemInContainer(container, foundItems)    
