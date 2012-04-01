@@ -18821,7 +18821,12 @@
 		<attribute key="attackSpeed" value="1200" />
 		<attribute key="skillDist" value="5" />
 		<attribute key="attack" value="9" />
-	</item>	
+	</item>		
+	<item id="12698" article="a" name="ordon's amulet of destruction">
+		<attribute key="weight" value="540"/>
+		<attribute key="slotType" value="necklace"/>
+		<attribute key="criticalChance" value="4" />
+	</item>
 	
 	<!-- Modified Items -->
 	<item id="2270" article="a" name="holy rune">

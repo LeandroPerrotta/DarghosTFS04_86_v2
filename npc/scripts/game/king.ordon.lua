@@ -83,7 +83,7 @@ function sayPunishment(cid, message, keywords, parameters, node)
     
     if(getPlayerPremiumDays(cid) < darghos_remove_change_pvp_debuff_cost) then
      	npcHandler:say("Para a remoção desta penalidade você precisará sacrificar " .. darghos_remove_change_pvp_debuff_cost .. " dias de sua conta premium, na qual você não possui!", cid)
-    	npcHandler:resetNpc(cid)		
+    	npcHandler:resetNpc(cid)
     	return false   
     end
     
@@ -94,6 +94,69 @@ function sayPunishment(cid, message, keywords, parameters, node)
     npcHandler:say("Esta feito! Você não esta mais sob o efeito da penalidade de redução de experiencia ganha!", cid)
     return true
 end
+
+STATE_NONE = -1
+STATE_ACCEPT = 0
+
+EVENT_ITEMS = {
+	2743, -- heaven blossom
+	2680, -- strawberrys
+	1746, -- treasure chest
+	2472, -- magic plate armor
+	3967 -- tribal mask
+}
+
+function facebookEventCallback(cid, message, keywords, parameters, node)
+	local npcHandler = parameters.npcHandler
+	local talkState = parameters.talk_state
+
+    if(not npcHandler:isFocused(cid)) then
+        return false
+    end
+	
+	local state = getPlayerStorageValue(cid, sid.FACEBOOK_EVENT_STATE)
+	if(talkState == 0) then
+		if(state == STATE_NONE) then
+			npcHandler:say("O Dark General roubou alguns de meus mais valiosos pertences e os escondeu nos lugares mais remotos de Darghos. Você gostaria de ajudar procurando os pertences roubados?", cid)
+			
+			node:clearChildrenNodes()
+			
+			node:addChildKeyword({'sim', 'yes'}, facebookEventCallback, {npcHandler = npcHandler, talk_state = 1})
+			node:addChildKeyword({'não', 'nao', 'no'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = "Que rude! Tu não deverias fazer parte deste reino!", reset = true})
+		elseif(state == STATE_ACCEPT) then
+			npcHandler:say("Seja bem vindo de volta " .. getPlayerName(cid).. "! Eu estava ancioso por noticias suas. E então, conseguiu encontrar meus pertences?" , cid)
+		
+			node:clearChildrenNodes()
+			
+			node:addChildKeyword({'sim', 'yes'}, facebookEventCallback, {npcHandler = npcHandler, talk_state = 2})
+			node:addChildKeyword({'não', 'nao', 'no'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = "Oh, que pena... Seja breve! Tenho pressa em recuperar-los!", reset = true})
+		end
+	elseif(talkState == 1) then
+		
+		npcHandler:say("Otimo! Como dito, os pertences foram escondidos pelo Darghos, sua missão será encontrar-los, juntar-los e trazer-los para mim. Por motivos de segurança informações sobre os items serão divulgados fora do jogo, no website: www.darghos.com.br! Boa sorte!", cid)
+		setPlayerStorageValue(cid, sid.FACEBOOK_EVENT_STATE, STATE_ACCEPT)
+	elseif(talkState == 2) then
+		
+		local foundAllItems = true
+		
+		for _,v in pairs(EVENT_ITEMS) do
+			if(getPlayerItemCount(cid, v) == 0) then
+				foundAllItems = false
+				break
+			end
+		end
+		
+		if (not foundAllItems) then
+			npcHandler:say("Algo esta errado, você não possui os meus pertences, volte aqui quando estiver com todos meus pertences!", cid)
+			npcHandler:resetNpc(cid)
+			return false
+		end
+	end
+	
+	return true
+end
+
+keywordHandler:addKeyword({'pertences'}, facebookEventCallback, {npcHandler = npcHandler, talk_state = 0, nlyFocus = true, text = 'O Dark General roubou alguns de meus mais valiosos pertences e os escondeu nos lugares mais remotos de Darghos. Você gostaria de ajudar procurando os pertences roubados?'})
 
 keywordHandler:addKeyword({'permissão especial', 'permissao especial'}, saySpecialPermission, {npcHandler = npcHandler, onlyFocus = true, talk_state = 1})
 
