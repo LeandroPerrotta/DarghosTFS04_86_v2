@@ -13,5 +13,18 @@ end
 setCombatCallback(combat, CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")
 
 function onCastSpell(cid, var)
+	
+	local target = getSpellTargetCreature(var)
+	if(not target) then
+		error("Invalid target: " .. table.show(var))
+		return false
+	end
+	
+	if(target ~= cid and not isDruid(cid)) then
+		doPlayerSendCancel(cid, "Somente druids podem usar runas de regeneração em outros jogadores.")
+		doSendMagicEffect(pos, CONST_ME_POFF)
+		return false		
+	end
+	
 	return doCombat(cid, combat, var)
 end
