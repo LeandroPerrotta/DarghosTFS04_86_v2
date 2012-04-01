@@ -12,21 +12,5 @@ end
 setCombatCallback(combat, CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")
 
 function onCastSpell(cid, var)
-
-	local manaCost = 160
-	
-	if(doPlayerIsInBattleground(cid)) then
-		manaCost = math.floor(getCreatureMaxMana(cid) * 0.22)
-	end
-	
-    if(getCreatureMana(cid) < manaCost) then
-            doPlayerSendDefaultCancel(cid, RETURNVALUE_NOTENOUGHMANA)
-            doSendMagicEffect(getCreaturePosition(cid), CONST_ME_POFF)
-            return false
-    end
-    
-    doCreatureAddMana(cid, -manaCost, false)
-    doPlayerAddSpentMana(cid, manaCost)
-
 	return doCombat(cid, combat, var)
 end

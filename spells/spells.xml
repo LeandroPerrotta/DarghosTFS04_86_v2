@@ -259,14 +259,14 @@
 		</instant>
 		
 		<!-- Healing (Generic) -->
-		<instant name="Light Healing" words="exura" lvl="9" mana="25"  exhaustion="1200" selftarget="1" aggressive="0" script="healing/light_healing.lua">
+		<instant name="Light Healing" words="exura" lvl="9" mana="25" exhaustion="1200" selftarget="1" aggressive="0" script="healing/light_healing.lua">
 		</instant>
-		<instant name="Intense Healing" words="exura gran" lvl="11" exhaustion="1200" selftarget="1" aggressive="0" script="healing/intense_healing.lua">
+		<instant name="Intense Healing" words="exura gran" lvl="11" mana="70" exhaustion="1200" selftarget="1" aggressive="0" script="healing/intense_healing.lua">
 			<vocation name="Sorcerer"/> <vocation name="Master Sorcerer"/> <vocation name="Warmaster Sorcerer"/>
 			<vocation name="Druid"/>    <vocation name="Elder Druid"/> <vocation name="Warden Druid"/>
 			<vocation name="Paladin"/>  <vocation name="Royal Paladin"/> <vocation name="Holy Paladin"/>
 		</instant>
-		<instant name="Ultimate Healing" words="exura vita" lvl="20" exhaustion="1200" selftarget="1" aggressive="0" script="healing/ultimate_healing.lua">
+		<instant name="Ultimate Healing" words="exura vita" lvl="20" mana="160" exhaustion="1200" selftarget="1" aggressive="0" script="healing/ultimate_healing.lua">
 			<vocation name="Sorcerer"/> <vocation name="Master Sorcerer"/> <vocation name="Warmaster Sorcerer"/>
 			<vocation name="Druid"/>    <vocation name="Elder Druid"/> <vocation name="Warden Druid"/>
 			<vocation name="Paladin"/>  <vocation name="Royal Paladin"/> <vocation name="Holy Paladin"/>
