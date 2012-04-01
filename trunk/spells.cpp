@@ -1039,16 +1039,12 @@ void Spell::postSpell(Player* player, bool finishedCast /*= true*/, bool payCost
 		if(!player->isInBattleground())
 		{
 			if(!player->hasFlag(PlayerFlag_HasNoExhaustion) && exhaustion > 0)
-#ifdef __DARGHOS_CUSTOM_SPELLS__
 				player->addExhaust(exhaustion, EXHAUST_COMBAT);
-#else
-				player->addExhaust(exhaustion, isAggressive ? EXHAUST_COMBAT : EXHAUST_HEALING);
-#endif
 		}
 		else
 		{
 			if(!player->hasFlag(PlayerFlag_HasNoExhaustion) && exhaustion > 0 && castDelay == 0)
-				player->addExhaust(exhaustion, isAggressive ? EXHAUST_COMBAT : EXHAUST_HEALING);
+				player->addExhaust(exhaustion, EXHAUST_COMBAT);
 		}
 #else
 		if(!player->hasFlag(PlayerFlag_HasNoExhaustion) && exhaustion > 0)

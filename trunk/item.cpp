@@ -1187,6 +1187,21 @@ std::string Item::getDescription(const ItemType& it, int32_t lookDistance, const
 			s << "magic level " << std::showpos << (int32_t)it.abilities.stats[STAT_MAGICLEVEL] << std::noshowpos;
 		}
 
+#ifdef __DARGHOS_CUSTOM__
+		if(it.m_criticalChance > 0 || (item && item->getCriticalChance() > 0))
+		{
+			if(begin)
+			{
+				begin = false;
+				s << " (";
+			}
+			else
+				s << ", ";
+
+			s << "crit% " << std::showpos << (item ? item->getCriticalChance() : it.m_criticalChance) << std::noshowpos;
+		}
+#endif
+
 		// TODO: we should find some better way of completing this
 		int32_t show = it.abilities.absorb[COMBAT_FIRST];
 		for(int32_t i = (COMBAT_FIRST + 1); i <= COMBAT_LAST; i++)
