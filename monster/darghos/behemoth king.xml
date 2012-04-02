@@ -71,7 +71,7 @@
 	<item id="2160" countmax="23" chance="90000">
 		<!--gold coin-->
 	</item>	  
-    <item id="2646" countmax="1" chance="500">
+    <item id="2646" countmax="1" chance="2500">
       <!--golden boots-->
     </item>
     <item id="2471" countmax="1" chance="333">
@@ -83,7 +83,7 @@
     <item id="6553" countmax="1" chance="5000">
       <!--ruthless axe-->
     </item>
-    <item id="2173" countmax="1" chance="500">
+    <item id="2173" countmax="1" chance="10000">
       <!--amulet of loss-->
     </item>
     <item id="2414" countmax="1" chance="8000">
