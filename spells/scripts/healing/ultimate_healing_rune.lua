@@ -22,7 +22,7 @@ function onCastSpell(cid, var)
 	
 	if(target ~= cid and not isDruid(cid)) then
 		doPlayerSendCancel(cid, "Somente druids podem usar runas de regeneração em outros jogadores.")
-		doSendMagicEffect(pos, CONST_ME_POFF)
+		doSendMagicEffect(getPlayerPosition(cid), CONST_ME_POFF)
 		return false		
 	end
 	
