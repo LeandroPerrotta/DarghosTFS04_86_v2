@@ -1431,7 +1431,11 @@ std::string Item::getDescription(const ItemType& it, int32_t lookDistance, const
 
 		if(!begin)
 			s << ")";
-	}
+	}	
+#ifdef __DARGHOS_CUSTOM__
+	else if(it.m_criticalChance > 0 || (item && item->getCriticalChance() > 0))
+		s << "(Crit% " << std::showpos << (item ? item->getCriticalChance() : it.m_criticalChance) << std::noshowpos << ")";
+#endif
 	else if(it.isContainer())
 		s << " (Vol:" << (int32_t)it.maxItems << ")";
 	else if(it.isKey())
