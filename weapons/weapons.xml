@@ -373,6 +373,8 @@
 	</distance>
 	<distance id="8856" level="60" unproperly="1" event="function" value="default"> <!-- Yol's Bow -->
 		<vocation id="3"/> <vocation id="7" showInDescription="0"/> <vocation id="11" showInDescription="0"/>
+		<vocation id="1"/> <vocation id="5" showInDescription="0"/> <vocation id="9" showInDescription="0"/>
+		<vocation id="2"/> <vocation id="6" showInDescription="0"/> <vocation id="10" showInDescription="0"/>
 		
 	</distance>
 	<distance id="8858" level="70" unproperly="1" event="function" value="default"> <!-- Elethriel's Elemental Bow -->
@@ -381,7 +383,8 @@
 	</distance>
 	<distance id="8854" level="80" unproperly="1" event="function" value="default"> <!-- Warsinger Bow -->
 		<vocation id="3"/> <vocation id="7" showInDescription="0"/> <vocation id="11" showInDescription="0"/>
-		
+		<vocation id="1"/> <vocation id="5" showInDescription="0"/> <vocation id="9" showInDescription="0"/>
+		<vocation id="2"/> <vocation id="6" showInDescription="0"/> <vocation id="10" showInDescription="0"/>		
 	</distance>	
 	
 	<!-- CUSTOM -->
