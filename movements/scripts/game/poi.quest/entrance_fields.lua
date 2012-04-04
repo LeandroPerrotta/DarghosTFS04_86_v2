@@ -15,7 +15,11 @@ function onStepIn(cid, item, position, fromPosition)
 	
 	local currentVocation = string.sub(strActionID, 3, 3)	
 	
-	if((currentVocation ~= playerVocation) and ((currentVocation + 4) ~= playerVocation)) then
+	if((isSorcerer(currentVocation) and not isSorcerer(playerVocation)) or
+		(isDruid(currentVocation) and not isDruid(playerVocation)) or
+		(isPaladin(currentVocation) and not isPaladin(playerVocation)) or
+		(isKnight(currentVocation) and not isKnight(playerVocation)) or
+			) then
 	
 		local index = tonumber(string.sub(strActionID, 4, 4))
 		local damage = tonumber(damages[index])
