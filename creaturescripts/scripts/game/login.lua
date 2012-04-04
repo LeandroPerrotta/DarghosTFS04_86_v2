@@ -79,7 +79,7 @@ function onLogin(cid)
 		message = message .. "www.darghos.com.br\n\n"
 		
 		message = message .. "Obrigado e tenha um bom jogo!"
-		doPlayerPopupFYI(cid, message)		
+		doPlayerPopupFYI(cid, message)
 	end
 
 	if(getPlayerAccess(cid) == access.GOD) then
@@ -107,6 +107,8 @@ function onLogin(cid)
 		
 		doPlayerAddExperience(cid, diff)
 		setPlayerStorageValue(cid, sid.AARAGON_DIFF_EXP, 0)
+		
+		doPlayerPopupFYI(cid, "Caro jogador,\nVocê fazia parte do mundo de Aaragon do Darghos, que foi\n encerrado recentemente.\n\nMaiores informações sobre isto você poderá encontrar em nosso website.\n\nEste personagem foi movido para o nosso outro mundo, Ordon, e aqui você\npoderá continuar jogando e se divertindo normalmente.\n\nPor conta da mudança de persongem você recebeu " .. diff .. " pontos de expêriencia\nreferente as diferenças de rates entre Ordon e Aaragon.\n\nEsperamos que continue se divertindo conosco!\n\nAtenciosamente,\nEquipe UltraxSoft.")
 	end
 	
 	setPlayerStorageValue(cid, sid.TRAINING_SHIELD, 0)
