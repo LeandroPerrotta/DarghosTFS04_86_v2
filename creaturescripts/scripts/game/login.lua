@@ -101,6 +101,14 @@ function onLogin(cid)
 		setPlayerStorageValue(cid, sid.GIVE_ITEMS_AFTER_DEATH, -1)
 	end
 	
+	-- Vamos acertar a exp do player devido a mudança dos players do antigo mundo Aaragon para Ordon...
+	if(tonumber(getPlayerStorageValue(cid, sid.AARAGON_DIFF_EXP)) > 0) then
+		local diff = tonumber(getPlayerStorageValue(cid, sid.AARAGON_DIFF_EXP)) - getPlayerExperience(cid)
+		
+		doPlayerAddExperience(cid, diff)
+		setPlayerStorageValue(cid, sid.AARAGON_DIFF_EXP, 0)
+	end
+	
 	setPlayerStorageValue(cid, sid.TRAINING_SHIELD, 0)
 	setPlayerStorageValue(cid, sid.TELEPORT_RUNE_STATE, STORAGE_NULL)
 	setPlayerStorageValue(cid, sid.HACKS_LIGHT, LIGHT_NONE)
