@@ -8,6 +8,7 @@ local itemList = {
 
 	-- utils
 	{ buy = 40, subType = 25, name = "infernal bolt" }
+	{ buy = 40, subType = 25, name = "burst arrow" }
 	,{ buy = 50, name = "flask of rusty remover"}
 	,{ id = 10511, buy = 300, name = "sneaky stabber of eliteness"}
 	,{ id = 10513, buy = 300, name = "squeezing gear of girlpower"}
