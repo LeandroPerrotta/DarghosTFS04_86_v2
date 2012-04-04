@@ -13,7 +13,7 @@ function onStepIn(cid, item, position, fromPosition)
 	
 	local playerVocation = getPlayerVocation(cid)
 	
-	local currentVocation = string.sub(strActionID, 3, 3)	
+	local currentVocation = tonumber(string.sub(strActionID, 3, 3))
 	
 	if((isSorcerer(currentVocation) and not isSorcerer(playerVocation)) or
 		(isDruid(currentVocation) and not isDruid(playerVocation)) or
