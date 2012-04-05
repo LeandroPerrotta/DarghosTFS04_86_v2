@@ -31,15 +31,8 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 	local config = configs[item.actionid]
 	
 	if(config ~= nil) then
-	
-		local playerVocation = getPlayerVocation(cid)
 		
-		if((isSorcerer(config.vocation) and isSorcerer(playerVocation)) or
-			(isDruid(config.vocation) and isDruid(playerVocation)) or
-			(isPaladin(config.vocation) and isPaladin(playerVocation)) or
-			(isKnight(config.vocation) and isKnight(playerVocation)) or
-				) then			
-		
+		if(config.vocation ~= getPlayerBaseVocation(cid)) then		
 			local firePos = getThingPosition(config.uid_remove)
 			firePos.stackpos = 1
 			
