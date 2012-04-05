@@ -102,9 +102,8 @@ function onLogin(cid)
 	end
 	
 	-- Vamos acertar a exp do player devido a mudança dos players do antigo mundo Aaragon para Ordon...
-	if(tonumber(getPlayerStorageValue(cid, sid.AARAGON_DIFF_EXP)) > 0) then
-		local diff = tonumber(getPlayerStorageValue(cid, sid.AARAGON_DIFF_EXP)) - getPlayerExperience(cid)
-		
+	local diff = tonumber(getPlayerStorageValue(cid, sid.AARAGON_DIFF_EXP))
+	if(diff > 0) then
 		doPlayerAddExperience(cid, diff)
 		setPlayerStorageValue(cid, sid.AARAGON_DIFF_EXP, 0)
 		
