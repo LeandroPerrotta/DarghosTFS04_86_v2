@@ -16221,7 +16221,7 @@
 		<attribute key="weight" value="950" />
 		<attribute key="armor" value="2" />
 		<attribute key="slotType" value="feet" />
-		<attribute key="absorbPercentFire" value="90" />
+		<attribute key="fieldAbsorbPercentFire" value="90" />
 		<attribute key="transformEquipTo" value="9932" />
 		<attribute key="stopduration" value="1" />
 		<attribute key="showduration" value="1" />
@@ -18857,6 +18857,7 @@
 		<attribute key="weight" value="540"/>
 		<attribute key="slotType" value="necklace"/>
 		<attribute key="criticalChance" value="4" />
+		<attribute key="fieldAbsorbPercentPoison" value="75" />
 	</item>
 	
 	<!-- Modified Items -->

@@ -98,8 +98,37 @@
 	*CUSTOM ITEMS
 	
 	<!-- BOWS -->
-	<movevent type="Equip" itemid="12697" slot="hand" event="function" value="onEquipItem"/> <!-- Agile Poisoned Longbow -->
-	<movevent type="DeEquip" itemid="12697" slot="hand" event="function" value="onDeEquipItem"/>	
+	<movevent type="Equip" itemid="12697" slot="hand" event="function" value="onEquipItem"> <!-- Agile Poisoned Longbow -->
+		<vocation id="3"/> <vocation id="7" showInDescription="0"/> <vocation id="11" showInDescription="0"/>
+	</movevent>	
+	<movevent type="DeEquip" itemid="12697" slot="hand" event="function" value="onDeEquipItem"/>
+	
+	<movevent type="Equip" itemid="8854" slot="hand" event="function" value="onEquipItem"/> <!-- Warsinger Bow -->
+	<movevent type="DeEquip" itemid="8854" slot="hand" event="function" value="onDeEquipItem"/>
+	
+	<movevent type="Equip" itemid="8856" slot="hand" event="function" value="onEquipItem"/> <!-- Yol's Bow -->
+	<movevent type="DeEquip" itemid="8856" slot="hand" event="function" value="onDeEquipItem"/>
+	
+	<!-- CROSSBOWS -->
+	<movevent type="Equip" itemid="8851" slot="hand" event="function" value="onEquipItem"> <!-- Royal Crossbow -->
+		<vocation id="3"/> <vocation id="7" showInDescription="0"/> <vocation id="11" showInDescription="0"/>
+	</movevent>	
+	<movevent type="DeEquip" itemid="8851" slot="hand" event="function" value="onDeEquipItem"/>
+	
+	<movevent type="Equip" itemid="8852" slot="hand" event="function" value="onEquipItem"> <!-- The Devileye -->
+		<vocation id="3"/> <vocation id="7" showInDescription="0"/> <vocation id="11" showInDescription="0"/>
+	</movevent>
+	<movevent type="DeEquip" itemid="8852" slot="hand" event="function" value="onDeEquipItem"/>
+	
+	<movevent type="Equip" itemid="8853" slot="hand" event="function" value="onEquipItem"> <!-- Ironworker -->
+		<vocation id="3"/> <vocation id="7" showInDescription="0"/> <vocation id="11" showInDescription="0"/>
+	</movevent>	
+	<movevent type="DeEquip" itemid="8853" slot="hand" event="function" value="onDeEquipItem"/>
+	
+	<movevent type="Equip" itemid="5803" slot="hand" event="function" value="onEquipItem"> <!-- Arbalest -->
+		<vocation id="3"/> <vocation id="7" showInDescription="0"/> <vocation id="11" showInDescription="0"/>
+	</movevent>	
+	<movevent type="DeEquip" itemid="5803" slot="hand" event="function" value="onDeEquipItem"/>
 	
 	*BOOTS SECTOR
 	<movevent type="Equip" itemid="12673" slot="feet" event="function" value="onEquipItem"/>
@@ -112,7 +141,7 @@
 	<movevent type="Equip" itemid="12674" slot="feet" event="function" value="onEquipItem"/>
 	<movevent type="DeEquip" itemid="12674" slot="feet" event="function" value="onDeEquipItem"/>
 		
-	*RINGS SECTOR
+	<!-- RINGS SECTOR -->
 	<movevent type="Equip" itemid="12676" slot="ring" event="function" value="onEquipItem"/>
 	<movevent type="Equip" itemid="12679" slot="ring" event="function" value="onEquipItem"/>
 	<movevent type="DeEquip" itemid="12679" slot="ring" event="function" value="onDeEquipItem"/>
@@ -125,7 +154,7 @@
 	<movevent type="Equip" itemid="12681" slot="ring" event="function" value="onEquipItem"/>
 	<movevent type="DeEquip" itemid="12681" slot="ring" event="function" value="onDeEquipItem"/>
 	
-	*Iron Ring
+	<!-- Iron Ring -->
 	<movevent type="Equip" itemid="12682" slot="ring" event="function" value="onEquipItem">
 		<vocation id="4"/> <vocation id="8" showInDescription="0"/> <vocation id="12" showInDescription="0"/>
 		
@@ -133,11 +162,12 @@
 	<movevent type="Equip" itemid="12683" slot="ring" event="function" value="onEquipItem"/>
 	<movevent type="DeEquip" itemid="12683" slot="ring" event="function" value="onDeEquipItem"/>
 	
+	<!-- Eagle-eyes Ring -->
 	<movevent type="Equip" itemid="12684" slot="ring" event="function" value="onEquipItem"/>
 	<movevent type="Equip" itemid="12685" slot="ring" event="function" value="onEquipItem"/>
 	<movevent type="DeEquip" itemid="12685" slot="ring" event="function" value="onDeEquipItem"/>
 	
-	*Bullseye Ring
+	<!-- Bullseye Ring  -->
 	<movevent type="Equip" itemid="12686" slot="ring" event="function" value="onEquipItem">
 		<vocation id="4"/> <vocation id="8" showInDescription="0"/> <vocation id="12" showInDescription="0"/>
 		
@@ -418,6 +448,9 @@
 
 
 	<!-- Boots -->
+		<!-- Golden Boots -->
+	<movevent type="Equip" itemid="2646" slot="feet" event="function" value="onEquipItem"/>
+	<movevent type="DeEquip" itemid="2646" slot="feet" event="function" value="onDeEquipItem"/>	
 		<!-- Boots of Haste -->
 	<movevent type="Equip" itemid="2195" slot="feet" event="function" value="onEquipItem"/>
 	<movevent type="DeEquip" itemid="2195" slot="feet" event="function" value="onDeEquipItem"/>

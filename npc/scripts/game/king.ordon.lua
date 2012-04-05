@@ -114,6 +114,10 @@ function facebookEventCallback(cid, message, keywords, parameters, node)
         return false
     end
 	
+	if(getStorage(gid.FACEBOOK_ORDON_EVENT_WINNER) ~= -1) then
+		return false
+	end
+	
 	local state = getPlayerStorageValue(cid, sid.FACEBOOK_EVENT_STATE)
 	if(talkState == 0) then
 		if(state == STATE_NONE) then
@@ -150,13 +154,39 @@ function facebookEventCallback(cid, message, keywords, parameters, node)
 			npcHandler:say("Algo esta errado, você não possui os meus pertences, volte aqui quando estiver com todos meus pertences!", cid)
 			npcHandler:resetNpc(cid)
 			return false
+		else
+			for _,v in pairs(EVENT_ITEMS) do
+				if(not doPlayerRemoveItem(cid, v, 1)) then
+					error("Cannot remove item: " .. v .. " of player " .. getPlayerName(cid))
+					break
+				end
+			end
+			
+			npcHandler:say("Bravo guerreiro, tenho certeza que você vagou muito pelas terras Darghonianas para conseguir os meus pertences de volta! Você foi corajoso e valente, e como prova de minha gratidão, aceite meu presente.", cid)
+			
+			local vocationName = "sorcerer"
+			
+			if (isDruid(cid)) then
+				vocationName = "druid"
+			elseif(isPaladin(cid)) then
+				vocationName = "paladin"
+			elseif(isKnight(cid)) then
+				vocationName = "knight"
+			end
+			
+			doBroadcastMessage("Rei Ordon: Meus pertences finalmente foram encontrados pelo bravo e valente " .. vocationName .. " chamado " .. getPlayerName(cid) .. " e ele receberá a minha generosa recompensa! Obrigado a todos Darghonianos que prestaram a sua ajuda nesta missão!", MESSAGE_EVENT_ADVANCE)
+			doPlayerAddItem(cid, CUSTOM_ITEMS.ORDON_DESTRUCTION_AMULET)
+			
+			doSetStorage(gid.FACEBOOK_ORDON_EVENT_WINNER, getPlayerGUID(cid))
+			
+			npcHandler:resetNpc(cid)
 		end
 	end
 	
 	return true
 end
 
-keywordHandler:addKeyword({'pertences'}, facebookEventCallback, {npcHandler = npcHandler, talk_state = 0, nlyFocus = true, text = 'O Dark General roubou alguns de meus mais valiosos pertences e os escondeu nos lugares mais remotos de Darghos. Você gostaria de ajudar procurando os pertences roubados?'})
+keywordHandler:addKeyword({'pertences'}, facebookEventCallback, {npcHandler = npcHandler, talk_state = 0, nlyFocus = true})
 
 keywordHandler:addKeyword({'permissão especial', 'permissao especial'}, saySpecialPermission, {npcHandler = npcHandler, onlyFocus = true, talk_state = 1})
 
