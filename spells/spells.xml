@@ -328,7 +328,7 @@
 		<instant name="Energy Beam" words="exevo vis lux" lvl="23" mana="100" exhaustion="1800" direction="1" script="attack/energy_beam.lua">
 			<vocation name="Sorcerer"/> <vocation name="Master Sorcerer"/> <vocation name="Warmaster Sorcerer"/>
 		</instant>
-		<instant name="Great Energy Beam" words="exevo gran vis lux" lvl="200" mana="110" exhaustion="1800" direction="1" script="attack/great_energy_beam.lua">
+		<instant name="Great Energy Beam" words="exevo gran vis lux" lvl="29" mana="200" exhaustion="1800" direction="1" script="attack/great_energy_beam.lua">
 			<vocation name="Sorcerer"/> <vocation name="Master Sorcerer"/> <vocation name="Warmaster Sorcerer"/>
 		</instant>
 		<instant name="Rage of the Skies" words="exevo gran mas vis" prem="1" lvl="55" mana="650" castdelay="4000" exhaustion="1800" selftarget="1" script="attack/rage_of_the_skies.lua">
