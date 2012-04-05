@@ -32,7 +32,7 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 	
 	if(config ~= nil) then
 		
-		if(config.vocation ~= getPlayerBaseVocation(cid)) then		
+		if(config.vocation == getPlayerBaseVocation(cid)) then		
 			local firePos = getThingPosition(config.uid_remove)
 			firePos.stackpos = 1
 			
