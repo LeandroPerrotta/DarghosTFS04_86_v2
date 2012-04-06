@@ -105,12 +105,16 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 			end
 			
 			if(done) then
+				if(leversEvent) then
+					stopEvent(leversEvent)
+				end
+				
 				lastLevers = lastLevers - 1
 				leversState_T[item.uid] = true
 				doPlayerSendTextMessage(cid, MESSAGE_EVENT_DEFAULT, "Alavanca ativada com sucesso! " .. ((lastLevers == 0) and "Não resta mais nenhuma alavanca!" or "Você precisa ativar a proxima alavanca nos proximos 30 minutos ou todas alavancas serão reiniciadas. Restam mais " .. lastLevers .. " alavanca (s)!"))
 				
-				if(astLevers ~= 0) then
-					addEvent(resetLevers, INTERVAL_NEXT_LEVER_TO_RESET * 60 * 1000, true)
+				if(lastLevers ~= 0) then
+					leversEvent = addEvent(resetLevers, INTERVAL_NEXT_LEVER_TO_RESET * 60 * 1000, true)
 				end
 			else
 				wrongSeq = true
