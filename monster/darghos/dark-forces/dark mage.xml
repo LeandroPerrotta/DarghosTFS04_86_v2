@@ -18,7 +18,7 @@
     <flag runonhealth="600"/>
   </flags>
   <attacks>
-    <attack target="1" chance="26" radius="2" interval="2000" range="3" min="-340" name="fire" max="-570">
+    <attack target="1" chance="26" radius="2" interval="2000" range="3" min="-120" name="fire" max="-430">
       <attribute key="shootEffect" value="burstarrow"/>
       <attribute key="areaEffect" value="firearea"/>
     </attack>
@@ -32,7 +32,7 @@
     <attack target="1" chance="20" radius="1" interval="2000" name="energyfield">
       <attribute key="shootEffect" value="burstarrow"/>
     </attack>
-    <attack chance="100" interval="2000" range="5" min="-620" name="death" max="-800">
+    <attack chance="75" interval="2000" range="5" min="-620" name="death" max="-800">
       <attribute key="shootEffect" value="suddendeath"/>
     </attack>
     <attack chance="21" spread="3" interval="2000" length="5" min="-550" name="ice" max="-695">

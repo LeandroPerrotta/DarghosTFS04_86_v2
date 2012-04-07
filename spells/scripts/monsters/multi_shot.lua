@@ -11,7 +11,7 @@ function onCastSpell(cid, var)
 	
 	local spectators = getSpectators(pos, 1, 1)
 	
-	local damage = math.random(480, 760)
+	local damage = math.random(370, 560)
 	
 	if(spectators) then
 		for _,thing in pairs(spectators) do
