@@ -37,7 +37,8 @@ function checkPlayerBot(cid)
 		return
 	end
 			
-	if(not danceEvents[cid]) then
+	local attacked = getCreatureTarget(cid)
+	if(not danceEvents[cid] and getBooleanFromString(attacked) and isInArray({"Marksman Target", "Hitdoll"}, getCreatureName(attacked))) then
 		danceEvents[cid] = addEvent(autoDance, 1000 * 10, cid)
 	end
 end
