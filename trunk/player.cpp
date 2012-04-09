@@ -5575,6 +5575,28 @@ uint32_t Player::getCurrentPing() const {
 
     return std::ceil((float)(sum / latencyList.size()));
 }
+
+uint32_t Player::getCriticalChance() const
+{
+	Item* item = NULL;
+	int32_t criticalChance = getVocation()->getCriticalChance();
+
+	for(uint32_t i = SLOT_FIRST ; i < SLOT_LAST; ++i)
+	{
+		if(!(item = getInventoryItem((slots_t)i)) || item->isRemoved() ||
+				(g_moveEvents->hasEquipEvent(item) && !isItemAbilityEnabled((slots_t)i)))
+			continue;
+
+		const ItemType& it = Item::items[item->getID()];
+	
+		if(it.m_criticalChance != -1)
+		{
+			criticalChance += it.m_criticalChance;
+		}
+	}
+
+	return criticalChance;
+}
 #endif
 
 #ifdef __DARGHOS_PVP_SYSTEM__

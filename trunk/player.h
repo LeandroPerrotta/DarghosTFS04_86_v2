@@ -788,7 +788,7 @@ class Player : public Creature, public Cylinder
         }
 
 		double getCriticalFactor() const;
-		//uint16_t getCriticalChance() { return m_criticalChance; }
+		uint32_t getCriticalChance() const;
 #endif
 
 #ifdef __DARGHOS_PVP_SYSTEM__

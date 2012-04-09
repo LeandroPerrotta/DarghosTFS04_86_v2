@@ -365,14 +365,11 @@ bool Weapon::useFist(Player* player, Creature* target)
 		player->sendCritical();
 	}
 #endif
-	
-
-	Vocation* vocation = player->getVocation();
 
 	int32_t minDamage = 0;
 
 #ifdef __DARGHOS_CUSTOM__
-	if(random_range(1, 100) < vocation->getCriticalChance())
+	if(random_range(1, 100) < player->getCriticalChance())
 	{
 		minDamage = maxDamage;
 		maxDamage = int32_t(maxDamage * player->getCriticalFactor());	
@@ -380,6 +377,7 @@ bool Weapon::useFist(Player* player, Creature* target)
 	}
 #endif
 
+	Vocation* vocation = player->getVocation();
 	if(vocation && vocation->getMultiplier(MULTIPLIER_MELEE) != 1.0)
 		maxDamage = int32_t(maxDamage * vocation->getMultiplier(MULTIPLIER_MELEE));
 
@@ -654,12 +652,10 @@ int32_t WeaponMelee::getWeaponDamage(const Player* player, const Creature*, cons
 	}
 #endif
 	
-	Vocation* vocation = player->getVocation();
-
 	int32_t minValue = 0;
 
 #ifdef __DARGHOS_CUSTOM__
-	if(random_range(1, 100) < vocation->getCriticalChance() + (uint32_t)item->getCriticalChance())
+	if(random_range(1, 100) < player->getCriticalChance())
 	{
 		minValue = maxValue;
 		maxValue = int32_t(maxValue * player->getCriticalFactor());	
@@ -667,6 +663,7 @@ int32_t WeaponMelee::getWeaponDamage(const Player* player, const Creature*, cons
 	}
 #endif
 
+	Vocation* vocation = player->getVocation();
 	if(vocation && vocation->getMultiplier(MULTIPLIER_MELEE) != 1.0)
 		maxValue = int32_t(maxValue * vocation->getMultiplier(MULTIPLIER_MELEE));
 
@@ -690,12 +687,11 @@ int32_t WeaponMelee::getElementDamage(const Player* player, const Item* item) co
 		player->sendCritical();
 	}
 #endif
-	
-	Vocation* vocation = player->getVocation();
 
 	int32_t minValue = 0;
+
 #ifdef __DARGHOS_CUSTOM__
-	if(random_range(1, 100) < vocation->getCriticalChance() + item->getCriticalChance())
+	if(random_range(1, 100) < player->getCriticalChance())
 	{
 		minValue = maxValue;
 		maxValue = int32_t(maxValue * player->getCriticalFactor());	
@@ -703,6 +699,7 @@ int32_t WeaponMelee::getElementDamage(const Player* player, const Item* item) co
 	}
 #endif
 
+	Vocation* vocation = player->getVocation();
 	if(vocation && vocation->getMultiplier(MULTIPLIER_MELEE) != 1.0)
 		maxValue = int32_t(maxValue * vocation->getMultiplier(MULTIPLIER_MELEE));
 
@@ -929,21 +926,10 @@ int32_t WeaponDistance::getWeaponDamage(const Player* player, const Creature* ta
 {
 	int32_t attackValue = ammoAttackValue;
 
-#ifdef __DARGHOS_CUSTOM__
-	int32_t bowCriticalChance = 0;
-#endif
-
 	if(item->getWeaponType() == WEAPON_AMMO)
 	{
 		if(Item* bow = const_cast<Player*>(player)->getWeapon(true))
-#ifdef __DARGHOS_CUSTOM__
-		{
-			bowCriticalChance = bow->getCriticalChance();
-#endif
 			attackValue += bow->getAttack() + bow->getExtraAttack();
-#ifdef __DARGHOS_CUSTOM__
-		}
-#endif
 	}
 
 	int32_t attackSkill = player->getSkill(SKILL_DIST, SKILL_LEVEL);
@@ -958,11 +944,10 @@ int32_t WeaponDistance::getWeaponDamage(const Player* player, const Creature* ta
 	}
 #endif
 	
-	Vocation* vocation = player->getVocation();
-
 	int32_t minValue = 0;
+
 #ifdef __DARGHOS_CUSTOM__
-	if(random_range(1, 100) < vocation->getCriticalChance() + bowCriticalChance)
+	if(random_range(1, 100) < player->getCriticalChance())
 	{
 		minValue = maxValue;
 		maxValue = int32_t(maxValue * player->getCriticalFactor());
@@ -970,6 +955,7 @@ int32_t WeaponDistance::getWeaponDamage(const Player* player, const Creature* ta
 	}
 #endif
 
+	Vocation* vocation = player->getVocation();
 	if(vocation && vocation->getMultiplier(MULTIPLIER_DISTANCE) != 1.0)
 		maxValue = int32_t(maxValue * vocation->getMultiplier(MULTIPLIER_DISTANCE));
 
@@ -977,7 +963,6 @@ int32_t WeaponDistance::getWeaponDamage(const Player* player, const Creature* ta
 	if(maxDamage)
 		return -ret;
 
-	//int32_t minValue = 0;
 	if(target && minValue == 0)
 	{
 		if(target->getPlayer())
@@ -1053,8 +1038,7 @@ int32_t WeaponWand::getWeaponDamage(const Player* player, const Creature*, const
 		multiplier = vocation->getMultiplier(MULTIPLIER_WAND);
 
 #ifdef __DARGHOS_CUSTOM__
-	Vocation* vocation = player->getVocation();
-	if(random_range(1, 100) < vocation->getCriticalChance() + item->getCriticalChance())
+	if(random_range(1, 100) < player->getCriticalChance())
 	{
 		multiplier = multiplier * player->getCriticalFactor();	
 		player->sendCritical();
