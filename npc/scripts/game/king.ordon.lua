@@ -99,7 +99,7 @@ STATE_NONE = -1
 STATE_ACCEPT = 0
 
 EVENT_ITEMS = {
-	2743, -- heaven blossom
+	5921, -- heaven blossom
 	2680, -- strawberrys
 	1746, -- treasure chest
 	2472, -- magic plate armor
