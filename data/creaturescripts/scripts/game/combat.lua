@@ -1,3 +1,18 @@
+local function bgWallOnCombat(cid, target)
+
+	local enemy = (getPlayerBattlegroundTeam(cid) == BATTLEGROUND_TEAM_ONE) and getStorage(gid.WALL_CID_TEAM_TWO) or getStorage(gid.WALL_CID_TEAM_ONE) 
+	local isEnemyWall = target == enemy
+	if(not isEnemyWall) then
+		return false
+	end
+	
+	return true
+end
+
+local monsterCallbacks = { 
+	["bg_wall"] = {callback = bgWallOnCombat}
+}
+
 function onCombat(cid, target)
 
 	if(isPlayer(cid) and doPlayerIsInBattleground(cid)) then
@@ -10,11 +25,22 @@ function onCombat(cid, target)
 			player_target = getCreatureMaster(target)
 		end	
 		
-		if(isBattlegroundEnemies(cid, player_target)) then
+		if(player_target and isBattlegroundEnemies(cid, player_target)) then
 			setPlayerStorageValue(cid, sid.BATTLEGROUND_LAST_DAMAGE, os.time())
 			setPlayerStorageValue(cid, sid.BATTLEGROUND_LONG_TIME_PZ, 0)
 			setPlayerStorageValue(cid, sid.BATTLEGROUND_PZTICKS, 0)			
 		end
+		
+		local wallCids = {
+			[getStorage(gid.WALL_CID_TEAM_ONE)] = "Time A",
+			[getStorage(gid.WALL_CID_TEAM_TWO)] = "Time B"
+		}		
+	end
+	
+	if(isMonster(target)) then
+		if(monsterCallbacks[string.lower(getCreatureName(target))] ~= nil) then
+			return monsterCallbacks[string.lower(getCreatureName(target))].callback(cid, target)
+		end		
 	end
 
 	--checks attacker

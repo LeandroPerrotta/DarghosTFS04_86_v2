@@ -1,75 +1,77 @@
-local keywordHandler = KeywordHandler:new()
-local npcHandler = NpcHandler:new(keywordHandler)
-NpcSystem.parseParameters(npcHandler)
+local dialog = NpcDialog:new()
+local npcSys = _NpcSystem:new()
+npcSys:setDialog(dialog)
 
-function onCreatureAppear(cid)            npcHandler:onCreatureAppear(cid)        end
-function onCreatureDisappear(cid)        npcHandler:onCreatureDisappear(cid)        end
-function onCreatureSay(cid, type, msg)        npcHandler:onCreatureSay(cid, type, msg)    end
-function onThink()                npcHandler:onThink()                end
+local shop = NpcShop:new(dialog, NPC_TRADETYPE_HONOR)
 
-REQUIRED_POINTS = 20
+local itemList = {
 
-function process(cid, message, keywords, parameters, node)
+	-- utils
+	{ buy = 40, subType = 25, name = "infernal bolt" }
+	,{ buy = 40, subType = 25, name = "burst arrow" }
+	,{ buy = 50, name = "flask of rusty remover"}
+	,{ id = 10511, buy = 300, name = "sneaky stabber of eliteness"}
+	,{ id = 10513, buy = 300, name = "squeezing gear of girlpower"}
+	,{ id = 10515, buy = 300, name = "whacking driller of fate"}
+	,{ buy = 800, subType = 50, name = "demonic essence"}
 	
-	local npcHandler = parameters.npcHandler
-	local talkState = parameters.talk_state
+	-- special backpacks
+	,{ buy = 500, name = "dragon backpack"}
+	,{ buy = 500, name = "moon backpack"}
+	,{ buy = 500, name = "heart backpack"}
+	,{ buy = 750, requireRating = 500, name = "jewelled backpack"}
 	
-    if(not npcHandler:isFocused(cid)) then
-        return false
-    end
+	-- powerfull potions
+	,{ buy = 250, requireRating = 500, name = "bullseye potion"}
+	,{ buy = 200, requireRating = 500, name = "berserk potion"}
+	,{ buy = 250, requireRating = 500, name = "mastermind potion"}	
+	
+	-- special rings
+	,{ id = 12676, buy = 3200, requireRating = 750}
+	,{ id = 12677, buy = 3200, requireRating = 750}
+	,{ id = 12678, buy = 3200, requireRating = 750}
+	,{ id = 12682, buy = 3000, requireRating = 750}
+	,{ id = 12684, buy = 3400, requireRating = 750}
+	,{ id = 12686, buy = 3200, requireRating = 750}
+	,{ id = 12688, buy = 3400, requireRating = 750}
+	
+	-- outfit & addons items
+	,{ buy = 6250, requireRating = 1200, name = "elane's crossbow"}
+	,{ buy = 6250, requireRating = 1200, name = "huge chunk of crude iron"}
+	,{ buy = 6250, requireRating = 1200, name = "soul stone"}
+	,{ buy = 6250, requireRating = 1200, name = "nose ring"}
+	,{ buy = 6250, subType = 100, requireRating = 1200, name = "turtle shell"}
+	,{ buy = 6250, requireRating = 1200, name = "mandrake"}
+	,{ buy = 6250, requireRating = 1200, name = "mermaid comb"}
+	--,{ id = 12691, buy = 7500, setActionId = 22, requireRating = 1600, name = "warmaster outfit ticket"}
+	--,{ id = 12691, buy = 7500, setActionId = 21, requireRating = 1600, name = "yalaharian outfit ticket"}
+	--,{ id = 12691, buy = 7500, setActionId = 23, requireRating = 1600, name = "wayfarer outfit ticket"}
+}
 
-	if(talkState == 1) then
-		local active = (getPlayerStorageValue(cid, sid.DAILY_BATTLEGROUND_ACTIVE) == 1) and true or false
-		
-		if(active) then
-			local points = getPlayerStorageValue(cid, sid.DAILY_BATTLEGROUND_POINTS)
-					
-			if(points >= REQUIRED_POINTS) then
-				npcHandler:say("Vejo que concluiu a sua tarefa! Agora Quendor conta com um guerreiro um pouco mais preparado para enfrentar seus desafios! Tome a sua recompensa! Retorne amanha se desejar continuar o preparo!", cid)
-				
-				setPlayerStorageValue(cid, sid.DAILY_BATTLEGROUND_LAST, getWeekday())
-				setPlayerStorageValue(cid, sid.DAILY_BATTLEGROUND_ACTIVE, -1)
-				setPlayerStorageValue(cid, sid.DAILY_BATTLEGROUND_POINTS, -1)
-				
-				local totalExp = getPlayerExperience(cid)
-				local expAdd = math.floor(totalExp * 0.02)
-				doPlayerAddExperience(cid, expAdd)
-				local moneyAdd = math.random(90000, 320000)
-				doPlayerAddMoney(cid, moneyAdd)
-				
-				doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Você adquiriu " .. expAdd .. " pontos de expêriencia e " .. moneyAdd .. " gold coins por concluir a tarefa.")
-			else
-				npcHandler:say("Você ainda não atingiu os 20 pontos! Não demore a completar sua missão! Quendor precisa de bravos guerreiros!", cid)
-				npcHandler:resetNpc(cid)
-			end	
-		else
-			npcHandler:say("Ordon espera que os soldados estejam sempre preparados para defender Quendor de seus inimigos. Por isso ele ordena que os guerreiros que treinarem diariamente na Battleground sejam recompensados. Você quer iniciar este treinamento?", cid)
+shop:addNegotiableListItems(itemList)
+
+function onCreatureSay(cid, type, msg)
+	msg = string.lower(msg)
+	local distance = getDistanceTo(cid) or -1
+	if((distance < npcSys:getTalkRadius()) and (distance ~= -1)) then
+		if((msg == "hi" or msg == "hello" or msg == "ola") and not (npcSys:isFocused(cid))) then
+			dialog:say("Olá bravo " .. getCreatureName(cid) .."! Eu {troco} uma série de poderosos itens por pontos de honra, que você pode conquistar participando de Battlegrounds.", cid)
+			npcSys:addFocus(cid)
+		elseif(npcSys:isFocused(cid) and (msg == "trade" or msg == "troco" or msg == "trocar")) then
+			dialog:say("Otimo, aqui está, sinta-se a vontade...", cid)					
+			shop:onPlayerRequestTrade(cid)
+			npcSys:setTopic(cid, 2)
+		elseif(npcSys:isFocused(cid) and isInArray({"sim", "yes"}, msg) and npcSys:getTopic(cid) == 2) then
+			shop:onPlayerConfirmBuy(cid)
+		elseif(npcSys:isFocused(cid) and isInArray({"não", "nao", "no"}, msg)) then
+			shop:onPlayerDeclineBuy(cid)
+		elseif((npcSys:isFocused(cid)) and (msg == "bye" or msg == "goodbye" or msg == "cya" or msg == "adeus")) then
+			dialog:say("Até mais!", cid)
+			npcSys:removeFocus(cid)		
 		end
-	elseif(talkState == 2) then
-	    local dailyStatus = getPlayerStorageValue(cid, sid.DAILY_BATTLEGROUND_LAST)
-	    
-	    if(dailyStatus ~= -1 and getWeekday() == dailyStatus) then
-	    	npcHandler:say("Você já concluiu o seu treinamento por hoje, você somente pode fazer-lo novamente amanha! Até lá!", cid)
-	    	npcHandler:resetNpc(cid)
-    	else
-    		npcHandler:say("A tarefa que lhe solicito é a seguinte: Vá para o campo de batalhas, o Battleground, e ganhe pontos, os pontos serão obtidos quando você derrota um jogador que não seja muito mais fraco que você, para cada vez que você for derrotado também irá perder um ponto! Você precisará atingir 20 pontos. E então, a aceita?", cid)
-	    end
-    elseif(talkState == 3) then
-		
-		npcHandler:say("Perfeito, retorne quando a tiver concluido, estarei o aguardando!", cid)
-		setPlayerStorageValue(cid, sid.DAILY_BATTLEGROUND_ACTIVE, 1)
-    	npcHandler:resetNpc(cid)		
-    end
-    
-    return true
+	end
 end
 
-local node1 = keywordHandler:addKeyword({'task', 'mission', 'tarefa', 'missão', 'missao'}, process, {npcHandler = npcHandler, onlyFocus = true, talk_state = 1})
-    local node2 = node1:addChildKeyword({'yes', 'sim'}, process, {npcHandler = npcHandler, onlyFocus = true, talk_state = 2})
-    node2:addChildKeyword({'yes', 'sim'}, process, {npcHandler = npcHandler, onlyFocus = true, talk_state = 3})   
-    node2:addChildKeyword({'no', 'não', 'não'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'Volte quando estiver preparado para seu treinamento.', reset = true})
-    
-    node1:addChildKeyword({'no', 'não', 'não'}, StdModule.say, {npcHandler = npcHandler, onlyFocus = true, text = 'Volte quando estiver preparado para seu treinamento.', reset = true})
-
-npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
-npcHandler:addModule(FocusModule:new())
+function onCreatureDisappear(cid) npcSys:onCreatureDisappear(cid) end
+function onPlayerCloseChannel(cid) npcSys:onPlayerCloseChannel(cid) end
+function onThink() npcSys:onThink() end

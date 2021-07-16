@@ -1,4 +1,4 @@
-NPC_DIALOG_INTERVAL = 1
+NPC_DIALOG_INTERVAL = 1000
 
 NpcDialog = {
 	lastMessage = 0,
@@ -46,7 +46,7 @@ function NpcDialog:say(message, creature, delay)
 	--print(table.show(self.messages))
 end
 
-function NpcDialog:delay(seconds, cid)
+function NpcDialog:delay(mseconds, cid)
 
 
 	if(cid ~= nil) then
@@ -55,24 +55,24 @@ function NpcDialog:delay(seconds, cid)
 		end
 	
 		if(self.messages[cid].lastMessage == 0) then
-			self.messages[cid].lastMessage = os.time() + seconds
+			self.messages[cid].lastMessage = os.mtime() + mseconds
 		else
-			if(os.time() > self.messages[cid].lastMessage) then
-				self.messages[cid].lastMessage = os.time() + seconds
+			if(os.mtime() > self.messages[cid].lastMessage) then
+				self.messages[cid].lastMessage = os.mtime() + mseconds
 			else
-				self.messages[cid].lastMessage = self.messages[cid].lastMessage + seconds
+				self.messages[cid].lastMessage = self.messages[cid].lastMessage + mseconds
 			end
 		end
 	
 		table.insert(self.messages[cid].msgQueue, {delay=self.messages[cid].lastMessage})	
 	else	
 		if(self.lastMessage == 0) then
-			self.lastMessage = os.time() + seconds
+			self.lastMessage = os.mtime() + mseconds
 		else
-			if(os.time() > self.lastMessage) then
-				self.lastMessage = os.time() + seconds
+			if(os.mtime() > self.lastMessage) then
+				self.lastMessage = os.mtime() + mseconds
 			else
-				self.lastMessage = self.lastMessage + seconds
+				self.lastMessage = self.lastMessage + mseconds
 			end
 		end
 	
@@ -89,7 +89,7 @@ function NpcDialog:run()
 		if(value.msgQueue ~= nil) then
 			for k,msgInfo in pairs(value.msgQueue) do
 				if(msgInfo.delay ~= nil) then
-					if(os.time() <= msgInfo.delay) then
+					if(os.mtime() <= msgInfo.delay) then
 						break
 					end
 					
@@ -104,7 +104,7 @@ function NpcDialog:run()
 	
 	for k,msgInfo in pairs(self.default_messages) do
 		if(msgInfo.delay ~= nil) then
-			if(os.time() <= msgInfo.delay) then
+			if(os.mtime() <= msgInfo.delay) then
 				break
 			end
 			

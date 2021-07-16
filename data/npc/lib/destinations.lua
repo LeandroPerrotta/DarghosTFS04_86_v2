@@ -154,10 +154,16 @@ function boatDestiny.addQuendorFromIslandOfPeace(keywordHandler, npcHandler)
 		local leaveFromIslandOfPeace = getPlayerStorageValue(cid, sid.LEAVE_FROM_ISLAND_OF_PEACE)
 		
 		if(leaveFromIslandOfPeace == -1) then
-			npcHandler:say('Vejo que você nunca viajou para Quendor, este barco pode levar-lo para lá, por ser sua primeira viagem, não lhe será cobrado nada, porém saiba que fora de Island of Peace você poderá ativar ou desativar <...>', cid)
-			npcHandler:say('a habilidade de entrar em combate com outros jogadores, isto é, seu pvp. Inicialmente o seu pvp está desativado, caso você deseje o ativar converse com o NPC\'s que ficam no templo de todas cidades. <...>', cid)
-			npcHandler:say('Saiba também que somente é permitido voltar para Island of Peace jogadores que estiverem com seu pvp desativado, se você o ativar-lo, não poderá voltar. <...>', cid)			
-			npcHandler:say('E então, deseja mesmo embarcar para Quendor?', cid)			
+			if(getConfigInfo("worldId") == WORLD_ORDON) then
+				npcHandler:say('Vejo que você nunca viajou para Quendor, este barco pode levar-lo para lá, por ser sua primeira viagem, não lhe será cobrado nada, porém saiba que fora de Island of Peace você poderá ativar ou desativar <...>', cid)
+				npcHandler:say('a habilidade de entrar em combate com outros jogadores, isto é, seu pvp. Inicialmente o seu pvp está desativado, caso você deseje o ativar converse com o NPC\'s que ficam no templo de todas cidades. <...>', cid)
+				npcHandler:say('Saiba também que somente é permitido voltar para Island of Peace jogadores que estiverem com seu pvp desativado, se você o ativar-lo, não poderá voltar. <...>', cid)			
+				npcHandler:say('E então, deseja mesmo embarcar para Quendor?', cid)
+			else
+				npcHandler:say('Quendor é uma maravilhosa cidade! Mais saiba que por lá e por todo o resto do mundo do Darghos o seu PvP e de todos outras é sempre ativo, assim você poderá  <...>', cid)
+				npcHandler:say('atacar e ser atacado por outras pessoas... Também esteja ciente que uma vez abandonando esta ilha você se tornará cidadão de Quendor não será mais possivel retornar <...>', cid)
+				npcHandler:say('E então, deseja mesmo embarcar para Quendor?', cid)				
+			end
 			return true
 		end		
 		
@@ -189,6 +195,12 @@ function boatDestiny.addQuendorFromIslandOfPeace(keywordHandler, npcHandler)
 			setPlayerStorageValue(cid, sid.LEAVE_FROM_ISLAND_OF_PEACE, 1)
 		else		
 			npcHandler:say('Seja bem vindo de volta a Quendor caro ' .. getPlayerName(cid) .. '!', cid)
+		end
+		
+		if(getConfigInfo("worldId") == WORLD_AARAGON) then
+			doPlayerSetTown(cid, towns.QUENDOR)
+			doPlayerEnablePvp(cid)
+			setStageOnChangePvp(cid)
 		end
 		
 		doTeleportThing(cid, parameters.destination, false)

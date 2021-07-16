@@ -27,6 +27,7 @@
 	<event type="death" name="monsterDeath" event="script" value="game/death.lua"/>
 	<event type="death" name="inquisitionReplaceDemons" event="script" value="game/inquisition/death.lua"/>
 	<event type="death" name="minigameOnBossDeath" event="script" value="game/mini_game.lua"/>
+	<event type="preparedeath" name="PrepareDeath" event="script" value="game/prepare_death.lua"/>
 	<event type="kill" name="Inquisition" event="script" value="game/inquisition.lua"/>
 	<event type="logout" name="CustomPlayerLogout" event="script" value="game/logout.lua"/>
 	<event type="kill" name="CustomBonartesTasks" event="script" value="game/onkillmission.lua"/>
@@ -35,13 +36,14 @@
 	<event type="advance" name="CustomStages" event="script" value="game/stages.lua"/>
 	<event type="think" name="Hacks" event="script" value="game/hacks.lua"/>
 	<event type="think" name="GainStamina" event="script" value="game/stamina.lua"/>
-	<event type="kill" name="autolotgold" event="script" value="game/autolotgold.lua"/>  
-	<event type="tradeaccept" name="tradeHandler" event="script" value="game/trade.lua"/> 	
+	<event type="tradeaccept" name="tradeHandler" event="script" value="game/trade.lua"/>
+	<event type="traderequest" name="tradeRequestHandler" event="script" value="game/trade.lua"/>
 	<event type="outfit" name="OnChangeOutfit" event="script" value="game/outfit.lua"/> 	
+	<event type="statschange" name="onStateChange" event="script" value="game/onstatechange.lua"/>
 	
 	<!-- DARGHOS SOURCE SCRIPTED EVENTS -->
 	<event type="think" name="onBattlegroundThink" event="script" value="game/battleground.lua"/>
-	<event type="bgfrag" name="onBattlegroundFrag" event="script" value="game/battleground.lua"/>
+	<event type="bgdeath" name="onBattlegroundDeath" event="script" value="game/battleground.lua"/>
 	<event type="bgend" name="onBattlegroundEnd" event="script" value="game/battleground.lua"/>
 	<event type="bgleave" name="onBattlegroundLeave" event="script" value="game/battleground.lua"/>
 	

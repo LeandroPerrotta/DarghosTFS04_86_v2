@@ -1,3 +1,279 @@
+function getMinMaxClassicFormula(level, maglevel, minFactor, maxFactor, _min, _max)
+	
+	local min = ((level / 3) + (maglevel / 2)) * minFactor
+	local max = ((level / 3) + (maglevel / 2)) * maxFactor
+	
+	if(_min ~= nil and _min > min) then
+		min = _min
+		
+		if(_max ~= nil and _max > max) then
+			max = _max
+		end
+	end
+	
+	return min, max
+end
+
+function getPlayerBaseVocation(cid)
+
+	if(isSorcerer(cid)) then
+		return 1
+	elseif(isDruid(cid)) then
+		return 2
+	elseif(isPaladin(cid)) then
+		return 3
+	elseif(isKnight(cid)) then
+		return 4
+	end
+	
+	return 0
+end
+
+function searchItemDepthContainer(container, itemlist, result, recursively)
+
+	recursively = recursively or true
+	
+	if(not isContainer(container.uid)) then
+		return false
+	end
+	
+	local foundItems = {}
+	
+	function tryAddItemToResult(item, attributes, result)
+		if(attributes.actionid ~= nil and item.aid ~= attributes.aid) then
+			return false
+		end
+		
+		print("Blabla")
+		table.insert(result, tmp)
+		return true
+	end
+	
+    for k = (getContainerSize(container.uid) - 1), 0, -1 do
+        local tmp = getContainerItem(container.uid, k)
+        
+		local iList = itemlist[tmp.itemid]
+        if (iList ~= nil) then
+			tryAddItemToResult(item, iList, result)
+        elseif (isContainer(tmp.uid) and recursively) then
+        	searchItemDepthContainer(tmp, itemlist, result)
+        end
+    end	
+	return true
+end
+
+function lookingOutfitTicket(cid, thing)
+
+	local outfitId = thing.actionid or 0
+	local outfitName = {
+		[1] = "Citizen",
+		[2] = "Hunter",
+		[3] = "Mage",
+		[4] = "Knight",
+		[5] = "Noble",
+		[6] = "Summoner",
+		[7] = "Warrior",
+		[8] = "Barbarian",
+		[9] = "Druid",
+		[10] = "Wizard",
+		[11] = "Oriental",
+		[12] = "Pirate",
+		[13] = "Assassin",
+		[14] = "Beggar",
+		[15] = "Shaman",
+		[16] = "Norse",
+		[17] = "Nightmare",
+		[18] = "Jester",
+		[19] = "Brotherhood",
+		[20] = "Demonhunter",
+		[21] = "Yalaharian",
+		[22] = "Warmaster",
+		[23] = "Wayfarer"
+	}
+
+	local tempName = "Unkwnown"
+
+	if(outfitName[outfitId] ~= nil) then
+		tempName = outfitName[outfitId]
+	end
+	
+	local desc = ""
+	
+	if(not canPlayerWearOutfitId(cid, outfitId, 0)) then
+		desc = "Use este bilhete para ganhar o outfit " .. tempName .. "."
+	else
+		if(canPlayerWearOutfitId(cid, outfitId, 2)) then
+			desc = "Você já possui todos addons para o outfit" .. tempName .. ". Mas outras pessoas ainda podem usar-lo."
+		elseif(canPlayerWearOutfitId(cid, outfitId, 1)) then
+			desc = "Use este bilhete para ganhar o segundo addon para o outfit " .. tempName .. "."
+		else
+			desc = "Use este bilhete para ganhar o primeiro addon  para o outfit " .. tempName .. "."
+		end		
+	end	
+
+	doItemSetAttribute(thing.uid, "name", string.lower(tempName) .. " outfit ticket")
+	doItemSetAttribute(thing.uid, "description", desc)
+end
+
+function summonDarkGeneral()
+
+	local POSITIONS = {
+		{pos = {x = 2221, y = 1748, z = 7}, message = "Foi avistado o estandarde supremo da Armada Negra! O GENERAL ataca o portão norte de Quendor!! Protejam a cidade!"} -- quendor north gate
+		,{pos = {x = 2080, y = 1835, z = 7}, message = "Foi avistado o estandarde supremo da Armada Negra! O GENERAL ataca o portão oeste de Quendor!! Protejam a cidade!"} -- quendor west gate
+	}
+	
+	local summonPos = POSITIONS[math.random(1, #POSITIONS)]
+
+	doBroadcastMessage(summonPos.message, MESSAGE_EVENT_ADVANCE)
+	local creature = doSummonCreature("Dark General", summonPos.pos, true, true)
+	registerCreatureEvent(creature, "monsterDeath")
+end
+
+function onDarkGeneralDie(cid, corpse, deathList)
+	msg = msg or "Rei Ordon anúncia: Guerreiros de Quendor mais uma vez com total bravura se uniram e derrotaram um oponente poderoso! A Armada Negra e o Dark General! Como comemoração pelo feito eu concedo 10% mais experience pelos proximo 3 dias!"
+	doBroadcastMessage(msg, MESSAGE_EVENT_ADVANCE)
+	
+	addEvent(disableRoyalBlessing, 1000 * 20)
+	
+	doSetStorage(gid.EXP_BONUS_KILL_DARK_GENERAL, os.time())
+	local onlineList = getPlayersOnline()
+	for _,uid in pairs(onlineList) do
+		reloadExpStages(uid)
+	end
+end
+
+function enableRoyalBlessing(msg, class)
+	doSetStorage(gid.ROYAL_BLESSING, 1)
+
+	msg = msg or "Rei Ordon anúncia: Por Quendor está concedida a BENÇÃO REAL a todos durante esta ameaça! Lutem por Quendor sem medo!"
+	class = class or MESSAGE_EVENT_ADVANCE
+	doBroadcastMessage(msg, class)
+end
+
+function disableRoyalBlessing(msg, class)
+	doSetStorage(gid.ROYAL_BLESSING, 0)
+
+	msg = msg or "Rei Ordon: Não há mais ameaça, a benção real está ENCERRADA!"
+	if(msg) then
+		class = class or MESSAGE_EVENT_ADVANCE
+		doBroadcastMessage(msg, class)
+	end
+end
+
+function doRoyalBlessIsEnable()
+	return getStorage(gid.ROYAL_BLESSING) == 1
+end
+
+function getHelpMessage(command, paramTable)
+	local str = "Instruções de uso:\n"
+	str = str .. "Ex: " .. command .. " [arg1] | [arg2] ... \n"
+	str = str .. "\nArgumentos: \n"
+	for k,v in pairs(paramTable) do
+		str = str .. v.key .. " --> " .. v.help .. "\n"
+	end
+	
+	return str
+end
+
+function parseTalkactionParameters(paramTable, str, separator)
+	separator = separator or "|"
+	
+	local params = string.explode(str, separator)
+	
+	if(#params == 0) then
+		params = { str }
+	end
+	
+	local nextProperties = nil
+	
+	for _, param in pairs(params) do
+		
+		param = string.trim(param)		
+		local result = string.explode(param, " ", 1)
+	
+		local _key = result[1]
+		local _value = result[2]
+		
+		if(_key == "-h") then
+			return TALK_PARAMS_CALL_HELP, ""
+		end
+		
+		local knowKey = false
+		
+		for key, props in pairs(paramTable) do
+			if(_key == props.key) then
+				
+				knowKey = true
+				
+				local expectType = "string" 
+				
+				if(props.expectedType == nil) then
+					props.expectedType = expectType
+				end
+				
+				if(props.expectedValues ~= nil and not isInArray(props.expectedValues, _value)) then
+					return TALK_PARAMS_WRONG_EXPECTED_VALUE, "Valor incorreto para o argumento " .. v .. ", era esperado um de: " .. table.implode(", ", props.expectedValues) .. "."
+				end
+				
+				if(props.expectedType == "string") then
+					paramTable[key].value = _value
+				elseif(props.expectedType == "numeric") then
+					paramTable[key].value = tonumber(_value)
+				end
+			end
+		end
+		
+		if(not knowKey) then
+			return TALK_PARAMS_WRONG_PARAMETER, "O parametro " .. _key .. " não é valido. Use o -h para ajuda."
+		end
+	end
+	
+	return TALK_PARAMS_DONE, paramTable
+end
+
+function getPlayerAccountIdByName(name)
+	local result = db.getResult("SELECT `account_id` FROM `players` WHERE `name` = " .. db.escapeString(name) .. " LIMIT 1;")
+	
+	if(result:getID() == -1) then
+		return false
+	end
+	
+	local account_id = result:getDataInt("account_id")
+	result:free()
+	
+	return account_id
+end
+
+function isOnContainer(position)
+	if(position.x == CONTAINER_POSITION) then
+		return true
+	end
+	
+	return false
+end
+
+function isOnSlot(position)
+
+	if(not isOnContainer(position)) then
+		return false
+	end
+
+	if(getBooleanFromString(bit.uband(position.y, 64))) then
+		return false
+	end
+	
+	return true
+end
+
+function isOnGround(position)
+
+	if(not isOnContainer(position) and not isOnSlot(position)) then
+		return true
+	end
+	
+	return false
+end
+
 function round(number, decimals)
 	decimals = decimals or 1
 	local shift = 10 ^ decimals
@@ -383,7 +659,7 @@ function raidLog(raidname)
 	
 	local date = os.date("*t")
 	local fileStr = date.day .. "-" .. date.month .. ".log"
-	local patch = getDataDir() .. "logs/raids/"
+	local patch = getConfigValue("logsDirectory") .. "raids/"
 	local file = io.open(patch .. fileStr, "a+")
 	
 	file:write(out .. "\n")
@@ -582,7 +858,7 @@ function consoleLog(type, npcname, caller, string, params)
 	
 		local date = os.date("*t")
 		local fileStr = npcname .. "_" .. date.day .. "-" .. date.month .. ".log"
-		local patch = getDataDir() .. "logs/npc/"
+		local patch = getConfigValue("logsDirectory") .. "npc/"
 		local file = io.open(patch .. fileStr, "a+")
 		
 		file:write(out .. "\n")
@@ -630,7 +906,7 @@ function addShieldTrie(cid, target)
 	local cTarget = getCreatureTarget(cid)
 	
 	if(cTarget == 0) then
-		--print("Alvo não encontrado, limpando... ")
+		--print("Alvo nï¿½o encontrado, limpando... ")
 		setPlayerStorageValue(cid, sid.TRAINING_SHIELD, 0)
 		return
 	else 
@@ -776,6 +1052,16 @@ function summonDemonOak()
 	setGlobalStorageValue(gid.THE_DEMON_OAK, temp_monster)
 end
 
+inquisitionBosses =	{
+	{name = "Ushuriel", uid = uid.INQ_USHURIEL_SPAWN},
+	{name = "Madareth", uid = uid.INQ_MADARETH_SPAWN},
+	{name = "Zugurosh", uid = uid.INQ_ZUGOROSH_SPAWN},
+	{name = "Latrivan", uid = uid.INQ_LATRIVAN_SPAWN},
+	{name = "Golgordan", uid = uid.INQ_GOLGORDAN_SPAWN},
+	{name = "Annihilon", uid = uid.INQ_ANNIHILON_SPAWN},
+	{name = "Hellgorak", uid = uid.INQ_HELLGORAK_SPAWN}
+}
+
 function summonInquisitionBoss(boss)
 
 	boss = boss or nil
@@ -783,47 +1069,14 @@ function summonInquisitionBoss(boss)
 	local pos = nil
 	local temp_monster = nil
 	
-	if(boss == nil or boss == "ushuriel") then
-		pos = getThingPos(uid.INQ_USHURIEL_SPAWN)
-		temp_monster = doSummonCreature("Ushuriel", pos)
-		registerCreatureEvent(temp_monster, "monsterDeath")
+	for k,v in pairs(inquisitionBosses) do
+		if((boss == nil or string.lower(v.name) == boss) and not getCreatureByName(v.name)) then
+			pos = getThingPos(v.uid)
+			temp_monster = doSummonCreature(v.name, pos)
+			registerCreatureEvent(temp_monster, "monsterDeath")	
+			print("Summoning inquisition boss " .. v.name)
+		end
 	end
-
-	if(boss == nil or boss == "madareth") then
-		pos = getThingPos(uid.INQ_MADARETH_SPAWN)
-		temp_monster = doSummonCreature("Madareth", pos)	
-		registerCreatureEvent(temp_monster, "monsterDeath")
-	end
-	
-	if(boss == nil or boss == "zugurosh") then
-		pos = getThingPos(uid.INQ_ZUGOROSH_SPAWN)
-		temp_monster = doSummonCreature("Zugurosh", pos)	
-		registerCreatureEvent(temp_monster, "monsterDeath")
-	end
-	
-	if(boss == nil or boss == "latrivan") then
-		pos = getThingPos(uid.INQ_LATRIVAN_SPAWN)
-		temp_monster = doSummonCreature("Latrivan", pos)
-		registerCreatureEvent(temp_monster, "monsterDeath")
-	end	
-	
-	if(boss == nil or boss == "golgordan") then
-		pos = getThingPos(uid.INQ_GOLGORDAN_SPAWN)
-		temp_monster = doSummonCreature("Golgordan", pos)	
-		registerCreatureEvent(temp_monster, "monsterDeath")
-	end
-	
-	if(boss == nil or boss == "annihilon") then
-		pos = getThingPos(uid.INQ_ANNIHILON_SPAWN)
-		temp_monster = doSummonCreature("Annihilon", pos)
-		registerCreatureEvent(temp_monster, "monsterDeath")
-	end
-	
-	if(boss == nil or boss == "hellgorak") then
-		pos = getThingPos(uid.INQ_HELLGORAK_SPAWN)
-		temp_monster = doSummonCreature("Hellgorak", pos)	
-		registerCreatureEvent(temp_monster, "monsterDeath")
-	end	
 end
 
 --[[
@@ -840,11 +1093,11 @@ function obsidianKnifeOnGhazranCorpse(cid, corpse)
 	
 	if not(hasRemovedTongue) then
 
-		doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Voc? conseguiu obter a l?ngua de Ghazran. Seu questlog foi atualizado.")
+		doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Voc? conseguiu obter a língua de Ghazran. Seu questlog foi atualizado.")
 		setPlayerStorageValue(cid, sid.ARIADNE_GHAZRAN_TONGUE, 1)
 		setPlayerStorageValue(cid, QUESTLOG.ARIADNE.GHAZRAN_WING, 3)
 	else
-		doPlayerSendCancel(cid, "Voc? j? obteve a l?ngua de Ghazran.")
+		doPlayerSendCancel(cid, "Você já obteve a língua de Ghazran.")
 	end
 end
 
@@ -1130,7 +1383,7 @@ end
 function notifyValidateEmail(cid)
 	local message = "Caro " .. getCreatureName(cid) ..",\n\n"
 	message = message .. "Você ainda não registrou um e-mail valido em sua conta. Lembre-se que por isso\n"
-	message = message .. "sua conta não está segura e você não conseguirá recuperar-la caso perda seus dados de acesso!\n\n"
+	message = message .. "sua conta não esta segura e você não conseguirá recuperar-la caso perda seus dados de acesso!\n\n"
 	message = message .. "Os seguintes recursos também estarão disponiveis para sua conta após o registro do e-mail:\n\n"
 	message = message .. " - Obter uma conta Premium.\n"
 	message = message .. " - Receber a Premium Test ao atingir level 100.\n"
@@ -1141,8 +1394,8 @@ function notifyValidateEmail(cid)
 	doPlayerPopupFYI(cid, message)	
 end
 
--- Verifica se o jogador ja foi notificado, existe uma enquete aberta, se o jogador possui um usuario e se esse usuario já votou, se tudo for verdadeiro, ele retorna falso
--- se não, retorna o resumo da enquete para ser exibido
+-- Verifica se o jogador ja foi notificado, existe uma enquete aberta, se o jogador possui um usuario e se esse usuario jï¿½ votou, se tudo for verdadeiro, ele retorna falso
+-- se nï¿½o, retorna o resumo da enquete para ser exibido
 function hasPollToNotify(cid)
 
 	local notify = getPlayerStorageValue(cid, sid.WEBSITE_POLL_NOTIFY)
@@ -1179,10 +1432,14 @@ function getWeekday()
 	return getGlobalStorageValue(gid.START_SERVER_WEEKDAY)
 end
 
-function table.copy(table)
+function table.copy(table_to_copy)
 	local _copy = {}
-	for k,v in pairs(table) do
-		_copy[k] = v
+	for k,v in pairs(table_to_copy) do
+		if(type(v) == "table") then
+			_copy[k] = table.copy(v)
+		else
+			_copy[k] = v
+		end
 	end
 	
 	return _copy

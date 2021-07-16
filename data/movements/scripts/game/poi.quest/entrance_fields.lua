@@ -11,11 +11,9 @@ function onStepIn(cid, item, position, fromPosition)
 	
 	local strActionID = tostring(item.actionid)
 	
-	local playerVocation = getPlayerVocation(cid)
+	local currentVocation = tonumber(string.sub(strActionID, 3, 3))
 	
-	local currentVocation = string.sub(strActionID, 3, 3)	
-	
-	if((currentVocation ~= playerVocation) and ((currentVocation + 4) ~= playerVocation)) then
+	if(currentVocation ~= getPlayerBaseVocation(cid)) then
 	
 		local index = tonumber(string.sub(strActionID, 4, 4))
 		local damage = tonumber(damages[index])

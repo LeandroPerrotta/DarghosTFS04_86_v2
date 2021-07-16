@@ -2,25 +2,16 @@
 	<script delay="0">
 	<![CDATA[
 	raidLog("globins (quendor)")
-	]]>
+		]]>
 	</script>
-
-<announce delay="0" type="event" message="An incoherent army of goblins on the east Quendor Bridge... Show our streght to that pathetic green creature!"/>
-
-<areaspawn delay="1000" centerx="2094" centery="1881" centerz="7" radius="12">
-<monster name="Goblin" minamount="25" maxamount="30"/>
-</areaspawn>
-
-<areaspawn delay="1000" centerx="2079" centery="1874" centerz="7" radius="10">
-<monster name="Goblin" minamount="10" maxamount="20"/>
-</areaspawn>
-
-<areaspawn delay="1000" centerx="2062" centery="1869" centerz="7" radius="15">
-<monster name="Goblin" minamount="25" maxamount="30"/>
-</areaspawn>
-
-<areaspawn delay="1000" centerx="2051" centery="1867" centerz="7" radius="5">
-<monster name="Goblin" minamount="15" maxamount="25"/>
-</areaspawn>
-
+	
+	<announce delay="0" type="event" message="Um estranho exercito de Goblins está a fazer baderna no portão ao Oeste de Quendor! Mostrem a nossa força a estas pateticas criaturas!"/>
+	
+	<!-- Quendor West Gate -->
+	<areaspawn delay="100000" centerx="2135" centery="1836" centerz="7" radius="25">
+		<monster name="Goblin" minamount="15" maxamount="25"/>
+		<monster name="Goblin Assassin" minamount="12" maxamount="20"/>
+		<monster name="Goblin Scavenger" minamount="12" maxamount="20"/>
+	</areaspawn>
+	
 </raid>

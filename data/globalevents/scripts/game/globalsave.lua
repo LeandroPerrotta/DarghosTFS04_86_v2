@@ -4,9 +4,9 @@ function onTime(time)
 
 	local date = os.date("*t")
 	
-	if(not isInArray({WEEKDAY.MONDAY, WEEKDAY.WEDNESDAY, WEEKDAY.FRIDAY}, date.wday)) then
-		return true
-	end
+	--if(not isInArray({WEEKDAY.MONDAY, WEEKDAY.WEDNESDAY, WEEKDAY.FRIDAY}, date.wday)) then
+	--	return true
+	--end
 
 	-- preparos de desligamento
 	pvpBattleground.close()

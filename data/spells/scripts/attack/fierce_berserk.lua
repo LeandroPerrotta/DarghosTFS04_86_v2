@@ -4,29 +4,16 @@ setCombatParam(combat, COMBAT_PARAM_BLOCKARMOR, TRUE)
 setCombatParam(combat, COMBAT_PARAM_EFFECT, CONST_ME_HITAREA)
 setCombatParam(combat, COMBAT_PARAM_USECHARGES, TRUE)
 
-if(darghos_distro == DISTROS_TFS) then
-	function getSpellDamage(cid, level, weaponSkill, weaponAttack, attackStrength)	
-		local min = ((weaponSkill+weaponAttack*2)*1.1+(level/5))
-		local max = ((weaponSkill+weaponAttack*2)*3+(level/5))
-	
-		return -min, -max
-	end
-elseif(darghos_distro == DISTROS_OPENTIBIA) then
-	function getSpellDamage(cid, weaponSkill, weaponAttack, attackStrength)
-		local level = getPlayerLevel(cid)
-	
-		local min = ((weaponSkill+weaponAttack*2)*1.1+(level/5))
-		local max = ((weaponSkill+weaponAttack*2)*3+(level/5))
-	
-		return -min, -max
-	end
-end
+function onGetFormulaValues(cid, level, maglevel)
+	local min, max = getMinMaxClassicFormula(level, maglevel, 8.1, 10.7)
+	return -min, -max
+end	
 
-setCombatCallback(combat, CALLBACK_PARAM_SKILLVALUE, "getSpellDamage")
+setCombatCallback(combat, CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")
 
 local area = createCombatArea(AREA_SQUARE1X1)
 setCombatArea(combat, area)
 
-function onCastSpell(cid, var)
+function onCastSpell(cid, var)	
 	return doCombat(cid, combat, var)
 end

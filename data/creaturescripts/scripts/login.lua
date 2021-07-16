@@ -4,6 +4,22 @@ local config = {
 }
 
 function onLogin(cid)
+	local a = 0
+	local limitAM = 5
+	if getCreatureName(cid):lower() == "account manager" then
+		for _, pid in ipairs(getPlayersOnline()) do
+			if getCreatureName(pid):lower() == "account manager" and pid ~= cid then
+				a = a + 1
+			end
+		end
+
+		if a >= limitAM then
+			return false
+		end
+
+		return true
+	end
+
 	local loss = getConfigValue('deathLostPercent')
 	if(loss ~= nil) then
 		doPlayerSetLossPercent(cid, PLAYERLOSS_EXPERIENCE, loss * 10)

@@ -16,26 +16,32 @@ config.splashable = getBooleanFromString(config.splashable)
 config.realAnimation = getBooleanFromString(config.realAnimation)
 
 local POTIONS = {
-	[8704] = {empty = 7636, splash = 42, health = {50, 100}}, -- small health potion
-	[7618] = {empty = 7636, splash = 42, health = {100, 200}}, -- health potion
-	[7588] = {empty = 7634, splash = 42, health = {200, 400}, level = 50, vocations = {3, 4, 7, 8}, vocStr = "knights and paladins"}, -- strong health potion
-	[7591] = {empty = 7635, splash = 42, health = {500, 700}, level = 80, vocations = {4, 8}, vocStr = "knights"}, -- great health potion
-	[8473] = {empty = 7635, splash = 42, health = {800, 1000}, level = 130, vocations = {4, 8}, vocStr = "knights"}, -- ultimate health potion
+	[8704] = {disabled = true, empty = 7636, splash = 42, health = {50, 100}}, -- small health potion
+	[7618] = {empty = 7636, splash = 42, health = {40, 75}}, -- health potion/life fluid
+	[7588] = {disabled = true, empty = 7634, splash = 42, health = {200, 400}, level = 50, vocations = {3, 4, 7, 8, 11, 12}, vocStr = "knights and paladins"}, -- strong health potion
+	[7591] = {disabled = true, empty = 7635, splash = 42, health = {500, 700}, level = 80, vocations = {4, 8, 12}, vocStr = "knights"}, -- great health potion
+	[8473] = {disabled = true, empty = 7635, splash = 42, health = {800, 1000}, level = 130, vocations = {4, 8, 12}, vocStr = "knights"}, -- ultimate health potion
 
-	[7620] = {empty = 7636, splash = 47, mana = {70, 130}}, -- mana potion
-	[7589] = {empty = 7634, splash = 47, mana = {110, 190}, level = 50, vocations = {1, 2, 3, 5, 6, 7}, vocStr = "sorcerers, druids and paladins"}, -- strong mana potion
-	[7590] = {empty = 7635, splash = 47, mana = {200, 300}, level = 80, vocations = {1, 2, 5, 6}, vocStr = "sorcerers and druids"}, -- great mana potion
+	[7620] = {empty = 7636, splash = 47, mana = {80, 160}}, -- mana potion/mana fluid
+	[7589] = {disabled = true, empty = 7634, splash = 47, mana = {110, 190}, level = 50, vocations = {1, 2, 3, 5, 6, 7, 9, 10, 11}, vocStr = "sorcerers, druids and paladins"}, -- strong mana potion
+	[7590] = {disabled = true, empty = 7635, splash = 47, mana = {200, 300}, level = 80, vocations = {1, 2, 5, 6, 9, 10}, vocStr = "sorcerers and druids"}, -- great mana potion
 
-	[8472] = {empty = 7635, splash = 43, health = {200, 400}, mana = {110, 190}, level = 80, vocations = {3, 7}, vocStr = "paladins"} -- great spirit potion
+	[8472] = {disabled = true, empty = 7635, splash = 43, health = {200, 400}, mana = {110, 190}, level = 80, vocations = {3, 7, 11}, vocStr = "paladins"} -- great spirit potion
 }
 
 local exhaust = createConditionObject(CONDITION_EXHAUST)
-setConditionParam(exhaust, CONDITION_PARAM_TICKS, (getConfigInfo('timeBetweenExActions') - 100))
+setConditionParam(exhaust, CONDITION_PARAM_SUBID, EXHAUST_COMBAT)
+setConditionParam(exhaust, CONDITION_PARAM_TICKS, 900)
 
 function onUse(cid, item, fromPosition, itemEx, toPosition)
 	local potion = POTIONS[item.itemid]
 	if(not potion) then
 		return false
+	end
+	
+	if(potion.disabled) then
+		doPlayerSendCancel(cid, "Item desativado. Opções são: life fluids, mana fluids, ultimate healing runes e etc...")
+		return true
 	end
 
 	if(not isPlayer(itemEx.uid) or (not config.usableOnTarget and cid ~= itemEx.uid)) then
@@ -62,13 +68,20 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 		return true
 	end
 
+	--[[
 	if(doPlayerIsInBattleground(cid) and hasCondition(cid, CONDITION_INFIGHT)) then
 		doPlayerSendDefaultCancel(cid, RETURNVALUE_YOUCANNOTUSETHISITEMINFIGHT)
 		return true	
 	end
+	]]
 
-	if(hasCondition(cid, CONDITION_EXHAUST)) then
+	if(hasCondition(cid, CONDITION_EXHAUST, EXHAUST_COMBAT)) then
 		doPlayerSendDefaultCancel(cid, RETURNVALUE_YOUAREEXHAUSTED)
+		return true
+	end
+	
+	if(not doPlayerIsPvpEnable(cid) and doPlayerIsPvpEnable(itemEx.uid)) then
+		doPlayerSendCancel(cid, "You can not use this item on agressive players.")
 		return true
 	end
 

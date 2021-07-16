@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<monster name="Behemoth King" nameDescription="a behemoth king" race="blood" species="hard" experience="700000" speed="400" manacost="0">
-  <health now="70000" max="70000"/>
+<monster name="Behemoth King" nameDescription="a behemoth king" race="blood" species="hard" experience="1400000" speed="400" manacost="0">
+  <health now="165000" max="165000"/>
   <look type="55" head="20" body="30" legs="40" feet="50" corpse="2931"/>
   <targetchange interval="8000" chance="12"/>
   <strategy attack="65" defense="35"/>
@@ -19,11 +19,11 @@
     <flag runonhealth="450"/>
   </flags>
   <attacks>
-    <attack name="melee" interval="500" min="-50" max="-190"/>
+    <attack name="melee" interval="500" attack="80" skill="200"/>
     <attack name="physical" interval="2000" chance="20" range="7" min="-100" max="-500">
       <attribute key="shootEffect" value="largerock"/>
     </attack>
-    <attack name="earth" interval="2000" chance="33" radius="5" target="0" min="-150" max="-205">
+    <attack name="earth" interval="2000" chance="33" radius="5" target="0" min="-295" max="-465">
       <attribute key="areaEffect" value="blackspark"/>
     </attack>
     <attack name="speed" interval="2000" chance="6" range="7" speedchange="-1000" duration="20000">
@@ -34,7 +34,7 @@
     </attack>
   </attacks>
   <defenses armor="500" defense="100">
-    <defense name="healing" interval="6000" chance="90" min="5500" max="11200">
+    <defense name="healing" interval="1000" chance="33" min="5500" max="11200">
       <attribute key="areaEffect" value="blueshimmer"/>
     </defense>
     <defense name="speed" interval="2000" chance="12" speedchange="900" duration="8000">
@@ -42,8 +42,8 @@
     </defense>
   </defenses>
   <elements>
-    <element physicalPercent="50"/>
-    <element deathPercent="0"/>
+    <element physicalPercent="0"/>
+    <element deathPercent="10"/>
     <element earthPercent="90"/>
     <element icePercent="-35"/>
     <element firePercent="90"/>
@@ -68,144 +68,73 @@
     <voice sentence="I NEED TO EAT YOU!"/>
   </voices>
   <loot capacity="900">
-    <item id="2646" countmax="1" chance="1000">
+	<item id="2160" countmax="23" chance="90000">
+		<!--gold coin-->
+	</item>	  
+    <item id="2646" countmax="1" chance="5000">
       <!--golden boots-->
     </item>
-    <item id="2471" countmax="1" chance="1000">
+    <item id="2471" countmax="1" chance="333">
       <!--golden helmet-->
     </item>
-    <item id="2400" countmax="1" chance="1000">
+    <item id="2400" countmax="1" chance="5000">
       <!--magic sword-->
     </item>
-    <item id="6553" countmax="1" chance="1000">
+    <item id="6553" countmax="1" chance="10000">
       <!--ruthless axe-->
     </item>
-    <item id="2173" countmax="1" chance="500">
+    <item id="2173" countmax="1" chance="25000">
       <!--amulet of loss-->
     </item>
-    <item id="2414" countmax="1" chance="1000">
+    <item id="2414" countmax="1" chance="15000">
       <!--dragon lance-->
     </item>
-    <item id="2377" countmax="1" chance="1000">
+    <item id="2377" countmax="1" chance="25000">
       <!--two handed sword-->
     </item>
-    <item id="7416" countmax="1" chance="1000">
+    <item id="7416" countmax="1" chance="8000">
       <!--bloody edge-->
     </item>
-    <item id="2472" countmax="1" chance="6666">
+    <item id="2472" countmax="1" chance="8000">
       <!--magic plate armor-->
     </item>
-    <item id="5887" countmax="1" chance="6666">
+    <item id="5887" countmax="1" chance="8000">
       <!--piece of royal steel-->
     </item>
-    <item id="2426" countmax="1" chance="6666">
+    <item id="2426" countmax="1" chance="20000">
       <!--naginata-->
     </item>
-    <item id="2393" countmax="1" chance="6666">
+    <item id="2393" countmax="1" chance="15000">
       <!--giant sword-->
     </item>
-    <item id="2392" countmax="1" chance="1000">
+    <item id="2392" countmax="1" chance="25000">
       <!--fire sword-->
     </item>
-    <item id="2476" countmax="1" chance="500">
+    <item id="2476" countmax="1" chance="25000">
       <!--knight armor-->
     </item>
-    <item id="2645" countmax="1" chance="500">
+    <item id="2645" countmax="1" chance="15000">
       <!--steel boots-->
     </item>
-    <item id="2520" countmax="1" chance="500">
+    <item id="2520" countmax="1" chance="15000">
       <!--demon shield-->
     </item>
-    <item id="2514" countmax="1" chance="1000">
+    <item id="2514" countmax="1" chance="10000">
       <!--mastermind shield-->
     </item>
-    <item id="2474" countmax="1" chance="500">
+    <item id="2474" countmax="1" chance="333">
       <!--winged helmet-->
     </item>
-    <item id="2470" countmax="1" chance="500">
+    <item id="2470" countmax="1" chance="12000">
       <!--golden legs-->
     </item>
-    <item id="2493" countmax="1" chance="500">
+    <item id="2493" countmax="1" chance="5000">
       <!--demon helmet-->
     </item>
-    <item id="7368" countmax="1" chance="1800">
-      <!--assassin star-->
+    <item id="7368" countmax="100" chance="20000">
+      <!--infernal bolt-->
     </item>
-    <item id="2365" countmax="1" chance="100000">
-      <inside>
-        <item id="2148" countmax="100" chance="90000">
-          <!--gold coin-->
-        </item>
-        <item id="2148" countmax="10" chance="90000">
-          <!--gold coin-->
-        </item>
-        <item id="2148" countmax="100" chance="90000">
-          <!--gold coin-->
-        </item>
-        <item id="2148" countmax="20" chance="90000">
-          <!--gold coin-->
-        </item>
-        <item id="2148" countmax="40" chance="90000">
-          <!--gold coin-->
-        </item>
-        <item id="2148" countmax="100" chance="90000">
-          <!--gold coin-->
-        </item>
-        <item id="2148" countmax="100" chance="90000">
-          <!--gold coin-->
-        </item>
-        <item id="2148" countmax="50" chance="90000">
-          <!--gold coin-->
-        </item>
-        <item id="2148" countmax="100" chance="90000">
-          <!--gold coin-->
-        </item>
-        <item id="2148" countmax="40" chance="90000">
-          <!--gold coin-->
-        </item>
-        <item id="2148" countmax="20" chance="90000">
-          <!--gold coin-->
-        </item>
-        <item id="2148" countmax="90" chance="90000">
-          <!--gold coin-->
-        </item>
-        <item id="2148" countmax="70" chance="90000">
-          <!--gold coin-->
-        </item>
-        <item id="2148" countmax="80" chance="90000">
-          <!--gold coin-->
-        </item>
-        <item id="2148" countmax="70" chance="90000">
-          <!--gold coin-->
-        </item>
-        <item id="2148" countmax="20" chance="90000">
-          <!--gold coin-->
-        </item>
-        <item id="2148" countmax="10" chance="90000">
-          <!--gold coin-->
-        </item>
-        <item id="2148" countmax="40" chance="90000">
-          <!--gold coin-->
-        </item>
-        <item id="2148" countmax="60" chance="90000">
-          <!--gold coin-->
-        </item>
-        <item id="2148" countmax="50" chance="90000">
-          <!--gold coin-->
-        </item>
-        <item id="2148" countmax="100" chance="90000">
-          <!--gold coin-->
-        </item>
-        <item id="2148" countmax="10" chance="90000">
-          <!--gold coin-->
-        </item>
-        <item id="2148" countmax="90" chance="90000">
-          <!--gold coin-->
-        </item>
-        <item id="2148" countmax="100" chance="90000">
-          <!--gold coin-->
-        </item>
-      </inside>
+    <item id="2365" countmax="1" chance="90000">
       <!--backpack of holding-->
     </item>
   </loot>

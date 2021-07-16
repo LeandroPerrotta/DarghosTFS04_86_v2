@@ -1,48 +1,44 @@
 <raid>
 	<script delay="0">
 	<![CDATA[
-	raidLog("ghouls (quendor)")
-	]]>
+	raidLog("undeads (quendor)")
+		]]>
 	</script>
-
-<announce delay="0" type="event" message="A dark, weird, and heavy fog apear at Quendor."/>
-<announce delay="60000" type="event" message="Dead to the Undeads! Be ready to fight against the death."/>
-<announce delay="100000" type="event" message="The dead warriors are rising from the ground! Ghouls are attacking Quendor City!"/>
-
-<areaspawn delay="100000" centerx="2018" centery="1870" centerz="7" radius="30">
-<monster name="Ghoul" minamount="10" maxamount="20"/>
-</areaspawn>
-
-<areaspawn delay="100000" centerx="2006" centery="1882" centerz="7" radius="15">
-<monster name="Ghoul" minamount="30" maxamount="50"/>
-</areaspawn>
-
-<areaspawn delay="100000" centerx="1988" centery="1868" centerz="7" radius="3">
-<monster name="Ghoul" minamount="12" maxamount="20"/>
-</areaspawn>
-
-<areaspawn delay="100000" centerx="1986" centery="1862" centerz="7" radius="3">
-<monster name="Ghoul" minamount="12" maxamount="20"/>
-</areaspawn>
-
-<areaspawn delay="100000" centerx="2006" centery="1873" centerz="7" radius="3">
-<monster name="Ghoul" minamount="10" maxamount="20"/>
-</areaspawn>
-
-<areaspawn delay="100000" centerx="2006" centery="1873" centerz="7" radius="3">
-<monster name="Ghoul" minamount="10" maxamount="20"/>
-</areaspawn>
-
-<areaspawn delay="100000" centerx="2006" centery="1873" centerz="7" radius="3">
-<monster name="Ghoul" minamount="10" maxamount="20"/>
-</areaspawn>
-
-<areaspawn delay="100000" centerx="2006" centery="1873" centerz="7" radius="3">
-<monster name="Ghoul" minamount="20" maxamount="20"/>
-</areaspawn>
-
-<areaspawn delay="100000" centerx="2000" centery="1870" centerz="7" radius="3">
-<monster name="Ghoul" minamount="5" maxamount="10"/>
-</areaspawn>
-
+	
+	<announce delay="0" type="event" message="Uma escura e medonha fumaça negra começa a surgir em Quendor..."/>
+	<announce delay="60000" type="event" message="Morte aos mortos vivos! Preparem-se para lutar contra a morte!"/>
+	<announce delay="100000" type="event" message="Guerreiros saem do chão e fantasmas assombram os lares! Os mortos vivos atacam a cidade de Quendor!"/>
+	
+	<!-- Quendor West Gate -->
+	<areaspawn delay="100000" centerx="2135" centery="1836" centerz="7" radius="25">
+		<monster name="Skeleton" minamount="8" maxamount="15"/>
+		<monster name="Skeleton Warrior" minamount="12" maxamount="20"/>
+		<monster name="Demon Skeleton" minamount="12" maxamount="20"/>
+		<monster name="Bonebeast" minamount="10" maxamount="15"/>
+		<monster name="Ghost" minamount="10" maxamount="20"/>
+		<monster name="Ghoul" minamount="15" maxamount="25"/>
+		<monster name="Crypt Shambler" minamount="15" maxamount="25"/>
+		<monster name="Mummy" minamount="10" maxamount="20"/>
+		<monster name="Vampire" minamount="10" maxamount="20"/>
+		<monster name="Banshee" minamount="8" maxamount="15"/>
+		<monster name="Lich" minamount="10" maxamount="15"/>
+		<monster name="Vampire Bride" minamount="4" maxamount="8"/>
+	</areaspawn>
+	
+	<!-- Quendor North Gate -->
+	<areaspawn delay="100000" centerx="2202" centery="1763" centerz="7" radius="25">
+		<monster name="Skeleton" minamount="8" maxamount="15"/>
+		<monster name="Skeleton Warrior" minamount="12" maxamount="20"/>
+		<monster name="Demon Skeleton" minamount="12" maxamount="20"/>
+		<monster name="Bonebeast" minamount="10" maxamount="15"/>
+		<monster name="Ghost" minamount="10" maxamount="20"/>
+		<monster name="Ghoul" minamount="15" maxamount="25"/>
+		<monster name="Crypt Shambler" minamount="15" maxamount="25"/>
+		<monster name="Mummy" minamount="10" maxamount="20"/>
+		<monster name="Vampire" minamount="10" maxamount="20"/>
+		<monster name="Banshee" minamount="8" maxamount="15"/>
+		<monster name="Lich" minamount="10" maxamount="15"/>
+		<monster name="Vampire Bride" minamount="4" maxamount="8"/>
+	</areaspawn>	
+	
 </raid>

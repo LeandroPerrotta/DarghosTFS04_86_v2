@@ -65,11 +65,25 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 
 		local vocation = item.actionid - 100
 		if(vocation >= 0 and vocation < 50) then
+			--[[
+			#ifndef DARGHOS_CUSTOM
 			local playerVocationInfo = getVocationInfo(getPlayerVocation(cid))
 			if(playerVocationInfo.id ~= vocation and playerVocationInfo.fromVocation ~= vocation) then
 				doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Only the worthy may pass.")
 				return true
 			end
+			#else
+			]]			
+			if((vocation == 1 and not isSorcerer(cid)) or
+				(vocation == 2 and not isDruid(cid)) or
+				 (vocation == 3 and not isPaladin(cid)) or
+					(vocation == 4 and not isDruid(cid))
+			) then
+				doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Only the worthy may pass.")
+				return true
+			end
+			
+			
 
 			doorEnter(cid, item, toPosition)
 			return true

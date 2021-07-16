@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<monster name="Ferumbras" nameDescription="Ferumbras" race="VENOM" experience="12000" speed="320" manacost="0">
-  <health now="35000" max="35000"/>
-  <look type="229" head="20" body="30" legs="40" feet="50" corpse="6078"/>
-  <targetchange interval="5000" chance="8"/>
-  <strategy attack="100" defense="0"/>
+<?xml version='1.0' encoding='UTF-8'?>
+<monster speed="320" manacost="0" race="VENOM" experience="12000" name="Ferumbras" nameDescription="Ferumbras">
+  <health max="35000" now="35000"/>
+  <look head="20" body="30" legs="40" type="229" corpse="6078" feet="50"/>
+  <targetchange chance="8" interval="5000"/>
+  <strategy defense="0" attack="100"/>
   <flags>
     <flag summonable="0"/>
     <flag attackable="1"/>
@@ -18,37 +18,37 @@
     <flag runonhealth="2500"/>
   </flags>
   <attacks>
-    <attack name="melee" interval="2000" skill="80" attack="50" poison="200"/>
+    <attack interval="2000" attack="50" poison="200" skill="80" name="melee"/>
     <!-- Mana Drain -->
-    <attack name="manadrain" interval="2000" chance="20" range="7" min="-500" max="-700">
+    <attack chance="20" interval="2000" range="7" min="-500" name="manadrain" max="-700">
       <attribute key="areaEffect" value="redshimmer"/>
     </attack>
     <!-- Great Life Bomb -->
-    <attack name="lifedrain" interval="2000" chance="21" radius="6" target="0" min="-250" max="-350">
+    <attack target="0" chance="21" radius="6" interval="2000" min="-250" name="lifedrain" max="-350">
       <attribute key="areaEffect" value="redspark"/>
     </attack>
     <!-- Great Smoke Bomb -->
-    <attack name="physical" interval="2000" chance="20" radius="6" target="0" min="-350" max="-470">
+    <attack target="0" chance="20" radius="6" interval="2000" min="-350" name="physical" max="-470">
       <attribute key="areaEffect" value="poff"/>
     </attack>
     <!-- Poison Explosion -->
-    <attack name="poison" interval="2000" chance="20" radius="6" target="0" min="-350" max="-550">
+    <attack target="0" chance="20" radius="6" interval="2000" min="-350" name="poison" max="-550">
       <attribute key="areaEffect" value="poison"/>
     </attack>
     <!-- Great Berserk -->
-    <attack name="physical" interval="2000" chance="15" radius="5" target="0" min="0" max="-900">
+    <attack target="0" chance="15" radius="5" interval="2000" min="0" name="physical" max="-900">
       <attribute key="areaEffect" value="blackspark"/>
     </attack>
     <!-- Energy Explosion -->
-    <attack name="energy" interval="2000" chance="18" radius="10" target="0" min="-300" max="-400">
+    <attack target="0" chance="18" radius="10" interval="2000" min="-300" name="energy" max="-400">
       <attribute key="areaEffect" value="energy"/>
     </attack>
   </attacks>
-  <defenses armor="50" defense="50">
-    <defense name="healing" interval="2000" chance="10" min="200" max="400">
+  <defenses defense="50" armor="50">
+    <defense chance="10" interval="2000" min="200" name="healing" max="400">
       <attribute key="areaEffect" value="greenshimmer"/>
     </defense>
-    <defense name="invisible" interval="4000" chance="20" duration="5000">
+    <defense duration="5000" chance="20" interval="4000" name="invisible">
       <attribute key="areaEffect" value="blueshimmer"/>
     </defense>
   </defenses>
@@ -63,9 +63,9 @@
     <immunity invisible="1"/>
   </immunities>
   <summons maxSummons="3">
-    <summon name="demon" interval="3000" chance="12" max="3"/>
+    <summon chance="12" interval="3000" name="demon" max="3"/>
   </summons>
-  <voices interval="5000" chance="20">
+  <voices chance="20" interval="5000">
     <voice sentence="NO ONE WILL STOP ME THIS TIME!" yell="1"/>
     <voice sentence="THE POWER IS MINE!" yell="1"/>
     <voice sentence="I returned from death and you dream about defeating me?" yell="1"/>
@@ -73,140 +73,50 @@
     <voice sentence="Even in my weakened state I will crush you all!" yell="1"/>
   </voices>
   <loot>
-    <item id="2148" countmax="100" chance="100000">
-      <!--gold coin-->
-    </item>
-    <item id="2148" countmax="70" chance="100000">
-      <!--gold coin-->
-    </item>
-    <item id="5903" chance="100000">
-      <!--ferumbras' hat-->
-    </item>
-    <item id="2539" chance="40000">
-      <!--phoenix shield-->
-    </item>
-    <item id="2470" chance="32000">
-      <!--golden legs-->
-    </item>
-    <item id="8885" chance="25000">
-      <!--divine plate-->
-    </item>
-    <item id="2127" chance="25000">
-      <!--emerald bangle-->
-    </item>
-    <item id="8924" chance="25000">
-      <!--hellforged axe-->
-    </item>
-    <item id="8902" chance="25000">
-      <!--spellbook of mind control-->
-    </item>
-    <item id="8926" chance="18000">
-      <!--demonwing axe-->
-    </item>
-    <item id="7407" chance="18000">
-      <!--haunted blade-->
-    </item>
-    <item id="7435" chance="18000">
-      <!--impaler-->
-    </item>
-    <item id="2472" chance="18000">
-      <!--magic plate armor-->
-    </item>
-    <item id="8928" chance="18000">
-      <!--obsidian truncheon-->
-    </item>
-    <item id="7414" chance="12000">
-      <!--abyss hammer-->
-    </item>
-    <item id="7403" chance="12000">
-      <!--berserker-->
-    </item>
-    <item id="2415" chance="12000">
-      <!--great axe-->
-    </item>
-    <item id="8869" chance="12000">
-      <!--greenwood coat-->
-    </item>
-    <item id="7405" chance="12000">
-      <!--havoc blade-->
-    </item>
-    <item id="7418" chance="12000">
-      <!--nightmare blade-->
-    </item>
-    <item id="1987" chance="100000">
-      <inside>
-        <item id="2678" countmax="3" chance="20000">
-          <!--coconut-->
-        </item>
-        <item id="2148" countmax="100" chance="100000">
-          <!--gold coin-->
-        </item>
-        <item id="2151" countmax="4" chance="12000">
-          <!--talon-->
-        </item>
-        <item id="2149" countmax="3" chance="15000">
-          <!--small emerald-->
-        </item>
-      </inside>
-      <!--bag-->
-    </item>
-    <item id="1987" chance="100000">
-      <inside>
-        <item id="7894" chance="12000">
-          <!--magma legs-->
-        </item>
-        <item id="8903" chance="18000">
-          <!--spellbook of lost souls-->
-        </item>
-        <item id="8930" chance="18000">
-          <!--emerald sword-->
-        </item>
-        <item id="7422" chance="18000">
-          <!--jade hammer-->
-        </item>
-        <item id="2514" chance="18000">
-          <!--mastermind shield-->
-        </item>
-        <item id="7896" chance="25000">
-          <!--glacier kilt-->
-        </item>
-        <item id="2466" chance="25000">
-          <!--golden armor-->
-        </item>
-        <item id="2522" chance="25000">
-          <!--great shield-->
-        </item>
-      </inside>
-      <!--bag-->
-    </item>
-    <item id="1987" chance="100000">
-      <inside>
-        <item id="7451" chance="32000">
-          <!--shadow sceptre-->
-        </item>
-        <item id="8904" chance="32000">
-          <!--spellscroll of prophecies-->
-        </item>
-        <item id="7895" chance="40000">
-          <!--lightning legs-->
-        </item>
-        <item id="7417" chance="12000">
-          <!--runed sword-->
-        </item>
-        <item id="8918" chance="12000">
-          <!--spellbook of dark mysteries-->
-        </item>
-        <item id="8868" chance="25000">
-          <!--velvet mantle-->
-        </item>
-        <item id="2520" chance="18000">
-          <!--demon shield-->
-        </item>
-        <item id="7382" chance="18000">
-          <!--demonrage sword-->
-        </item>
-      </inside>
-      <!--bag-->
-    </item>
+    <item chance="7142" id="2144" countmax="83"/>
+    <item chance="12500" id="7427"/>
+    <item chance="7142" id="7382"/>
+    <item chance="20000" id="2520"/>
+    <item chance="10000" id="8926"/>
+    <item chance="20000" id="8885"/>
+    <item chance="20000" id="2127"/>
+    <item chance="16666" id="8930"/>
+    <item chance="100000" id="5903"/>
+    <item chance="16666" id="7896"/>
+    <item chance="50000" id="2148" countmax="100"/>
+    <item chance="50000" id="2148" countmax="84"/>
+    <item chance="20000" id="2466"/>
+    <item chance="25000" id="2470"/>
+    <item chance="50000" id="9971" countmax="2"/>
+    <item chance="25000" id="2522"/>
+    <item chance="10000" id="8869"/>
+    <item chance="10000" id="7407"/>
+    <item chance="16666" id="7405"/>
+    <item chance="12500" id="8924"/>
+    <item chance="10000" id="7422"/>
+    <item chance="20000" id="7895"/>
+    <item chance="16666" id="2472"/>
+    <item chance="16666" id="7894"/>
+    <item chance="14285" id="2514"/>
+    <item chance="7142" id="7418"/>
+    <item chance="7142" id="8928"/>
+    <item chance="16666" id="2539"/>
+    <item chance="10000" id="2152" countmax="58"/>
+    <item chance="12500" id="7410"/>
+    <item chance="10000" id="7417"/>
+    <item chance="20000" id="7451"/>
+    <item chance="10000" id="7423"/>
+    <item chance="12500" id="2150" countmax="54"/>
+    <item chance="20000" id="2149" countmax="100"/>
+    <item chance="12500" id="2146" countmax="78"/>
+    <item chance="12500" id="9970" countmax="87"/>
+    <item chance="12500" id="8918"/>
+    <item chance="20000" id="8903"/>
+    <item chance="25000" id="8902"/>
+    <item chance="14285" id="8904"/>
+    <item chance="20000" id="2542"/>
+    <item chance="16666" id="7885"/>
+    <item chance="20000" id="8868"/>
+    <item chance="14285" id="2143" countmax="88"/>
   </loot>
 </monster>

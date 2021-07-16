@@ -17,7 +17,7 @@ function defaultActions(cid, item, fromPosition, itemEx, toPosition)
 		ret = teleportRune.onUse(cid, item, fromPosition, itemEx, toPosition)
 	elseif(item_id == CUSTOM_ITEMS.UNHOLY_SWORD) then
 		ret = unholySword.onUse(cid, item, fromPosition, itemEx, toPosition)
-	elseif(item_id == CUSTOM_ITEMS.PREMIUM_SCROLL) then
+	elseif(item_id == CUSTOM_ITEMS.PREMIUM_SCROLL_MONTLY or item_id == CUSTOM_ITEMS.PREMIUM_SCROLL_WEEKLY) then
 		ret = premiumScroll.onUse(cid, item, fromPosition, itemEx, toPosition)
 	elseif(item_id == CUSTOM_ITEMS.OUTFIT_TICKET) then
 		ret = outfitTicket.onUse(cid, item, fromPosition, itemEx, toPosition)
@@ -45,7 +45,7 @@ function christmasPresent.onUse(cid, item, fromPosition, itemEx, toPosition)
 		barbarian_ticket = {id = 12691, actionid = 8},
 		hunter_ticket = {id = 12691, actionid = 2},
 		warrior_ticket = {id = 12691, actionid = 7},
-		mage_ticket = {id = 12691, actionid = 7},
+		mage_ticket = {id = 12691, actionid = 3},
 		summoner_ticket = {id = 12691, actionid = 6},
 		warmaster_ticket = {id = 12691, actionid = 22},
 		yalaharian_ticket = {id = 12691, actionid = 21},
@@ -126,6 +126,23 @@ function christmasPresent.onUse(cid, item, fromPosition, itemEx, toPosition)
 			presentContent.item1[math.random(1, #presentContent.item1)].id,
 			presentContent.item2[math.random(1, #presentContent.item2)].id
 		}		
+		
+		if(item.itemid == CUSTOM_ITEMS.BIG_CHRISTMAS_PRESENT) then
+			christmasPresent.sortBonusItems()
+			
+			local checkItems = {
+				{logId = getStorage(gid.CHRISTMAS_PRESENT_DRAGON_SCALE_LEGS), id = 2469},
+				{logId = getStorage(gid.CHRISTMAS_PRESENT_BLESSED_SHIELD), id = 2523},
+				{logId = getStorage(gid.CHRISTMAS_PRESENT_SOLAR_AXE), id = 8925}
+			}
+			
+			for k,v in pairs(checkItems) do
+				local shopLog = getItemAttribute(item.uid, "itemShopLogId")
+				if(shopLog and shopLog == v.logId) then
+					table.insert(toCreateItems, v.id)
+				end
+			end			
+		end
 
 		local success = true
 		local addedItems = {}
@@ -134,7 +151,7 @@ function christmasPresent.onUse(cid, item, fromPosition, itemEx, toPosition)
 			local _item = doAddContainerItem(item.uid, v)
 			if (not _item) then
 				success = false
-				error("Não foi possivel adicionar um item ao presente de natal do jogador " .. getPlayerName(cid) .. ". Uid: ".. _item .. "")
+				error("Não foi possivel adicionar um item ao presente de natal do jogador " .. getPlayerName(cid) .. ". Uid: ".. v .. "")
 				break
 			else
 				if( k == 2) then
@@ -142,11 +159,11 @@ function christmasPresent.onUse(cid, item, fromPosition, itemEx, toPosition)
 				end
 				table.insert(addedItems, _item)
 			end
-		end		
+		end
 		
 		if(not success) then
 			for k,v in pairs(addedItems) do
-				doRemoveItem(_item)
+				doRemoveItem(v)
 			end
 			
 			doPlayerSendCancel(cid, "Não foi possivel entregar o seu presente! Cerfique de possuir espaço e capacidade sulficiente.")
@@ -165,6 +182,37 @@ function christmasPresent.onUse(cid, item, fromPosition, itemEx, toPosition)
 	end
 	
 	return false
+end
+
+function christmasPresent.sortBonusItems()
+
+	if(getStorage(gid.CHRISTMAS_PRESENT_DRAGON_SCALE_LEGS) ~= -1) then
+		return
+	end
+
+	local result = db.getResult("SELECT `id` FROM `wb_itemshop_log` WHERE `shop_id` = 75;")
+	
+	if(result:getID() ~= -1) then
+		local logIdTable = {}
+	
+		repeat
+			table.insert(logIdTable, result:getDataInt("id"))	
+		until not(result:next())
+		result:free()
+		
+		local toSort = {
+			gid.CHRISTMAS_PRESENT_DRAGON_SCALE_LEGS,
+			gid.CHRISTMAS_PRESENT_BLESSED_SHIELD,
+			gid.CHRISTMAS_PRESENT_SOLAR_AXE
+		}
+		
+		for k,v in pairs(toSort) do
+		
+			local sortedKey = math.random(1, #logIdTable)
+			doSetStorage(v, logIdTable[sortedKey])
+			logIdTable[sortedKey] = nil
+		end
+	end
 end
 
 unholySword = {}
@@ -272,9 +320,9 @@ end
 
 premiumScroll = {}
 
-premiumScroll.PREMIUM_DAYS_TO_ADD = 30
-
 function premiumScroll.onUse(cid, item, frompos, item2, topos)
+	
+	premiumScroll.DAYS = { [CUSTOM_ITEMS.PREMIUM_SCROLL_MONTLY] = 30, [CUSTOM_ITEMS.PREMIUM_SCROLL_WEEKLY] = 7}
 	
 	local log_id = getItemAttribute(item.uid, "itemShopLogId")
 	
@@ -283,8 +331,8 @@ function premiumScroll.onUse(cid, item, frompos, item2, topos)
 		return true
 	end
 	
-	doPlayerAddPremiumDays(cid, premiumScroll.PREMIUM_DAYS_TO_ADD)
-	doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_ORANGE, "You have earned " .. premiumScroll.PREMIUM_DAYS_TO_ADD .. " days of premium time with this premium scroll! Good luck!")
+	doPlayerAddPremiumDays(cid, premiumScroll.DAYS[item.itemid])
+	doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_ORANGE, "You get " .. premiumScroll.DAYS[item.itemid] .. " days of premium time with this premium ticket! Good luck!")
 	doRemoveItem(item.uid)	
 	
 	return true

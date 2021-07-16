@@ -1,4 +1,4 @@
-function onSay(cid, words, param, channel)
+function onSay(cid, words, param, channel, type)
 
 	if(wordsIsSpell(words .. " " .. param)) then
 		return false
@@ -20,11 +20,11 @@ function pvp.onSay(cid, words, param, channel)
 			if(pvpBattleground.playerSpeakTeam(cid, words .. " " .. param)) then
 				return true			
 			else
-				doPlayerSendCancel(cid, "Não é permitido a jogadores fora da battleground enviarem mensagens por este canal.")
+				doPlayerSendCancel(cid, "Nï¿½o ï¿½ permitido a jogadores fora da battleground enviarem mensagens por este canal.")
 				return true
 			end	
 		elseif(channel == CUSTOM_CHANNEL_PVP) then
-			doPlayerSendCancel(cid, "Não é permitido enviar mensagens neste canal.")
+			doPlayerSendCancel(cid, "Nï¿½o ï¿½ permitido enviar mensagens neste canal.")
 			return true		
 		end
 	end
@@ -42,12 +42,12 @@ function help.onSay(cid, words, param, channel)
 	local lastMessage = getPlayerStorageValue(cid, sid.LAST_HELP_MESSAGE)
 	
 	if(getPlayerAccess(cid) == ACCESS_PLAYER and lastMessage ~= STORAGE_NULL and lastMessage + HELP_EXHAUSTED >= os.time()) then
-		doPlayerSendCancel(cid, "So é permitido enviar uma mensagem neste canal a cada 15 segundos.")
+		doPlayerSendCancel(cid, "So ï¿½ permitido enviar uma mensagem neste canal a cada 15 segundos.")
 		return true	
 	end
 	
 	if(banExpires ~= STORAGE_NULL and banExpires >= os.time()) then
-		doPlayerSendCancel(cid, "Você foi proibido de enviar mensagens no help channel até " .. os.date("%d/%m/%Y - %X", banExpires) .. " devido uma conduta inaceitavel recente.")
+		doPlayerSendCancel(cid, "Vocï¿½ foi proibido de enviar mensagens no help channel atï¿½ " .. os.date("%d/%m/%Y - %X", banExpires) .. " devido uma conduta inaceitavel recente.")
 		return true
 	else
 		setPlayerStorageValue(cid, sid.LAST_HELP_MESSAGE, os.time())

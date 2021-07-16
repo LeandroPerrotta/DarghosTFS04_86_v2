@@ -78,7 +78,7 @@
   <house name="Aracura Flats A-II" houseid="370" entryx="2971" entryy="1124" entryz="7" rent="8700" townid="2" size="28"/>
   <house name="Aracura Flats A-III" houseid="371" entryx="2970" entryy="1120" entryz="6" rent="4200" townid="2" size="15"/>
   <house name="Aracura Flats A-IV" houseid="372" entryx="2970" entryy="1121" entryz="6" rent="3400" townid="2" size="12"/>
-  <house name="Aracura Flats A-V" houseid="373" entryx="2975" entryy="1121" entryz="6" rent="6500" townid="2" size="16"/>
+  <house name="Aracura Flats A-V" houseid="373" entryx="2975" entryy="1121" entryz="6" rent="6500" townid="2" size="15"/>
   <house name="Aracura Flats A-VI" houseid="374" entryx="2976" entryy="1121" entryz="6" rent="6700" townid="2" size="21"/>
   <house name="Aracura Flats A-VII" houseid="375" entryx="2974" entryy="1118" entryz="5" rent="3400" townid="2" size="12"/>
   <house name="Aracura Flats A-VIII" houseid="376" entryx="2975" entryy="1123" entryz="5" rent="7000" townid="2" size="27"/>
@@ -92,7 +92,7 @@
   <house name="Aracura Flats B-II" houseid="385" entryx="2959" entryy="1124" entryz="7" rent="8700" townid="2" size="28"/>
   <house name="Aracura Flats B-III" houseid="386" entryx="2961" entryy="1120" entryz="6" rent="4200" townid="2" size="15"/>
   <house name="Aracura Flats B-IV" houseid="387" entryx="2960" entryy="1121" entryz="6" rent="3400" townid="2" size="12"/>
-  <house name="Aracura Flats B-V" houseid="388" entryx="2956" entryy="1121" entryz="6" rent="6500" townid="2" size="16"/>
+  <house name="Aracura Flats B-V" houseid="388" entryx="2956" entryy="1121" entryz="6" rent="6500" townid="2" size="15"/>
   <house name="Aracura Flats B-VI" houseid="389" entryx="2954" entryy="1121" entryz="6" rent="6700" townid="2" size="21"/>
   <house name="Aracura Flats B-VII" houseid="390" entryx="2955" entryy="1123" entryz="5" rent="7000" townid="2" size="27"/>
   <house name="Aracura Flats B-VIII" houseid="391" entryx="2956" entryy="1117" entryz="5" rent="3400" townid="2" size="12"/>

@@ -5,6 +5,9 @@
 	<!-- Hack for default script for Use With items... -->
 	<action itemid="12670" script="default.lua"/>
 
+	<!-- Battleground Flags -->
+	<action itemid="10952;11293" script="game/battleground_flag.lua"/>
+
 	<!-- Koshei's (Blue Legs) -->
 	<action uniqueid="1075-1076" script="game/koshei.lua"/>
 	<action itemid="8266" script="game/koshei.lua"/>
@@ -71,6 +74,7 @@
 	<action itemid="7731" event="script" value="tools/rope.lua"/>
 	<action itemid="2553" event="script" value="tools/pick.lua"/>
 	<action itemid="5908;5942" event="script" value="tools/skinning.lua"/>
+	<action itemid="10511;10513;10515" event="script" value="tools/squeeze.lua"/>
 
 	<!-- Liquids -->
 	<action itemid="1775" event="script" value="liquids/containers.lua"/>
@@ -104,6 +108,7 @@
 	<action itemid="7440" event="script" value="liquids/mastermind_potion.lua"/>
 	<action itemid="7443" event="script" value="liquids/bullseye_potion.lua"/>
 	<action itemid="8474" event="script" value="liquids/antidote_potion.lua"/>
+	<action itemid="9930" event="script" value="liquids/rusty_remover_flask.lua"/>
 
 	<!-- Food -->
 	<action itemid="2328" event="script" value="foods/food.lua"/>

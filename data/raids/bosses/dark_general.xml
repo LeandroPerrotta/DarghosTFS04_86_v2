@@ -5,53 +5,263 @@
 	]]>
 	</script>
 
-	<announce delay="0" type="event" message="Dark Army inicia sua marcha para a Cidade de Quendor!"/>
-	<announce delay="60000" type="event" message="Os gritos da marcha ja podem ser ouvidos na cidade de Quendor! Prepare-se para batalha"/>
-	<announce delay="120000" type="event" message="Quendor esta sitiada, mate os soldados invasores!"/>
-	<announce delay="180000" type="event" message="O General do ataque invade a cidade!"/>
-	<announce delay="200000" type="event" message="Mais soldados chegaram em Quendor, nao ande sozinho!"/>
+	<announce delay="0" type="event" message="Observadores alertam! A Armada Negra marcha na direção de Quendor!"/>
+	
+	<announce delay="180000" type="event" message="Batalhões de tropas inimigas se aproximam do portão ao Norte! Quendor precisa reunir todas as forças! O combat está para iniciar!"/>
+	
+	<script delay="300000">
+	<![CDATA[
+	enableRoyalBlessing()
+	]]>
+	</script>
+	
+	<!--
+	Quantidade total de monstros (para calculos de loot)
+	Dark Warriors, Archers & Mages [min = 106] [max = 156]
+	Dark Priestess [min = 70] [max = 101]
+	Dark Summoner [min = 71] [max = 102]
+	
+	Rare Items Drop:
+	
+	Zaoan Legs (15)
+		- Archer [42]
+		- Warrior [42]
+		
+	Zaoan Armor	(15)
+		- Archer [42]
+		- Warrior [42]
+		
+	Draken Boots (8)
+		- Archer [156]
+		- Warrior [156]
+		- Priestess [156]
+		
+	Zaoan Helmet (6)
+		- Archer [104]
+		- Warrior [104]
+		
+	Elite Draken Mail (3)
+		- Archer [208]
+		- Warrior [208]
 
-	<areaspawn delay="120000" centerx="2061" centery="1869" centerz="7" radius="15">
-		<monster name="Dark Warrior" minamount="10" maxamount="13"/>
+	Royal Crossbow (1)
+		- Archer [156]
+		
+	The Devileye (<0)
+		- Archer [312]
+		
+	Yols'Bow (<0)
+		- Archer [624]
+		
+	Yalaharian Leg Piece (4)
+		- Archer [39]
+		
+	Necromancer Shield (3)
+		- Warrior [52]
+		
+	Twiceslicer (10)
+		- Warrior [15]
+		
+	Fireborn Giant Armor (2)
+		- Warrior [78]
+		
+	Calamity(<0)
+		- Warrior [624]
+		
+	Guardian Boots(3)
+		- Warrior [52]
+		
+	Nightmare Shield (2)
+		- Warrior [78]
+		
+	Drakinata (12)
+		- Warrior [13]
+		
+	Blade of Corruption (6)
+		- Warrior [26]		
+		
+	Zaoan Robe (8)
+		- Mage [64]
+		- Summoner [64]
+		
+	Spellweaver's Robe (8)
+		- Mage [64]
+		- Priestess [64]		
+		
+	Spellbook of Dark Mysteries (3)
+		- Mage [171]
+		- Priestess	[171]	
+		
+	Firewalker Boots (6)
+		- Mage [26]
+		
+	Royal Scale Robe (4)
+		- Mage [39]
+		
+	Snake God's Wristguard (3)
+		- Priestess [33]
+	
+	Cobra Crown (1)
+		- Priestess [101]
+		
+	Robe of Ice Queen (<0)
+		- Priestess [202]
+		
+	Crystal Boots (1)
+		- Summoner [102]
+		
+	Yalahari Mask (4)
+		- Summoner [25]
+	-->
+
+	<!-- 1a leva (portão norte aos 6 minutos) -->
+	<announce delay="360000" type="event" message="A primeira onda de soldados leais a Armada Negra ataca o portão Norte de Quendor! Estamos sob ataque! E reforços ao inimigo chegarão em breve!"/>
+	<areaspawn delay="360000" centerx="2200" centery="1767" centerz="7" radius="4">
+		<monster name="Dark Warrior" minamount="4" maxamount="6"/>
+		<monster name="Dark Archer" minamount="4" maxamount="6"/>
+		<monster name="Dark Priestess" minamount="1" maxamount="2"/>
 	</areaspawn>
 
-	<areaspawn delay="120000" centerx="2028" centery="1850" centerz="7" radius="15">
-		<monster name="Dark Warrior" minamount="10" maxamount="14"/>
-	</areaspawn>
-
-	<areaspawn delay="120000" centerx="2042" centery="1884" centerz="7" radius="15">
-		<monster name="Dark Archer" minamount="10" maxamount="20"/>
+	<!-- 2a leva (portão norte aos 7 minutos) -->
+	<areaspawn delay="420000" centerx="2209" centery="1751" centerz="7" radius="6">
+		<monster name="Dark Warrior" minamount="6" maxamount="8"/>
+		<monster name="Dark Priestess" minamount="2" maxamount="4"/>
+		<monster name="Dark Archer" minamount="6" maxamount="8"/>
+		<monster name="Dark Summoner" minamount="3" maxamount="6"/>
+		<monster name="Dark Mage" minamount="4" maxamount="8"/>
 	</areaspawn>
 	
-	<areaspawn delay="120000" centerx="2031" centery="1876" centerz="7" radius="15">
-		<monster name="Dark Archer" minamount="10" maxamount="20"/>
-	</areaspawn>
-
-	<areaspawn delay="180000" centerx="2028" centery="1869" centerz="7" radius="15">
-		<monster name="Dark Warrior" minamount="10" maxamount="14"/>
-	</areaspawn>
-
-	<areaspawn delay="180000" centerx="2035" centery="1873" centerz="7" radius="15">
-		<monster name="Dark Archer" minamount="10" maxamount="20"/>
+	<!-- 3a leva (portão norte aos 8 minutos) -->
+	<areaspawn delay="480000" centerx="2209" centery="1751" centerz="7" radius="8">
+		<monster name="Dark Warrior" minamount="6" maxamount="10"/>
+		<monster name="Dark Priestess" minamount="4" maxamount="6"/>
+		<monster name="Dark Archer" minamount="6" maxamount="10"/>
+		<monster name="Dark Summoner" minamount="5" maxamount="8"/>
+		<monster name="Dark Mage" minamount="6" maxamount="10"/>
+	</areaspawn>	
+	
+	<!-- 4a leva (portão oeste aos 10 minutos) -->
+	<announce delay="600000" type="event" message="Atividades inimigas ao Oeste! Um grande pelotão ataca o portão Oeste! Organizem-se e preparem para proteger o portão Oeste!"/>
+	<areaspawn delay="600000" centerx="2200" centery="1767" centerz="7" radius="6">
+		<monster name="Dark Warrior" minamount="4" maxamount="6"/>
+		<monster name="Dark Archer" minamount="4" maxamount="6"/>
+		<monster name="Dark Mage" minamount="4" maxamount="6"/>
+		<monster name="Dark Priestess" minamount="1" maxamount="3"/>
+	</areaspawn>	
+	
+	<!-- 5a leva (portão oeste aos 11 minutos) -->
+	<areaspawn delay="660000" centerx="2121" centery="1833" centerz="7" radius="8">
+		<monster name="Dark Warrior" minamount="6" maxamount="10"/>
+		<monster name="Dark Archer" minamount="6" maxamount="10"/>
+		<monster name="Dark Priestess" minamount="4" maxamount="6"/>
+		<monster name="Dark Summoner" minamount="5" maxamount="8"/>
+		<monster name="Dark Mage" minamount="6" maxamount="10"/>
 	</areaspawn>
 	
-	<singlespawn delay="180000" name="Dark General" x="2040" y="1869" z="7" />
-	<singlespawn delay="180000" name="Dark General" x="2025" y="1874" z="7" />
-
-	<areaspawn delay="190000" centerx="2061" centery="1869" centerz="7" radius="15">
-		<monster name="Dark Warrior" minamount="10" maxamount="13"/>
-	</areaspawn>
-
-	<areaspawn delay="200000" centerx="2028" centery="1850" centerz="7" radius="15">
-		<monster name="Dark Warrior" minamount="10" maxamount="14"/>
-	</areaspawn>
-
-	<areaspawn delay="220000" centerx="2042" centery="1884" centerz="7" radius="15">
-		<monster name="Dark Archer" minamount="10" maxamount="20"/>
+	<!-- 6a leva (portão oeste aos 13 minutos) -->
+	<announce delay="1020000" type="event" message="Ultimo pelotão de ataque inimigo no portão Oeste! O proximo ataque está longe o que dará algum tempo para respirar! Mas se mantenham atentos!!"/>
+	<areaspawn delay="780000" centerx="2121" centery="1833" centerz="7" radius="8">
+		<monster name="Dark Warrior" minamount="8" maxamount="12"/>
+		<monster name="Dark Archer" minamount="8" maxamount="12"/>
+		<monster name="Dark Priestess" minamount="6" maxamount="8"/>
+		<monster name="Dark Summoner" minamount="6" maxamount="8"/>
+		<monster name="Dark Mage" minamount="8" maxamount="12"/>
 	</areaspawn>
 	
-	<areaspawn delay="240000" centerx="2031" centery="1876" centerz="7" radius="15">
-		<monster name="Dark Archer" minamount="10" maxamount="20"/>
+	<!-- mensagem aos 16 minutos -->
+	<announce delay="1020000" type="event" message="Massivos pelotões caminhão em direção aos portões Norte e Oeste! Se preparem para defender Quendor de seus inimigos!"/>
+	
+	<!-- 7a leva (portão norte aos 20 minutos) -->
+	<announce delay="1200000" type="event" message="Tropas da Armada Negra atacam os portões Norte e Oeste ao mesmo tempo! Estamos cercados!"/>
+	<areaspawn delay="1200000" centerx="2209" centery="1751" centerz="7" radius="8">
+		<monster name="Dark Warrior" minamount="8" maxamount="12"/>
+		<monster name="Dark Archer" minamount="8" maxamount="12"/>
+		<monster name="Dark Priestess" minamount="6" maxamount="8"/>
+		<monster name="Dark Summoner" minamount="6" maxamount="8"/>
+		<monster name="Dark Mage" minamount="8" maxamount="12"/>
+	</areaspawn>	
+	
+	<!-- 8a leva (portão oeste aos 20 minutos) -->
+	<areaspawn delay="1200000" centerx="2121" centery="1833" centerz="7" radius="8">
+		<monster name="Dark Warrior" minamount="8" maxamount="12"/>
+		<monster name="Dark Archer" minamount="8" maxamount="12"/>
+		<monster name="Dark Priestess" minamount="6" maxamount="8"/>
+		<monster name="Dark Summoner" minamount="6" maxamount="8"/>
+		<monster name="Dark Mage" minamount="8" maxamount="12"/>
 	</areaspawn>
 	
+	<!-- 9a leva (portão norte aos 22 minutos) -->
+	<areaspawn delay="1320000" centerx="2209" centery="1751" centerz="7" radius="8">
+		<monster name="Dark Warrior" minamount="8" maxamount="12"/>
+		<monster name="Dark Archer" minamount="8" maxamount="12"/>
+		<monster name="Dark Priestess" minamount="6" maxamount="8"/>
+		<monster name="Dark Summoner" minamount="6" maxamount="8"/>
+		<monster name="Dark Mage" minamount="8" maxamount="12"/>
+	</areaspawn>	
+	
+	<!-- 10a leva (portão oeste aos 22 minutos) -->
+	<areaspawn delay="1320000" centerx="2121" centery="1833" centerz="7" radius="8">
+		<monster name="Dark Warrior" minamount="8" maxamount="12"/>
+		<monster name="Dark Archer" minamount="8" maxamount="12"/>
+		<monster name="Dark Priestess" minamount="6" maxamount="8"/>
+		<monster name="Dark Summoner" minamount="6" maxamount="8"/>
+		<monster name="Dark Mage" minamount="8" maxamount="12"/>
+	</areaspawn>	
+	
+	<!-- 11a leva (portão norte aos 25 minutos) -->
+	<areaspawn delay="1500000" centerx="2209" centery="1751" centerz="7" radius="8">
+		<monster name="Dark Warrior" minamount="8" maxamount="12"/>
+		<monster name="Dark Archer" minamount="8" maxamount="12"/>
+		<monster name="Dark Priestess" minamount="6" maxamount="8"/>
+		<monster name="Dark Summoner" minamount="6" maxamount="8"/>
+		<monster name="Dark Mage" minamount="8" maxamount="12"/>
+	</areaspawn>
+	
+	<!-- 12a leva (portão oeste aos 26 minutos) -->
+	<areaspawn delay="1560000" centerx="2121" centery="1833" centerz="7" radius="8">
+		<monster name="Dark Warrior" minamount="8" maxamount="12"/>
+		<monster name="Dark Archer" minamount="8" maxamount="12"/>
+		<monster name="Dark Priestess" minamount="6" maxamount="8"/>
+		<monster name="Dark Summoner" minamount="6" maxamount="8"/>
+		<monster name="Dark Mage" minamount="8" maxamount="12"/>
+	</areaspawn>	
+	
+	<!-- 13a leva (portão norte aos 27 minutos) -->
+	<areaspawn delay="1620000" centerx="2209" centery="1751" centerz="7" radius="10">
+		<monster name="Dark Warrior" minamount="12" maxamount="16"/>
+		<monster name="Dark Archer" minamount="12" maxamount="16"/>
+		<monster name="Dark Priestess" minamount="8" maxamount="12"/>
+		<monster name="Dark Summoner" minamount="8" maxamount="12"/>
+		<monster name="Dark Mage" minamount="12" maxamount="16"/>
+	</areaspawn>	
+	
+	<!-- 14a leva (portão oeste aos 28 minutos) -->
+	<areaspawn delay="1680000" centerx="2121" centery="1833" centerz="7" radius="10">
+		<monster name="Dark Warrior" minamount="12" maxamount="16"/>
+		<monster name="Dark Archer" minamount="12" maxamount="16"/>
+		<monster name="Dark Priestess" minamount="8" maxamount="12"/>
+		<monster name="Dark Summoner" minamount="8" maxamount="12"/>
+		<monster name="Dark Mage" minamount="12" maxamount="16"/>
+	</areaspawn>	
+	
+	<!-- 15a leva - DARK GENERAL -->
+	<script delay="1800000">
+	<![CDATA[
+	summonDarkGeneral()
+	]]>	
+	</script>
+	
+	<!-- FIM DA RAID: 2 horas e meia -->
+	<script delay="5400000">
+	<![CDATA[
+	local general = getCreatureByName("dark general")
+	
+	if(general) then
+		doRemoveCreature(general)
+		local msg = "Quendor fracassou na defesa! As Armada Negra concluiu seu objetivo de invadir a cidade e saqueou muitas riquezas. Humilhado por seus inimigos Ordon está furioso."
+		addEvent(doBroadcastMessage, 1000 * 2, msg, MESSAGE_EVENT_ADVANCE)
+		addEvent(disableRoyalBlessing, 1000 * 20)
+	end
+	]]>	
+	</script>	
 </raid>

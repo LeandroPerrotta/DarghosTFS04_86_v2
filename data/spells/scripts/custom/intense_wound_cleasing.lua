@@ -10,8 +10,14 @@ setConditionParam(condition, CONDITION_PARAM_TICKS, 22 * 1000)
 setConditionParam(condition, CONDITION_PARAM_HEALTHTICKS, 1000)
 
 function onGetFormulaValues(cid, level, maglevel)
-	local min = math.ceil(getCreatureMaxHealth(cid) * 0.28)
-	local max = math.ceil(getCreatureMaxHealth(cid) * 0.33)
+	local min = math.ceil(getCreatureMaxHealth(cid) * 0.09)
+	local max = math.ceil(getCreatureMaxHealth(cid) * 0.12)
+	
+	if(min < 300) then
+		min = 300
+		max = 350
+	end
+	
 	return min, max
 end
 
@@ -25,7 +31,7 @@ function onCastSpell(cid, var)
             return false
 	end
 	
-	local healthGain = math.ceil(math.random(math.ceil(getCreatureMaxHealth(cid) * 0.24), math.ceil(getCreatureMaxHealth(cid) * 0.27)) / 15)	
+	local healthGain = math.ceil(math.random(math.ceil(getCreatureMaxHealth(cid) * 0.27), math.ceil(getCreatureMaxHealth(cid) * 0.31)) / 15)	
 	setConditionParam(condition, CONDITION_PARAM_HEALTHGAIN, healthGain)
 	setCombatCondition(combat, condition)	
 

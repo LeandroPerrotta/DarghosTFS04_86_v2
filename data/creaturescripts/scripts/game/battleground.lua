@@ -15,7 +15,7 @@ function onBattlegroundLeave(cid)
 	doRemoveCondition(cid, CONDITION_INFIGHT)
 end
 
-function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
+function onBattlegroundEnd(cid, winner, timeIn, bgDuration, initIn)
 
 	local points = getBattlegroundTeamsPoints()
 
@@ -27,27 +27,30 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 		loserTeam = (winnerTeam == BATTLEGROUND_TEAM_ONE) and BATTLEGROUND_TEAM_TWO or BATTLEGROUND_TEAM_ONE
 	end
 	
-	if(pvpBattleground.hasGain()) then
+	if(pvpBattleground.hasGain(initIn)) then
+	
+		-- calculando os ganhos de honor com base no damage/heal done
+		pvpBattleground.damageDone2Honor(cid)
+		pvpBattleground.healDone2Honor(cid)
+	
 		if(not winner and winnerTeam ~= BATTLEGROUND_TEAM_NONE) then
 			local removedRating = pvpBattleground.removePlayerRating(cid, timeIn, bgDuration)
 			local ratingMessage = "Você piorou a sua classificação (rating) em " .. removedRating .. " pontos por sua derrota na Battleground."
 			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, ratingMessage)		
 			
-			local gold = 20000
+			local gainHonor = pvpBattleground.doUpdateHonor(cid)
 			
-			if(not isPremium(cid)) then
-				gold = gold * (FREE_GAINS_PERCENT / 100)
-			end
-			
-			local msg = "Não foi dessa vez... Por derrotas não são concedido premios de experience, mas você recebeu " .. gold .. " moedas de ouro para ajudar a repor os suprimentos gastos e se preparar para a proxima Battleground!"
+			local msg = "Não foi dessa vez... Por derrotas não são concedido premios de experience, mas você recebeu " .. gainHonor .. " pontos de honra pela sua participação e coragem!"
 			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, msg)	
 			doPlayerAddMoney(cid, gold)			
 			
+			pvpBattleground.storePlayerParticipation(cid, getPlayerBattlegroundTeam(cid), false, 0, -removedRating, gainHonor)
 			playerHistory.logBattlegroundLost(cid, newRating)
 		end
 	
 		if(winner or winnerTeam == BATTLEGROUND_TEAM_NONE) then
 		
+			pvpBattleground.onGainHonor(cid, BATTLEGROUND_HONOR_WIN)
 			if(winner and points[winnerTeam] == BG_CONFIG_WINPOINTS	and points[loserTeam] == 0 and not playerHistory.hasAchievBattlegroundPerfect(cid)) then
 				playerHistory.achievBattlegroundPerfect(cid)
 			end		
@@ -56,23 +59,29 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 			local staminaMinutes = getPlayerStamina(cid)		
 			local staminaChange = timeIn / 60
 			
-			expGain = math.floor(expGain * (timeIn / bgDuration)) -- calculamo a exp obtida com base no tempo de participação do jogador
-			expGain = math.floor(expGain * (bgDuration / BG_CONFIG_DURATION)) -- calculamo a exp obtida com base na duração da battleground
+			expGain = math.floor(expGain * (timeIn / bgDuration)) -- calculamo a exp obtida com base no tempo de participa??o do jogador
+			expGain = math.floor(expGain * (bgDuration / BG_CONFIG_DURATION)) -- calculamo a exp obtida com base na dura??o da battleground
 			
-			-- iremos reduzir o ganho de exp conforme o player se afasta da média de kills definida para o grupo até um limite de 50% de redução
+			-- iremos reduzir o ganho de exp conforme o player se afasta da m?dia de kills definida para o grupo at? um limite de 50% de redu??o
 			local playerInfo = getPlayerBattlegroundInfo(cid)
-			local killsAvg = math.ceil(points[getPlayerBattlegroundTeam(cid)] / BG_CONFIG_TEAMSIZE)
+			local killsAvg = math.ceil(pvpBattleground.getTeamFragPoints(getPlayerBattlegroundTeam(cid)) / BG_CONFIG_TEAMSIZE)
 			local killsRate = math.random(math.min(killsAvg, playerInfo.kills) * 100, killsAvg * 100) / (killsAvg * 100)
 			
-			expGain = math.ceil(expGain * (math.max(0.5, killsRate)))
+			local diminush = math.max(0.5, killsRate)
+			
+			-- Para que Druids não sejam prejudicados, vamos incluir o Heal na conta
+			-- baseando na representação em % do heal que o jogador causou com o total
+			-- de heal do time
+			local teamHeal = pvpBattleground.getTeamHealDone(getPlayerBattlegroundTeam(cid))
+			if(teamHeal > 0) then
+				diminush = math.min((((pvpBattleground.getHealDone(cid) * 100) / teamHeal) / 100) + diminush, 1.0)	
+			end
+
+			expGain = math.ceil(expGain * diminush)
 		
-			local gold = 60000
+			local gainHonor = pvpBattleground.doUpdateHonor(cid)
 			
-			if(not isPremium(cid)) then
-				gold = gold * (FREE_GAINS_PERCENT / 100)
-			end			
-			
-			local msg = "Você adquiriu " .. expGain .. " pontos de experiência além de " .. gold .. " moedas de ouro para ajudar a você repor os suprimentos gastos pela vitoria na Battleground!"
+			local msg = "Você adquiriu " .. expGain .. " pontos de experiência além de " .. gainHonor .. " pontos de honra pela sua participação nesta vitoria!"
 			
 			local currentRating = getPlayerBattlegroundRating(cid)
 			local changeRating = pvpBattleground.getChangeRating(cid, timeIn, bgDuration)
@@ -80,10 +89,9 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 		
 			if(winnerTeam == BATTLEGROUND_TEAM_NONE) then
 			
-				staminaChange = math.floor(newStamina / 2)
+				staminaChange = math.floor(staminaChange / 2)
 				expGain = math.floor(expGain / 2)
-				gold = 30000
-				msg = "Você adquiriu " .. expGain .. " pontos de experiencia e " .. gold .. " moedas de ouro pelo empate na Battleground!"
+				msg = "Você adquiriu " .. expGain .. " pontos de experiencia e " .. gainHonor .. " pontos de honra pela sua participação neste empate!"
 				
 				changeRating = math.floor(changeRating / 2)
 				ratingMessage = "Você melhorou a sua classificação (rating) em " .. changeRating .. " pontos por seu empate na Battleground."
@@ -92,16 +100,24 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 				playerHistory.logBattlegroundWin(cid, currentRating + changeRating)
 			end		
 			
-			if(not playerHistory.hasAchievBattlegroundGet1500Rating(cid)
+			pvpBattleground.storePlayerParticipation(cid, getPlayerBattlegroundTeam(cid), false, expGain, changeRating, gainHonor, getPlayerStamina(cid) > 40 * 60)
+	
+			if(not playerHistory.hasAchievBattlegroundRankBrave(cid)
+				and currentRating < 1000
+				and currentRating + changeRating >= 1000) then
+				playerHistory.achievBattlegroundRankBrave(cid)
+			end			
+			
+			if(not playerHistory.hasAchievBattlegroundRankVeteran(cid)
 				and currentRating < 1500
 				and currentRating + changeRating >= 1500) then
-				playerHistory.achievBattlegroundGet1500Rating(cid)
+				playerHistory.achievBattlegroundRankVeteran(cid)
 			end
 			
-			if(not playerHistory.hasAchievBattlegroundGet2000Rating(cid)
+			if(not playerHistory.hasAchievBattlegroundRankLegend(cid)
 				and currentRating < 2000
 				and currentRating + changeRating >= 2000) then
-				playerHistory.achievBattlegroundGet2000Rating(cid)
+				playerHistory.achievBattlegroundRankLegend(cid)
 			end				
 			
 			doPlayerSetStamina(cid, staminaMinutes - staminaChange)
@@ -118,60 +134,44 @@ function onBattlegroundEnd(cid, winner, timeIn, bgDuration)
 		if(BG_ENABLED_GAINS) then
 			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Recompensa de experiencia, dinheiro e rating não concedida. Recompensas só são concedidas entre as AM 11:00 (onze da manha) e as AM 01:00 (uma da manha), expeto aos sabados e domingos.")
 		else
-		doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "A battleground esta passando por revisões e somente está funcionando no modo sem ganhos, por isso nenhum tipo de ganho ou perda foi concedido por esta partida.")
+			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "A battleground esta passando por revisões e somente está funcionando no modo sem ganhos, por isso nenhum tipo de ganho ou perda foi concedido por esta partida.")
 		end
 	end
 	
 	pvpBattleground.showResult(cid, winnerTeam)
 end
 
-function onBattlegroundFrag(cid, target)
-	doSendAnimatedText(getPlayerPosition(cid), "FRAG!", TEXTCOLOR_DARKRED)
+function onBattlegroundDeath(cid, lastDamager, assistList)
+
+	doSendAnimatedText(getPlayerPosition(lastDamager), "FRAG!", TEXTCOLOR_DARKRED)
 	
-	local teams = { "Time A", "Time B" }	
+	local teams = { "Time A", "Time B" }
 	local points = getBattlegroundTeamsPoints()
 	
-	pvpBattleground.sendPvpChannelMessage("[Battleground | (" .. teams[BATTLEGROUND_TEAM_ONE] .. ") " .. points[BATTLEGROUND_TEAM_ONE] .. " X " .. points[BATTLEGROUND_TEAM_TWO] .. " (" .. teams[BATTLEGROUND_TEAM_TWO] .. ")] " .. getPlayerName(cid).. " (" .. getPlayerLevel(cid) .. ") matou " .. getPlayerName(target) .. " (" .. getPlayerLevel(target) .. ") pelo " .. teams[getPlayerBattlegroundTeam(cid)] .. "!", PVPCHANNEL_MSGMODE_INBATTLE)
+	local msg = "[Battleground | (" .. teams[BATTLEGROUND_TEAM_ONE] .. ") " .. points[BATTLEGROUND_TEAM_ONE] .. " X " .. points[BATTLEGROUND_TEAM_TWO] .. " (" .. teams[BATTLEGROUND_TEAM_TWO] .. ")] "
+	msg = msg .. getPlayerName(lastDamager).. " (" .. getPlayerLevel(lastDamager) .. ") matou " .. getPlayerName(cid) .. " (" .. getPlayerLevel(cid) .. ") "
+	msg = msg .. "pelo " .. teams[getPlayerBattlegroundTeam(lastDamager)] .. "!"
+	
+	pvpBattleground.sendPvpChannelMessage(msg, PVPCHANNEL_MSGMODE_INBATTLE)
 
 	if(pvpBattleground.hasGain()) then
 		
-		local playerInfo = getPlayerBattlegroundInfo(cid)
-		if(not playerHistory.hasAchievBattlegroundInsaneKiller(cid)
-			and playerInfo.kills >= 25 and playerInfo.deaths == 0) then
-			playerHistory.achievBattlegroundInsaneKiller(cid)
-		end
-	end
-	--[[
-	local dailyActive = (getPlayerStorageValue(cid, sid.DAILY_BATTLEGROUND_ACTIVE) == 1) and true or false	
-	if(dailyActive) then
-		local level, target_level = getPlayerLevel(cid), getPlayerLevel(target)
-		local target_min_level = level - math.floor(level * (0.15))
+		local totalHonor = BATTLEGROUND_DEATH_HONOR_GIVE
+		local honorGain = math.floor(totalHonor * (BATTLEGROUND_FRAGGER_HONOR_PERCENT / 100))
+		totalHonor = totalHonor - honorGain
+		pvpBattleground.onGainHonor(lastDamager, honorGain, true)
 		
-		if(target_level >= target_min_level) then
-			local points = math.max(getPlayerStorageValue(cid, sid.DAILY_BATTLEGROUND_POINTS), 0)
-			points = points + 1
-			points = math.min(points, DAILY_REQUIRED_POINTS)
-			
-			if(points < DAILY_REQUIRED_POINTS) then
-				doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_ORANGE, "Você precisa derrotar mais " .. (DAILY_REQUIRED_POINTS - points) .. " adversários para completar a sua missão.")
-			elseif(points == DAILY_REQUIRED_POINTS) then
-				doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_ORANGE, "Você concluiu a sua missão! Volte a falar com Dhor'Thar para receber a sua recompensa!")
-			end
-			
-			setPlayerStorageValue(cid, sid.DAILY_BATTLEGROUND_POINTS, points)
+		for k,v in pairs(assistList) do
+			honorGain = math.floor(totalHonor / #assistList)
+			pvpBattleground.onGainHonor(v, honorGain, true)
+		end
+		
+		local playerInfo = getPlayerBattlegroundInfo(lastDamager)
+		if(not playerHistory.hasAchievBattlegroundInsaneKiller(lastDamager)
+			and playerInfo.kills >= 25 and playerInfo.deaths == 0) then
+			playerHistory.achievBattlegroundInsaneKiller(lastDamager)
 		end
 	end
-	
-	dailyActive = (getPlayerStorageValue(target, sid.DAILY_BATTLEGROUND_ACTIVE) == 1) and true or false	
-	if(dailyActive) then
-		local points = math.max(getPlayerStorageValue(target, sid.DAILY_BATTLEGROUND_POINTS), 0)
-		if(points > 0) then
-			points = points - 1
-			doPlayerSendTextMessage(target, MESSAGE_STATUS_CONSOLE_ORANGE, "Você foi derrotado por outro jogador na battleground e perdeu 1 ponto, você precisa derrotar mais " .. (DAILY_REQUIRED_POINTS - points) .. " adversários para completar a sua missão.")
-			setPlayerStorageValue(target, sid.DAILY_BATTLEGROUND_POINTS, points)
-		end
-	end
-	--]]
 end
 
 function onThink(cid, interval)
